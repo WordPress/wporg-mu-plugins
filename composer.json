@@ -1,8 +1,7 @@
 {
-    "name": "wordpress/wporg-mu-plugins",
-    "description": "`mu-plugins` for the WordPress.org network",
-    "license": "GPL-2.0-or-later",
-    "require": {},
+	"name": "wporg/wporg-mu-plugins",
+	"description": "`mu-plugins` for the WordPress.org network",
+	"license": "GPL-2.0-or-later",
 	"extra" : {
 		"sync-svn" : {
 			"main-branch" : "trunk",
