@@ -1,0 +1,14 @@
+{
+    "name": "wordpress/wporg-mu-plugins",
+    "description": "`mu-plugins` for the WordPress.org network",
+    "license": "GPL-2.0-or-later",
+    "require": {},
+	"extra" : {
+		"sync-svn" : {
+			"main-branch" : "trunk",
+			"paths" : {
+				"mu-plugins/" : "https://dotorg.svn.wordpress.org/wordpress/website/wp-content/mu-plugins/git-sync/  -- todo: name this better, but probably want a subfolder in mu-plugins/ so can cleanly sync"
+			}
+		}
+	}
+}
