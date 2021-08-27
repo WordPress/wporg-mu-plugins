@@ -1,6 +1,6 @@
 <?php
 
-namespace WordPress_org\MU_Plugins\Global_Header_Footer;
+namespace WordPressdotorg\MU_Plugins\Global_Header_Footer;
 
 defined( 'WPINC' ) || die();
 
@@ -12,12 +12,12 @@ function register_assets() {
 	// don't want this visible in Inserter. need to create ticket for that?
 
 	register_block_type(
-		'wordpress-org/global-header',
+		'wporg/global-header',
 		array( 'render_callback' => __NAMESPACE__ . '\render_global_header' )
 	);
 
 	register_block_type(
-		'wordpress-org/global-footer',
+		'wporg/global-footer',
 		array( 'render_callback' => __NAMESPACE__ . '\render_global_footer' )
 	);
 }
