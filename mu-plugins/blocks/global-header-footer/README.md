@@ -1,11 +1,8 @@
 # Global Header
 
-## Setup
-
 ## Register as a block (for Full Site Editing themes)
 
-1. Add entries to the `repositories` and `require-dev` sections of `composer.json`
-1. Run `composer update` to install it
+1. See `../../../README.md` for installation prerequsites.
 1. `require_once .../global-header-footer/blocks.php` file. See `wporg-news-2021` as an example.
 
 ## Include directly in PHP (for classic themes)

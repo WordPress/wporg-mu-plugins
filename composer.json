@@ -7,8 +7,17 @@
 		"sync-svn": {
 			"main-branch": "trunk",
 			"paths": {
-				"mu-plugins/": "https://dotorg.svn.wordpress.org/wordpress/website/wp-content/mu-plugins/git-sync/  -- todo: name this better, but probably want a subfolder in mu-plugins/ so can cleanly sync"
+				"mu-plugins/": "https://dotorg.svn.wordpress.org/wordpress/website/wp-content/mu-plugins/git-sync/  -- todo: come up with name this better, but probably want a subfolder in mu-plugins/ so can cleanly sync"
 			}
 		}
+	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "git@github.com:WordPress/wporg-repo-tools.git"
+		}
+	],
+	"require-dev": {
+		"wporg/wporg-repo-tools": "dev-trunk",
 	}
 }
