@@ -2,31 +2,18 @@
 
 ## Setup
 
-
-
-
 ## Register as a block (for Full Site Editing themes)
 
-Add as a composer dependency, install, then add this to a theme's `functions.php`:
-
-```php
-require_once WPORG_GIT_MUPLUGINS_DIR . '/mu-plugins/blocks/global-header-footer/blocks.php';
-```
-
+1. Add entries to the `repositories` and `require-dev` sections of `composer.json`
+1. Run `composer update` to install it
+1. `require_once .../global-header-footer/blocks.php` file. See `wporg-news-2021` as an example.
 
 ## Include directly in PHP (for classic themes)
 
-Add as a composer dependency, install, then
+The same as above, but include `universal-header.php` directly. See `{ todo }` as an example.
 
-```php
-require_once WPORG_GIT_MUPLUGINS_DIR . '/mu-plugins/blocks/global-header-footer/universal-header.php';
+## Embed as an iframe (for non-WP software like Trac, Codex, etc)
+
 ```
-
-todo path should be "blocks", or more generic like "components", "template-parts", ?
-
-
-## Embed as an iframe (for Trac, Codex, etc)
-
-<iframe ...>
-
-src=http...?embed_context=codex
+todo add example, maybe w/ something like `src=http...?embed_context=codex`
+```

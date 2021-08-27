@@ -1,16 +1,23 @@
 <?php
 
+/*
+ * This file should only contain logic related to blocks.
+ * Anything that applies to loading the header as raw PHP, iframe'ing, etc, should go in `universal-header.php`.
+ */
+
 namespace WordPressdotorg\MU_Plugins\Global_Header_Footer;
 
 defined( 'WPINC' ) || die();
 
-add_action( 'init', __NAMESPACE__ . '\register_assets', 9 );
-// why 9? if can be 10, then callers could be 9
+add_action( 'init', __NAMESPACE__ . '\register_block_types', 10 );
 
 
-function register_assets() {
-	// don't want this visible in Inserter. need to create ticket for that?
-
+/**
+ * Register block types
+ *
+ * These are intentionally missing arguments like `title`, `category`, `icon`, etc, because we don't want them showing up in the Block Inserter, regardless of which theme is running.
+ */
+function register_block_types() {
 	register_block_type(
 		'wporg/global-header',
 		array( 'render_callback' => __NAMESPACE__ . '\render_global_header' )
@@ -25,39 +32,21 @@ function register_assets() {
 /**
  * Render the global header in a block context.
  *
- * @param array $attributes Block attributes.
- *
  * @return string
  */
-function render_global_header( $attributes ) {
-	/*
-	todo
-	meta tags included called automaticaly in FSE themes
-	so the header needs to avoid adding them for FSE, or we need to disable FSE automatically adding them
-	*/
-
+function render_global_header() {
 	ob_start();
 	require_once __DIR__ . '/universal-header.php';
-	// cant include inside namespace b/c that messes things up?
-	// if so, is there a way to de-scope it?
-
 	return ob_get_clean();
 }
 
 /**
  * Render the global footer in a block context.
  *
- * @param array $attributes Block attributes.
- *
  * @return string
  */
-function render_global_footer( $attributes ) {
+function render_global_footer() {
 	ob_start();
 	require_once __DIR__ . '/universal-footer.php';
 	return ob_get_clean();
 }
-
-
-// maybe make an api endpoint to serve this to codex/trac?
-
- // all universal logic should go inside header.php, so that Trac, the Codex, etc can load it
