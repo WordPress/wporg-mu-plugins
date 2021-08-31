@@ -1,31 +1,41 @@
 <?php
 
-/*
- * This file should only contain logic related to blocks.
- * Anything that applies to loading the header as raw PHP, iframe'ing, etc, should go in `universal-header.php`.
- */
-
 namespace WordPressdotorg\MU_Plugins\Global_Header_Footer;
 
 defined( 'WPINC' ) || die();
 
-add_action( 'init', __NAMESPACE__ . '\register_block_types', 10 );
-
+add_action( 'init', __NAMESPACE__ . '\register_block_types' );
 
 /**
  * Register block types
  *
- * These are intentionally missing arguments like `title`, `category`, `icon`, etc, because we don't want them showing up in the Block Inserter, regardless of which theme is running.
+ * These are intentionally missing arguments like `title`, `category`, `icon`, etc, because we don't want them
+ * showing up in the Block Inserter, regardless of which theme is running.
  */
 function register_block_types() {
+	wp_register_style(
+		'wporg-global-header-footer',
+		plugins_url( '/style.css', __FILE__ ),
+		array( 'wp-block-library' ), // Load `block-library` styles first, so that our styles override them.
+		filemtime( __DIR__ . '/style.css' )
+	);
+
 	register_block_type(
 		'wporg/global-header',
-		array( 'render_callback' => __NAMESPACE__ . '\render_global_header' )
+		array(
+			'render_callback' => __NAMESPACE__ . '\render_global_header',
+			'style'           => 'wporg-global-header-footer',
+			'editor_style'    => 'wporg-global-header-footer',
+		)
 	);
 
 	register_block_type(
 		'wporg/global-footer',
-		array( 'render_callback' => __NAMESPACE__ . '\render_global_footer' )
+		array(
+			'render_callback' => __NAMESPACE__ . '\render_global_footer',
+			'style'           => 'wporg-global-header-footer',
+			'editor_style'    => 'wporg-global-header-footer',
+		)
 	);
 }
 
@@ -37,7 +47,7 @@ function register_block_types() {
 function render_global_header() {
 	ob_start();
 	require_once __DIR__ . '/universal-header.php';
-	return ob_get_clean();
+	return do_blocks( ob_get_clean() );
 }
 
 /**
@@ -48,5 +58,5 @@ function render_global_header() {
 function render_global_footer() {
 	ob_start();
 	require_once __DIR__ . '/universal-footer.php';
-	return ob_get_clean();
+	return do_blocks( ob_get_clean() );
 }

@@ -1,0 +1,40 @@
+/*
+ * ⚠️ Only values that are specific to the global header/footer (like layout, padding, etc) should be hardcoded in
+ * this file. Values that are shared across the entire theme (like typography, color palette, etc) should use the
+ * CSS variables from the `wporg-parent-2021` theme -- or from `wporg-news-2021` if
+ * https://github.com/WordPress/wporg-news-2021/issues/13 isn't done yet.
+ */
+
+
+/*
+ * Common
+ */
+.wp-block-group.site-header,
+.wp-block-group.site-footer,
+.wp-block-navigation:not(.has-background) .wp-block-navigation__responsive-container.is-menu-open {
+	background-color: var(--wp--preset--color--dark-strokes-grey);
+}
+
+.wp-block-navigation.is-responsive .wp-block-navigation-link__content {
+    color: var(--wp--preset--color--white);
+}
+
+
+/*
+ * Header
+ */
+.wp-block-group.site-header {
+	padding: 37px 30px 37px 24px;
+}
+
+
+/*
+ * Footer
+ */
+.wp-block-group.site-footer {
+	padding: 69px 80px 61px 80px;
+}
+
+.wp-block-group.site-footer .wp-block-social-links .wp-social-link svg {
+	fill: var(--wp--preset--color--white);
+}
