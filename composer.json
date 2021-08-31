@@ -2,7 +2,7 @@
 	"name": "wporg/wporg-mu-plugins",
 	"description": "`mu-plugins` for the WordPress.org network",
 	"license": "GPL-2.0-or-later",
-	"require": {},
+	"type": "wordpress-muplugin",
 	"extra": {
 		"sync-svn": {
 			"main-branch": "trunk",
@@ -17,7 +17,10 @@
 			"url": "git@github.com:WordPress/wporg-repo-tools.git"
 		}
 	],
+	"require": {
+		"composer/installers": "~1.0"
+	},
 	"require-dev": {
-		"wporg/wporg-repo-tools": "dev-trunk",
+		"wporg/wporg-repo-tools": "dev-trunk"
 	}
 }
