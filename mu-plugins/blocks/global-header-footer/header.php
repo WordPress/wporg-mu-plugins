@@ -25,6 +25,8 @@ if ( ! $is_fse_theme ) {
 
 <!-- wp:navigation-link {"label":"Patterns","url":"https://wordpress.org/patterns/","kind":"custom","isTopLevelLink":true} /-->
 
+<!-- wp:navigation-link {"label":"OpenVerse","url":"https://wordpress.org/openverse/","kind":"custom","isTopLevelLink":true} /-->
+
 <!-- wp:navigation-link {"label":"Learn","url":"https://learn.wordpress.org/","kind":"custom","isTopLevelLink":true} /-->
 
 <!-- wp:navigation-link {"label":"Support","url":"https://wordpress.org/support/","kind":"custom","isTopLevelLink":true} /-->
