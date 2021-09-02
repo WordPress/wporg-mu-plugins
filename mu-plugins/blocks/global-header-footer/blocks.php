@@ -46,7 +46,7 @@ function register_block_types() {
  */
 function render_global_header() {
 	ob_start();
-	require_once __DIR__ . '/universal-header.php';
+	require_once __DIR__ . '/header.php';
 	return do_blocks( ob_get_clean() );
 }
 
@@ -57,6 +57,6 @@ function render_global_header() {
  */
 function render_global_footer() {
 	ob_start();
-	require_once __DIR__ . '/universal-footer.php';
+	require_once __DIR__ . '/footer.php';
 	return do_blocks( ob_get_clean() );
 }
