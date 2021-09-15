@@ -1,6 +1,6 @@
 # wporg-mu-plugins
 
-Over time, this is intended to become the canonical source repository all `mu-plugins` on the WordPress.org network. At the moment, it only includes a few.
+Over time, this is intended to become the canonical source repository for all `mu-plugins` on the WordPress.org network. At the moment, it only includes a few.
 
 ## Usage
 
@@ -15,6 +15,13 @@ Over time, this is intended to become the canonical source repository all `mu-pl
 	require_once WPORG_GIT_MUPLUGINS_DIR . '/mu-plugins/blocks/global-header-footer/blocks.php';
 	```
 1. See individual plugin readmes for specific instructions
+
+
+## Development
+
+* `npm run start` during development
+* `npm run build` before commit/sync/deploy
+
 
 ## Sync/Deploy
 

@@ -1,0 +1,7 @@
+.wp-block-group.site-footer {
+	padding: 69px 80px 61px 80px;
+}
+
+.wp-block-group.site-footer .wp-block-social-links .wp-social-link svg {
+	fill: var(--wp--preset--color--white);
+}
