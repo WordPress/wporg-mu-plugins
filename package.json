@@ -28,6 +28,6 @@
 	"scripts": {
 		"start": "npm run build -- --watch",
 		"pre-build": "mkdir -p mu-plugins/blocks/global-header-footer/build",
-		"build": "npm run pre-build && postcss mu-plugins/blocks/global-header-footer/postcss/style.css --output mu-plugins/blocks/global-header-footer/build/style.css"
+		"build": "npm run pre-build && postcss mu-plugins/blocks/global-header-footer/postcss/style.pcss --output mu-plugins/blocks/global-header-footer/build/style.css"
 	}
 }
