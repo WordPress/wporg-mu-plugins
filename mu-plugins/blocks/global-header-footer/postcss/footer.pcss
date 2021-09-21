@@ -1,7 +1,98 @@
 .wp-block-group.site-footer {
-	padding: 69px 80px 61px 80px;
-}
+	padding-top: 44px;
+	padding-right: var(--wp--custom--post-content--padding--right);
+	padding-bottom: 44px;
+	padding-left: var(--wp--custom--post-content--padding--left);
 
-.wp-block-group.site-footer .wp-block-social-links .wp-social-link svg {
-	fill: var(--wp--preset--color--white);
+	@media (--tablet) {
+		padding-top: 69px;
+		padding-bottom: 58px;
+		padding-left: var(--wp--custom--post-content--breakpoint--tablet--padding--left);
+
+		/* Intentionally using "left" value for the right side. */
+		padding-right: var(--wp--custom--post-content--breakpoint--tablet--padding--left);
+	}
+
+	& > .site-footer__navigation-container {
+		max-width: 100%;
+		display: grid;
+		grid-gap: 20px;
+
+		/* Create columns automatically, make them equal widths, wrap when needed. */
+		grid-template-columns: repeat( auto-fit, minmax(150px, 1fr) );
+	}
+
+	& [class*="wp-container-"].site-footer__logos-container {
+		display: flex;
+		flex-wrap: wrap;
+		margin-top: calc(66px - var(--site-footer-nav-block-margin-bottom));
+
+		@media (--tablet) {
+			justify-content: space-between;
+			flex-wrap: nowrap;
+		}
+	}
+
+	& .site-footer__wporg-logo-mark {
+		flex-basis: 65%;
+		margin-bottom: 0;
+
+		@media (--tablet) {
+			display: none;
+		}
+	}
+
+	& .site-footer__wporg-logo-full {
+		@media (--tablet) {
+			display: inline;
+			flex-basis: 33%;
+		}
+	}
+
+	& .wp-block-social-links {
+		justify-content: flex-end;
+		flex-basis: 35%;
+		min-width: 100px;
+	}
+
+	& .wp-block-social-links,
+	& .wp-block-social-links .wp-social-link.wp-social-link.wp-social-link,
+	& .wp-block-social-links .wp-social-link a {
+		margin-top: 0;
+		margin-bottom: 0;
+		padding-top: 0;
+		padding-bottom: 0;
+	}
+
+	& .wp-block-social-links .wp-social-link:last-child {
+		margin-right: 0;
+	}
+
+	& .wp-block-social-links .wp-social-link svg {
+		fill: var(--wp--preset--color--white);
+	}
+
+	& .wp-block-social-links {
+		@media (--tablet) {
+			justify-content: flex-end;
+			flex-basis: 33%;
+			order: 3;
+		}
+	}
+
+	& .wp-block-image.site-footer__code_is_poetry {
+		flex-basis: 100%;
+		margin-top: 9px;
+		margin-bottom: 0;
+
+		@media (--tablet) {
+			flex-basis: 33%;
+			order: 2;
+			text-align: right; /* Optical illusion to make this image look more centered. */
+		}
+	}
+
+	& .wp-block-image {
+		text-align: left;
+	}
 }

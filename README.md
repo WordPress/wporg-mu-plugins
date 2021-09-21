@@ -6,13 +6,9 @@ Over time, this is intended to become the canonical source repository for all `m
 
 1. Add entries to the `repositories` and `require-dev` sections of `composer.json`. See `wporg-news-2021` as an example.
 1. Run `composer update` to install it
-1. Add a constant in `env/0-sandbox.php`:
-	```php
-	define( 'WPORG_GIT_MUPLUGINS_DIR', dirname( ABSPATH ) . '/vendor/wporg/wporg-mu-plugins' );
-	```
 1. `require_once` the files that you want. e.g.,
 	```php
-	require_once WPORG_GIT_MUPLUGINS_DIR . '/mu-plugins/blocks/global-header-footer/blocks.php';
+	require_once WPMU_PLUGIN_DIR . '/wporg-mu-plugins/mu-plugins/blocks/global-header-footer/blocks.php';
 	```
 1. See individual plugin readmes for specific instructions
 
