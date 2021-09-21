@@ -6,6 +6,9 @@ module.exports = {
 		'postcss-nesting': {},
 		'postcss-custom-media': {},
 		'postcss-preset-env': {},
-		'cssnano': {}
+		'cssnano': {},
+
+		// This has to go after any plugins that output messages.
+		'postcss-reporter': {}
 	}
 };
