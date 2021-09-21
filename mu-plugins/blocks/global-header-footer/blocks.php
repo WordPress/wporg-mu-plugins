@@ -15,9 +15,9 @@ add_action( 'init', __NAMESPACE__ . '\register_block_types' );
 function register_block_types() {
 	wp_register_style(
 		'wporg-global-header-footer',
-		plugins_url( '/style.css', __FILE__ ),
+		plugins_url( '/build/style.css', __FILE__ ),
 		array( 'wp-block-library' ), // Load `block-library` styles first, so that our styles override them.
-		filemtime( __DIR__ . '/style.css' )
+		filemtime( __DIR__ . '/build/style.css' )
 	);
 
 	register_block_type(
