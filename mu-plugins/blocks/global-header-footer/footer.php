@@ -31,7 +31,7 @@ defined( 'WPINC' ) || die();
 			<!-- wp:navigation-link {"label":"Plugins","url":"https://wordpress.org/plugins/","kind":"custom","isTopLevelLink":true} /-->
 			<!-- wp:navigation-link {"label":"Themes","url":"https://wordpress.org/themes/","kind":"custom","isTopLevelLink":true} /-->
 			<!-- wp:navigation-link {"label":"Patterns","url":"https://wordpress.org/patterns/","kind":"custom","isTopLevelLink":true} /-->
-			<!-- wp:navigation-link {"label":"OpenVerse","url":"https://wordpress.org/openverse/","kind":"custom","isTopLevelLink":true} /-->
+			<!-- wp:navigation-link {"label":"Openverse","url":"https://wordpress.org/openverse/","kind":"custom","isTopLevelLink":true} /-->
 		<!-- /wp:navigation -->
 
 		<!-- wp:navigation {"orientation":"vertical","className":"site-footer__navigation-community","isResponsive":false} -->
