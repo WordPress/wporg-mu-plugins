@@ -8,7 +8,7 @@ defined( 'WPINC' ) || die();
 
 <!-- wp:group {"tagName":"footer","className":"site-footer"} -->
 <footer class="wp-block-group site-footer">
-	<!-- wp:group {"tagName":"div","className":"site-footer__navigation-container"} -->
+	<!-- wp:group {"className":"site-footer__navigation-container"} -->
 	<div class="wp-block-group site-footer__navigation-container">
 		<!-- wp:navigation {"orientation":"vertical","className":"site-footer__navigation-important","isResponsive":false} -->
 			<!-- wp:navigation-link {"label":"About","url":"https://wordpress.org/about/","kind":"custom","isTopLevelLink":true} /-->
@@ -31,7 +31,7 @@ defined( 'WPINC' ) || die();
 			<!-- wp:navigation-link {"label":"Plugins","url":"https://wordpress.org/plugins/","kind":"custom","isTopLevelLink":true} /-->
 			<!-- wp:navigation-link {"label":"Themes","url":"https://wordpress.org/themes/","kind":"custom","isTopLevelLink":true} /-->
 			<!-- wp:navigation-link {"label":"Patterns","url":"https://wordpress.org/patterns/","kind":"custom","isTopLevelLink":true} /-->
-			<!-- wp:navigation-link {"label":"OpenVerse","url":"https://wordpress.org/openverse/","kind":"custom","isTopLevelLink":true} /-->
+			<!-- wp:navigation-link {"label":"Openverse","url":"https://wordpress.org/openverse/","kind":"custom","isTopLevelLink":true} /-->
 		<!-- /wp:navigation -->
 
 		<!-- wp:navigation {"orientation":"vertical","className":"site-footer__navigation-community","isResponsive":false} -->
@@ -51,6 +51,7 @@ defined( 'WPINC' ) || die();
 
 	<!-- wp:group {"className":"site-footer__logos-container"} -->
 	<div class="wp-block-group site-footer__logos-container">
+		<!-- The design calls for two logos, a small "mark" on mobile/tablet, and the full logo for desktops. -->
 		<!-- wp:image {"width":27,"height":27,"className":"site-footer__wporg-logo-mark"} -->
 		<figure class="wp-block-image is-resized site-footer__wporg-logo-mark">
 			<img src="https://wordpress.org/style/images/w-mark.svg" alt="" width="27" height="27" />
