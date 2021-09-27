@@ -15,6 +15,7 @@ if ( ! $is_fse_theme ) {
 
 <!-- wp:group {"tagName":"header","className":"site-header"} -->
 <header class="wp-block-group site-header">
+	<!-- The design calls for two logos, a small "mark" on mobile/tablet, and the full logo for desktops. -->
 	<!-- wp:image {"width":27,"height":27,"className":"site-header__wporg-logo-mark"} -->
 	<figure class="wp-block-image is-resized site-header__wporg-logo-mark">
 		<a href="https://wordpress.org/">
@@ -31,7 +32,7 @@ if ( ! $is_fse_theme ) {
 	</figure>
 	<!-- /wp:image -->
 
-	<!-- wp:group {"tagName":"div","className":"site-header__search-container"} -->
+	<!-- wp:group {"className":"site-header__search-container"} -->
 	<div class="wp-block-group site-header__search-container">
 		<!-- wp:html -->
 		<a class="site-header__open-search" href="https://wordpress.org/search/">
