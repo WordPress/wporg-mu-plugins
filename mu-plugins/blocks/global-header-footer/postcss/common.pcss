@@ -11,24 +11,29 @@
 /* Breakpoints should be synced with `wporg-parent-2021` (or `wporg-news-2021` until parent exists). */
 @custom-media --tablet (min-width: 890px);
 @custom-media --desktop (min-width: 1152px);
-@custom-media --desktop-wide (min-width: 1320px);
+@custom-media --desktop-wide (min-width: 1400px);
 
 /*
  * Shared styles
  */
-
 .wp-block-group.site-header,
 .wp-block-group.site-footer {
-	--active-menu-item-border-height: 4px;
-
-	background-color: var(--wp--preset--color--dark-grey);
-
 	& .wp-block-image {
 		margin: 0;
 	}
+}
 
-	& .wp-block-navigation-item {
-	    color: var(--wp--preset--color--white);
+.wp-block-group.site-header,
+.wp-block-group.site-footer,
+.wp-block-group.site-header .wp-block-navigation:not(.has-background) .wp-block-navigation__responsive-container,
+.wp-block-navigation:not(.has-background) .wp-block-navigation__submenu-container {
+	--active-menu-item-border-height: 4px;
+
+	background-color: var(--wp--preset--color--dark-grey);
+	color: var(--wp--preset--color--white);
+
+	& .wp-block-image {
+		margin: 0;
 	}
 }
 
