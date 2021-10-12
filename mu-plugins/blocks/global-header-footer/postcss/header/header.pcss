@@ -1,0 +1,39 @@
+.wp-block-group.site-header {
+	display: flex;
+	align-items: center;
+	font-size: 21px;
+
+	@media (--tablet) {
+		font-size: 13px;
+	}
+
+	& > * {
+		flex-shrink: 0;
+		padding-top: 60px;
+		padding-right: var(--wp--style--block-gap);
+		padding-bottom: 17px;
+		padding-left: var(--wp--style--block-gap);
+		margin: 0 auto;
+
+		@media (--tablet) {
+			padding-top: 37px;
+			padding-bottom: 37px;
+		}
+	}
+
+	& button {
+		background-color: transparent;
+		border: none;
+	}
+
+	& .site-header__search-container,
+	& .site-header__menu-container {
+		flex-basis: calc( 25px + ( var(--wp--style--block-gap) * 2 ) );
+		text-align: center;
+	}
+
+	& .site-header__close-search,
+	& .site-header__close-menu {
+		display: none;
+	}
+}

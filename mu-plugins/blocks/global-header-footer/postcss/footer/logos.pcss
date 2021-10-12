@@ -1,0 +1,28 @@
+.wp-block-group.site-footer [class*="wp-container-"].site-footer__logos-container {
+	position: relative;
+	display: flex;
+	flex-wrap: wrap;
+	margin-top: calc(66px - var(--wp--style--block-gap));
+
+	@media (--tablet) {
+		justify-content: space-between;
+		flex-wrap: nowrap;
+	}
+
+	& .site-footer__wporg-logo-mark {
+		flex-basis: 65%;
+
+		@media (--tablet) {
+			display: none;
+		}
+	}
+
+	& .site-footer__wporg-logo-full {
+		display: none;
+
+		@media (--tablet) {
+			display: inline;
+			flex-basis: 33%;
+		}
+	}
+}

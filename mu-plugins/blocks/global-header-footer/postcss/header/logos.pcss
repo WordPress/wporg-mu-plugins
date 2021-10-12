@@ -1,0 +1,35 @@
+.wp-block-group.site-header {
+	& .site-header__wporg-logo-mark,
+	& .site-header__wporg-logo-full {
+		border-right: 1px solid var(--wp--preset--color--darker-grey);
+
+		@media (--tablet) {
+			padding-top: 34px;
+			padding-bottom: 28px;
+		}
+	}
+
+	& .site-header__wporg-logo-full {
+		display: none;
+		padding-right: var(--wp--style--block-gap);
+
+		@media (--desktop-wide) {
+			display: inline;
+		}
+	}
+
+	& .wp-block-image.site-header__wporg-logo-mark {
+		flex-basis: 100%;
+		flex-shrink: 1;
+		text-align: left;
+
+		@media (--tablet) {
+			flex-basis: 73px;
+			flex-shrink: 0;
+		}
+
+		@media (--desktop-wide) {
+			display: none;
+		}
+	}
+}

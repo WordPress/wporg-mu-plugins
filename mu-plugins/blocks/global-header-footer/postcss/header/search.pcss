@@ -1,0 +1,14 @@
+.wp-block-group.site-header .site-header__search-container {
+	border-left: 1px solid var(--wp--preset--color--darker-grey);
+	border-right: 1px solid var(--wp--preset--color--darker-grey);
+
+	@media (--tablet) {
+		order: 3;
+		border-right: none;
+		padding-bottom: 28px;
+	}
+
+	& .site-header__search-form {
+		display: none;
+	}
+}
