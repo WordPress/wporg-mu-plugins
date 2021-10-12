@@ -18,7 +18,6 @@
 	min-width: 100px;
 
 	@media (--tablet) {
-		top: -11px; /* Align with W logo. */
 		justify-content: flex-end;
 		flex-basis: 33%;
 		order: 3;
@@ -27,20 +26,5 @@
 	& .wp-social-link svg {
 		width: 29px;
 		height: 29px;
-	}
-
-	& .wp-block-image.site-footer__code_is_poetry {
-		flex-basis: 100%;
-		margin-top: 9px;
-		margin-bottom: 0;
-
-		@media (--tablet) {
-			position: absolute;
-			top: 0;
-			left: calc(50% - (188px / 2)); /* Must match width of the image. */
-			width: 188px;
-			height: 13px;
-			margin-top: 3px;
-		}
 	}
 }

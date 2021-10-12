@@ -9,6 +9,10 @@
 		flex-wrap: nowrap;
 	}
 
+	& .wp-block-image {
+		text-align: left;
+	}
+
 	& .site-footer__wporg-logo-mark {
 		flex-basis: 65%;
 
@@ -23,6 +27,29 @@
 		@media (--tablet) {
 			display: inline;
 			flex-basis: 33%;
+		}
+	}
+
+	& .wp-block-image.site-footer__code_is_poetry {
+		flex-basis: 100%;
+		margin-top: 9px;
+		margin-bottom: 0;
+
+		@media (--tablet) {
+			& img {
+				position: absolute;
+				width: 188px;
+				height: 13px;
+				left: calc(50% - (188px / 2)); /* Align horizontally. Width must match width of the image. */
+
+				/*
+				 * Align vertically with W logo and social links.
+				 * This is intentionally not the exact center, since that wouldn't appear perfectly aligned to
+				 * the human eye. It needs to be a little off-center to appear centered.
+				 * Must match the height of the image.
+				 */
+				top: calc( 13px / 1.5 );
+			}
 		}
 	}
 }
