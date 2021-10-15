@@ -74,6 +74,12 @@ if ( ! $is_fse_theme ) {
 		<a href="https://wordpress.org/download/" class="site-header__desktop-get-wordpress site-header__get-wordpress">Get WordPress</a>
 	</div> <!-- /wp:group -->
 
+	<!--
+		The "..." menu is used when there isn't enough room to show all the items without wrapping. The items
+		inside it need to be duplicated in the top level menu, and have their values kept in sync. Any submenu
+		items should be moved to the top level (e.g., Five for the Future), to make them easier to see, and to
+		make the CSS simpler.
+	-->
 	<!-- wp:navigation {"orientation":"horizontal","className":"site-header__navigation","isResponsive":true} -->
 		<!-- wp:navigation-link {"label":"Plugins","url":"https://wordpress.org/plugins/","kind":"custom","isTopLevelLink":true} /-->
 		<!-- wp:navigation-link {"label":"Themes","url":"https://wordpress.org/themes/","kind":"custom","isTopLevelLink":true} /-->
@@ -84,8 +90,8 @@ if ( ! $is_fse_theme ) {
 			<!-- wp:navigation-link {"label":"Forums","url":"https://wordpress.org/support/forums/","kind":"custom","isTopLevelLink":true} /-->
 		<!-- /wp:navigation-link -->
 		<!-- wp:navigation-link {"label":"News","url":"https://wordpress.org/news","kind":"custom","isTopLevelLink":true,"className":"current-menu-item"} /-->
-		<!-- wp:navigation-link {"label":"About","url":"https://wordpress.org/about/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"Get Involved","url":"https://make.wordpress.org/","kind":"custom","isTopLevelLink":false} -->
+		<!-- wp:navigation-link {"label":"About","url":"https://wordpress.org/about/","kind":"custom","isTopLevelLink":true,"className":"site-header__overflow-item"} /-->
+		<!-- wp:navigation-link {"label":"Get Involved","url":"https://make.wordpress.org/","kind":"custom","isTopLevelLink":false,"className":"site-header__overflow-item"} -->
 			<!-- wp:navigation-link {"label":"Five for the Future","url":"https://wordpress.org/five-for-the-future/","kind":"custom","isTopLevelLink":true} /-->
 		<!-- /wp:navigation-link -->
 		<!-- wp:navigation-link {"label":"Showcase","url":"https://wordpress.org/showcase/","kind":"custom","isTopLevelLink":true,"className":"site-header__overflow-item"} /-->
@@ -93,6 +99,9 @@ if ( ! $is_fse_theme ) {
 		<!-- wp:navigation-link {"label":"Hosting","url":"https://wordpress.org/hosting/","kind":"custom","isTopLevelLink":true,"className":"site-header__overflow-item"} /-->
 		<!-- wp:navigation-link {"label":"Openverse","url":"https://wordpress.org/openverse/","kind":"custom","isTopLevelLink":true,"className":"site-header__overflow-item"} /-->
 		<!-- wp:navigation-link {"label":"...","url":"#","kind":"custom","isTopLevelLink":false,"className":"site-header__overflow-menu"} -->
+			<!-- wp:navigation-link {"label":"About","url":"https://wordpress.org/about/","kind":"custom","isTopLevelLink":true} /-->
+			<!-- wp:navigation-link {"label":"Get Involved","url":"https://make.wordpress.org/","kind":"custom","isTopLevelLink":true} /-->
+			<!-- wp:navigation-link {"label":"Five for the Future","url":"https://wordpress.org/five-for-the-future/","kind":"custom","isTopLevelLink":true} /-->
 			<!-- wp:navigation-link {"label":"Showcase","url":"https://wordpress.org/showcase/","kind":"custom","isTopLevelLink":true} /-->
 			<!-- wp:navigation-link {"label":"Mobile","url":"https://wordpress.org/mobile/","kind":"custom","isTopLevelLink":true} /-->
 			<!-- wp:navigation-link {"label":"Hosting","url":"https://wordpress.org/hosting/","kind":"custom","isTopLevelLink":true} /-->

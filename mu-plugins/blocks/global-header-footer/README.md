@@ -1,5 +1,8 @@
 # Global Header
 
+⚠️ Changes here must be tested on all sites. See the old `header.php` for more info, until that's ported here.
+
+
 ## Full Site Editing themes
 
 1. See `../../../README.md` for installation prerequisites.
