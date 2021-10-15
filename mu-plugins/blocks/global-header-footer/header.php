@@ -32,40 +32,51 @@ if ( ! $is_fse_theme ) {
 	</figure>
 	<!-- /wp:image -->
 
-	<!-- wp:group {"className":"site-header__search-container"} -->
-	<div class="wp-block-group site-header__search-container">
-		<!-- wp:html -->
-		<button
-			aria-haspopup="true"
-			aria-expanded="false"
-			aria-label="Open search"
-			class="site-header__open-search"
-		>
-			<img
-				src="<?php echo esc_url( plugins_url( '/images/search.svg', __FILE__ ) ); ?>"
-				alt=""
-				width="18"
-				height="17"
-			/>
-		</button>
+	<!--
+		The search block is inside a navigation submenu, because that provides the exact functionality the design
+		calls for. It also provides a consistent experience with the primary navigation menu, with respect to
+		keyboard navigation, ARIA states, etc. It also saves having to write custom code for all the interactions.
+	-->
+	<!-- wp:navigation {"orientation":"vertical","className":"site-header__search","isResponsive":true} -->
+		<!-- wp:navigation-link {"label":"Search","url":"#","kind":"custom","isTopLevelLink":false} -->
+			<!-- wp:html -->
+			<!--
+				This markup is forked from the `wp:search` block. The only reason we're not using that, is because the
+				`action` URL can't be customized.
 
-		<button
-			aria-haspopup="false"
-			aria-expanded="false"
-			aria-label="Open search"
-			class="site-header__close-search"
-		>
-			<img
-				src="<?php echo esc_url( plugins_url( '/images/close.svg', __FILE__ ) ); ?>"
-				alt=""
-				width="21"
-				height="21"
-			/>
-		</button>
-		<!-- /wp:html -->
+				@link https://github.com/WordPress/gutenberg/issues/35572
 
-		<!-- wp:search {"className":"site-header__search-form","label":"Search","placeholder":"Search WordPress.org...","buttonText":"Submit search"} /-->
-	</div> <!-- /wp:group -->
+				The only things that changed were:
+
+				1) The `s` parameter is renamed to `search`, because `do-search.php` requires that.
+				2) The instance ID was changed to `99`, to make it likely to be unique.
+
+				If that issue is ever resolved, we should be able to replace this with the Search block, without having
+				to change any CSS.
+			-->
+			<form
+				role="search"
+				method="get"
+				action="https://wordpress.org/search/do-search.php"
+				class="wp-block-search__button-outside wp-block-search__text-button site-header__search-form wp-block-search"
+			>
+				<label for="wp-block-search__input-99" class="wp-block-search__label">Search</label>
+				<div class="wp-block-search__inside-wrapper">
+					<input
+						type="search"
+						id="wp-block-search__input-99"
+						class="wp-block-search__input"
+						name="search"
+						value=""
+						placeholder="Search WordPress.org..."
+						required=""
+					>
+					<button type="submit" class="wp-block-search__button" aria-label="Submit search"></button>
+				</div>
+			</form>
+			<!-- /wp:html -->
+		<!-- /wp:navigation-link -->
+	<!-- /wp:navigation -->
 
 	<!-- This is the first of two Get WordPress buttons; the other is in the navigation menu.
 		 Two are needed because they have different DOM hierarchies at different breakpoints. -->

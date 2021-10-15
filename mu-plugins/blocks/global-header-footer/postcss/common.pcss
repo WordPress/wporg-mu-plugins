@@ -11,7 +11,7 @@
 /* Breakpoints should be synced with `wporg-parent-2021` (or `wporg-news-2021` until parent exists). */
 @custom-media --tablet (min-width: 890px);
 @custom-media --desktop (min-width: 1152px);
-@custom-media --desktop-wide (min-width: 1430px);
+@custom-media --desktop-wide (min-width: 1440px);
 
 /*
  * Shared styles
@@ -28,6 +28,12 @@
 	}
 }
 
+.wp-block-group.site-header {
+	& .wp-block-navigation__responsive-container-open[aria-expanded=true] {
+		visibility: hidden; /* Not needed when expanded, and behaves unintuitively. */
+	}
+}
+
 .wp-block-group.site-header,
 .wp-block-group.site-footer,
 .wp-block-group.site-header .wp-block-navigation:not(.has-background) .wp-block-navigation__responsive-container,
@@ -39,6 +45,25 @@
 
 	& .wp-block-image {
 		margin: 0;
+	}
+}
+
+.wp-block-group.site-header .site-header__navigation,
+.wp-block-group.site-header .site-header__search {
+	& .wp-block-navigation__responsive-container:not(.is-menu-open) {
+		display: none; /* Gutenberg has the menu hardcoded to open at 600px, but we need it to wait until `--tablet`. */
+
+		@media (--tablet) {
+			display: flex;
+		}
+	}
+
+	& .wp-block-navigation__responsive-container-open {
+		display: flex; /* Gutenberg has the button hardcoded to hide at 600px, but we need it to wait until `--tablet`. */
+
+		@media (--tablet) {
+			display: none;
+		}
 	}
 }
 
