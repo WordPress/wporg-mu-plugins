@@ -6,8 +6,8 @@ defined( 'WPINC' ) || die();
 
 ?>
 
-<!-- wp:group {"tagName":"footer","className":"site-footer"} -->
-<footer class="wp-block-group site-footer">
+<!-- wp:group {"tagName":"footer","align":"full","className":"site-footer"} -->
+<footer class="wp-block-group site-footer alignfull">
 	<!-- wp:group {"className":"site-footer__navigation-container"} -->
 	<div class="wp-block-group site-footer__navigation-container">
 		<!-- wp:navigation {"orientation":"vertical","className":"site-footer__navigation-important","isResponsive":false} -->
