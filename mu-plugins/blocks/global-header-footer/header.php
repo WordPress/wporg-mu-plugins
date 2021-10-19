@@ -13,8 +13,8 @@ if ( ! $is_fse_theme ) {
 
 ?>
 
-<!-- wp:group {"tagName":"header","className":"site-header"} -->
-<header class="wp-block-group site-header">
+<!-- wp:group {"tagName":"header","align":"full","className":"site-header"} -->
+<header class="wp-block-group site-header alignfull">
 	<!-- The design calls for two logos, a small "mark" on mobile/tablet, and the full logo for desktops. -->
 	<!-- wp:image {"width":27,"height":27,"className":"site-header__wporg-logo-mark"} -->
 	<figure class="wp-block-image is-resized site-header__wporg-logo-mark">
