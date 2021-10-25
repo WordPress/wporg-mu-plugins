@@ -2,8 +2,8 @@
  * There are separate buttons for mobile and desktop; see `header.php` for more info.
  */
 
-.wp-block-group.site-header {
-	& .site-header__get-wordpress {
+.wp-block-group.global-header {
+	& .global-header__get-wordpress {
 		background-color: var(--wp--preset--color--blue-1) !important; /* Override Gutenberg's !important */
 		color: var(--wp--preset--color--white);
 		padding: 10px 19px;
@@ -13,7 +13,7 @@
 		}
 	}
 
-	& .site-header__desktop-get-wordpress-container {
+	& .global-header__desktop-get-wordpress-container {
 		display: none;
 		order: 4;
 		border-left: 1px solid var(--wp--preset--color--darker-grey);
@@ -24,7 +24,7 @@
 		}
 	}
 
-	& .wp-block-navigation__container .wp-block-navigation-item.site-header__mobile-get-wordpress {
+	& .wp-block-navigation__container .wp-block-navigation-item.global-header__mobile-get-wordpress {
 		padding: var(--wp--style--block-gap) 65px;
 		margin: 57px var(--wp--style--block-gap) 0 var(--wp--style--block-gap);
 		width: calc( 100% - var(--wp--style--block-gap) );
