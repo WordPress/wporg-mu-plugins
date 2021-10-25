@@ -73,3 +73,9 @@
 .global-footer [class*="wp-container-"] > * + * {
 	margin-top: initial;
 }
+
+/* The scrollbar covers up part of the edge padding, so this offsets that. */
+.wp-block-group.global-header,
+.wp-block-group.global-footer > * {
+	padding-right: var(--wp--custom--alignment--scroll-bar-width);
+}
