@@ -46,7 +46,9 @@ function register_block_types() {
  */
 function render_global_header() {
 	ob_start();
-	require_once __DIR__ . '/header.php';
+
+	// Allow multiple includes for the `site-header-offset` workaround.
+	require __DIR__ . '/header.php';
 	return do_blocks( ob_get_clean() );
 }
 
