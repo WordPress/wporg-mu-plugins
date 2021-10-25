@@ -16,8 +16,8 @@
 /*
  * Shared styles
  */
-.wp-block-group.site-header,
-.wp-block-group.site-footer {
+.wp-block-group.global-header,
+.wp-block-group.global-footer {
 	& .wp-block-image {
 		margin: 0;
 	}
@@ -28,15 +28,15 @@
 	}
 }
 
-.wp-block-group.site-header {
+.wp-block-group.global-header {
 	& .wp-block-navigation__responsive-container-open[aria-expanded=true] {
 		visibility: hidden; /* Not needed when expanded, and behaves unintuitively. */
 	}
 }
 
-.wp-block-group.site-header,
-.wp-block-group.site-footer,
-.wp-block-group.site-header .wp-block-navigation:not(.has-background) .wp-block-navigation__responsive-container,
+.wp-block-group.global-header,
+.wp-block-group.global-footer,
+.wp-block-group.global-header .wp-block-navigation:not(.has-background) .wp-block-navigation__responsive-container,
 .wp-block-navigation:not(.has-background) .wp-block-navigation__submenu-container {
 	--active-menu-item-border-height: 4px;
 
@@ -48,8 +48,8 @@
 	}
 }
 
-.wp-block-group.site-header .site-header__navigation,
-.wp-block-group.site-header .site-header__search {
+.wp-block-group.global-header .global-header__navigation,
+.wp-block-group.global-header .global-header__search {
 	& .wp-block-navigation__responsive-container:not(.is-menu-open) {
 		display: none; /* Gutenberg has the menu hardcoded to open at 600px, but we need it to wait until `--tablet`. */
 
@@ -73,11 +73,11 @@
  * @link https://github.com/WordPress/gutenberg/issues/34716
  * @link https://github.com/WordPress/wporg-news-2021/pull/30
  */
-[class*="wp-container-"].site-header,
-[class*="wp-container-"].site-footer,
-[class*="wp-container-"].site-header > * + *,
-[class*="wp-container-"].site-footer > * + *,
-.site-header [class*="wp-container-"] > * + *,
-.site-footer [class*="wp-container-"] > * + * {
+[class*="wp-container-"].global-header,
+[class*="wp-container-"].global-footer,
+[class*="wp-container-"].global-header > * + *,
+[class*="wp-container-"].global-footer > * + *,
+.global-header [class*="wp-container-"] > * + *,
+.global-footer [class*="wp-container-"] > * + * {
 	margin-top: initial;
 }
