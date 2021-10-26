@@ -37,7 +37,7 @@ if ( ! $is_fse_theme ) {
 		calls for. It also provides a consistent experience with the primary navigation menu, with respect to
 		keyboard navigation, ARIA states, etc. It also saves having to write custom code for all the interactions.
 	-->
-	<!-- wp:navigation {"orientation":"vertical","className":"global-header__search","isResponsive":true} -->
+	<!-- wp:navigation {"orientation":"vertical","className":"global-header__search","overlayMenu":"mobile"} -->
 		<!-- wp:navigation-link {"label":"Search","url":"#","kind":"custom","isTopLevelLink":false} -->
 			<!-- wp:html -->
 			<!--
@@ -91,7 +91,7 @@ if ( ! $is_fse_theme ) {
 		items should be moved to the top level (e.g., Five for the Future), to make them easier to see, and to
 		make the CSS simpler.
 	-->
-	<!-- wp:navigation {"orientation":"horizontal","className":"global-header__navigation","isResponsive":true} -->
+	<!-- wp:navigation {"orientation":"horizontal","className":"global-header__navigation","overlayMenu":"mobile"} -->
 		<!-- wp:navigation-link {"label":"Plugins","url":"https://wordpress.org/plugins/","kind":"custom","isTopLevelLink":true} /-->
 		<!-- wp:navigation-link {"label":"Themes","url":"https://wordpress.org/themes/","kind":"custom","isTopLevelLink":true} /-->
 		<!-- wp:navigation-link {"label":"Patterns","url":"https://wordpress.org/patterns/","kind":"custom","isTopLevelLink":true} /-->

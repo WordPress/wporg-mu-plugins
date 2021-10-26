@@ -9,9 +9,14 @@
 	& > .global-footer__navigation-container {
 		max-width: 100%;
 		display: grid;
-		grid-gap: 20px;
+		column-gap: 20px;
+		row-gap: 35px;
 
 		/* Create columns automatically, make them equal widths, wrap when needed. */
 		grid-template-columns: repeat( auto-fit, minmax(150px, 1fr) );
+	}
+
+	& .wp-block-navigation__container {
+		gap: 5px;
 	}
 }
