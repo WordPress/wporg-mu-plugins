@@ -137,3 +137,10 @@ body.admin-bar .global-header {
 		top: calc( 110px + var(--wp-admin--admin-bar--height) );
 	}
 }
+
+//this aligns the close button with the position of the burger menu icon
+.wp-block-navigation__responsive-container-close {
+	position: fixed;
+	right: calc( var(--wp--style--block-gap) + var(--wp--custom--alignment--scroll-bar-width));
+	top: 65px;
+}
