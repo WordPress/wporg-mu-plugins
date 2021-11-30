@@ -55,13 +55,16 @@
 
 			&.current-menu-item {
 				border-left: var(--active-menu-item-border-height) solid #7B90FF;
-				color: #7B90FF;
 				font-weight: bold;
 
 				@media (--tablet) {
 					padding-bottom: calc(37px - var(--active-menu-item-border-height));
 					border-bottom: var(--active-menu-item-border-height) solid #7B90FF;
 					border-left: none;
+				}
+
+				& a {
+					color: #7B90FF;
 				}
 			}
 		}
@@ -72,6 +75,16 @@
 	}
 
 	& .wp-block-navigation__container .wp-block-navigation__submenu-container {
+		font-size: 0.7em;
+		gap: 0.5em;
+		padding-bottom: calc(var(--wp--style--block-gap) / 2);
+
+		@media (--tablet) {
+			font-size: inherit;
+			gap: inherit;
+			padding-bottom: 0;
+		}
+
 		& .wp-block-navigation-item {
 			padding: 0;
 
