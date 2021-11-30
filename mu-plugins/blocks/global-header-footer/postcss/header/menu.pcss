@@ -129,6 +129,9 @@
 body:not(.admin-bar) .global-header {
 	& .wp-block-navigation__responsive-container.is-menu-open {
 		top: 110px;
+		&:not(.has-background) {
+			background: #1C2024;
+		}
 	}
 }
 
@@ -138,8 +141,13 @@ body.admin-bar .global-header {
 	}
 }
 
-.wp-block-navigation__responsive-container-close {
+.wp-block-group.global-header .wp-block-navigation__responsive-container-close {
 	position: fixed;
-	right: calc( var(--wp--style--block-gap) + var(--wp--custom--alignment--scroll-bar-width));
-	top: 65px;
+	right: 0; 
+	top: 0;
+	padding-bottom: 24px;
+	padding-left: var(--wp--style--block-gap);
+	padding-right:calc( var(--wp--style--block-gap) + var(--wp--custom--alignment--scroll-bar-width) );
+	padding-top: 63px;
+	background-color: #1C2024;
 }
