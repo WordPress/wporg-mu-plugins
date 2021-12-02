@@ -27,10 +27,17 @@
 			for (const el of this.listItems) {
 				el.classList.remove('global-header__overflow-item');
 			}
-			if(document.querySelector('global-header__overflow-menu')){
-				document.querySelector('global-header__overflow-menu').remove();
-			}
+			this.removeSubMenu();
 			this.hasHiddenItems = false;
+		}
+
+		/**
+		 * Removes the ... submenu
+		 */
+		this.removeSubMenu = function() {
+			if(this.wrapper.querySelector('.global-header__overflow-menu')){
+				this.wrapper.querySelector('.global-header__overflow-menu').remove();
+			}
 		}
 
 		/**
@@ -69,13 +76,33 @@
 		this.populateExtendedSubmenu = function() {
 			if( this.hasHiddenItems ) {
 
-				//create the ... menu item
+				this.removeSubMenu();
+
 				let itemsContainer = this.wrapper.querySelector(".wp-block-navigation__container");
+
+				//create the ... menu list item
 				let newItem = document.createElement('li');
-				newItem.classList.add("wp-block-navigation-item", "wp-block-navigation-link", "global-header__overflow-menu");
-				newItem.appendChild(document.createTextNode('...'));
+				newItem.classList.add("wp-block-navigation-item", "wp-block-navigation-link", "has-child", "global-header__overflow-menu");
+
+				let newLink = document.createElement('a');
+				newLink.classList.add("wp-block-navigation-item__content");
+				newLink.appendChild(document.createTextNode('...'));
+				newItem.appendChild(newLink);
+
+				//create the submenu where the hidden links will live
+				let newSubMenu = document.createElement('ul'); 
+				newSubMenu.classList.add("wp-block-navigation__submenu-container");
+				newItem.appendChild(newSubMenu);
+
+				//populate submenu with clones of the hidden menu items
+				for (const el of this.listItems) {
+					if( el.classList.contains("global-header__overflow-item") ){
+						let clone = el.cloneNode(true);
+						newSubMenu.appendChild(clone); 
+					}
+				}
+
 				itemsContainer.appendChild(newItem);
-				console.log(this.listItems);
 
 			}
 		}
@@ -84,20 +111,20 @@
 		this.hideExtraItems();
 		this.populateExtendedSubmenu();
 
-	};
+		window.addEventListener( 'resize', function () {
+			//TODO:
+			//if the menu is responsive, reset everything and leave the menu as it was
+			//else check if all the elements have enough space inside the wrapper
+			console.log(this);
+			this.resetMenu();
+			this.hideExtraItems();
+			this.populateExtendedSubmenu();
+		}.bind(this) );
 
+	};
 
 	window.addEventListener( 'load', function () {
 		new navMenu('.global-header .global-header__navigation');
-	} );
-
-	/**
-	 * Check visible menu items on window resize
-	 */
-	window.addEventListener( 'resize', function () {
-		new navMenu('.global-header .global-header__navigation');
-		//if the menu is responsive, reset everything and leave the menu as it was
-		//else check if all the elements have enough space inside the wrapper
 	} );
 
 } )();
