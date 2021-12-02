@@ -80,30 +80,14 @@
 	}
 
 	& .wp-block-navigation__container .wp-block-navigation-item.global-header__overflow-menu {
-		display: none;
-
-		& .wp-block-navigation__submenu-icon {
-			display: none;
-		}
 
 		@media (--tablet) {
-			display: inherit;
 			padding-right: 60px; /* Give the user more space to keep the menu hovered/open while they move their mouse to the submenu. */
-		}
-
-		@media (--desktop-wide) {
-			display: none;
 		}
 	}
 
 	& .global-header__overflow-item {
-		@media (--tablet) {
-			display: none;
-		}
-
-		@media (--desktop-wide) {
-			display: inherit;
-		}
+		display: none;
 	}
 
 	& .wp-block-navigation-item {

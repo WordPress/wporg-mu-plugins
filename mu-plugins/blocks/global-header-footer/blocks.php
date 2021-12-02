@@ -20,6 +20,14 @@ function register_block_types() {
 		filemtime( __DIR__ . '/build/style.css' )
 	);
 
+	wp_enqueue_script(
+		'wporg-global-header-script',
+		plugins_url( '/js/wporg-global-header-script.js', __FILE__ ), 
+		array(), 
+		wp_get_theme()->get( 'Version' ), 
+		true
+	);
+
 	register_block_type(
 		'wporg/global-header',
 		array(
