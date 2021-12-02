@@ -5,8 +5,7 @@
  * https://css-tricks.com/the-priority-navigation-pattern/
  * 
  */
-//TODO: consider the ... menu item in the widths calculations
-( function () {
+ ( function () {
 
 	/**
 	 * Menu Responsive navigation
@@ -56,6 +55,9 @@
 		this.hideExtraItems = function() {
 
 			let totalWidth = 0;
+			//not pretty! but it's not likely to change
+			const dotMenuWidth = 83;
+			totalWidth += dotMenuWidth;
 			this.resetMenu();
 
 			for (var i = 0, len = this.itemsWidths.length; i < len; i++ ) {
@@ -115,7 +117,6 @@
 			//TODO:
 			//if the menu is responsive, reset everything and leave the menu as it was
 			//else check if all the elements have enough space inside the wrapper
-			console.log(this);
 			this.resetMenu();
 			this.hideExtraItems();
 			this.populateExtendedSubmenu();
