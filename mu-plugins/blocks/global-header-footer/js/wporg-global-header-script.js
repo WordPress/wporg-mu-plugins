@@ -127,9 +127,6 @@
 		}
 
 		window.addEventListener( 'resize', function () {
-			//TODO:
-			//if the menu is responsive, reset everything and leave the menu as it was
-			//else check if all the elements have enough space inside the wrapper
 			this.resetMenu();
 			if( !this.isResponsive() ) {
 				this.hideExtraItems();
