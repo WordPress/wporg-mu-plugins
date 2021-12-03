@@ -109,17 +109,32 @@
 			}
 		}
 
-		this.getItemWidths();
-		this.hideExtraItems();
-		this.populateExtendedSubmenu();
+		/**
+		 * Checks if the responsive menu is visible
+		 */
+		this.isResponsive = function() {
+			let burgerButton = this.wrapper.querySelector('.wp-block-navigation__responsive-container-open');
+			if( burgerButton.offsetWidth > 0 ){
+				return true;
+			}
+			return false;
+		}
+
+		if( !this.isResponsive() ) {
+			this.getItemWidths();
+			this.hideExtraItems();
+			this.populateExtendedSubmenu();
+		}
 
 		window.addEventListener( 'resize', function () {
 			//TODO:
 			//if the menu is responsive, reset everything and leave the menu as it was
 			//else check if all the elements have enough space inside the wrapper
 			this.resetMenu();
-			this.hideExtraItems();
-			this.populateExtendedSubmenu();
+			if( !this.isResponsive() ) {
+				this.hideExtraItems();
+				this.populateExtendedSubmenu();
+			}
 		}.bind(this) );
 
 	};
