@@ -15,6 +15,11 @@
 	const navMenu = function ( selector ) {
 
 		this.wrapper = document.querySelector(selector);
+
+		if ( ! this.wrapper ) {
+			return;
+		}
+
 		this.listItems = this.wrapper.getElementsByTagName("li");
 		this.itemsWidths = [];
 		this.hasHiddenItems = false;
