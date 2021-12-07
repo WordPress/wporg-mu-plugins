@@ -70,6 +70,10 @@
 		}
 
 		& .wp-block-search__input {
+			@media (--tablet) {
+				width: calc(100% - 40px);
+			}
+
 			padding-right: 35px; /* Prevent user input from running into icon. */
 			border: none;
 			background-color: var(--wp--preset--color--white);
