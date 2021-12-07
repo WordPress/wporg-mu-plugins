@@ -93,6 +93,7 @@
 
 				let newLink = document.createElement('a');
 				newLink.classList.add("wp-block-navigation-item__content");
+				newLink.setAttribute("href","#");
 				newLink.appendChild(document.createTextNode('...'));
 				newItem.appendChild(newLink);
 
