@@ -36,4 +36,15 @@
 	& .global-header__close-menu {
 		display: none;
 	}
+
+	& .wp-block-navigation__responsive-container-close {
+		position: fixed;
+		right: 0;
+		top: var(--wp-admin--admin-bar--height, 0);
+		padding-bottom: 24px;
+		padding-left: var(--wp--style--block-gap);
+		padding-right: calc(var(--wp--style--block-gap) + var(--wp--custom--alignment--scroll-bar-width));
+		padding-top: 63px;
+		background-color: #1c2024;
+	}
 }
