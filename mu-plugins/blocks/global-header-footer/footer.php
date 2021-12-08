@@ -51,13 +51,13 @@ defined( 'WPINC' ) || die();
 		<!-- The design calls for two logos, a small "mark" on mobile/tablet, and the full logo for desktops. -->
 		<!-- wp:image {"width":27,"height":27,"className":"global-footer__wporg-logo-mark"} -->
 		<figure class="wp-block-image is-resized global-footer__wporg-logo-mark">
-			<img src="https://wordpress.org/style/images/w-mark.svg" alt="" width="27" height="27" />
+			<img src="https://wordpress.org/style/images/w-mark.svg" alt="WordPress.org" width="27" height="27" />
 		</figure>
 		<!-- /wp:image -->
 
 		<!-- wp:image {"width":160,"height":24,"className":"global-footer__wporg-logo-full"} -->
 		<figure class="wp-block-image is-resized global-footer__wporg-logo-full">
-			<img src="<?php echo plugin_dir_url( __FILE__ ) . 'images/wporg-logo.svg'; ?>" alt="" width="160" height="24" />
+			<img src="<?php echo plugin_dir_url( __FILE__ ) . 'images/wporg-logo.svg'; ?>" alt="WordPress.org" width="160" height="24" />
 		</figure>
 		<!-- /wp:image -->
 
@@ -71,7 +71,7 @@ defined( 'WPINC' ) || die();
 		<figure class="wp-block-image is-resized global-footer__code_is_poetry">
 			<img
 				src="https://s.w.org/style/images/code-is-poetry-for-dark-bg.svg"
-				alt=""
+				alt="Code is Poetry"
 				width="188"
 				height="13"
 			/>

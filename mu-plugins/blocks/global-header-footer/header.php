@@ -19,7 +19,7 @@ if ( ! $is_fse_theme ) {
 	<!-- wp:image {"width":27,"height":27,"className":"global-header__wporg-logo-mark"} -->
 	<figure class="wp-block-image is-resized global-header__wporg-logo-mark">
 		<a href="https://wordpress.org/">
-			<img src="https://wordpress.org/style/images/w-mark.svg" alt="" width="27" height="27" />
+			<img src="https://wordpress.org/style/images/w-mark.svg" alt="WordPress.org" width="27" height="27" />
 		</a>
 	</figure>
 	<!-- /wp:image -->
@@ -27,7 +27,7 @@ if ( ! $is_fse_theme ) {
 	<!-- wp:image {"width":160,"height":24,"className":"global-header__wporg-logo-full"} -->
 	<figure class="wp-block-image is-resized global-header__wporg-logo-full">
 		<a href="https://wordpress.org/">
-			<img src="<?php echo plugin_dir_url( __FILE__ ) . 'images/wporg-logo.svg'; ?>" alt="" width="160" height="24" />
+			<img src="<?php echo plugin_dir_url( __FILE__ ) . 'images/wporg-logo.svg'; ?>" alt="WordPress.org" width="160" height="24" />
 		</a>
 	</figure>
 	<!-- /wp:image -->
