@@ -15,8 +15,6 @@ defined( 'WPINC' ) || die();
 			<!-- wp:navigation-link {"label":"Blog","url":"https://wordpress.org/news","kind":"custom","isTopLevelLink":true} /-->
 			<!-- wp:navigation-link {"label":"Hosting","url":"https://wordpress.org/hosting/","kind":"custom","isTopLevelLink":true} /-->
 			<!-- wp:navigation-link {"label":"Donate","url":"https://wordpressfoundation.org/donate/","kind":"custom","isTopLevelLink":true} /-->
-			<!-- wp:navigation-link {"label":"Get WordPress","url":"https://wordpress.org/download/","kind":"custom","isTopLevelLink":true} /-->
-			<!-- wp:navigation-link {"label":"Mobile","url":"https://wordpress.org/mobile/","kind":"custom","isTopLevelLink":true} /-->
 		<!-- /wp:navigation -->
 
 		<!-- wp:navigation {"orientation":"vertical","className":"global-footer__navigation-information","overlayMenu":"never"} -->
@@ -31,7 +29,6 @@ defined( 'WPINC' ) || die();
 			<!-- wp:navigation-link {"label":"Plugins","url":"https://wordpress.org/plugins/","kind":"custom","isTopLevelLink":true} /-->
 			<!-- wp:navigation-link {"label":"Themes","url":"https://wordpress.org/themes/","kind":"custom","isTopLevelLink":true} /-->
 			<!-- wp:navigation-link {"label":"Patterns","url":"https://wordpress.org/patterns/","kind":"custom","isTopLevelLink":true} /-->
-			<!-- wp:navigation-link {"label":"Openverse","url":"https://wordpress.org/openverse/","kind":"custom","isTopLevelLink":true} /-->
 		<!-- /wp:navigation -->
 
 		<!-- wp:navigation {"orientation":"vertical","className":"global-footer__navigation-community","overlayMenu":"never"} -->
