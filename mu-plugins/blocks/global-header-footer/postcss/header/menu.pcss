@@ -7,11 +7,14 @@
 		text-align: left;
 	}
 
-	& .wp-block-navigation:not(.has-background) .wp-block-navigation__responsive-container {
+	&:not(.has-background) .wp-block-navigation__responsive-container {
 		background-color: var(--wp--preset--color--darker-grey);
+		color: var(--wp--preset--color--white);
+		font-size: var(--wp--preset--font-size--large);
 
 		@media (--tablet) {
 			background-color: var(--wp--preset--color--dark-grey);
+			font-size: var(--wp--preset--font-size--small);
 		}
 	}
 
@@ -76,7 +79,7 @@
 	}
 
 	& .wp-block-navigation__container .wp-block-navigation__submenu-container {
-		font-size: 15px;
+		font-size: inherit;
 		gap: 0.5em;
 		padding-bottom: calc(var(--wp--style--block-gap) / 2);
 		padding-left: calc(var(--wp--style--block-gap) / 2);
@@ -129,17 +132,17 @@
 	}
 }
 
-body:not(.admin-bar) .global-header {
+.global-header {
 	& .wp-block-navigation__responsive-container.is-menu-open {
-		top: 110px;
-		&:not(.has-background) {
-			background: #1C2024;
-		}
-	}
-}
 
-body.admin-bar .global-header {
-	& .wp-block-navigation__responsive-container.is-menu-open {
-		top: calc( 110px + var(--wp-admin--admin-bar--height) );
+		/*
+		 * 117px = height of .global-header
+		 * var() fallback must be `0px` with unit for calc addition to work.
+		 */
+		top: calc(117px + var(--wp-admin--admin-bar--height, 0px));
+
+		&:not(.has-background) {
+			background: var(--wp--preset--color--darker-grey);
+		}
 	}
 }
