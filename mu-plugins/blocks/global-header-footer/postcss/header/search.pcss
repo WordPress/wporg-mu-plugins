@@ -52,6 +52,12 @@
 		}
 	}
 
+	& .has-child:hover .wp-block-navigation-item__content,
+	& .has-child:focus-within .wp-block-navigation-item__content,
+	&:not(.has-background) .wp-block-navigation__submenu-container {
+		background-color: var(--wp--preset--color--darker-grey);
+	}
+
 	& .wp-block-navigation__responsive-container-content .wp-block-navigation__submenu-container {
 		padding: 0;
 
