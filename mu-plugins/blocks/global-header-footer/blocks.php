@@ -5,6 +5,7 @@ namespace WordPressdotorg\MU_Plugins\Global_Header_Footer;
 defined( 'WPINC' ) || die();
 
 add_action( 'init', __NAMESPACE__ . '\register_block_types' );
+add_action( 'enqueue_block_assets', __NAMESPACE__ . '\register_block_types_js' );
 
 /**
  * Register block types
@@ -22,15 +23,16 @@ function register_block_types() {
 
 	wp_enqueue_script(
 		'wporg-global-header-script',
-		plugins_url( '/js/wporg-global-header-script.js', __FILE__ ), 
-		array(), 
-		wp_get_theme()->get( 'Version' ), 
+		plugins_url( '/js/wporg-global-header-script.js', __FILE__ ),
+		array(),
+		wp_get_theme()->get( 'Version' ),
 		true
 	);
 
 	register_block_type(
 		'wporg/global-header',
 		array(
+			'title'           => 'Global Header',
 			'render_callback' => __NAMESPACE__ . '\render_global_header',
 			'style'           => 'wporg-global-header-footer',
 			'editor_style'    => 'wporg-global-header-footer',
@@ -40,11 +42,52 @@ function register_block_types() {
 	register_block_type(
 		'wporg/global-footer',
 		array(
+			'title'           => 'Global Footer',
 			'render_callback' => __NAMESPACE__ . '\render_global_footer',
 			'style'           => 'wporg-global-header-footer',
 			'editor_style'    => 'wporg-global-header-footer',
 		)
 	);
+}
+
+/**
+ * Register block types in JS, for the editor.
+ *
+ * Blocks need to be registered in JS to show up in the editor. We can dynamically register the blocks using
+ * ServerSideRender, which will render the PHP callback. This runs through the existing blocks to find any
+ * matching `wporg/global-*` blocks, so it will match the header & footer, and any other pattern-blocks we
+ * might add in the future.
+ *
+ * Watch https://github.com/WordPress/gutenberg/issues/28734 for a possible core solution.
+ */
+function register_block_types_js() {
+	$blocks = \WP_Block_Type_Registry::get_instance()->get_all_registered();
+	$wporg_global_blocks = array_filter(
+		$blocks,
+		function ( $block ) {
+			return 'wporg/global-' === substr( $block->name, 0, 13 );
+		}
+	);
+	ob_start();
+	?>
+	( function( wp ) {
+		<?php foreach ( $wporg_global_blocks as $block ) : ?>
+		wp.blocks.registerBlockType(
+			'<?php echo esc_html( $block->name ); ?>',
+			{
+				title: '<?php echo esc_html( $block->title ); ?>',
+				edit: function( props ) {
+					return wp.element.createElement( wp.serverSideRender, {
+						block: '<?php echo esc_html( $block->name ); ?>',
+						attributes: props.attributes
+					} );
+				},
+			}
+		);
+		<?php endforeach; ?>
+	}( window.wp ));
+	<?php
+	wp_add_inline_script( 'wp-editor', ob_get_clean(), 'after' );
 }
 
 /**
