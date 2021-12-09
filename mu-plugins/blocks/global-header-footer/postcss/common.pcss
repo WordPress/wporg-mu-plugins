@@ -31,8 +31,7 @@
 }
 
 .wp-block-group.global-header,
-.wp-block-group.global-footer,
-.wp-block-navigation:not(.has-background) .wp-block-navigation__submenu-container {
+.wp-block-group.global-footer {
 	--active-menu-item-border-height: 4px;
 
 	background-color: var(--wp--preset--color--dark-grey);
@@ -41,6 +40,18 @@
 
 .wp-block-group.global-header .global-header__navigation,
 .wp-block-group.global-header .global-header__search {
+	&:not(.has-background) .wp-block-navigation__responsive-container,
+	&:not(.has-background) .wp-block-navigation__submenu-container {
+		background-color: var(--wp--preset--color--darker-grey);
+		color: var(--wp--preset--color--white);
+		font-size: var(--wp--preset--font-size--large);
+
+		@media (--tablet) {
+			background-color: var(--wp--preset--color--dark-grey);
+			font-size: var(--wp--preset--font-size--small);
+		}
+	}
+
 	& .wp-block-navigation__responsive-container:not(.is-menu-open) {
 		display: none; /* Gutenberg has the menu hardcoded to open at 600px, but we need it to wait until `--tablet`. */
 
