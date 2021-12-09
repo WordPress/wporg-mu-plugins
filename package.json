@@ -28,7 +28,20 @@
 	],
 	"scripts": {
 		"start": "npm run build -- --watch",
+		"lint:css": "wp-scripts lint-style mu-plugins/blocks/global-header-footer/postcss/**/*.pcss",
 		"pre-build": "mkdir -p mu-plugins/blocks/global-header-footer/build",
 		"build": "npm run pre-build && postcss mu-plugins/blocks/global-header-footer/postcss/style.pcss --output mu-plugins/blocks/global-header-footer/build/style.css"
+	},
+	"stylelint": {
+		"extends": "@wordpress/stylelint-config",
+		"rules": {
+			"max-line-length": null,
+			"no-duplicate-selectors": null,
+			"no-descending-specificity": null,
+			"rule-empty-line-before" : [ "always-multi-line", {
+				"except" : [ "first-nested", "after-single-line-comment" ]
+			} ],
+			"selector-class-pattern": null
+		}
 	}
 }
