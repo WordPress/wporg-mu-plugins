@@ -31,10 +31,12 @@
 		};
 
 		/**
-		 * Get the visible list items (filtering on display hides the extra "Get WordPress" link).
+		 * Get the top-level list items.
 		 */
 		this.getListItems = function () {
-			return this.wrapper.querySelectorAll( 'li:not(.global-header__mobile-get-wordpress)' );
+			return this.wrapper.querySelectorAll(
+				'.wp-block-navigation__container > li:not(.global-header__mobile-get-wordpress)'
+			);
 		};
 
 		/**
@@ -61,10 +63,9 @@
 		 * Hide menu items that exceed the container's width
 		 */
 		this.hideExtraItems = function () {
-			let totalWidth = 0;
 			//not pretty! but it's not likely to change
 			const dotMenuWidth = 83;
-			totalWidth += dotMenuWidth;
+			let totalWidth = dotMenuWidth;
 			this.resetMenu();
 
 			for ( let i = 0, len = this.itemsWidths.length; i < len; i++ ) {
