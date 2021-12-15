@@ -25,7 +25,7 @@ function register_block_types() {
 		'wporg-global-header-script',
 		plugins_url( '/js/wporg-global-header-script.js', __FILE__ ),
 		array(),
-		wp_get_theme()->get( 'Version' ),
+		filemtime( __DIR__ . '/js/wporg-global-header-script.js' ),
 		true
 	);
 
