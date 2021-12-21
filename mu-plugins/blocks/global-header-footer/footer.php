@@ -78,12 +78,3 @@ defined( 'WPINC' ) || die();
 		</figure> <!-- /wp:image -->
 	</div> <!-- /wp:group -->
 </footer> <!-- /wp:group -->
-
-<?php
-
-// Required for Classic themes, see `header.php`.
-if ( ! wp_is_block_theme() ) {
-	wp_footer();
-
-	echo '</body> </html>';
-}

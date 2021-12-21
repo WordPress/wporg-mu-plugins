@@ -130,12 +130,22 @@ function restore_inner_group_container() {
 function render_global_header() {
 	remove_inner_group_container();
 
+	/*
+	 * Render the block mockup first, in case anything in that process adds hooks to `wp_head`.
+	 * Allow multiple includes to allow for the double `site-header-offset` workaround.
+	 */
 	ob_start();
-	// Allow multiple includes for the `site-header-offset` workaround.
 	require __DIR__ . '/header.php';
 	$markup = do_blocks( ob_get_clean() );
 
 	restore_inner_group_container();
+
+	// Render the classic markup second, so the `wp_head()` call will execute callbacks that blocks added.
+	if ( ! wp_is_block_theme() ) {
+		ob_start();
+		require __DIR__ . '/classic-header.php';
+		$markup = ob_get_clean() . $markup;
+	}
 
 	return $markup;
 }
@@ -148,11 +158,19 @@ function render_global_header() {
 function render_global_footer() {
 	remove_inner_group_container();
 
+	// Render the block mockup first, because `wp_render_layout_support_flag()` adds callbacks to `wp_footer`.
 	ob_start();
 	require_once __DIR__ . '/footer.php';
 	$markup = do_blocks( ob_get_clean() );
 
 	restore_inner_group_container();
+
+	// Render the classic markup second, so the `wp_footer()` call will execute callbacks that blocks added.
+	if ( ! wp_is_block_theme() ) {
+		ob_start();
+		require_once __DIR__ . '/classic-footer.php';
+		$markup .= ob_get_clean();
+	}
 
 	return $markup;
 }

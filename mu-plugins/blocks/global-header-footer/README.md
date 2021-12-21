@@ -18,19 +18,9 @@ The same as above, but instead of adding the block to `block-templates/*.html` f
 echo do_blocks( '<!-- wp:wporg/global-header /-->' );
 ```
 
-⚠️ You can't just `require universal-header.php` directly, because the dynamic blocks need to be processed by `do_blocks()`.
+⚠️ You can't just `require header.php` directly, because the dynamic blocks need to be processed by `do_blocks()`, and `blocks.php` does additional work that's necessary.
 
 
 ## Non-WP software (like Trac, Codex, etc)
 
-```html
-<iframe
-	width="100%"
-	height="auto"
-	src="https://wordpress.org/header.php?embed_context=trac">
-</iframe>
-```
-
-todo - or maybe download above url via curl? look at how trac/codex currenly do it
-
-⚠️ The above won't work in local development environments, because of `X-FRAME-OPTIONS`.
+@todo - probably pull contents from a REST API
