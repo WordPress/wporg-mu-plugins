@@ -23,13 +23,19 @@ function register_block_types() {
 		filemtime( __DIR__ . '/build/style.css' )
 	);
 
-	wp_enqueue_script(
+	wp_register_script(
 		'wporg-global-header-script',
 		plugins_url( '/js/wporg-global-header-script.js', __FILE__ ),
 		array(),
 		filemtime( __DIR__ . '/js/wporg-global-header-script.js' ),
 		true
 	);
+
+	// Enqueue them for GlotPress sites. `register_block_type()` will enqueue them for regular WP sites.
+	if ( function_exists( 'gp_enqueue_style' ) ) {
+		gp_enqueue_style( 'wporg-global-header-footer' );
+		gp_enqueue_script( 'wporg-global-header-script' );
+	}
 
 	register_block_type(
 		'wporg/global-header',
@@ -38,6 +44,7 @@ function register_block_types() {
 			'render_callback' => __NAMESPACE__ . '\render_global_header',
 			'style'           => 'wporg-global-header-footer',
 			'editor_style'    => 'wporg-global-header-footer',
+			'script'          => 'wporg-global-header-script',
 		)
 	);
 

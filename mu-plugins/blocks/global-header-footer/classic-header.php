@@ -27,7 +27,15 @@ defined( 'WPINC' ) || die();
 			<?php echo get_network_option( 1, 'global-header-footer-dependent-styles' ); ?>
 		</style>
 
-		<?php wp_head(); ?>
+		<?php
+
+		if ( function_exists( 'gp_head' ) ) {
+			gp_head();
+		} else {
+			wp_head();
+		}
+
+		?>
 	</head>
 
 	<body <?php body_class(); ?>>
