@@ -3,6 +3,14 @@
 	align-items: flex-end;
 	font-size: 21px;
 
+	/*
+	 * Some themes set a `z-index` on content elements that follow the header, like `#masthead` in
+	 * `wporg-learn-2020`. If the global header doesn't have a higher index, then submenus will be
+	 * covered up by the content when you hover over the parent menu item.
+	 */
+	position: relative;
+	z-index: 200;
+
 	@media (--tablet) {
 		font-size: 13px;
 	}
