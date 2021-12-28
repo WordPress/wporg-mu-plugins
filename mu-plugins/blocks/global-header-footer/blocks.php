@@ -196,10 +196,13 @@ function render_global_footer() {
  */
 function save_dependent_global_styles( $news_transient_value ) {
 	/*
-	 * There could be multiple sites running the News theme -- like `/news` and `/news-test` -- so make sure that
-	 * only the production styles are used.
+	 * This function is only called when updating styles for the News theme, but there could be multiple sites
+	 * running it -- like `/news` and `/news-test` -- so make sure that only the production styles are saved.
+	 *
+	 * After a parent FSE theme is created, we may want to adjust this so that only the parent styles are saved.
+	 * @see https://github.com/WordPress/wporg-news-2021/issues/13
 	 */
-	if ( 706 === get_current_blog_id() ) { // `w.org/news-test`. TODO change this to `w.org/news` when the redesign launches.
+	if ( 706 !== get_current_blog_id() ) { // `w.org/news-test`. TODO change this to `w.org/news` when the redesign launches.
 		return $news_transient_value;
 	}
 
