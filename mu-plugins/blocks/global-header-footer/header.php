@@ -77,12 +77,6 @@ defined( 'WPINC' ) || die();
 		<a href="https://wordpress.org/download/" class="global-header__desktop-get-wordpress global-header__get-wordpress">Get WordPress</a>
 	</div> <!-- /wp:group -->
 
-	<!--
-		The "..." menu is used when there isn't enough room to show all the items without wrapping. The items
-		inside it need to be duplicated in the top level menu, and have their values kept in sync. Any submenu
-		items should be moved to the top level (e.g., Five for the Future), to make them easier to see, and to
-		make the CSS simpler.
-	-->
 	<!-- wp:navigation {"orientation":"horizontal","className":"global-header__navigation","overlayMenu":"mobile"} -->
 		<!-- wp:navigation-link {"label":"Plugins","url":"https://wordpress.org/plugins/","kind":"custom","isTopLevelLink":true} /-->
 		<!-- wp:navigation-link {"label":"Themes","url":"https://wordpress.org/themes/","kind":"custom","isTopLevelLink":true} /-->
