@@ -1,6 +1,7 @@
 <?php
 
 namespace WordPressdotorg\MU_Plugins\Global_Header_Footer;
+use Rosetta_Sites;
 
 defined( 'WPINC' ) || die();
 
@@ -141,7 +142,11 @@ function restore_inner_group_container() {
 function render_global_header() {
 	remove_inner_group_container();
 
-	$menu_items = get_global_menu_items();
+	if ( is_rosetta_site() ) {
+		$menu_items = get_rosetta_menu_items();
+	} else {
+		$menu_items = get_global_menu_items();
+	}
 
 	// The mobile Get WordPress button needs to be in both menus.
 	$menu_items[] = array(
@@ -169,6 +174,19 @@ function render_global_header() {
 	}
 
 	return $markup;
+}
+
+/**
+ * Determine if the current site is a Rosetta site (e.g., `es-mx.wordpress.org`).
+ *
+ * This returns `false` for `translate.wordpress.org`; it's part of the Rosetta network, but isn't a Rosetta site.
+ *
+ * @return bool
+ */
+function is_rosetta_site() {
+	global $rosetta;
+
+	return $rosetta instanceof Rosetta_Sites;
 }
 
 /**
@@ -279,12 +297,101 @@ function get_global_menu_items() {
 }
 
 /**
+ * Rosetta sites each have their own menus, rather than using the global menu items.
+ *
+ * It's a combination of the items that site admins add to the "Rosetta" menu, and some items that are added
+ * programmatically to all sites.
+ *
+ * @return array[]
+ */
+function get_rosetta_menu_items() : array {
+	/** @var Rosetta_Sites $rosetta */
+	global $rosetta;
+
+	switch_to_blog( $rosetta->get_root_site_id() );
+
+	$database_items               = wp_get_nav_menu_items( get_nav_menu_locations()['rosetta_main'] );
+	$mock_args                    = (object) array( 'theme_location' => 'rosetta_main' );
+	$database_and_hardcoded_items = $rosetta->wp_nav_menu_objects( $database_items, $mock_args );
+	$normalized_items             = normalize_rosetta_items( $database_and_hardcoded_items );
+
+	restore_current_blog();
+
+	return $normalized_items;
+}
+
+/**
+ * Normalize the data to be consistent with the format of `get_global_menu_items()`.
+ *
+ * @param object[] $rosetta_items Some are `WP_Post`, and some are `stdClass` that are mocking a `WP_Post`.
+ *
+ * @return array
+ */
+function normalize_rosetta_items( $rosetta_items ) {
+	$normalized_items = array();
+	$parent_indices   = array();
+
+	foreach ( $rosetta_items as $index => $item ) {
+		$top_level_item = empty( $item->menu_item_parent );
+		$item->classes  = implode( ' ', $item->classes );
+
+		if ( $top_level_item ) {
+			// Track the indexes of parent items, so the submenu can be built later on.
+			$parent_indices[ $item->ID ] = $index;
+			$normalized_items[ $index ]  = (array) $item;
+
+		} else {
+			$parent_index = $parent_indices[ $item->menu_item_parent ];
+
+			$normalized_items[ $parent_index ]['submenu'][] = array(
+				'title' => $item->title,
+				'url'   => $item->url,
+				'type'  => $item->type,
+			);
+		}
+	}
+
+	return $normalized_items;
+}
+
+/**
  * Retrieve the URL to download WordPress.
  *
  * Rosetta sites sometimes have a localized page, rather than the main English one.
+ *
+ * @todo Make DRY with `Rosetta_Sites::wp_nav_menu_objects()` and `WordPressdotorg\MainTheme\get_downloads_url()`.
+ * There are some differences between these three that need to be reconciled, though.
  */
 function get_download_url() {
-	$url = 'https://wordpress.org/downloads/';
+	/** @var Rosetta_Sites $rosetta */
+	global $rosetta;
+
+	$url = false;
+
+	if ( is_rosetta_site() ) {
+		$root_site = $rosetta->get_root_site_id();
+
+		switch_to_blog( $root_site );
+
+		$download = get_page_by_path( 'download' );
+
+		if ( ! $download ) {
+			$download = get_page_by_path( 'txt-download' );
+		}
+		if ( ! $download ) {
+			$download = get_page_by_path( 'releases' );
+		}
+
+		if ( $download ) {
+			$url = get_permalink( $download );
+		}
+
+		restore_current_blog();
+	}
+
+	if ( ! $url ) {
+		$url = 'https://wordpress.org/downloads/';
+	}
 
 	return $url;
 }
