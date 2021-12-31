@@ -108,10 +108,12 @@ function register_block_types_js() {
  * @see restore_inner_group_container()
  */
 function remove_inner_group_container() {
-	if ( ! wp_is_block_theme() ) {
-		remove_filter( 'render_block', 'wp_restore_group_inner_container' );
-		remove_filter( 'render_block', 'gutenberg_restore_group_inner_container' );
+	if ( wp_is_block_theme() ) {
+		return;
 	}
+
+	remove_filter( 'render_block', 'wp_restore_group_inner_container' );
+	remove_filter( 'render_block', 'gutenberg_restore_group_inner_container' );
 }
 
 /**
@@ -120,12 +122,14 @@ function remove_inner_group_container() {
  * @see remove_inner_group_container()
  */
 function restore_inner_group_container() {
-	if ( ! wp_is_block_theme() ) {
-		if ( function_exists( 'gutenberg_restore_group_inner_container' ) ) {
-			add_filter( 'render_block', 'gutenberg_restore_group_inner_container', 10, 2 );
-		} else {
-			add_filter( 'render_block', 'wp_restore_group_inner_container', 10, 2 );
-		}
+	if ( wp_is_block_theme() ) {
+		return;
+	}
+
+	if ( function_exists( 'gutenberg_restore_group_inner_container' ) ) {
+		add_filter( 'render_block', 'gutenberg_restore_group_inner_container', 10, 2 );
+	} else {
+		add_filter( 'render_block', 'wp_restore_group_inner_container', 10, 2 );
 	}
 }
 
@@ -147,7 +151,7 @@ function render_global_header() {
 
 	restore_inner_group_container();
 
-	// Render the classic markup second, so the `wp_head()` call will execute callbacks that blocks added.
+	// Render the classic markup second, so the `wp_head()` call will execute callbacks that blocks added above.
 	if ( ! wp_is_block_theme() ) {
 		ob_start();
 		require __DIR__ . '/classic-header.php';
