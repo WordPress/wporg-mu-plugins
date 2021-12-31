@@ -141,6 +141,16 @@ function restore_inner_group_container() {
 function render_global_header() {
 	remove_inner_group_container();
 
+	$menu_items = get_global_menu_items();
+
+	// The mobile Get WordPress button needs to be in both menus.
+	$menu_items[] = array(
+		'title'   => esc_html_x( 'Get WordPress', 'Menu item title', 'wporg' ),
+		'url'     => get_download_url(),
+		'type'    => 'custom',
+		'classes' => 'global-header__mobile-get-wordpress global-header__get-wordpress',
+	);
+
 	/*
 	 * Render the block mockup first, in case anything in that process adds hooks to `wp_head`.
 	 * Allow multiple includes to allow for the double `site-header-offset` workaround.
@@ -159,6 +169,124 @@ function render_global_header() {
 	}
 
 	return $markup;
+}
+
+/**
+ * Get the standard items for the global header menu.
+ *
+ * These are used on all sites, except Rosetta.
+ *
+ * @return array[]
+ */
+function get_global_menu_items() {
+	$global_items = array(
+		array(
+			'title' => esc_html_x( 'Plugins', 'Menu item title', 'wporg' ),
+			'url'   => 'https://wordpress.org/plugins/',
+			'type'  => 'custom',
+		),
+
+		array(
+			'title' => esc_html_x( 'Themes', 'Menu item title', 'wporg' ),
+			'url'   => 'https://wordpress.org/themes/',
+			'type'  => 'custom',
+		),
+
+		array(
+			'title' => esc_html_x( 'Patterns', 'Menu item title', 'wporg' ),
+			'url'   => 'https://wordpress.org/patterns/',
+			'type'  => 'custom',
+		),
+
+		array(
+			'title' => esc_html_x( 'Learn', 'Menu item title', 'wporg' ),
+			'url'   => 'https://learn.wordpress.org/',
+			'type'  => 'custom',
+		),
+
+		array(
+			'title' => esc_html_x( 'Support', 'Menu item title', 'wporg' ),
+			'url'   => 'https://wordpress.org/support/',
+			'type'  => 'custom',
+
+			'submenu' => array(
+				array(
+					'title' => esc_html_x( 'Documentation', 'Menu item title', 'wporg' ),
+					'url'   => 'https://wordpress.org/support/',
+					'type'  => 'custom',
+				),
+				array(
+					'title' => esc_html_x( 'Forums', 'Menu item title', 'wporg' ),
+					'url'   => 'https://wordpress.org/support/forums/',
+					'type'  => 'custom',
+				),
+			),
+		),
+
+		array(
+			'title'   => esc_html_x( 'News', 'Menu item title', 'wporg' ),
+			'url'     => 'https://wordpress.org/news/',
+			'type'    => 'custom',
+			'classes' => 'current-menu-item',
+		),
+
+		array(
+			'title' => esc_html_x( 'About', 'Menu item title', 'wporg' ),
+			'url'   => 'https://wordpress.org/about/',
+			'type'  => 'custom',
+		),
+
+		array(
+			'title' => esc_html_x( 'Get Involved', 'Menu item title', 'wporg' ),
+			'url'   => 'https://make.wordpress.org/',
+			'type'  => 'custom',
+
+			'submenu' => array(
+				array(
+					'title' => esc_html_x( 'Five for the Future', 'Menu item title', 'wporg' ),
+					'url'   => 'https://wordpress.org/five-for-the-future/',
+					'type'  => 'custom',
+				),
+			),
+		),
+
+		array(
+			'title' => esc_html_x( 'Showcase', 'Menu item title', 'wporg' ),
+			'url'   => 'https://wordpress.org/showcase/',
+			'type'  => 'custom',
+		),
+
+		array(
+			'title' => esc_html_x( 'Mobile', 'Menu item title', 'wporg' ),
+			'url'   => 'https://wordpress.org/mobile/',
+			'type'  => 'custom',
+		),
+
+		array(
+			'title' => esc_html_x( 'Hosting', 'Menu item title', 'wporg' ),
+			'url'   => 'https://wordpress.org/hosting/',
+			'type'  => 'custom',
+		),
+
+		array(
+			'title' => esc_html_x( 'Openverse', 'Menu item title', 'wporg' ),
+			'url'   => 'https://wordpress.org/openverse/',
+			'type'  => 'custom',
+		),
+	);
+
+	return $global_items;
+}
+
+/**
+ * Retrieve the URL to download WordPress.
+ *
+ * Rosetta sites sometimes have a localized page, rather than the main English one.
+ */
+function get_download_url() {
+	$url = 'https://wordpress.org/downloads/';
+
+	return $url;
 }
 
 /**

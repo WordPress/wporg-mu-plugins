@@ -1,8 +1,16 @@
 <?php
 
 namespace WordPressdotorg\MU_Plugins\Global_Header_Footer\Header;
+use function WordPressdotorg\MU_Plugins\Global_Header_Footer\{ get_download_url };
 
 defined( 'WPINC' ) || die();
+
+/**
+ * Defined in `render_global_header()`.
+ *
+ * @var array $menu_items
+ */
+
 ?>
 
 <!-- wp:group {"tagName":"header","align":"full","className":"global-header"} -->
@@ -74,27 +82,47 @@ defined( 'WPINC' ) || die();
 		 Two are needed because they have different DOM hierarchies at different breakpoints. -->
 	<!-- wp:group {"className":"global-header__desktop-get-wordpress-container"} -->
 	<div class="global-header__desktop-get-wordpress-container">
-		<a href="https://wordpress.org/download/" class="global-header__desktop-get-wordpress global-header__get-wordpress">Get WordPress</a>
+		<a href="<?php echo esc_url( get_download_url() ); ?>" class="global-header__desktop-get-wordpress global-header__get-wordpress">Get WordPress</a>
 	</div> <!-- /wp:group -->
 
 	<!-- wp:navigation {"orientation":"horizontal","className":"global-header__navigation","overlayMenu":"mobile"} -->
-		<!-- wp:navigation-link {"label":"Plugins","url":"https://wordpress.org/plugins/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"Themes","url":"https://wordpress.org/themes/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"Patterns","url":"https://wordpress.org/patterns/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"Learn","url":"https://learn.wordpress.org/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"Support","url":"https://wordpress.org/support/","kind":"custom","isTopLevelLink":false} -->
-			<!-- wp:navigation-link {"label":"Documentation","url":"https://wordpress.org/support/","kind":"custom","isTopLevelLink":true} /-->
-			<!-- wp:navigation-link {"label":"Forums","url":"https://wordpress.org/support/forums/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- /wp:navigation-link -->
-		<!-- wp:navigation-link {"label":"News","url":"https://wordpress.org/news","kind":"custom","isTopLevelLink":true,"className":"current-menu-item"} /-->
-		<!-- wp:navigation-link {"label":"About","url":"https://wordpress.org/about/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"Get Involved","url":"https://make.wordpress.org/","kind":"custom","isTopLevelLink":false} -->
-			<!-- wp:navigation-link {"label":"Five for the Future","url":"https://wordpress.org/five-for-the-future/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- /wp:navigation-link -->
-		<!-- wp:navigation-link {"label":"Showcase","url":"https://wordpress.org/showcase/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"Mobile","url":"https://wordpress.org/mobile/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"Hosting","url":"https://wordpress.org/hosting/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"Openverse","url":"https://wordpress.org/openverse/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"Get WordPress","url":"https://wordpress.org/download/","kind":"custom","isTopLevelLink":true,"className":"global-header__mobile-get-wordpress global-header__get-wordpress"} /-->
+		<?php
+
+		/*
+		 * Loop though menu items and create `navigation-link` block comments.
+		 *
+		 * This only supports 1 level deep, but that's currently enough for our needs. More than that could be an
+		 * information architecture smell anyways.
+		 */
+		foreach ( $menu_items as $item ) {
+			$is_top_level_link = empty( $item['submenu'] );
+
+			printf(
+				'<!-- wp:navigation-link {"label":"%s","url":"%s","kind":"%s","isTopLevelLink":%s,"className":"%s"} %s-->',
+				// These sometimes come from user input (like with Rosetta menus), but `render_block_core_navigation_link()` will escape the values.
+				$item['title'],
+				$item['url'],
+				$item['type'],
+				json_encode( $is_top_level_link ),
+				$item['classes'] ?? '',
+				$is_top_level_link ? '/' : ''
+			);
+
+			if ( ! $is_top_level_link ) {
+				foreach( $item['submenu'] as $submenu_item ) {
+					printf(
+						'<!-- wp:navigation-link {"label":"%s","url":"%s","kind":"%s","isTopLevelLink":true,"className":"%s"} /-->',
+						$submenu_item['title'],
+						$submenu_item['url'],
+						$submenu_item['type'],
+						$submenu_item['classes'] ?? '',
+					);
+				}
+
+				echo '<!-- /wp:navigation-link -->';
+			}
+		}
+
+		?>
 	<!-- /wp:navigation -->
 </header> <!-- /wp:group -->
