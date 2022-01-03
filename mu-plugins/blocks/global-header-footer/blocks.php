@@ -355,6 +355,33 @@ function normalize_rosetta_items( $rosetta_items ) {
 }
 
 /**
+ * Retrieve the URL of the home page.
+ *
+ * Most of the time it will just be `w.org/`, but Rosetta sites use the URL of the "root site" homepage.
+ */
+function get_home_url() {
+	/** @var Rosetta_Sites $rosetta */
+	global $rosetta;
+
+	$url = false;
+
+	if ( is_rosetta_site() ) {
+		$root_site = $rosetta->get_root_site_id();
+		switch_to_blog( $root_site );
+
+		$url = home_url();
+
+		restore_current_blog();
+	}
+
+	if ( ! $url ) {
+		$url = 'https://wordpress.org/';
+	}
+
+	return $url;
+}
+
+/**
  * Retrieve the URL to download WordPress.
  *
  * Rosetta sites sometimes have a localized page, rather than the main English one.
