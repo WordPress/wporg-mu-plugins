@@ -1,14 +1,14 @@
 <?php
 
 namespace WordPressdotorg\MU_Plugins\Global_Header_Footer;
-use Rosetta_Sites;
+use Rosetta_Sites, WP_REST_Server;
 
 defined( 'WPINC' ) || die();
 
 add_action( 'init', __NAMESPACE__ . '\register_block_types' );
 add_action( 'enqueue_block_assets', __NAMESPACE__ . '\register_block_types_js' );
 add_filter( 'pre_set_transient_global_styles_wporg-news-2021', __NAMESPACE__ . '\save_dependent_global_styles' );
-
+add_action( 'rest_api_init', __NAMESPACE__ . '\register_routes' );
 
 /**
  * Register block types
@@ -56,6 +56,33 @@ function register_block_types() {
 			'render_callback' => __NAMESPACE__ . '\render_global_footer',
 			'style'           => 'wporg-global-header-footer',
 			'editor_style'    => 'wporg-global-header-footer',
+		)
+	);
+}
+
+/**
+ * Register REST API routes, so non-WP applications can integrate it.
+ */
+function register_routes() {
+	register_rest_route(
+		'global-header-footer/v1',
+		'header',
+		array(
+			array(
+				'methods'  => WP_REST_Server::READABLE,
+				'callback' => __NAMESPACE__ . '\render_global_header',
+			),
+		)
+	);
+
+	register_rest_route(
+		'global-header-footer/v1',
+		'footer',
+		array(
+			array(
+				'methods'  => WP_REST_Server::READABLE,
+				'callback' => __NAMESPACE__ . '\render_global_footer',
+			),
 		)
 	);
 }
@@ -166,11 +193,23 @@ function render_global_header() {
 
 	restore_inner_group_container();
 
-	// Render the classic markup second, so the `wp_head()` call will execute callbacks that blocks added above.
-	if ( ! wp_is_block_theme() ) {
+	$is_rest_request = defined( 'REST_REQUEST' ) && REST_REQUEST;
+
+	/*
+	 * Render the classic markup second, so the `wp_head()` call will execute callbacks that blocks added above.
+	 *
+	 * API requests also need `<head>` etc so they can get the styles.
+	 */
+	if ( ! wp_is_block_theme() || $is_rest_request ) {
 		ob_start();
 		require __DIR__ . '/classic-header.php';
 		$markup = ob_get_clean() . $markup;
+	}
+
+	if ( $is_rest_request ) {
+		header( 'Content-Type: text/html' );
+		echo $markup;
+		die(); // this is an ugly hack. todo get the api to return html
 	}
 
 	return $markup;
@@ -438,11 +477,19 @@ function render_global_footer() {
 
 	restore_inner_group_container();
 
+	$is_rest_request = defined( 'REST_REQUEST' ) && REST_REQUEST;
+
 	// Render the classic markup second, so the `wp_footer()` call will execute callbacks that blocks added.
-	if ( ! wp_is_block_theme() ) {
+	if ( ! wp_is_block_theme() || $is_rest_request ) {
 		ob_start();
 		require_once __DIR__ . '/classic-footer.php';
 		$markup .= ob_get_clean();
+	}
+
+	if ( $is_rest_request ) {
+		header( 'Content-Type: text/html' );
+		echo $markup;
+		die(); // this is an ugly hack. todo get the api to return html
 	}
 
 	return $markup;
