@@ -1,7 +1,7 @@
 <?php
 
 namespace WordPressdotorg\MU_Plugins\Global_Header_Footer;
-use Rosetta_Sites, WP_REST_Server;
+use Rosetta_Sites, WP_Post, WP_REST_Server;
 
 defined( 'WPINC' ) || die();
 
@@ -349,7 +349,10 @@ function get_rosetta_menu_items() : array {
 
 	switch_to_blog( $rosetta->get_root_site_id() );
 
-	$database_items               = wp_get_nav_menu_items( get_nav_menu_locations()['rosetta_main'] );
+	// `Rosetta_Sites::wp_nav_menu_objects` sometimes removes redundant items, but sometimes returns early.
+	$database_items = wp_get_nav_menu_items( get_nav_menu_locations()['rosetta_main'] );
+	$database_items = array_filter( $database_items, __NAMESPACE__ . '\is_valid_rosetta_menu_item' );
+
 	$mock_args                    = (object) array( 'theme_location' => 'rosetta_main' );
 	$database_and_hardcoded_items = $rosetta->wp_nav_menu_objects( $database_items, $mock_args );
 	$normalized_items             = normalize_rosetta_items( $database_and_hardcoded_items );
@@ -357,6 +360,32 @@ function get_rosetta_menu_items() : array {
 	restore_current_blog();
 
 	return $normalized_items;
+}
+
+/**
+ * Determines if a Rosetta menu item is valid.
+ *
+ * Some items saved in Rosetta nav menus are redundant, because the global header already includes Download and
+ * Home links (via the logo).
+ *
+ * @param WP_Post $menu_item
+ *
+ * @return bool
+ */
+function is_valid_rosetta_menu_item( $item ) {
+	/*
+	 * Cover full URLs like `https://ar.wordpress.org/` and `https://ar.wordpress.org/download/`; and relative
+	 * ones like  `/` and `/download/`.
+	 */
+	$redundant_slugs = array( '/download/', '/txt-download/', '/', "/{$_SERVER['HTTP_HOST']}/" );
+
+	// Not using `basename()` because that would match `/foo/download`
+	$irrelevant_url_parts = array( 'http://', 'https://', $_SERVER['HTTP_HOST'] );
+
+	$item_slug = str_replace( $irrelevant_url_parts, '', $item->url );
+	$item_slug = trailingslashit( $item_slug );
+
+	return ! in_array( $item_slug, $redundant_slugs, true );
 }
 
 /**
