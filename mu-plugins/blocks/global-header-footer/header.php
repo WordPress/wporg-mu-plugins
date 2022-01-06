@@ -32,6 +32,47 @@ defined( 'WPINC' ) || die();
 	</figure>
 	<!-- /wp:image -->
 
+	<!-- wp:navigation {"orientation":"horizontal","className":"global-header__navigation","overlayMenu":"mobile"} -->
+		<?php
+
+		/*
+		 * Loop though menu items and create `navigation-link` block comments.
+		 *
+		 * This only supports 1 level deep, but that's currently enough for our needs. More than that could be an
+		 * information architecture smell anyways.
+		 */
+		foreach ( $menu_items as $item ) {
+			$is_top_level_link = empty( $item['submenu'] );
+
+			printf(
+				'<!-- wp:navigation-link {"label":"%s","url":"%s","kind":"%s","isTopLevelLink":%s,"className":"%s"} %s-->',
+				// These sometimes come from user input (like with Rosetta menus), but `render_block_core_navigation_link()` will escape the values.
+				$item['title'],
+				$item['url'],
+				$item['type'],
+				json_encode( $is_top_level_link ),
+				$item['classes'] ?? '',
+				$is_top_level_link ? '/' : ''
+			);
+
+			if ( ! $is_top_level_link ) {
+				foreach( $item['submenu'] as $submenu_item ) {
+					printf(
+						'<!-- wp:navigation-link {"label":"%s","url":"%s","kind":"%s","isTopLevelLink":true,"className":"%s"} /-->',
+						$submenu_item['title'],
+						$submenu_item['url'],
+						$submenu_item['type'],
+						$submenu_item['classes'] ?? '',
+					);
+				}
+
+				echo '<!-- /wp:navigation-link -->';
+			}
+		}
+
+		?>
+	<!-- /wp:navigation -->
+
 	<!--
 		The search block is inside a navigation submenu, because that provides the exact functionality the design
 		calls for. It also provides a consistent experience with the primary navigation menu, with respect to
@@ -91,45 +132,4 @@ defined( 'WPINC' ) || die();
 			<?php echo esc_html_x( 'Get WordPress', 'link anchor text', 'wporg' ); ?>
 		</a>
 	</div> <!-- /wp:group -->
-
-	<!-- wp:navigation {"orientation":"horizontal","className":"global-header__navigation","overlayMenu":"mobile"} -->
-		<?php
-
-		/*
-		 * Loop though menu items and create `navigation-link` block comments.
-		 *
-		 * This only supports 1 level deep, but that's currently enough for our needs. More than that could be an
-		 * information architecture smell anyways.
-		 */
-		foreach ( $menu_items as $item ) {
-			$is_top_level_link = empty( $item['submenu'] );
-
-			printf(
-				'<!-- wp:navigation-link {"label":"%s","url":"%s","kind":"%s","isTopLevelLink":%s,"className":"%s"} %s-->',
-				// These sometimes come from user input (like with Rosetta menus), but `render_block_core_navigation_link()` will escape the values.
-				$item['title'],
-				$item['url'],
-				$item['type'],
-				json_encode( $is_top_level_link ),
-				$item['classes'] ?? '',
-				$is_top_level_link ? '/' : ''
-			);
-
-			if ( ! $is_top_level_link ) {
-				foreach( $item['submenu'] as $submenu_item ) {
-					printf(
-						'<!-- wp:navigation-link {"label":"%s","url":"%s","kind":"%s","isTopLevelLink":true,"className":"%s"} /-->',
-						$submenu_item['title'],
-						$submenu_item['url'],
-						$submenu_item['type'],
-						$submenu_item['classes'] ?? '',
-					);
-				}
-
-				echo '<!-- /wp:navigation-link -->';
-			}
-		}
-
-		?>
-	<!-- /wp:navigation -->
 </header> <!-- /wp:group -->
