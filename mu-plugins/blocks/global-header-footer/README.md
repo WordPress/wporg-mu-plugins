@@ -26,3 +26,5 @@ echo do_blocks( '<!-- wp:wporg/global-header /-->' );
 ## Non-WP software (like Trac, Codex, etc)
 
 @todo - probably pull contents from a REST API
+
+see https://github.com/WordPress/wporg-mu-plugins/issues/45

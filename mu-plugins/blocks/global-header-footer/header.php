@@ -48,8 +48,11 @@ defined( 'WPINC' ) || die();
 
 				The only things that changed were:
 
-				1) The `s` parameter is renamed to `search`, because `do-search.php` requires that.
+				1) The `s` parameter is renamed to `search`, because `do-search.php` requires that. Alternatively,
+				   we could modify that file to accept either.
 				2) The instance ID was changed to `99`, to make it likely to be unique.
+				3) Internationalizing the labels. See https://github.com/WordPress/gutenberg/issues/36061 and
+				   related issues for a possible future alternative.
 
 				If that issue is ever resolved, we should be able to replace this with the Search block, without having
 				to change any CSS.
@@ -60,7 +63,9 @@ defined( 'WPINC' ) || die();
 				action="https://wordpress.org/search/do-search.php"
 				class="wp-block-search__button-outside wp-block-search__text-button global-header__search-form wp-block-search"
 			>
-				<label for="wp-block-search__input-99" class="wp-block-search__label">Search</label>
+				<label for="wp-block-search__input-99" class="wp-block-search__label">
+					<?php echo esc_html_x( 'Search', 'button label', 'wporg' ); ?>
+				</label>
 				<div class="wp-block-search__inside-wrapper">
 					<input
 						type="search"
@@ -68,10 +73,10 @@ defined( 'WPINC' ) || die();
 						class="wp-block-search__input"
 						name="search"
 						value=""
-						placeholder="Search WordPress.org..."
+						placeholder="<?php echo esc_attr_x( 'Search WordPress.org...', 'input field placeholder', 'wporg' ); ?>"
 						required=""
 					>
-					<button type="submit" class="wp-block-search__button" aria-label="Submit search"></button>
+					<button type="submit" class="wp-block-search__button" aria-label="<?php echo esc_attr_x( 'Submit search', 'button label', 'wporg' ); ?>"></button>
 				</div>
 			</form>
 			<!-- /wp:html -->
@@ -82,7 +87,9 @@ defined( 'WPINC' ) || die();
 		 Two are needed because they have different DOM hierarchies at different breakpoints. -->
 	<!-- wp:group {"className":"global-header__desktop-get-wordpress-container"} -->
 	<div class="global-header__desktop-get-wordpress-container">
-		<a href="<?php echo esc_url( get_download_url() ); ?>" class="global-header__desktop-get-wordpress global-header__get-wordpress">Get WordPress</a>
+		<a href="<?php echo esc_url( get_download_url() ); ?>" class="global-header__desktop-get-wordpress global-header__get-wordpress">
+			<?php echo esc_html_x( 'Get WordPress', 'link anchor text', 'wporg' ); ?>
+		</a>
 	</div> <!-- /wp:group -->
 
 	<!-- wp:navigation {"orientation":"horizontal","className":"global-header__navigation","overlayMenu":"mobile"} -->
