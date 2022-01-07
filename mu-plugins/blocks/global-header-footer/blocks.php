@@ -9,6 +9,7 @@ add_action( 'init', __NAMESPACE__ . '\register_block_types' );
 add_action( 'enqueue_block_assets', __NAMESPACE__ . '\register_block_types_js' );
 add_filter( 'pre_set_transient_global_styles_wporg-news-2021', __NAMESPACE__ . '\save_dependent_global_styles' );
 add_action( 'rest_api_init', __NAMESPACE__ . '\register_routes' );
+add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_compat_wp4_styles' );
 
 /**
  * Register block types
@@ -125,6 +126,24 @@ function register_block_types_js() {
 	}( window.wp ));
 	<?php
 	wp_add_inline_script( 'wp-editor', ob_get_clean(), 'after' );
+}
+
+/**
+ * Output styles for themes that don't use `wp4-styles`. This provides compat with the classic header.php.
+ */
+function enqueue_compat_wp4_styles() {
+	if ( ! current_theme_supports( 'wp4-styles' ) ) {
+		$cdn_domain = defined( 'WPORG_SANDBOXED' ) && WPORG_SANDBOXED ? 'wordpress.org' : 's.w.org';
+		$suffix = 'rtl' === $text_direction ? '-rtl' : '';
+		wp_register_style(
+			'wp4-styles',
+			'https://' . $cdn_domain . '/style/wp4' . $suffix . '.css',
+			array( 'open-sans' ),
+			'95'
+		);
+
+		wp_enqueue_style( 'wp4-styles' );
+	}
 }
 
 /**
