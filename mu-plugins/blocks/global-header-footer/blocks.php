@@ -72,6 +72,7 @@ function register_routes() {
 			array(
 				'methods'  => WP_REST_Server::READABLE,
 				'callback' => __NAMESPACE__ . '\render_global_header',
+				'permission_callback' => '__return_true',
 			),
 		)
 	);
@@ -83,6 +84,7 @@ function register_routes() {
 			array(
 				'methods'  => WP_REST_Server::READABLE,
 				'callback' => __NAMESPACE__ . '\render_global_footer',
+				'permission_callback' => '__return_true',
 			),
 		)
 	);
