@@ -132,9 +132,10 @@ function register_block_types_js() {
  * Output styles for themes that don't use `wp4-styles`. This provides compat with the classic header.php.
  */
 function enqueue_compat_wp4_styles() {
-	if ( ! current_theme_supports( 'wp4-styles' ) ) {
+	if ( ! wp_is_block_theme() && ! current_theme_supports( 'wp4-styles' ) ) {
 		$cdn_domain = defined( 'WPORG_SANDBOXED' ) && WPORG_SANDBOXED ? 'wordpress.org' : 's.w.org';
-		$suffix = 'rtl' === $text_direction ? '-rtl' : '';
+		$suffix = 'rtl' === is_rtl() ? '-rtl' : '';
+
 		wp_register_style(
 			'wp4-styles',
 			'https://' . $cdn_domain . '/style/wp4' . $suffix . '.css',
