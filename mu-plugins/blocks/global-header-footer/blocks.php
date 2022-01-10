@@ -273,6 +273,9 @@ function rest_render_codex_global_header( $request ) {
 		];
 	} );
 
+	wp_enqueue_style( 'wp4', 'https://s.w.org/style/wp4.css', array(), 95 );
+	wp_enqueue_style( 'codex-wp4', 'https://s.w.org/style/codex-wp4.css', array( 'wp4' ), 3 );
+
 	// hreflang tags are not needed for this site.
 	remove_action( 'wp_head', 'WordPressdotorg\Theme\hreflang_link_attributes' );
 
