@@ -68,7 +68,19 @@ function register_routes() {
 		array(
 			array(
 				'methods'  => WP_REST_Server::READABLE,
-				'callback' => __NAMESPACE__ . '\render_global_header',
+				'callback' => __NAMESPACE__ . '\rest_render_global_header',
+				'permission_callback' => '__return_true',
+			),
+		)
+	);
+
+	register_rest_route(
+		'global-header-footer/v1',
+		'header/codex',
+		array(
+			array(
+				'methods'  => WP_REST_Server::READABLE,
+				'callback' => __NAMESPACE__ . '\rest_render_codex_global_header',
 				'permission_callback' => '__return_true',
 			),
 		)
@@ -80,7 +92,7 @@ function register_routes() {
 		array(
 			array(
 				'methods'  => WP_REST_Server::READABLE,
-				'callback' => __NAMESPACE__ . '\render_global_footer',
+				'callback' => __NAMESPACE__ . '\rest_render_global_footer',
 				'permission_callback' => '__return_true',
 			),
 		)
@@ -220,6 +232,57 @@ function restore_inner_group_container() {
 }
 
 /**
+ * Render the global header via a REST request.
+ *
+ * @return string
+ */
+function rest_render_global_header( $request ) {
+
+	$markup = render_global_header();
+
+	// Serve the request as HTML
+	add_filter( 'rest_pre_serve_request', function( $served, $result ) {
+		header( 'Content-Type: text/html' );
+
+		echo $result->get_data();
+
+		return $served = true;
+	}, 10, 2 );
+
+	return $markup;
+}
+
+/**
+ * Render the global header via a REST request for the Codex with appropriate tags.
+ *
+ * @return string
+ */
+function rest_render_codex_global_header( $request ) {
+	add_action( 'wp_head', function() {
+		echo '<!-- [codex head meta] -->', "\n";
+	}, 1 );
+
+	add_action( 'wp_head', function() {
+		echo '<!-- [codex head scripts] -->', "\n";
+	}, 100 );
+
+	add_filter( 'body_class', function( $class ) {
+		return [
+			'wporg-responsive',
+			'wporg-codex'
+		];
+	} );
+
+	// hreflang tags are not needed for this site.
+	remove_action( 'wp_head', 'WordPressdotorg\Theme\hreflang_link_attributes' );
+
+	$markup = rest_render_global_header( $request );
+	$markup = preg_replace( '!<html[^>]+>!i', '<!-- [codex head html] -->', $markup );
+
+	return $markup;
+}
+
+/**
  * Render the global header in a block context.
  *
  * @return string
@@ -264,12 +327,6 @@ function render_global_header() {
 		ob_start();
 		require __DIR__ . '/classic-header.php';
 		$markup = ob_get_clean() . $markup;
-	}
-
-	if ( $is_rest_request ) {
-		header( 'Content-Type: text/html' );
-		echo $markup;
-		die(); // this is an ugly hack. todo get the api to return html
 	}
 
 	return $markup;
@@ -551,6 +608,27 @@ function get_download_url() {
 }
 
 /**
+ * Render the global footer via a REST request.
+ *
+ * @return string
+ */
+function rest_render_global_footer( $request ) {
+
+	$markup = render_global_footer();
+
+	// Serve the request as HTML
+	add_filter( 'rest_pre_serve_request', function( $served, $result ) {
+		header( 'Content-Type: text/html' );
+
+		echo $result->get_data();
+
+		return $served = true;
+	}, 10, 2 );
+
+	return $markup;
+}
+
+/**
  * Render the global footer in a block context.
  *
  * @return string
@@ -572,12 +650,6 @@ function render_global_footer() {
 		ob_start();
 		require_once __DIR__ . '/classic-footer.php';
 		$markup .= ob_get_clean();
-	}
-
-	if ( $is_rest_request ) {
-		header( 'Content-Type: text/html' );
-		echo $markup;
-		die(); // this is an ugly hack. todo get the api to return html
 	}
 
 	return $markup;
