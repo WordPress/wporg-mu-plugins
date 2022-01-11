@@ -624,8 +624,30 @@ function get_menu_url_for_current_page( $menu_items ) {
 		return 'https://make.wordpress.org/';
 	}
 
+	if ( 'developer.wordpress.prg' === $_SERVER['HTTP_HOST'] ) {
+		// DevHub doesn't exist within the menu.
+		return '';
+	}
+
+	// Temporary
 	if ( 'https://wordpress.org/news-test/' === home_url( '/' ) ) {
 		return 'https://wordpress.org/news/';
+	}
+
+	$compare = "https://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+
+	// Is it the Global Search?
+	if ( 0 === stripos( $compare, 'https://wordpress.org/search/' ) ) {
+		if ( isset( $_GET['in'] ) ) {
+			if ( 'support_docs' === $_GET['in'] ) {
+				return 'https://wordpress.org/support/';
+			} elseif ( 'developer_documentation' === $_GET['in'] ) {
+				// DevHub doesn't exist within the menu.
+				return '';
+			}
+		}
+
+		return 'https://wordpress.org/support/forums/';
 	}
 
 	// Extract all URLs, toplevel and child.
@@ -638,12 +660,11 @@ function get_menu_url_for_current_page( $menu_items ) {
 			}
 		}
 	);
-	// Sort long to short.
+
+	// Sort long to short, we need the deepest path to match.
 	usort( $urls, function( $a, $b ) {
 		return strlen( $b ) - strlen( $a );
 	} );
-
-	$compare = "https://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
 
 	foreach ( $urls as $url ) {
 		if ( 0 === stripos( $compare, $url ) ) {
