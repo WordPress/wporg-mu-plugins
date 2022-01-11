@@ -205,6 +205,8 @@ function render_global_header() {
 		'classes' => 'global-header__mobile-get-wordpress global-header__get-wordpress',
 	);
 
+	$menu_items = set_current_item_class( $menu_items );
+
 	/*
 	 * Render the block mockup first, in case anything in that process adds hooks to `wp_head`.
 	 * Allow multiple includes to allow for the double `site-header-offset` workaround.
@@ -306,7 +308,6 @@ function get_global_menu_items() {
 			'title'   => esc_html_x( 'News', 'Menu item title', 'wporg' ),
 			'url'     => 'https://wordpress.org/news/',
 			'type'    => 'custom',
-			'classes' => 'current-menu-item',
 		),
 
 		array(
@@ -578,4 +579,77 @@ function save_dependent_global_styles( $news_transient_value ) {
 
 	// We don't want to change the value, using this filter is just a way to access it when it changes.
 	return $news_transient_value;
+}
+
+/**
+ * Set the menu active state for the currently selected menu item.
+ *
+ * @param array $menu_items The menu menu items.
+ *
+ * @return array The altered menu items.
+ */
+function set_current_item_class( $menu_items ) {
+	$current_url = get_menu_url_for_current_page( $menu_items );
+
+	foreach ( $menu_items as & $item ) {
+		$sub = false;
+		if ( ! empty( $item['submenu'] ) ) {
+			foreach ( $item['submenu'] as & $subitem ) {
+				if ( $current_url === $subitem['url'] ) {
+					$subitem['classes'] = trim( ( $subitem['classes'] ?? '' ) . ' current-menu-item' );
+					$sub                = true;
+					break;
+				}
+			}
+		}
+
+		if ( $sub || $current_url === $item['url'] ) {
+			$item['classes'] = trim( ( $item['classes'] ?? '' ) . ' current-menu-item' );
+		}
+	}
+
+	return $menu_items;
+}
+
+/**
+ * Determine the menu item which best describes the current request.
+ *
+ * @param array $menu_items The menu menu items.
+ *
+ * @return string
+ */
+function get_menu_url_for_current_page( $menu_items ) {
+
+	if ( 'translate.wordpress.org' === $_SERVER['HTTP_HOST'] ) {
+		return 'https://make.wordpress.org/';
+	}
+
+	if ( 'https://wordpress.org/news-test/' === home_url( '/' ) ) {
+		return 'https://wordpress.org/news/';
+	}
+
+	// Extract all URLs, toplevel and child.
+	$urls = [];
+	array_walk_recursive(
+		$menu_items,
+		function( $val, $key ) use ( &$urls ) {
+			if ( 'url' === $key ) {
+				$urls[] = $val;
+			}
+		}
+	);
+	// Sort long to short.
+	usort( $urls, function( $a, $b ) {
+		return strlen( $b ) - strlen( $a );
+	} );
+
+	$compare = "https://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+
+	foreach ( $urls as $url ) {
+		if ( 0 === stripos( $compare, $url ) ) {
+			return $url;
+		}
+	}
+
+	return home_url('/');
 }
