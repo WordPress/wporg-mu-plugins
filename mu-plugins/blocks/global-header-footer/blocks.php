@@ -650,6 +650,11 @@ function get_menu_url_for_current_page( $menu_items ) {
 		return 'https://wordpress.org/support/forums/';
 	}
 
+	// These prefixes are Support Forums, not Support Documentation.
+	if ( preg_match( '!/support/(forum|view|topic|reply|users)/!i', $_SERVER['REQUEST_URI'] ) ) {
+		$compare = "https://{$_SERVER['HTTP_HOST']}/support/forums/";
+	}
+
 	// Extract all URLs, toplevel and child.
 	$urls = [];
 	array_walk_recursive(
