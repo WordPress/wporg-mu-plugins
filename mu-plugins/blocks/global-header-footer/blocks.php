@@ -246,7 +246,7 @@ function rest_render_global_header( $request ) {
 
 		echo $result->get_data();
 
-		return $served = true;
+		return true;
 	}, 10, 2 );
 
 	return $markup;
