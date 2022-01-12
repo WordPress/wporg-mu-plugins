@@ -114,7 +114,7 @@ defined( 'WPINC' ) || die();
 						class="wp-block-search__input"
 						name="search"
 						value=""
-						placeholder="<?php echo esc_attr_x( 'Search WordPress.org...', 'input field placeholder', 'wporg' ); ?>"
+						placeholder="<?php echo esc_attr_x( 'Search WP.org...', 'input field placeholder', 'wporg' ); ?>"
 						required=""
 					>
 					<button type="submit" class="wp-block-search__button" aria-label="<?php echo esc_attr_x( 'Submit search', 'button label', 'wporg' ); ?>"></button>
