@@ -100,7 +100,7 @@
 			border: none;
 			border-radius: 2px;
 			background-color: var(--wp--preset--color--white);
-			color: var(--wp--preset--color--dark-grey);
+			color: var(--wp--preset--color--black);
 			font-size: inherit;
 			-webkit-appearance: none;
 
@@ -112,6 +112,11 @@
 
 			&:focus {
 				outline: none;
+			}
+
+			&::placeholder {
+				color: #6A6A6A;
+				opacity: 1;
 			}
 		}
 
