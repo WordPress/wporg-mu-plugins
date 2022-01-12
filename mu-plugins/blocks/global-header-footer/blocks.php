@@ -10,6 +10,8 @@ add_action( 'init', __NAMESPACE__ . '\register_block_types' );
 add_action( 'enqueue_block_assets', __NAMESPACE__ . '\register_block_types_js' );
 add_action( 'rest_api_init', __NAMESPACE__ . '\register_routes' );
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_compat_wp4_styles' );
+add_action( 'wp_head', __NAMESPACE__ . '\preload_google_fonts' );
+add_filter( 'style_loader_src', __NAMESPACE__ . '\update_google_fonts_url', 10, 2 );
 
 /**
  * Register block types
@@ -128,6 +130,28 @@ function register_block_types_js() {
 	}( window.wp ));
 	<?php
 	wp_add_inline_script( 'wp-editor', ob_get_clean(), 'after' );
+}
+
+/**
+ * Filter the google fonts URL to use the "CSS2" version of the API.
+ *
+ * @param string $src    The source URL of the enqueued style.
+ * @param string $handle The style's registered handle.
+ * @return string Updated URL for `open-sans`.
+ */
+function update_google_fonts_url( $src, $handle ) {
+	if ( 'open-sans' === $handle ) {
+		return 'https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap';
+	}
+	return $src;
+}
+
+/**
+ * Add preconnect resource hints for the Google Fonts API.
+ */
+function preload_google_fonts() {
+	echo '<link rel="preconnect" href="https://fonts.googleapis.com">';
+	echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> ';
 }
 
 /**
