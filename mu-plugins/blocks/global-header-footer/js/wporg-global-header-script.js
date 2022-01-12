@@ -135,6 +135,15 @@
 			return false;
 		};
 
+		/**
+		 * Deactivates the mobile menu if needed.
+		 */
+		this.maybeDeactivateMobileMenu = function() {
+			if ( this.wrapper.querySelector( '.wp-block-navigation__responsive-container.is-menu-open' ) ) {
+				this.wrapper.querySelector( '.wp-block-navigation__responsive-container-close' ).click();
+			}
+		}
+
 		this.listItems = this.getListItems();
 		this.itemsWidths = [];
 		this.hasHiddenItems = false;
@@ -153,6 +162,7 @@
 					this.getItemWidths();
 					this.hideExtraItems();
 					this.populateExtendedSubmenu();
+					this.maybeDeactivateMobileMenu();
 				}
 			}.bind( this )
 		);
