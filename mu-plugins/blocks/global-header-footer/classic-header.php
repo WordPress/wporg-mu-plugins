@@ -28,11 +28,7 @@ defined( 'WPINC' ) || die();
 
 		<?php
 
-		if ( function_exists( 'gp_head' ) ) {
-			gp_head();
-		} else {
-			wp_head();
-		}
+		wp_head();
 
 		?>
 	</head>

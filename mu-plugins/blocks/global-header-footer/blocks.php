@@ -35,12 +35,6 @@ function register_block_types() {
 		true
 	);
 
-	// Enqueue them for GlotPress sites. `register_block_type()` will enqueue them for regular WP sites.
-	if ( function_exists( 'gp_enqueue_style' ) ) {
-		gp_enqueue_style( 'wporg-global-header-footer' );
-		gp_enqueue_script( 'wporg-global-header-script' );
-	}
-
 	register_block_type(
 		'wporg/global-header',
 		array(
