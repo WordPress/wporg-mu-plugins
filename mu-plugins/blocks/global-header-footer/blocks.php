@@ -10,6 +10,7 @@ add_action( 'init', __NAMESPACE__ . '\register_block_types' );
 add_action( 'enqueue_block_assets', __NAMESPACE__ . '\register_block_types_js' );
 add_action( 'rest_api_init', __NAMESPACE__ . '\register_routes' );
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_compat_wp4_styles' );
+add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_fonts' );
 add_action( 'wp_head', __NAMESPACE__ . '\preload_google_fonts' );
 add_filter( 'style_loader_src', __NAMESPACE__ . '\update_google_fonts_url', 10, 2 );
 
@@ -165,6 +166,23 @@ function enqueue_compat_wp4_styles() {
 
 		wp_enqueue_style( 'wp4-styles' );
 	}
+}
+
+/**
+ * Load Inter (font) for use in header & footer on classic themes.
+ *
+ * In the block theme, this is loaded by `theme.json` & `WordPressdotorg\Theme\News_2021\enqueue_assets`.
+ */
+function enqueue_fonts() {
+	if ( wp_is_block_theme() ) {
+		return;
+	}
+
+	wp_enqueue_style(
+		'wporg-news-fonts-css',
+		'https://fonts.googleapis.com/css2?family=Inter:wght@200..700&display=swap',
+		array(),
+	);
 }
 
 /**
