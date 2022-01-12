@@ -53,7 +53,7 @@
 
 	& .has-child:hover .wp-block-navigation-item__content,
 	& .has-child:focus-within .wp-block-navigation-item__content,
-	&:not(.has-background) .wp-block-navigation__submenu-container {
+	&:not(.has-background) .wp-block-navigation__submenu-container .global-header__search-form {
 		background-color: var(--wp--preset--color--darker-grey);
 	}
 
@@ -62,19 +62,25 @@
 
 		@media (--tablet) {
 			width: 300px;
-			top: 100px;
-			right: -25px;
+			bottom: 0;
+			right: 0;
 			left: auto;
+			transform: translateY(-100%);
 			border: none;
 		}
 	}
 
 	& .global-header__search-form {
-		padding: 20px;
+		margin-top: 0;
+
+		@media (--tablet) {
+			padding: 20px;
+		}
 
 		& .wp-block-search__label {
 			display: inline-block;
 			margin-bottom: 20px;
+			font-size: 21px;
 
 			@media (--tablet) {
 				display: none;
@@ -91,14 +97,28 @@
 
 		& .wp-block-search__input {
 			width: 100%;
-			padding-right: 35px; /* Prevent user input from running into icon. */
+			padding: var(--wp--custom--form--padding);
+			padding-right: 50px; /* Prevent user input from running into icon. */
 			border: none;
+			border-radius: 2px;
 			background-color: var(--wp--preset--color--white);
-			color: var(--wp--preset--color--dark-grey);
+			color: var(--wp--preset--color--black);
 			font-size: inherit;
+			-webkit-appearance: none;
+
+			@media (--tablet) {
+				padding-right: 35px; /* Prevent user input from running into icon. */
+				padding-top: calc(0.5 * var(--wp--custom--form--padding));
+				padding-bottom: calc(0.5 * var(--wp--custom--form--padding));
+			}
 
 			&:focus {
 				outline: none;
+			}
+
+			&::placeholder {
+				color: #6a6a6a;
+				opacity: 1;
 			}
 		}
 
@@ -106,12 +126,21 @@
 			position: absolute;
 			right: 0;
 			top: 0;
-			width: 24px;
+			width: 20px;
 			height: 100%;
 			mask-image: url(../images/search.svg);
+			mask-size: 20px auto;
 			mask-repeat: no-repeat;
 			mask-position: center;
 			background-color: var(--wp--preset--color--dark-grey);
+			margin: 0 30px;
+			padding: 0;
+
+			@media (--tablet) {
+				width: 13px;
+				mask-size: 13px auto;
+				margin: 0 12px;
+			}
 
 			&:hover {
 				cursor: pointer;

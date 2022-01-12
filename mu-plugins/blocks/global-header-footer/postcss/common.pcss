@@ -8,6 +8,7 @@
 /*
  * Variables, mixins, etc
  */
+
 /* Breakpoints should be synced with `wporg-parent-2021` (or `wporg-news-2021` until parent exists). */
 @custom-media --tablet (min-width: 890px);
 @custom-media --desktop (min-width: 1152px);
@@ -16,6 +17,7 @@
 /*
  * Shared styles
  */
+
 .wp-block-group.global-header,
 .wp-block-group.global-footer {
 	& svg,
@@ -25,7 +27,7 @@
 }
 
 .wp-block-group.global-header {
-	& .wp-block-navigation__responsive-container-open[aria-expanded=true] {
+	& .wp-block-navigation__responsive-container-open[aria-expanded="true"] {
 		visibility: hidden; /* Not needed when expanded, and behaves unintuitively. */
 	}
 }
@@ -82,6 +84,7 @@
  * @link https://github.com/WordPress/gutenberg/issues/34716
  * @link https://github.com/WordPress/wporg-news-2021/pull/30
  */
+
 [class*="wp-container-"].global-header,
 [class*="wp-container-"].global-footer,
 [class*="wp-container-"].global-header > * + *,
