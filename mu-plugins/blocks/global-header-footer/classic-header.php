@@ -2,6 +2,8 @@
 
 namespace WordPressdotorg\MU_Plugins\Global_Header_Footer\Header;
 
+use function WordPressdotorg\MU_Plugins\Global_Header_Footer\render_global_styles;
+
 defined( 'WPINC' ) || die();
 
 /*
@@ -19,21 +21,14 @@ defined( 'WPINC' ) || die();
 
 		  Some of them may conflict with rules that the Classic theme applies to the content area. These are
 		  output first, so they can be overridden if needed.
-
-		  This is essentially a cached version of the output of `wp_get_global_stylesheet()` in an FSE theme.
-		  @see `save_dependent_global_styles()`
 		-->
 		<style id="global-styles-for-classic-themes">
-			<?php echo get_network_option( 1, 'global-header-footer-dependent-styles' ); ?>
+			<?php render_global_styles(); ?>
 		</style>
 
 		<?php
 
-		if ( function_exists( 'gp_head' ) ) {
-			gp_head();
-		} else {
-			wp_head();
-		}
+		wp_head();
 
 		?>
 	</head>
