@@ -88,6 +88,18 @@ function register_routes() {
 
 	register_rest_route(
 		'global-header-footer/v1',
+		'header/planet',
+		array(
+			array(
+				'methods'  => WP_REST_Server::READABLE,
+				'callback' => __NAMESPACE__ . '\rest_render_planet_global_header',
+				'permission_callback' => '__return_true',
+			),
+		)
+	);
+
+	register_rest_route(
+		'global-header-footer/v1',
 		'footer',
 		array(
 			array(
@@ -284,6 +296,33 @@ function rest_render_codex_global_header( $request ) {
 	$markup = preg_replace( '!<html[^>]+>!i', '<!-- [codex head html] -->', $markup );
 
 	return $markup;
+}
+
+/**
+ * Render the global header via a REST request for use with Planet.
+ *
+ * @return string
+ */
+function rest_render_planet_global_header( $request ) {
+	add_filter( 'pre_get_document_title', function() {
+		return 'Planet &mdash; WordPress.org';
+	} );
+
+	add_filter( 'wporg_canonical_url', function() {
+		return 'https://planet.wordpress.org/';
+	} );
+
+	add_filter( 'body_class', function( $class ) {
+		return [
+			'wporg-responsive',
+			'wporg-planet'
+		];
+	} );
+
+	// hreflang tags are not needed for this site.
+	remove_action( 'wp_head', 'WordPressdotorg\Theme\hreflang_link_attributes' );
+
+	return rest_render_global_header( $request );
 }
 
 /**
