@@ -9,7 +9,7 @@ defined( 'WPINC' ) || die();
 add_action( 'init', __NAMESPACE__ . '\register_block_types' );
 add_action( 'enqueue_block_assets', __NAMESPACE__ . '\register_block_types_js' );
 add_action( 'rest_api_init', __NAMESPACE__ . '\register_routes' );
-add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_compat_wp4_styles' );
+add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_compat_wp4_styles', 30 );
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_fonts' );
 add_action( 'wp_head', __NAMESPACE__ . '\preload_google_fonts' );
 add_filter( 'style_loader_src', __NAMESPACE__ . '\update_google_fonts_url', 10, 2 );
@@ -68,7 +68,31 @@ function register_routes() {
 		array(
 			array(
 				'methods'  => WP_REST_Server::READABLE,
-				'callback' => __NAMESPACE__ . '\render_global_header',
+				'callback' => __NAMESPACE__ . '\rest_render_global_header',
+				'permission_callback' => '__return_true',
+			),
+		)
+	);
+
+	register_rest_route(
+		'global-header-footer/v1',
+		'header/codex',
+		array(
+			array(
+				'methods'  => WP_REST_Server::READABLE,
+				'callback' => __NAMESPACE__ . '\rest_render_codex_global_header',
+				'permission_callback' => '__return_true',
+			),
+		)
+	);
+
+	register_rest_route(
+		'global-header-footer/v1',
+		'header/planet',
+		array(
+			array(
+				'methods'  => WP_REST_Server::READABLE,
+				'callback' => __NAMESPACE__ . '\rest_render_planet_global_header',
 				'permission_callback' => '__return_true',
 			),
 		)
@@ -80,7 +104,7 @@ function register_routes() {
 		array(
 			array(
 				'methods'  => WP_REST_Server::READABLE,
-				'callback' => __NAMESPACE__ . '\render_global_footer',
+				'callback' => __NAMESPACE__ . '\rest_render_global_footer',
 				'permission_callback' => '__return_true',
 			),
 		)
@@ -153,15 +177,17 @@ function preload_google_fonts() {
  * Output styles for themes that don't use `wp4-styles`. This provides compat with the classic header.php.
  */
 function enqueue_compat_wp4_styles() {
-	if ( ! wp_is_block_theme() && ! current_theme_supports( 'wp4-styles' ) ) {
-		$cdn_domain = defined( 'WPORG_SANDBOXED' ) && WPORG_SANDBOXED ? 'wordpress.org' : 's.w.org';
+	if (
+		( ! wp_is_block_theme() && ! current_theme_supports( 'wp4-styles' ) ) ||
+		( defined( 'REST_REQUEST' ) && REST_REQUEST )
+	) {
 		$suffix = 'rtl' === is_rtl() ? '-rtl' : '';
 
 		wp_register_style(
 			'wp4-styles',
-			'https://' . $cdn_domain . '/style/wp4' . $suffix . '.css',
+			'https://s.w.org/style/wp4' . $suffix . '.css',
 			array( 'open-sans' ),
-			'95'
+			96
 		);
 
 		wp_enqueue_style( 'wp4-styles' );
@@ -220,6 +246,93 @@ function restore_inner_group_container() {
 }
 
 /**
+ * Render the global header via a REST request.
+ *
+ * @return string
+ */
+function rest_render_global_header( $request ) {
+
+	// Remove the theme stylesheet from rest requests.
+	add_filter( 'wp_enqueue_scripts', function() {
+		remove_theme_support( 'wp4-styles' );
+
+		wp_dequeue_style( 'wporg-style' );
+		wp_enqueue_style( 'dashicons' );
+		wp_enqueue_style( 'open-sans' );
+	}, 20 );
+
+	// Serve the request as HTML.
+	add_filter( 'rest_pre_serve_request', function( $served, $result ) {
+		header( 'Content-Type: text/html' );
+
+		echo $result->get_data();
+
+		return true;
+	}, 10, 2 );
+
+	return render_global_header();
+}
+
+/**
+ * Render the global header via a REST request for the Codex with appropriate tags.
+ *
+ * @return string
+ */
+function rest_render_codex_global_header( $request ) {
+	add_action( 'wp_head', function() {
+		echo '<!-- [codex head meta] -->', "\n";
+	}, 1 );
+
+	add_action( 'wp_head', function() {
+		echo '<!-- [codex head scripts] -->', "\n";
+	}, 100 );
+
+	add_filter( 'body_class', function( $class ) {
+		return [
+			'wporg-responsive',
+			'wporg-codex'
+		];
+	} );
+
+	wp_enqueue_style( 'codex-wp4', 'https://s.w.org/style/codex-wp4.css', array( 'wp4-styles' ), 4 );
+
+	// hreflang tags are not needed for this site.
+	remove_action( 'wp_head', 'WordPressdotorg\Theme\hreflang_link_attributes' );
+
+	$markup = rest_render_global_header( $request );
+	$markup = preg_replace( '!<html[^>]+>!i', '<!-- [codex head html] -->', $markup );
+
+	return $markup;
+}
+
+/**
+ * Render the global header via a REST request for use with Planet.
+ *
+ * @return string
+ */
+function rest_render_planet_global_header( $request ) {
+	add_filter( 'pre_get_document_title', function() {
+		return 'Planet &mdash; WordPress.org';
+	} );
+
+	add_filter( 'wporg_canonical_url', function() {
+		return 'https://planet.wordpress.org/';
+	} );
+
+	add_filter( 'body_class', function( $class ) {
+		return [
+			'wporg-responsive',
+			'wporg-planet'
+		];
+	} );
+
+	// hreflang tags are not needed for this site.
+	remove_action( 'wp_head', 'WordPressdotorg\Theme\hreflang_link_attributes' );
+
+	return rest_render_global_header( $request );
+}
+
+/**
  * Render the global header in a block context.
  *
  * @return string
@@ -264,12 +377,6 @@ function render_global_header() {
 		ob_start();
 		require __DIR__ . '/classic-header.php';
 		$markup = ob_get_clean() . $markup;
-	}
-
-	if ( $is_rest_request ) {
-		header( 'Content-Type: text/html' );
-		echo $markup;
-		die(); // this is an ugly hack. todo get the api to return html
 	}
 
 	return $markup;
@@ -551,6 +658,31 @@ function get_download_url() {
 }
 
 /**
+ * Render the global footer via a REST request.
+ *
+ * @return string
+ */
+function rest_render_global_footer( $request ) {
+
+	/*
+	 * Render the header but discard the markup, so that any header styles/scripts
+	 * required are then available for output in the footer.
+	 */
+	render_global_header();
+
+	// Serve the request as HTML
+	add_filter( 'rest_pre_serve_request', function( $served, $result ) {
+		header( 'Content-Type: text/html' );
+
+		echo $result->get_data();
+
+		return true;
+	}, 10, 2 );
+
+	return render_global_footer();
+}
+
+/**
  * Render the global footer in a block context.
  *
  * @return string
@@ -572,12 +704,6 @@ function render_global_footer() {
 		ob_start();
 		require_once __DIR__ . '/classic-footer.php';
 		$markup .= ob_get_clean();
-	}
-
-	if ( $is_rest_request ) {
-		header( 'Content-Type: text/html' );
-		echo $markup;
-		die(); // this is an ugly hack. todo get the api to return html
 	}
 
 	return $markup;
