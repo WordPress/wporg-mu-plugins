@@ -178,7 +178,7 @@ function preload_google_fonts() {
  */
 function enqueue_compat_wp4_styles() {
 	// See https://wordpress.slack.com/archives/C02QB8GMM/p1642056619063500
-	if ( ! FEATURE_2021_GLOBAL_HEADER_FOOTER ) {
+	if ( defined( 'FEATURE_2021_GLOBAL_HEADER_FOOTER' ) && ! FEATURE_2021_GLOBAL_HEADER_FOOTER ) {
 		return;
 	}
 
