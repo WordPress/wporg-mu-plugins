@@ -618,7 +618,11 @@ function get_download_url() {
  */
 function rest_render_global_footer( $request ) {
 
-	$markup = render_global_footer();
+	/*
+	 * Render the header but discard the markup, so that any header styles/scripts
+	 * required are then available for output in the footer.
+	 */
+	render_global_header();
 
 	// Serve the request as HTML
 	add_filter( 'rest_pre_serve_request', function( $served, $result ) {
@@ -629,7 +633,7 @@ function rest_render_global_footer( $request ) {
 		return true;
 	}, 10, 2 );
 
-	return $markup;
+	return render_global_footer();
 }
 
 /**
