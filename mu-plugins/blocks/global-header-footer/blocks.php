@@ -299,6 +299,9 @@ function rest_render_codex_global_header( $request ) {
 	// hreflang tags are not needed for this site.
 	remove_action( 'wp_head', 'WordPressdotorg\Theme\hreflang_link_attributes' );
 
+	// Remove <title> tags.
+	remove_theme_support( 'title-tag' );
+
 	$markup = rest_render_global_header( $request );
 	$markup = preg_replace( '!<html[^>]+>!i', '<!-- [codex head html] -->', $markup );
 
