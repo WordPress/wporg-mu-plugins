@@ -241,6 +241,8 @@ function render_global_header() {
 		'classes' => 'global-header__mobile-get-wordpress global-header__get-wordpress',
 	);
 
+	$menu_items = set_current_item_class( $menu_items );
+
 	/*
 	 * Render the block mockup first, in case anything in that process adds hooks to `wp_head`.
 	 * Allow multiple includes to allow for the double `site-header-offset` workaround.
@@ -342,7 +344,6 @@ function get_global_menu_items() {
 			'title'   => esc_html_x( 'News', 'Menu item title', 'wporg' ),
 			'url'     => 'https://wordpress.org/news/',
 			'type'    => 'custom',
-			'classes' => 'current-menu-item',
 		),
 
 		array(
@@ -604,4 +605,103 @@ function render_global_styles() {
 	// Restore to current site.
 	restore_current_blog();
 	WP_Theme_JSON_Resolver::clean_cached_data();
+}
+
+/**
+ * Set the menu active state for the currently selected menu item.
+ *
+ * @param array $menu_items The menu menu items.
+ *
+ * @return array The altered menu items.
+ */
+function set_current_item_class( $menu_items ) {
+	$current_url = get_menu_url_for_current_page( $menu_items );
+
+	foreach ( $menu_items as & $item ) {
+		$sub = false;
+		if ( ! empty( $item['submenu'] ) ) {
+			foreach ( $item['submenu'] as & $subitem ) {
+				if ( $current_url === $subitem['url'] ) {
+					$subitem['classes'] = trim( ( $subitem['classes'] ?? '' ) . ' current-menu-item' );
+					$sub                = true;
+					break;
+				}
+			}
+		}
+
+		if ( $sub || $current_url === $item['url'] ) {
+			$item['classes'] = trim( ( $item['classes'] ?? '' ) . ' current-menu-item' );
+		}
+	}
+
+	return $menu_items;
+}
+
+/**
+ * Determine the menu item which best describes the current request.
+ *
+ * @param array $menu_items The menu menu items.
+ *
+ * @return string
+ */
+function get_menu_url_for_current_page( $menu_items ) {
+
+	if ( 'translate.wordpress.org' === $_SERVER['HTTP_HOST'] ) {
+		return 'https://make.wordpress.org/';
+	}
+
+	if ( 'developer.wordpress.prg' === $_SERVER['HTTP_HOST'] ) {
+		// DevHub doesn't exist within the menu.
+		return '';
+	}
+
+	// Temporary
+	if ( 'https://wordpress.org/news-test/' === home_url( '/' ) ) {
+		return 'https://wordpress.org/news/';
+	}
+
+	$compare = "https://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+
+	// Is it the Global Search?
+	if ( 0 === stripos( $compare, 'https://wordpress.org/search/' ) ) {
+		if ( isset( $_GET['in'] ) ) {
+			if ( 'support_docs' === $_GET['in'] ) {
+				return 'https://wordpress.org/support/';
+			} elseif ( 'developer_documentation' === $_GET['in'] ) {
+				// DevHub doesn't exist within the menu.
+				return '';
+			}
+		}
+
+		return 'https://wordpress.org/support/forums/';
+	}
+
+	// These prefixes are Support Forums, not Support Documentation.
+	if ( preg_match( '!/support/(forum|view|topic|reply|users)/!i', $_SERVER['REQUEST_URI'] ) ) {
+		$compare = "https://{$_SERVER['HTTP_HOST']}/support/forums/";
+	}
+
+	// Extract all URLs, toplevel and child.
+	$urls = [];
+	array_walk_recursive(
+		$menu_items,
+		function( $val, $key ) use ( &$urls ) {
+			if ( 'url' === $key ) {
+				$urls[] = $val;
+			}
+		}
+	);
+
+	// Sort long to short, we need the deepest path to match.
+	usort( $urls, function( $a, $b ) {
+		return strlen( $b ) - strlen( $a );
+	} );
+
+	foreach ( $urls as $url ) {
+		if ( 0 === stripos( $compare, $url ) ) {
+			return $url;
+		}
+	}
+
+	return home_url('/');
 }
