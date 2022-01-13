@@ -9,7 +9,7 @@ defined( 'WPINC' ) || die();
 add_action( 'init', __NAMESPACE__ . '\register_block_types' );
 add_action( 'enqueue_block_assets', __NAMESPACE__ . '\register_block_types_js' );
 add_action( 'rest_api_init', __NAMESPACE__ . '\register_routes' );
-add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_compat_wp4_styles' );
+add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_compat_wp4_styles', 30 );
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_fonts' );
 add_action( 'wp_head', __NAMESPACE__ . '\preload_google_fonts' );
 add_filter( 'style_loader_src', __NAMESPACE__ . '\update_google_fonts_url', 10, 2 );
@@ -187,7 +187,7 @@ function enqueue_compat_wp4_styles() {
 			'wp4-styles',
 			'https://s.w.org/style/wp4' . $suffix . '.css',
 			array( 'open-sans' ),
-			'95'
+			96
 		);
 
 		wp_enqueue_style( 'wp4-styles' );
@@ -252,9 +252,16 @@ function restore_inner_group_container() {
  */
 function rest_render_global_header( $request ) {
 
-	$markup = render_global_header();
+	// Remove the theme stylesheet from rest requests.
+	add_filter( 'wp_enqueue_scripts', function() {
+		remove_theme_support( 'wp4-styles' );
 
-	// Serve the request as HTML
+		wp_dequeue_style( 'wporg-style' );
+		wp_enqueue_style( 'dashicons' );
+		wp_enqueue_style( 'open-sans' );
+	}, 20 );
+
+	// Serve the request as HTML.
 	add_filter( 'rest_pre_serve_request', function( $served, $result ) {
 		header( 'Content-Type: text/html' );
 
@@ -263,7 +270,7 @@ function rest_render_global_header( $request ) {
 		return true;
 	}, 10, 2 );
 
-	return $markup;
+	return render_global_header();
 }
 
 /**
@@ -287,7 +294,7 @@ function rest_render_codex_global_header( $request ) {
 		];
 	} );
 
-	wp_enqueue_style( 'codex-wp4', 'https://s.w.org/style/codex-wp4.css', array( 'wp4-styles' ), 3 );
+	wp_enqueue_style( 'codex-wp4', 'https://s.w.org/style/codex-wp4.css', array( 'wp4-styles' ), 4 );
 
 	// hreflang tags are not needed for this site.
 	remove_action( 'wp_head', 'WordPressdotorg\Theme\hreflang_link_attributes' );
