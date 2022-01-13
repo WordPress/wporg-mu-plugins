@@ -177,6 +177,11 @@ function preload_google_fonts() {
  * Output styles for themes that don't use `wp4-styles`. This provides compat with the classic header.php.
  */
 function enqueue_compat_wp4_styles() {
+	// See https://wordpress.slack.com/archives/C02QB8GMM/p1642056619063500
+	if ( ! FEATURE_2021_GLOBAL_HEADER_FOOTER ) {
+		return;
+	}
+
 	if (
 		( ! wp_is_block_theme() && ! current_theme_supports( 'wp4-styles' ) ) ||
 		( defined( 'REST_REQUEST' ) && REST_REQUEST )
