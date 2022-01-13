@@ -165,13 +165,15 @@ function preload_google_fonts() {
  * Output styles for themes that don't use `wp4-styles`. This provides compat with the classic header.php.
  */
 function enqueue_compat_wp4_styles() {
-	if ( ! wp_is_block_theme() && ! current_theme_supports( 'wp4-styles' ) ) {
-		$cdn_domain = defined( 'WPORG_SANDBOXED' ) && WPORG_SANDBOXED ? 'wordpress.org' : 's.w.org';
+	if (
+		( ! wp_is_block_theme() && ! current_theme_supports( 'wp4-styles' ) ) ||
+		( defined( 'REST_REQUEST' ) && REST_REQUEST )
+	) {
 		$suffix = 'rtl' === is_rtl() ? '-rtl' : '';
 
 		wp_register_style(
 			'wp4-styles',
-			'https://' . $cdn_domain . '/style/wp4' . $suffix . '.css',
+			'https://s.w.org/style/wp4' . $suffix . '.css',
 			array( 'open-sans' ),
 			'95'
 		);
@@ -273,8 +275,7 @@ function rest_render_codex_global_header( $request ) {
 		];
 	} );
 
-	wp_enqueue_style( 'wp4', 'https://s.w.org/style/wp4.css', array(), 95 );
-	wp_enqueue_style( 'codex-wp4', 'https://s.w.org/style/codex-wp4.css', array( 'wp4' ), 3 );
+	wp_enqueue_style( 'codex-wp4', 'https://s.w.org/style/codex-wp4.css', array( 'wp4-styles' ), 3 );
 
 	// hreflang tags are not needed for this site.
 	remove_action( 'wp_head', 'WordPressdotorg\Theme\hreflang_link_attributes' );
