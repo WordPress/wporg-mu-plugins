@@ -49,9 +49,19 @@
 
 			@media (--tablet) {
 				padding-bottom: 37px;
-				padding-top: 0;
+				padding-top: 42px;
 				padding-left: calc(var(--wp--style--block-gap) / 2);
 				padding-right: calc(var(--wp--style--block-gap) / 2);
+			}
+
+			&:hover,
+			&:focus-within {
+				background-color: var(--wp--preset--color--darker-grey);
+
+				& ul {
+					border-top: none;
+					background-color: var(--wp--preset--color--darker-grey);
+				}
 			}
 
 			&.current-menu-item {
@@ -96,7 +106,10 @@
 	& .wp-block-navigation__container .wp-block-navigation-item.global-header__overflow-menu {
 
 		@media (--tablet) {
-			padding-right: 60px; /* Give the user more space to keep the menu hovered/open while they move their mouse to the submenu. */
+
+			/* Add extra space around the overflow … to make a bigger tap/hover target. */
+			padding-left: var(--wp--style--block-gap);
+			padding-right: var(--wp--style--block-gap);
 		}
 
 		& .global-header__overflow-item {
@@ -109,6 +122,14 @@
 
 		& .wp-block-navigation__submenu-icon {
 			transform: rotate( -90deg );
+		}
+
+		& > ul {
+			padding-left: 0;
+
+			& li {
+				padding-left: calc(var(--wp--style--block-gap) / 2 );
+			}
 		}
 	}
 
