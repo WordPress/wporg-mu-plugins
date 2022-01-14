@@ -90,11 +90,9 @@ defined( 'WPINC' ) || die();
 
 					The only things that changed were:
 
-					1) The `s` parameter is renamed to `search`, because `do-search.php` requires that. Alternatively,
-					we could modify that file to accept either.
-					2) The instance ID was changed to `99`, to make it likely to be unique.
-					3) Internationalizing the labels. See https://github.com/WordPress/gutenberg/issues/36061 and
-					related issues for a possible future alternative.
+					1) The instance ID was changed to `99`, to make it likely to be unique.
+					2) Internationalizing the labels. See https://github.com/WordPress/gutenberg/issues/36061 and
+					   related issues for a possible future alternative.
 
 					If that issue is ever resolved, we should be able to replace this with the Search block, without having
 					to change any CSS.
@@ -113,7 +111,7 @@ defined( 'WPINC' ) || die();
 							type="search"
 							id="wp-block-search__input-99"
 							class="wp-block-search__input"
-							name="search"
+							name="s"
 							value=""
 							placeholder="<?php echo esc_attr_x( 'Search WP.org...', 'input field placeholder', 'wporg' ); ?>"
 							required=""
