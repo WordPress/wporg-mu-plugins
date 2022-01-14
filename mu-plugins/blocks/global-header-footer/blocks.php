@@ -272,6 +272,7 @@ function rest_render_global_header( $request ) {
 	// Serve the request as HTML.
 	add_filter( 'rest_pre_serve_request', function( $served, $result ) {
 		header( 'Content-Type: text/html' );
+		header( 'X-Robots-Tag: noindex, follow' );
 
 		echo $result->get_data();
 
@@ -684,6 +685,7 @@ function rest_render_global_footer( $request ) {
 	// Serve the request as HTML
 	add_filter( 'rest_pre_serve_request', function( $served, $result ) {
 		header( 'Content-Type: text/html' );
+		header( 'X-Robots-Tag: noindex, follow' );
 
 		echo $result->get_data();
 
