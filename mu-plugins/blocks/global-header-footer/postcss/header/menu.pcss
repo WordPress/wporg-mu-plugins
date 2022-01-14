@@ -106,7 +106,10 @@
 	& .wp-block-navigation__container .wp-block-navigation-item.global-header__overflow-menu {
 
 		@media (--tablet) {
-			padding-right: 60px; /* Give the user more space to keep the menu hovered/open while they move their mouse to the submenu. */
+
+			/* Add extra space around the overflow … to make a bigger tap/hover target. */
+			padding-left: var(--wp--style--block-gap);
+			padding-right: var(--wp--style--block-gap);
 		}
 
 		& .global-header__overflow-item {
