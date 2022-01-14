@@ -54,7 +54,8 @@
 				padding-right: calc(var(--wp--style--block-gap) / 2);
 			}
 
-			&:hover:not(.global-header__overflow-menu) {
+			&:hover,
+			&:focus-within {
 				background-color: var(--wp--preset--color--darker-grey);
 
 				& ul {
