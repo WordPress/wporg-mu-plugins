@@ -189,7 +189,7 @@ function enqueue_compat_wp4_styles() {
 		( ! wp_is_block_theme() && ! current_theme_supports( 'wp4-styles' ) ) ||
 		( defined( 'REST_REQUEST' ) && REST_REQUEST )
 	) {
-		$suffix = 'rtl' === is_rtl() ? '-rtl' : '';
+		$suffix = is_rtl() ? '-rtl' : '';
 
 		wp_register_style(
 			'wp4-styles',
