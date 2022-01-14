@@ -13,6 +13,7 @@ add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_compat_wp4_styles', 
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_fonts' );
 add_action( 'wp_head', __NAMESPACE__ . '\preload_google_fonts' );
 add_filter( 'style_loader_src', __NAMESPACE__ . '\update_google_fonts_url', 10, 2 );
+add_filter( 'render_block_core/navigation-link', __NAMESPACE__ . '\swap_submenu_arrow_svg' );
 
 /**
  * Register block types
@@ -837,4 +838,14 @@ function get_menu_url_for_current_page( $menu_items ) {
 	}
 
 	return home_url('/');
+}
+
+/**
+ * Replace the current submenu down-arrow with a custom icon.
+ *
+ * @param string $block_content The block content about to be appended.
+ * @return string IDK
+ */
+function swap_submenu_arrow_svg( $block_content ) {
+	return str_replace( block_core_navigation_link_render_submenu_icon(), "<svg width='10' height='7' viewBox='0 0 10 7' stroke-width='1.2' xmlns='http://www.w3.org/2000/svg'><path d='M0.416667 1.33325L5 5.49992L9.58331 1.33325'></path></svg>", $block_content );
 }
