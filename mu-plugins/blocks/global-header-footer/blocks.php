@@ -844,7 +844,7 @@ function get_menu_url_for_current_page( $menu_items ) {
  * Replace the current submenu down-arrow with a custom icon.
  *
  * @param string $block_content The block content about to be appended.
- * @return string IDK
+ * @return string The filtered block content.
  */
 function swap_submenu_arrow_svg( $block_content ) {
 	return str_replace( block_core_navigation_link_render_submenu_icon(), "<svg width='10' height='7' viewBox='0 0 10 7' stroke-width='1.2' xmlns='http://www.w3.org/2000/svg'><path d='M0.416667 1.33325L5 5.49992L9.58331 1.33325'></path></svg>", $block_content );
