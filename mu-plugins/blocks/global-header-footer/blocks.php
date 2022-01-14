@@ -305,9 +305,6 @@ function rest_render_codex_global_header( $request ) {
 
 	wp_enqueue_style( 'codex-wp4', 'https://s.w.org/style/codex-wp4.css', array( 'wp4-styles' ), 4 );
 
-	// hreflang tags are not needed for this site.
-	remove_action( 'wp_head', 'WordPressdotorg\Theme\hreflang_link_attributes' );
-
 	// Remove <title> tags.
 	remove_theme_support( 'title-tag' );
 
@@ -337,9 +334,6 @@ function rest_render_planet_global_header( $request ) {
 			'wporg-planet'
 		];
 	} );
-
-	// hreflang tags are not needed for this site.
-	remove_action( 'wp_head', 'WordPressdotorg\Theme\hreflang_link_attributes' );
 
 	return rest_render_global_header( $request );
 }
