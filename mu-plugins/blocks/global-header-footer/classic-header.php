@@ -30,6 +30,18 @@ defined( 'WPINC' ) || die();
 
 		wp_head();
 
+		/*
+		 * Normally GlotPress only calls `gp_head()`, not `wp_head()`. We're intentionally calling both, because
+		 * we need to output the global styles from Core, scripts for the Navigation and Global Header blocks, etc.
+		 * Without those, the global header and footer won't work properly.
+		 *
+		 * This won't be necessary once GlotPress transitions to use standard WP themes.
+		 * See https://github.com/GlotPress/GlotPress-WP/issues/8
+		 */
+		if ( function_exists( 'gp_head' ) ) {
+			gp_head();
+		}
+
 		?>
 	</head>
 
