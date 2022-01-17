@@ -79,7 +79,7 @@ defined( 'WPINC' ) || die();
 		keyboard navigation, ARIA states, etc. It also saves having to write custom code for all the interactions.
 	-->
 	<!-- wp:navigation {"orientation":"vertical","className":"global-header__search","overlayMenu":"mobile"} -->
-		<!-- wp:navigation-link {"label":"Search","url":"#","kind":"custom","isTopLevelLink":false} -->
+		<!-- wp:navigation-link {"label":<?php echo esc_html_x( 'Search', 'button label', 'wporg' ); ?>,"url":"#","kind":"custom","isTopLevelLink":false} -->
 			<!-- wp:html -->
 			<li>
 				<!--
