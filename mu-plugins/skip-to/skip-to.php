@@ -134,8 +134,4 @@ namespace WordPressdotorg {
 	function skip_to_main() {
 		return MU_Plugins\Skip_To_Links\skip_to( 'main', false );
 	}
-
-	function skip_to_styled( $selector = 'main', $css = true ) {
-		return MU_Plugins\Skip_To_Links\skip_to( $selector, $css );
-	}
 }
