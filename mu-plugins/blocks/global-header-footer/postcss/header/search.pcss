@@ -30,6 +30,11 @@
 
 	& .wp-block-navigation-item__content {
 		padding: 42px var(--wp--style--block-gap) 37px;
+		display: none;
+
+		@media (--tablet) {
+			display: block;
+		}
 	}
 
 	& .wp-block-navigation__submenu-icon {
