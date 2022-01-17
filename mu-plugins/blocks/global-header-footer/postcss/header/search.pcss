@@ -25,11 +25,27 @@
 	}
 
 	& .wp-block-navigation-item__label {
-		display: none;
+
+		/* See @mixin hide-accessibly in wporg-news-2021 */
+		border: 0;
+		clip: rect(1px, 1px, 1px, 1px);
+		clip-path: inset(50%);
+		height: 1px;
+		margin: -1px;
+		overflow: hidden;
+		padding: 0;
+		position: absolute;
+		width: 1px;
+		word-wrap: normal !important;
 	}
 
 	& .wp-block-navigation-item__content {
 		padding: 42px var(--wp--style--block-gap) 37px;
+		display: none;
+
+		@media (--tablet) {
+			display: block;
+		}
 	}
 
 	& .wp-block-navigation__submenu-icon {
