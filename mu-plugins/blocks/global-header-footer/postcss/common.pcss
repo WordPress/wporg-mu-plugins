@@ -14,6 +14,11 @@
 @custom-media --desktop (min-width: 1152px);
 @custom-media --desktop-wide (min-width: 1440px);
 
+/* Offset from the top of the page which is covered by "stuck" items (admin bar & header). */
+html {
+	scroll-padding-top: calc(105px + var(--wp-admin--admin-bar--height, 0px)); /* 105px = height of header. */
+}
+
 /*
  * Shared styles
  */
