@@ -1,3 +1,4 @@
+/* global MicroModal */
 /**
  * File wporg-global-header-script.js.
  *
@@ -168,7 +169,24 @@
 		);
 	};
 
+	/* eslint-disable @wordpress/no-global-event-listener */
 	window.addEventListener( 'load', function () {
 		new navMenu( '.global-header .global-header__navigation' );
+
+		const buttons = document.querySelectorAll( '[data-micromodal-trigger]' );
+		const modalIds = Array.from( buttons ).map( ( button ) =>
+			button.getAttribute( 'data-micromodal-trigger' )
+		);
+		buttons.forEach( function ( button ) {
+			button.addEventListener( 'click', function ( event ) {
+				const thisModal = event.target.getAttribute( 'data-micromodal-trigger' );
+				modalIds.forEach( function ( modalId ) {
+					if ( thisModal !== modalId ) {
+						// This overwrites the internally tracked modal 😞
+						MicroModal.close( modalId );
+					}
+				} );
+			} );
+		} );
 	} );
 } )();
