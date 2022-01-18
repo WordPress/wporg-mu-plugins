@@ -168,7 +168,24 @@
 		);
 	};
 
+	/* eslint-disable @wordpress/no-global-event-listener */
 	window.addEventListener( 'load', function () {
 		new navMenu( '.global-header .global-header__navigation' );
+
+		const openButtons = document.querySelectorAll( '[data-micromodal-trigger]' );
+		openButtons.forEach( function ( button ) {
+			// When any open menu button is clicked, find any existing close buttons and click them.
+			button.addEventListener( 'click', function ( event ) {
+				const thisModal = event.target.getAttribute( 'data-micromodal-trigger' );
+				const closeButtons = Array.from(
+					document.querySelectorAll( 'button[data-micromodal-close]' )
+				).filter(
+					// Filter to find visible close buttons that are not for this modal.
+					( _button ) => _button.offsetWidth > 0 && null === _button.closest( `#${ thisModal }` )
+				);
+
+				closeButtons.forEach( ( _button ) => _button.click() );
+			} );
+		} );
 	} );
 } )();
