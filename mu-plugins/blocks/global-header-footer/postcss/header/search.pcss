@@ -62,17 +62,25 @@
 		}
 	}
 
-	& .global-header__search-form {
+	& .wp-block-search {
 		margin-top: 0;
 		width: 100%;
 
 		@media (--tablet) {
 			padding: 20px;
-			width: auto;
+		}
+
+		& .wp-block-search__inside-wrapper {
+			padding: 0;
+			border: none;
+			border-radius: 2px;
+			background-color: var(--wp--preset--color--white);
+			color: var(--wp--preset--color--black);
+			font-size: inherit;
 		}
 
 		& .wp-block-search__label {
-			display: inline-block;
+			display: block;
 			margin-bottom: 20px;
 			font-size: 21px;
 
@@ -92,63 +100,41 @@
 			}
 		}
 
-		& .wp-block-search__inside-wrapper {
-			position: relative;
-
-			&:focus-within {
-				outline: 1px dotted currentColor;
-			}
-		}
-
 		& .wp-block-search__input {
-			width: 100%;
-			padding: var(--wp--custom--form--padding);
-			padding-right: 50px; /* Prevent user input from running into icon. */
-			border: none;
-			border-radius: 2px;
-			background-color: var(--wp--preset--color--white);
-			color: var(--wp--preset--color--black);
-			font-size: inherit;
 			-webkit-appearance: none; /* Remove duplicate magnifying glass icon on Safari-mobile. */
+			padding: var(--wp--custom--form--padding);
+			box-shadow: none;
 
 			@media (--tablet) {
-				padding-right: 35px; /* Prevent user input from running into icon. */
-				padding-top: calc(0.5 * var(--wp--custom--form--padding));
-				padding-bottom: calc(0.5 * var(--wp--custom--form--padding));
-			}
-
-			&:focus {
-				outline: none;
+				padding: calc(var(--wp--custom--form--padding) * 0.5) var(--wp--custom--form--padding);
 			}
 
 			&::placeholder {
 				color: #6a6a6a;
 				opacity: 1;
 			}
+
+			&:focus {
+				outline: revert;
+			}
 		}
 
 		& .wp-block-search__button {
-			position: absolute;
-			right: 0;
-			top: 0;
-			width: 20px;
-			height: 100%;
-			mask-image: url(../images/search.svg);
-			mask-size: 20px auto;
-			mask-repeat: no-repeat;
-			mask-position: center;
-			background-color: var(--wp--preset--color--dark-grey);
-			margin: 0 30px;
-			padding: 0;
+			padding: 8px 12px;
+			background-color: transparent;
+			color: var(--wp--preset--color--black);
 
-			@media (--tablet) {
-				width: 13px;
-				mask-size: 13px auto;
-				margin: 0 12px;
-			}
+			& svg {
+				fill: currentColor;
+				height: 32px;
+				width: 32px;
 
-			&:hover {
-				cursor: pointer;
+				@media (--tablet) {
+					min-height: 20px;
+					height: 20px;
+					min-width: 20px;
+					width: 20px;
+				}
 			}
 		}
 	}
