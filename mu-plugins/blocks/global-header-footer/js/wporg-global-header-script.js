@@ -1,4 +1,3 @@
-/* global MicroModal */
 /**
  * File wporg-global-header-script.js.
  *
@@ -173,19 +172,19 @@
 	window.addEventListener( 'load', function () {
 		new navMenu( '.global-header .global-header__navigation' );
 
-		const buttons = document.querySelectorAll( '[data-micromodal-trigger]' );
-		const modalIds = Array.from( buttons ).map( ( button ) =>
-			button.getAttribute( 'data-micromodal-trigger' )
-		);
-		buttons.forEach( function ( button ) {
+		const openButtons = document.querySelectorAll( '[data-micromodal-trigger]' );
+		openButtons.forEach( function ( button ) {
+			// When any open menu button is clicked, find any existing close buttons and click them.
 			button.addEventListener( 'click', function ( event ) {
 				const thisModal = event.target.getAttribute( 'data-micromodal-trigger' );
-				modalIds.forEach( function ( modalId ) {
-					if ( thisModal !== modalId ) {
-						// This overwrites the internally tracked modal 😞
-						MicroModal.close( modalId );
-					}
-				} );
+				const closeButtons = Array.from(
+					document.querySelectorAll( 'button[data-micromodal-close]' )
+				).filter(
+					// Filter to find visible close buttons that are not for this modal.
+					( _button ) => _button.offsetWidth > 0 && null === _button.closest( `#${ thisModal }` )
+				);
+
+				closeButtons.forEach( ( _button ) => _button.click() );
 			} );
 		} );
 	} );
