@@ -27,7 +27,7 @@
 		padding-left: 0;
 		flex-basis: max-content;
 		flex-grow: 1;
-		flex-shrink: 0;
+		flex-shrink: 1;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
@@ -44,6 +44,7 @@
 		@media (--tablet) {
 			max-width: 15em;
 			flex-basis: min-content;
+			flex-shrink: 0;
 		}
 
 		@media (--desktop-wide) {
