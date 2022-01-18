@@ -22,4 +22,31 @@
 			display: none;
 		}
 	}
+
+	& .global-header__wporg-local-title {
+		flex-basis: 60%;
+		flex-shrink: 0;
+		line-height: 1;
+		overflow: hidden;
+		padding-left: 0;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+
+		@media (--tablet) {
+			display: inline;
+			flex-basis: initial;
+			font-size: 1.2em;
+			line-height: 1.5;
+			max-width: 200px;
+		}
+
+		@media (--desktop-wide) {
+			max-width: inherit;
+		}
+
+		& span {
+			border-left: 1px solid;
+			padding-left: var(--wp--style--block-gap);
+		}
+	}
 }

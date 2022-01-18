@@ -350,9 +350,11 @@ function render_global_header() {
 	remove_inner_group_container();
 
 	if ( is_rosetta_site() ) {
-		$menu_items = get_rosetta_menu_items();
+		$menu_items   = get_rosetta_menu_items();
+		$locale_title = get_rosetta_name();
 	} else {
-		$menu_items = get_global_menu_items();
+		$menu_items   = get_global_menu_items();
+		$locale_title = '';
 	}
 
 	// The mobile Get WordPress button needs to be in both menus.
@@ -535,6 +537,18 @@ function get_rosetta_menu_items() : array {
 	restore_current_blog();
 
 	return $normalized_items;
+}
+
+/**
+ * Fetch the Rosetta site name.
+ *
+ * @return string
+ */
+function get_rosetta_name() : string {
+	/** @var Rosetta_Sites $rosetta */
+	global $rosetta;
+
+	return get_blog_option( $rosetta->get_root_site_id(), 'blogname' );
 }
 
 /**

@@ -11,6 +11,12 @@ defined( 'WPINC' ) || die();
  * @var array $menu_items
  */
 
+/**
+ * Defined in `render_global_header()`.
+ *
+ * @var string $locale_title
+ */
+
 ?>
 
 <!-- wp:group {"tagName":"header","align":"full","className":"global-header"} -->
@@ -31,6 +37,14 @@ defined( 'WPINC' ) || die();
 		</a>
 	</figure>
 	<!-- /wp:image -->
+
+	<?php if ( ! empty( $locale_title ) ) : ?>
+	<!-- wp:paragraph {"className":"global-header__wporg-local-title"} -->
+	<p class="global-header__wporg-local-title">
+		<span><?php echo $locale_title; ?></span>
+	</p>
+	<!-- /wp:paragraph -->
+	<?php endif; ?>
 
 	<!-- wp:navigation {"orientation":"horizontal","className":"global-header__navigation","overlayMenu":"mobile"} -->
 		<?php
