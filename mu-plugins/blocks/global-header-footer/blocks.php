@@ -206,7 +206,7 @@ function enqueue_compat_wp4_styles() {
 }
 
 /**
- * Load Inter (font) for use in header & footer on classic themes.
+ * Load EB Garamond & Inter (fonts) for use in header & footer on classic themes.
  *
  * In the block theme, this is loaded by `theme.json` & `WordPressdotorg\Theme\News_2021\enqueue_assets`.
  */
@@ -217,7 +217,7 @@ function enqueue_fonts() {
 
 	wp_enqueue_style(
 		'wporg-news-fonts-css',
-		'https://fonts.googleapis.com/css2?family=Inter:wght@200..700&display=swap',
+		'https://fonts.googleapis.com/css2?family=Inter:wght@200..700&family=EB+Garamond:wght@400&display=swap',
 		array(),
 	);
 }
