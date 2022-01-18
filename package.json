@@ -21,17 +21,21 @@
 		"postcss-import": "^14.0.2",
 		"postcss-nesting": "^8.0.1",
 		"postcss-preset-env": "^6.7.0",
-		"postcss-reporter": "^7.0.2"
+		"postcss-reporter": "^7.0.2",
+		"rtlcss": "3.5.0"
 	},
 	"browserslist": [
 		"extends @wordpress/browserslist-config"
 	],
 	"scripts": {
-		"start": "npm run build -- --watch",
+		"start": "npm run build:css -- --watch",
 		"lint:css": "wp-scripts lint-style mu-plugins/blocks/global-header-footer/postcss/**/*.pcss",
 		"pre-build": "mkdir -p mu-plugins/blocks/global-header-footer/build",
-		"build": "npm run pre-build && postcss mu-plugins/blocks/global-header-footer/postcss/style.pcss --output mu-plugins/blocks/global-header-footer/build/style.css"
+		"build": "npm run pre-build && npm run build:css && npm run build:rtl",
+		"build:css": "postcss mu-plugins/blocks/global-header-footer/postcss/style.pcss --output mu-plugins/blocks/global-header-footer/build/style.css",
+		"build:rtl": "rtlcss mu-plugins/blocks/global-header-footer/build/style.css mu-plugins/blocks/global-header-footer/build/style-rtl.css"
 	},
+	"rtlcssConfig": {},
 	"stylelint": {
 		"extends": "@wordpress/stylelint-config",
 		"rules": {

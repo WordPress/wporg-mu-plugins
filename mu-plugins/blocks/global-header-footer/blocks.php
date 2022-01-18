@@ -22,11 +22,13 @@ add_filter( 'render_block_core/navigation-link', __NAMESPACE__ . '\swap_submenu_
  * showing up in the Block Inserter, regardless of which theme is running.
  */
 function register_block_types() {
+	$suffix = is_rtl() ? '-rtl' : '';
+
 	wp_register_style(
 		'wporg-global-header-footer',
-		plugins_url( '/build/style.css', __FILE__ ),
+		plugins_url( "/build/style$suffix.css", __FILE__ ),
 		array( 'wp-block-library' ), // Load `block-library` styles first, so that our styles override them.
-		filemtime( __DIR__ . '/build/style.css' )
+		filemtime( __DIR__ . "/build/style$suffix.css" )
 	);
 
 	wp_register_script(
