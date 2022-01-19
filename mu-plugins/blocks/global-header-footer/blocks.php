@@ -221,7 +221,7 @@ function enqueue_compat_wp4_styles() {
 }
 
 /**
- * Load Inter (font) for use in header & footer on classic themes.
+ * Load EB Garamond & Inter (fonts) for use in header & footer on classic themes.
  *
  * In the block theme, this is loaded by `theme.json` & `WordPressdotorg\Theme\News_2021\enqueue_assets`.
  */
@@ -232,7 +232,7 @@ function enqueue_fonts() {
 
 	wp_enqueue_style(
 		'wporg-news-fonts-css',
-		'https://fonts.googleapis.com/css2?family=Inter:wght@200..700&display=swap',
+		'https://fonts.googleapis.com/css2?family=Inter:wght@200..700&family=EB+Garamond:wght@400&display=swap',
 		array(),
 	);
 }
@@ -365,9 +365,11 @@ function render_global_header() {
 	remove_inner_group_container();
 
 	if ( is_rosetta_site() ) {
-		$menu_items = get_rosetta_menu_items();
+		$menu_items   = get_rosetta_menu_items();
+		$locale_title = get_rosetta_name();
 	} else {
-		$menu_items = get_global_menu_items();
+		$menu_items   = get_global_menu_items();
+		$locale_title = '';
 	}
 
 	// The mobile Get WordPress button needs to be in both menus.
@@ -550,6 +552,18 @@ function get_rosetta_menu_items() : array {
 	restore_current_blog();
 
 	return $normalized_items;
+}
+
+/**
+ * Fetch the Rosetta site name.
+ *
+ * @return string
+ */
+function get_rosetta_name() : string {
+	/** @var Rosetta_Sites $rosetta */
+	global $rosetta;
+
+	return get_blog_option( $rosetta->get_root_site_id(), 'blogname' );
 }
 
 /**
