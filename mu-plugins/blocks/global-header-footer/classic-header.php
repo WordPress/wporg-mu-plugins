@@ -2,7 +2,7 @@
 
 namespace WordPressdotorg\MU_Plugins\Global_Header_Footer\Header;
 
-use function WordPressdotorg\MU_Plugins\Global_Header_Footer\render_global_styles;
+use function WordPressdotorg\MU_Plugins\Global_Header_Footer\{ get_global_styles };
 
 defined( 'WPINC' ) || die();
 
@@ -23,7 +23,7 @@ defined( 'WPINC' ) || die();
 		  output first, so they can be overridden if needed.
 		-->
 		<style id="global-styles-for-classic-themes">
-			<?php render_global_styles(); ?>
+			<?php echo get_global_styles(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		</style>
 
 		<?php
