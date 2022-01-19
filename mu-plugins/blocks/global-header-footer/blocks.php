@@ -729,6 +729,12 @@ function rest_render_global_footer( $request ) {
 function render_global_footer() {
 	remove_inner_group_container();
 
+	if ( is_rosetta_site() ) {
+		$locale_title = get_rosetta_name();
+	} else {
+		$locale_title = '';
+	}
+
 	// Render the block mockup first, because `wp_render_layout_support_flag()` adds callbacks to `wp_footer`.
 	ob_start();
 	require_once __DIR__ . '/footer.php';

@@ -5,6 +5,12 @@ use function WordPressdotorg\MU_Plugins\Global_Header_Footer\{ get_home_url };
 
 defined( 'WPINC' ) || die();
 
+/**
+ * Defined in `render_global_footer()`.
+ *
+ * @var string $locale_title
+ */
+
 ?>
 
 <!-- wp:group {"tagName":"footer","align":"full","className":"global-footer"} -->
@@ -49,22 +55,36 @@ defined( 'WPINC' ) || die();
 
 	<!-- wp:group {"className":"global-footer__logos-container"} -->
 	<div class="wp-block-group global-footer__logos-container">
-		<!-- The design calls for two logos, a small "mark" on mobile/tablet, and the full logo for desktops. -->
-		<!-- wp:image {"width":27,"height":27,"className":"global-footer__wporg-logo-mark"} -->
-		<figure class="wp-block-image is-resized global-footer__wporg-logo-mark">
-			<a href="<?php echo esc_url( get_home_url() ); ?>">
-				<img src="https://wordpress.org/style/images/w-mark.svg" alt="<?php echo esc_html_x( 'WordPress.org', 'Image alt text', 'wporg' ); ?>" width="27" height="27" />
-			</a>
-		</figure>
-		<!-- /wp:image -->
+		<!-- wp:group {"layout":{"type":"flex","allowOrientation":false,"justifyContent":"left"}} -->
+		<div class="wp-block-group">
+			<!-- The design calls for two logos, a small "mark" on mobile/tablet, and the full logo for desktops. -->
+			<!-- wp:image {"width":27,"height":27,"className":"global-footer__wporg-logo-mark"} -->
+			<figure class="wp-block-image is-resized global-footer__wporg-logo-mark">
+				<a href="<?php echo esc_url( get_home_url() ); ?>">
+					<img src="https://wordpress.org/style/images/w-mark.svg" alt="<?php echo esc_html_x( 'WordPress.org', 'Image alt text', 'wporg' ); ?>" width="27" height="27" />
+				</a>
+			</figure>
+			<!-- /wp:image -->
 
-		<!-- wp:image {"width":160,"height":24,"className":"global-footer__wporg-logo-full"} -->
-		<figure class="wp-block-image is-resized global-footer__wporg-logo-full">
-			<a href="<?php echo esc_url( get_home_url() ); ?>">
-				<img src="<?php echo plugin_dir_url( __FILE__ ) . 'images/wporg-logo.svg'; ?>" alt="<?php echo esc_html_x( 'WordPress.org', 'Image alt text', 'wporg' ); ?>" width="160" height="24" />
-			</a>
-		</figure>
-		<!-- /wp:image -->
+			<!-- wp:image {"width":160,"height":24,"className":"global-footer__wporg-logo-full"} -->
+			<figure class="wp-block-image is-resized global-footer__wporg-logo-full">
+				<a href="<?php echo esc_url( get_home_url() ); ?>">
+					<img src="<?php echo plugin_dir_url( __FILE__ ) . 'images/wporg-logo.svg'; ?>" alt="<?php echo esc_html_x( 'WordPress.org', 'Image alt text', 'wporg' ); ?>" width="160" height="24" />
+				</a>
+			</figure>
+			<!-- /wp:image -->
+
+			<?php if ( ! empty( $locale_title ) ) : ?>
+			<!-- wp:paragraph {"className":"global-footer__wporg-locale-title"} -->
+			<p class="global-footer__wporg-locale-title">
+				<a href="https://make.wordpress.org/polyglots/teams/">
+					<?php echo esc_html( $locale_title ); ?>
+				</a>
+			</p>
+			<!-- /wp:paragraph -->
+			<?php endif; ?>
+		</div>
+		<!-- /wp:group -->
 
 		<!-- wp:social-links {"className":"is-style-logos-only"} -->
 		<ul class="wp-block-social-links is-style-logos-only">
