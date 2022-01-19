@@ -13,17 +13,24 @@
 	}
 
 	& .wp-block-image.global-header__wporg-logo-mark {
-		flex-basis: auto;
+		flex-basis: 100%;
+		flex-shrink: 1;
 		text-align: left;
+		min-width: 73px;
 
 		@media (--tablet) {
-			flex-basis: 73px;
+			flex-basis: auto;
 			flex-shrink: 0;
 		}
 
 		@media (--desktop-wide) {
 			display: none;
 		}
+	}
+
+	&.global-header__has-locale-title .global-header__wporg-logo-mark {
+		flex-basis: auto;
+		flex-shrink: unset;
 	}
 
 	& .global-header__wporg-locale-title {

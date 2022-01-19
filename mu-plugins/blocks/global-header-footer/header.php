@@ -17,10 +17,15 @@ defined( 'WPINC' ) || die();
  * @var string $locale_title
  */
 
+$container_class = 'global-header';
+if ( ! empty( $locale_title ) ) {
+	$container_class .= ' global-header__has-locale-title';
+}
+
 ?>
 
-<!-- wp:group {"tagName":"header","align":"full","className":"global-header"} -->
-<header class="wp-block-group global-header alignfull">
+<!-- wp:group {"tagName":"header","align":"full","className":"<?php echo esc_attr( $container_class ); ?>"} -->
+<header class="wp-block-group alignfull <?php echo esc_attr( $container_class ); ?>">
 	<!-- The design calls for two logos, a small "mark" on mobile/tablet, and the full logo for desktops. -->
 	<!-- wp:image {"width":27,"height":27,"className":"global-header__wporg-logo-mark"} -->
 	<figure class="wp-block-image is-resized global-header__wporg-logo-mark">
