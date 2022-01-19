@@ -39,8 +39,8 @@ defined( 'WPINC' ) || die();
 	<!-- /wp:image -->
 
 	<?php if ( ! empty( $locale_title ) ) : ?>
-	<!-- wp:paragraph {"className":"global-header__wporg-local-title"} -->
-	<p class="global-header__wporg-local-title">
+	<!-- wp:paragraph {"className":"global-header__wporg-locale-title"} -->
+	<p class="global-header__wporg-locale-title">
 		<span><?php echo esc_html( $locale_title ); ?></span>
 	</p>
 	<!-- /wp:paragraph -->
