@@ -8,18 +8,8 @@ defined( 'WPINC' ) || die();
 /**
  * Defined in `render_global_header()`.
  *
- * @var array $menu_items
- */
-
-/**
- * Defined in `render_global_header()`.
- *
+ * @var array  $menu_items
  * @var string $locale_title
- */
-
-/**
- * Defined in `render_global_header()`.
- *
  * @var string $show_search
  */
 
