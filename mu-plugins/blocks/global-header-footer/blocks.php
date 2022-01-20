@@ -771,7 +771,7 @@ function localize_nav_links( $block ) {
 		'core/navigation-link' === $block['blockName'] &&
 		! empty( $block['attrs']['url'] )
 	) {
-		$block['attrs']['url'] = localize_footer_link( $block['attrs']['url'] );
+		$block['attrs']['url'] = get_localized_footer_link( $block['attrs']['url'] );
 	}
 
 	return $block;
@@ -784,7 +784,7 @@ function localize_nav_links( $block ) {
  *
  * @return string|bool Replacement URL if one exists, false otherwise.
  */
-function localize_footer_link( $url ) {
+function get_localized_footer_link( $url ) {
 	global $rosetta;
 	if ( empty( $rosetta->current_site_domain ) ) {
 		return $url;
