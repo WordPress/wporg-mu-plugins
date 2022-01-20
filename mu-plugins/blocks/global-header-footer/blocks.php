@@ -367,9 +367,11 @@ function render_global_header() {
 	if ( is_rosetta_site() ) {
 		$menu_items   = get_rosetta_menu_items();
 		$locale_title = get_rosetta_name();
+		$show_search  = false;
 	} else {
 		$menu_items   = get_global_menu_items();
 		$locale_title = '';
+		$show_search  = true;
 	}
 
 	// The mobile Get WordPress button needs to be in both menus.
