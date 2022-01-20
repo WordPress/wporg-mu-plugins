@@ -641,11 +641,7 @@ function get_home_url() {
 
 	if ( is_rosetta_site() ) {
 		$root_site = $rosetta->get_root_site_id();
-		switch_to_blog( $root_site );
-
-		$url = home_url();
-
-		restore_current_blog();
+		$url       = \get_home_url( $root_site, '/' );
 	}
 
 	if ( ! $url ) {
@@ -733,6 +729,7 @@ function render_global_footer() {
 
 	if ( is_rosetta_site() ) {
 		$locale_title = get_rosetta_name();
+		add_filter( 'render_block_data', __NAMESPACE__ . '\localize_nav_links' );
 	} else {
 		$locale_title = '';
 	}
@@ -753,7 +750,63 @@ function render_global_footer() {
 		$markup .= ob_get_clean();
 	}
 
+	remove_filter( 'render_block_data', __NAMESPACE__ . '\localize_nav_links' );
+
 	return $markup;
+}
+
+/**
+ * Localise a `core/navigation-link` block link to point to the Rosetta site resource.
+ *
+ * Unfortunately WordPress doesn't have a block-specific pre- filter, only a block-specific post-filter.
+ * That's why we specifically check for the blockName here.
+ *
+ * @param array $block The parsed block data.
+ *
+ * @return array
+ */
+function localize_nav_links( $block ) {
+	if (
+		! empty( $block['blockName'] ) &&
+		'core/navigation-link' === $block['blockName'] &&
+		! empty( $block['attrs']['url'] )
+	) {
+		$block['attrs']['url'] = get_localized_footer_link( $block['attrs']['url'] );
+	}
+
+	return $block;
+}
+
+/**
+ * Get a localized variant of a link included in the global footer.
+ *
+ * @param string $url The URL as it is in the menu.
+ *
+ * @return string|bool Replacement URL if one exists, false otherwise.
+ */
+function get_localized_footer_link( $url ) {
+	global $rosetta;
+	if ( empty( $rosetta->current_site_domain ) ) {
+		return $url;
+	}
+
+	switch ( $url ) {
+		case 'https://wordpress.org/showcase/':
+		case 'https://wordpress.org/hosting/':
+			return $url;
+
+		case 'https://wordpress.org/support/':
+			// Check if support forum exists.
+			if ( ! $rosetta->has_support_forum() ) {
+				return $url;
+			}
+			break;
+
+		case 'https://learn.wordpress.org/':
+			return add_query_arg( 'locale', get_locale(), $url );
+	}
+
+	return str_replace( 'https://wordpress.org/', 'https://' . $rosetta->current_site_domain . '/', $url );
 }
 
 /**
