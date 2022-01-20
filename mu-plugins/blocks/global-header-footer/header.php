@@ -17,6 +17,12 @@ defined( 'WPINC' ) || die();
  * @var string $locale_title
  */
 
+/**
+ * Defined in `render_global_header()`.
+ *
+ * @var string $show_search
+ */
+
 $container_class = 'global-header';
 if ( ! empty( $locale_title ) ) {
 	$container_class .= ' global-header__has-locale-title';
@@ -92,6 +98,7 @@ if ( ! empty( $locale_title ) ) {
 		?>
 	<!-- /wp:navigation -->
 
+	<?php if ( $show_search ) : ?>
 	<!--
 		The search block is inside a navigation submenu, because that provides the exact functionality the design
 		calls for. It also provides a consistent experience with the primary navigation menu, with respect to
@@ -142,6 +149,7 @@ if ( ! empty( $locale_title ) ) {
 			<!-- /wp:html -->
 		<!-- /wp:navigation-link -->
 	<!-- /wp:navigation -->
+	<?php endif; ?>
 
 	<!-- This is the first of two Get WordPress buttons; the other is in the navigation menu.
 		 Two are needed because they have different DOM hierarchies at different breakpoints. -->
