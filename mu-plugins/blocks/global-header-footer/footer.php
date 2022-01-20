@@ -19,7 +19,7 @@ defined( 'WPINC' ) || die();
 	<div class="wp-block-group global-footer__navigation-container">
 		<!-- wp:navigation {"orientation":"vertical","className":"global-footer__navigation-important","overlayMenu":"never"} -->
 			<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'About', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/about/","kind":"custom","isTopLevelLink":true} /-->
-			<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Blog', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/news","kind":"custom","isTopLevelLink":true} /-->
+			<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Blog', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/news/","kind":"custom","isTopLevelLink":true} /-->
 			<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Hosting', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/hosting/","kind":"custom","isTopLevelLink":true} /-->
 			<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Donate', 'Menu item title', 'wporg' ); ?>","url":"https://wordpressfoundation.org/donate/","kind":"custom","isTopLevelLink":true} /-->
 		<!-- /wp:navigation -->
