@@ -641,11 +641,7 @@ function get_home_url() {
 
 	if ( is_rosetta_site() ) {
 		$root_site = $rosetta->get_root_site_id();
-		switch_to_blog( $root_site );
-
-		$url = home_url();
-
-		restore_current_blog();
+		$url       = \get_home_url( $root_site, '/' );
 	}
 
 	if ( ! $url ) {
