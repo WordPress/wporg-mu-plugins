@@ -782,7 +782,7 @@ function localize_nav_links( $block ) {
  *
  * @param string $url The URL as it is in the menu.
  *
- * @return string|bool Replacement URL if one exists, false otherwise.
+ * @return string Replacement URL, which may be localised.
  */
 function get_localized_footer_link( $url ) {
 	global $rosetta;
