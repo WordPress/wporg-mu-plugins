@@ -234,6 +234,7 @@ function enqueue_fonts() {
 		'wporg-news-fonts-css',
 		'https://fonts.googleapis.com/css2?family=Inter:wght@200..700&family=EB+Garamond:wght@400&display=swap',
 		array(),
+		null
 	);
 }
 
