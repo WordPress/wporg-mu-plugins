@@ -166,3 +166,14 @@
 		}
 	}
 }
+
+/* Gutenberg bug, override it locally */
+.global-header__navigation {
+	& .has-modal-open {
+		overflow: visible;
+
+		& div {
+			overflow: scroll;
+		}
+	}
+}
