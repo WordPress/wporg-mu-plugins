@@ -7,6 +7,22 @@
 		padding-bottom: 0;
 	}
 
+	& .wp-block-navigation__responsive-container {
+
+		@media (--tablet) {
+			overflow: visible;
+		}
+	}
+
+	& .wp-block-navigation__responsive-container-open,
+	& .wp-block-navigation__responsive-container-close {
+
+		@media (--tablet) {
+			padding-top: 42px;
+			padding-bottom: 38px;
+		}
+	}
+
 	& .wp-block-navigation__responsive-container-open {
 		box-sizing: content-box;
 		width: 24px;
@@ -15,74 +31,28 @@
 		background-repeat: no-repeat;
 		background-position: top 72px left var(--wp--style--block-gap);
 
+		@media (--tablet) {
+			background-size: 17px 17px;
+			background-position: top 46px left calc(var(--wp--style--block-gap) + 3px);
+		}
+
+		&:hover {
+			background-color: var(--wp--preset--color--darker-grey);
+		}
+
 		& svg {
 			display: none;
 		}
 	}
 
-	& .wp-block-navigation__container {
-		padding-top: 0;
-	}
-
-	& .wp-block-navigation-item__label {
-
-		/* See @mixin hide-accessibly in wporg-news-2021 */
-		border: 0;
-		clip: rect(1px, 1px, 1px, 1px);
-		clip-path: inset(50%);
-		height: 1px;
-		margin: -1px;
-		overflow: hidden;
-		padding: 0;
-		position: absolute;
-		width: 1px;
-		word-wrap: normal !important;
-	}
-
-	& .wp-block-navigation-item__content {
-		padding: 42px var(--wp--style--block-gap) 37px;
-		display: none;
+	& .wp-block-navigation__responsive-container-close {
+		right: calc(73px + var(--wp--custom--alignment--scroll-bar-width));
+		padding-right: var(--wp--style--block-gap);
 
 		@media (--tablet) {
-			display: block;
-		}
-	}
-
-	& .wp-block-navigation__submenu-icon {
-
-		/* Replace the submenu icon with the search icon. */
-		@media (--tablet) {
-			display: inline-block;
-			width: 24px;
-			height: 24px;
-			background-size: 17px 17px;
-			background-image: url(../images/search.svg);
-			background-repeat: no-repeat;
-			background-position: center center;
-			margin-left: 0;
-
-			& svg {
-				display: none;
-			}
-		}
-	}
-
-	& .has-child:hover .wp-block-navigation-item__content,
-	& .has-child:focus-within .wp-block-navigation-item__content,
-	&:not(.has-background) .wp-block-navigation__submenu-container .global-header__search-form {
-		background-color: var(--wp--preset--color--darker-grey);
-	}
-
-	& .wp-block-navigation__responsive-container-content .wp-block-navigation__submenu-container {
-		padding: 0;
-
-		@media (--tablet) {
-			width: 300px;
-			bottom: 0;
+			position: absolute;
+			top: -104px;
 			right: 0;
-			left: auto;
-			transform: translateY(-100%);
-			border: none;
 		}
 	}
 
@@ -173,10 +143,5 @@
 				cursor: pointer;
 			}
 		}
-	}
-
-	& .wp-block-navigation__responsive-container-close {
-		right: calc(73px + var(--wp--custom--alignment--scroll-bar-width));
-		padding-right: var(--wp--style--block-gap);
 	}
 }

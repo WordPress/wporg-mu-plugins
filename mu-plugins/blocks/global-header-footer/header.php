@@ -94,50 +94,46 @@ if ( ! empty( $locale_title ) ) {
 		calls for. It also provides a consistent experience with the primary navigation menu, with respect to
 		keyboard navigation, ARIA states, etc. It also saves having to write custom code for all the interactions.
 	-->
-	<!-- wp:navigation {"orientation":"vertical","className":"global-header__search","overlayMenu":"mobile"} -->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Search', 'button label', 'wporg' ); ?>","url":"#","kind":"custom","isTopLevelLink":false} -->
-			<!-- wp:html -->
-			<li>
-				<!--
-					This markup is forked from the `wp:search` block. The only reason we're not using that, is because the
-					`action` URL can't be customized.
+	<!-- wp:navigation {"orientation":"vertical","className":"global-header__search","overlayMenu":"always"} -->
+		<!-- wp:html -->
+		<!--
+			This markup is forked from the `wp:search` block. The only reason we're not using that, is because the
+			`action` URL can't be customized.
 
-					@link https://github.com/WordPress/gutenberg/issues/35572
+			@link https://github.com/WordPress/gutenberg/issues/35572
 
-					The only things that changed were:
+			The only things that changed were:
 
-					1) The instance ID was changed to `99`, to make it likely to be unique.
-					2) Internationalizing the labels. See https://github.com/WordPress/gutenberg/issues/36061 and
-					   related issues for a possible future alternative.
+			1) The instance ID was changed to `99`, to make it likely to be unique.
+			2) Internationalizing the labels. See https://github.com/WordPress/gutenberg/issues/36061 and
+			   related issues for a possible future alternative.
 
-					If that issue is ever resolved, we should be able to replace this with the Search block, without having
-					to change any CSS.
-				-->
-				<form
-					role="search"
-					method="get"
-					action="https://wordpress.org/search/do-search.php"
-					class="wp-block-search__button-outside wp-block-search__text-button global-header__search-form wp-block-search"
+			If that issue is ever resolved, we should be able to replace this with the Search block, without having
+			to change any CSS.
+		-->
+		<form
+			role="search"
+			method="get"
+			action="https://wordpress.org/search/do-search.php"
+			class="wp-block-search__button-outside wp-block-search__text-button global-header__search-form wp-block-search"
+		>
+			<label for="wp-block-search__input-99" class="wp-block-search__label">
+				<?php echo esc_html_x( 'Search', 'button label', 'wporg' ); ?>
+			</label>
+			<div class="wp-block-search__inside-wrapper">
+				<input
+					type="search"
+					id="wp-block-search__input-99"
+					class="wp-block-search__input"
+					name="s"
+					value=""
+					placeholder="<?php echo esc_attr_x( 'Search WP.org...', 'input field placeholder', 'wporg' ); ?>"
+					required=""
 				>
-					<label for="wp-block-search__input-99" class="wp-block-search__label">
-						<?php echo esc_html_x( 'Search', 'button label', 'wporg' ); ?>
-					</label>
-					<div class="wp-block-search__inside-wrapper">
-						<input
-							type="search"
-							id="wp-block-search__input-99"
-							class="wp-block-search__input"
-							name="s"
-							value=""
-							placeholder="<?php echo esc_attr_x( 'Search WP.org...', 'input field placeholder', 'wporg' ); ?>"
-							required=""
-						>
-						<button type="submit" class="wp-block-search__button" aria-label="<?php echo esc_attr_x( 'Submit search', 'button label', 'wporg' ); ?>"></button>
-					</div>
-				</form>
-			</li>
-			<!-- /wp:html -->
-		<!-- /wp:navigation-link -->
+				<button type="submit" class="wp-block-search__button" aria-label="<?php echo esc_attr_x( 'Submit search', 'button label', 'wporg' ); ?>"></button>
+			</div>
+		</form>
+		<!-- /wp:html -->
 	<!-- /wp:navigation -->
 	<?php endif; ?>
 
