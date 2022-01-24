@@ -605,24 +605,44 @@ function normalize_rosetta_items( $rosetta_items ) {
 	$normalized_items = array();
 	$parent_indices   = array();
 
+	// Standardise the menu classes.
+	foreach ( $rosetta_items as $index => &$item ) {
+		$item->classes  = implode( ' ', (array) $item->classes );
+	}
+
+	// Assign the top-level menu items.
 	foreach ( $rosetta_items as $index => $item ) {
 		$top_level_item = empty( $item->menu_item_parent );
-		$item->classes  = implode( ' ', $item->classes );
+
+		if ( ! $top_level_item ) {
+			continue;
+		}
+
+		// Track the indexes of parent items, so the submenu can be built later on.
+		$parent_indices[ $item->ID ] = $index;
+		$normalized_items[ $index ]  = (array) $item;
+	}
+
+	// Add all submenu items.
+	foreach ( $rosetta_items as $index => $item ) {
+		$top_level_item = empty( $item->menu_item_parent );
 
 		if ( $top_level_item ) {
-			// Track the indexes of parent items, so the submenu can be built later on.
-			$parent_indices[ $item->ID ] = $index;
-			$normalized_items[ $index ]  = (array) $item;
-
-		} else {
-			$parent_index = $parent_indices[ $item->menu_item_parent ];
-
-			$normalized_items[ $parent_index ]['submenu'][] = array(
-				'title' => $item->title,
-				'url'   => $item->url,
-				'type'  => $item->type,
-			);
+			continue;
 		}
+
+		// Page has a parent that is not in the menu?
+		if ( ! isset( $parent_indices[ $item->menu_item_parent ] ) ) {
+			continue;
+		}
+
+		$parent_index = $parent_indices[ $item->menu_item_parent ];
+
+		$normalized_items[ $parent_index ]['submenu'][] = array(
+			'title' => $item->title,
+			'url'   => $item->url,
+			'type'  => $item->type,
+		);
 	}
 
 	return $normalized_items;
