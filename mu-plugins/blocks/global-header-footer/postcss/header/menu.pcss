@@ -167,13 +167,11 @@
 	}
 }
 
-/* Gutenberg bug, override it locally */
-.global-header__navigation {
-	& .has-modal-open {
-		overflow: visible;
+/* Gutenberg bug: Close button is not visible in Safari; override it locally */
+.global-header__navigation .is-menu-open {
+	overflow: visible;
 
-		& div {
-			overflow: scroll;
-		}
+	& div {
+		overflow: scroll;
 	}
 }
