@@ -98,7 +98,7 @@ if ( ! empty( $locale_title ) ) {
 		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Search', 'button label', 'wporg' ); ?>","url":"#","kind":"custom","isTopLevelLink":false} -->
 			<!-- wp:html -->
 				<li>
-					<!-- wp:search {"label":"<?php echo esc_attr_x( 'Search', 'button label', 'wporg' ); ?>","placeholder":"<?php echo esc_attr_x( 'Search WP.org...', 'input field placeholder', 'wporg' ); ?>","buttonText":"<?php echo esc_attr_x( 'Submit search', 'button label', 'wporg' ); ?>","formAction":"https://wordpress.org/search/do-search.php"} /-->
+					<!-- wp:search <?php echo wp_json_encode( [ 'label' => _x( 'Search', 'button label', 'wporg' ), 'placeholder' => _x( 'Search WP.org...', 'input field placeholder', 'wporg' ), 'buttonText' => _x( 'Submit search', 'button label', 'wporg' ), 'formAction' => 'https://wordpress.org/search/do-search.php' ] ); ?> /-->
 				</li>
 			<!-- /wp:html -->
 		<!-- /wp:navigation-link -->
