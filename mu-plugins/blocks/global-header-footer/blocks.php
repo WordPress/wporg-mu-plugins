@@ -606,8 +606,8 @@ function normalize_rosetta_items( $rosetta_items ) {
 	$parent_indices   = array();
 
 	// Standardise the menu classes.
-	foreach ( $rosetta_items as $index => &$item ) {
-		$item->classes  = implode( ' ', (array) $item->classes );
+	foreach ( $rosetta_items as $index => $item ) {
+		$rosetta_items[ $index ]->classes  = implode( ' ', (array) $item->classes );
 	}
 
 	// Assign the top-level menu items.
