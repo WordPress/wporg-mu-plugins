@@ -16,7 +16,7 @@
 
 /* Offset from the top of the page which is covered by "stuck" items (admin bar & header). */
 html {
-	scroll-padding-top: calc(105px + var(--wp-admin--admin-bar--height, 0px)); /* 105px = height of header. */
+	scroll-padding-top: calc( var(--wp-global-header-height,  0px) + var(--wp-admin--admin-bar--height, 0px));
 	height: unset; /* Let height use default browser height. */
 }
 

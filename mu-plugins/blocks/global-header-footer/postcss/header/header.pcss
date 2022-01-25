@@ -1,7 +1,15 @@
+:root {
+	--wp-global-header-height: 60px;
+
+	@media (--tablet) {
+		--wp-global-header-height: 90px;
+	}
+}
 .wp-block-group.global-header {
 	display: flex;
 	align-items: flex-end;
 	font-size: 21px;
+	height: var(--wp-global-header-height);
 
 	/*
 	 * Some themes set a `z-index` on content elements that follow the header, like `#masthead` in
@@ -34,8 +42,8 @@
 
 		& .wp-block-navigation__responsive-container-open {
 
-			/* Magic numbers to center the 24px icon in 117px height. */
-			padding: 70px var(--wp--style--block-gap) 23px;
+			/* Magic numbers to center the 24px icon in 60px height. */
+			padding: 18px var(--wp--style--block-gap) 18px;
 
 			@media (--tablet) {
 				padding-top: 37px;
@@ -64,9 +72,9 @@
 		position: fixed;
 		right: 0;
 		top: var(--wp-admin--admin-bar--height, 0);
-		padding-top: 70px; /* Magic numbers to center the 24px icon in 117px height. */
+		padding-top: 18px; /* Magic numbers to center the 24px icon in 60px height. */
 		padding-right: calc(var(--wp--style--block-gap) + var(--wp--custom--alignment--scroll-bar-width));
-		padding-bottom: 23px; /* Magic numbers to center the 24px icon in 117px height. */
+		padding-bottom: 28px; /* Magic numbers to center the 24px icon in 60px height. */
 		padding-left: var(--wp--style--block-gap);
 		background-color: var(--wp--preset--color--darker-grey);
 	}

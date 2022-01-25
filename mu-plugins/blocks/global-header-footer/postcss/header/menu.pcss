@@ -175,12 +175,7 @@
 	}
 
 	& .wp-block-navigation__responsive-container.is-menu-open {
-
-		/*
-		 * 117px = height of .global-header
-		 * var() fallback must be `0px` with unit for calc addition to work.
-		 */
-		top: calc(117px + var(--wp-admin--admin-bar--height, 0px));
+		top: calc(var(--wp-global-header-height, 0px) + var(--wp-admin--admin-bar--height, 0px));
 
 		@media (--tablet) {
 			position: absolute;
