@@ -13,19 +13,29 @@
 html.slimline .wp-block-group.global-header {
 	& .wp-block-navigation__container .wp-block-navigation-item {
 		&.current-menu-item > a {
-			padding-bottom: calc( 20px - var(--active-menu-item-border-height) );
+			padding-bottom: calc(20px - var(--active-menu-item-border-height));
 		}
+
 		& a {
 			padding-bottom: 20px;
 			padding-top: 15px;
 		}
 	}
+
 	& > * {
 		padding-top: 20px;
 		padding-bottom: 20px;
 	}
+
 	& > nav {
 		padding-bottom: 0;
+	}
+
+	& .global-header__search .wp-block-navigation__responsive-container-close,
+	& .global-header__search .wp-block-navigation__responsive-container-open {
+		padding-bottom: 20px;
+		padding-top: 16px;
+		background-position: center;
 	}
 }
 

@@ -18,8 +18,8 @@
 	& .wp-block-navigation__responsive-container-close {
 
 		@media (--tablet) {
-			padding-top: 42px;
-			padding-bottom: 38px;
+			padding-top: 33px;
+			padding-bottom: 33px;
 		}
 	}
 
@@ -33,7 +33,7 @@
 
 		@media (--tablet) {
 			background-size: 17px 17px;
-			background-position: top 46px left calc(var(--wp--style--block-gap) + 3px);
+			background-position: center;
 		}
 
 		&:hover {
@@ -51,7 +51,7 @@
 
 		@media (--tablet) {
 			position: absolute;
-			top: -104px;
+			top: calc(var(--wp-global-header-height) * -1);
 			right: 0;
 		}
 	}
