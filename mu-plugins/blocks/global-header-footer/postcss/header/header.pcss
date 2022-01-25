@@ -11,23 +11,20 @@
 }
 
 html.slimline .wp-block-group.global-header {
-	& .wp-block-navigation-item a {
-		padding-top: 18px;
-		padding-bottom: 18px;
-	}
 	& .wp-block-navigation__container .wp-block-navigation-item {
 		&.current-menu-item > a {
 			padding-bottom: calc( 20px - var(--active-menu-item-border-height) );
 		}
 		& a {
 			padding-bottom: 20px;
+			padding-top: 15px;
 		}
 	}
 	& > * {
 		padding-top: 20px;
 		padding-bottom: 20px;
 	}
-	& > .global-header__navigation {
+	& > nav {
 		padding-bottom: 0;
 	}
 }
