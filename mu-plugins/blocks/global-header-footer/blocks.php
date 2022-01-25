@@ -213,7 +213,7 @@ function enqueue_compat_wp4_styles() {
 			'wp4-styles',
 			'https://s.w.org/style/wp4' . $suffix . '.css',
 			array( 'open-sans' ),
-			96
+			97
 		);
 
 		wp_enqueue_style( 'wp4-styles' );
