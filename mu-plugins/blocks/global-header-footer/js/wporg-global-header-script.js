@@ -1,3 +1,4 @@
+/* global wporgGlobalHeaderI18n */
 /**
  * File wporg-global-header-script.js.
  *
@@ -171,6 +172,11 @@
 	/* eslint-disable @wordpress/no-global-event-listener */
 	window.addEventListener( 'load', function () {
 		new navMenu( '.global-header .global-header__navigation' );
+
+		const openSearchButton = document.querySelector( '.global-header__search [data-micromodal-trigger]' );
+		const closeSearchButton = document.querySelector( '.global-header__search button[data-micromodal-close]' );
+		openSearchButton.setAttribute( 'aria-label', wporgGlobalHeaderI18n.openSearchLabel );
+		closeSearchButton.setAttribute( 'aria-label', wporgGlobalHeaderI18n.closeSearchLabel );
 
 		const openButtons = document.querySelectorAll( '[data-micromodal-trigger]' );
 		openButtons.forEach( function ( button ) {

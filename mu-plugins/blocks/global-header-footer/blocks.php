@@ -38,6 +38,14 @@ function register_block_types() {
 		filemtime( __DIR__ . '/js/wporg-global-header-script.js' ),
 		true
 	);
+	wp_localize_script(
+		'wporg-global-header-script',
+		'wporgGlobalHeaderI18n',
+		array(
+			'openSearchLabel' => __( 'Open Search', 'wporg' ),
+			'closeSearchLabel' => __( 'Close Search', 'wporg' ),
+		)
+	);
 
 	register_block_type(
 		'wporg/global-header',
