@@ -172,11 +172,16 @@
 	/* eslint-disable @wordpress/no-global-event-listener */
 	window.addEventListener( 'load', function () {
 		new navMenu( '.global-header .global-header__navigation' );
+		const labels = window.wporgGlobalHeaderI18n || {};
 
 		const openSearchButton = document.querySelector( '.global-header__search [data-micromodal-trigger]' );
 		const closeSearchButton = document.querySelector( '.global-header__search button[data-micromodal-close]' );
-		openSearchButton.setAttribute( 'aria-label', wporgGlobalHeaderI18n.openSearchLabel );
-		closeSearchButton.setAttribute( 'aria-label', wporgGlobalHeaderI18n.closeSearchLabel );
+		if ( openSearchButton ) {
+			openSearchButton.setAttribute( 'aria-label', labels.openSearchLabel || 'Open Search' );
+		}
+		if ( closeSearchButton ) {
+			closeSearchButton.setAttribute( 'aria-label', labels.closeSearchLabel || 'Close Search' );
+		}
 
 		const openButtons = document.querySelectorAll( '[data-micromodal-trigger]' );
 		openButtons.forEach( function ( button ) {
