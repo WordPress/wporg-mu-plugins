@@ -503,6 +503,16 @@ function get_global_menu_items() {
 
 			'submenu' => array(
 				array(
+					'title' => esc_html_x( 'Meetings', 'Menu item title', 'wporg' ),
+					'url'   => 'https://make.wordpress.org/meetings/',
+					'type'  => 'custom',
+				),
+				array(
+					'title' => esc_html_x( 'Team Updates', 'Menu item title', 'wporg' ),
+					'url'   => 'https://make.wordpress.org/updates/',
+					'type'  => 'custom',
+				),
+				array(
 					'title' => esc_html_x( 'Five for the Future', 'Menu item title', 'wporg' ),
 					'url'   => 'https://wordpress.org/five-for-the-future/',
 					'type'  => 'custom',
