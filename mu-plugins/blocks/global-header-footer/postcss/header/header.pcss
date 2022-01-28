@@ -1,41 +1,12 @@
-:root {
+html {
 	--wp-global-header-height: 60px;
 
 	@media (--tablet) {
 		--wp-global-header-height: 90px;
-
-		&.slimline {
-			--wp-global-header-height: 60px;
-		}
-	}
-}
-
-html.slimline .wp-block-group.global-header {
-	& .wp-block-navigation__container .wp-block-navigation-item {
-		&.current-menu-item > a {
-			padding-bottom: calc(20px - var(--active-menu-item-border-height));
-		}
-
-		& a {
-			padding-bottom: 20px;
-			padding-top: 15px;
-		}
 	}
 
-	& > * {
-		padding-top: 20px;
-		padding-bottom: 20px;
-	}
-
-	& > nav {
-		padding-bottom: 0;
-	}
-
-	& .global-header__search .wp-block-navigation__responsive-container-close,
-	& .global-header__search .wp-block-navigation__responsive-container-open {
-		padding-bottom: 20px;
-		padding-top: 16px;
-		background-position: center;
+	@media (--short-screen) {
+		--wp-global-header-height: 60px;
 	}
 }
 
@@ -111,5 +82,18 @@ html.slimline .wp-block-group.global-header {
 		padding-bottom: 28px; /* Magic numbers to center the 24px icon in 60px height. */
 		padding-left: var(--wp--style--block-gap);
 		background-color: var(--wp--preset--color--darker-grey);
+	}
+}
+
+@media (--short-screen) {
+	.wp-block-group.global-header {
+		& > * {
+			padding-top: 20px;
+			padding-bottom: 20px;
+		}
+
+		& > nav {
+			padding-bottom: 0;
+		}
 	}
 }

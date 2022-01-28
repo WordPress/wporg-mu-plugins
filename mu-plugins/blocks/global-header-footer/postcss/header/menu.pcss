@@ -27,9 +27,7 @@
 		}
 
 		&.is-menu-open {
-			padding-left: 0;
-			padding-right: 0;
-			padding-top: 0;
+			padding: 0;
 
 			& .wp-block-navigation__container {
 				line-height: 1em;
@@ -71,6 +69,10 @@
 					border-left: none;
 					padding-bottom: calc(var(--wp--style--block-gap) + var(--active-menu-item-border-height, 0px));
 				}
+
+				@media (--short-screen) {
+					padding-bottom: calc(20px - var(--active-menu-item-border-height));
+				}
 			}
 
 			&.has-child {
@@ -98,6 +100,11 @@
 				padding-top: 33px;
 				padding-left: calc(var(--wp--style--block-gap) / 2);
 				padding-right: calc(var(--wp--style--block-gap) / 2);
+			}
+
+			@media (--short-screen) {
+				padding-bottom: 20px;
+				padding-top: 15px;
 			}
 		}
 	}
