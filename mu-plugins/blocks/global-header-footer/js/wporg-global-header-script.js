@@ -200,35 +200,4 @@
 			}
 		}
 	} );
-
-	/**
-	 * Scroll throttle flag
-	 *
-	 * @param {bool} throttled or not.
-	 */
-	let scrollThrottled = false;
-
-	/* eslint-disable @wordpress/no-global-event-listener */
-	window.addEventListener( 'scroll', function () {
-		if ( scrollThrottled ) {
-			return;
-		}
-
-		let isSlimline = document.documentElement.classList.contains('slimline'),
-			shouldBeSlimline = Math.max( document.body.scrollTop, document.documentElement.scrollTop ) > 250;
-
-		if ( ! isSlimline && shouldBeSlimline ) {
-			document.documentElement.classList.add('slimline');
-
-			scrollThrottled = true;
-		} else if ( isSlimline && ! shouldBeSlimline ) {
-			document.documentElement.classList.remove('slimline');
-
-			scrollThrottled = true;
-		}
-
-		if ( scrollThrottled ) {
-			setTimeout(() => scrollThrottled = false, 400 );
-		}
-	} );
 } )();
