@@ -136,15 +136,6 @@
 			return false;
 		};
 
-		/**
-		 * Deactivates the mobile menu if needed.
-		 */
-		this.maybeDeactivateMobileMenu = function() {
-			if ( this.wrapper.querySelector( '.wp-block-navigation__responsive-container.is-menu-open' ) ) {
-				this.wrapper.querySelector( '.wp-block-navigation__responsive-container-close' ).click();
-			}
-		}
-
 		this.listItems = this.getListItems();
 		this.itemsWidths = [];
 		this.hasHiddenItems = false;
@@ -163,7 +154,6 @@
 					this.getItemWidths();
 					this.hideExtraItems();
 					this.populateExtendedSubmenu();
-					this.maybeDeactivateMobileMenu();
 				}
 			}.bind( this )
 		);
@@ -198,5 +188,16 @@
 				closeButtons.forEach( ( _button ) => _button.click() );
 			} );
 		} );
+	} );
+
+	/* eslint-disable @wordpress/no-global-event-listener */
+	window.addEventListener( 'resize', () => {
+		// Hide any open mobile menus if we're no longer in a mobile view.
+		if ( ! document.querySelector('.global-header__navigation .wp-block-navigation__responsive-container-open').offsetWidth ) {
+			const closeMenuButton = document.querySelector( '.wp-block-navigation__responsive-container.is-menu-open button[data-micromodal-close]' );
+			if ( closeMenuButton ) {
+				closeMenuButton.click();
+			}
+		}
 	} );
 } )();
