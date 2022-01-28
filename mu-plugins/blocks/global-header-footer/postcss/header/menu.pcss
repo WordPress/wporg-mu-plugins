@@ -27,9 +27,7 @@
 		}
 
 		&.is-menu-open {
-			padding-left: 0;
-			padding-right: 0;
-			padding-top: 0;
+			padding: 0;
 
 			& .wp-block-navigation__container {
 				line-height: 1em;
@@ -56,53 +54,57 @@
 		}
 
 		& .wp-block-navigation-item {
+			&:hover,
+			&:focus-within {
+				background-color: var(--wp--preset--color--darker-grey);
+			}
+
+			&.current-menu-item > a {
+				border-left: var(--active-menu-item-border-height) solid #7b90ff;
+				color: #7b90ff;
+				font-weight: 700;
+
+				@media (--tablet) {
+					border-bottom: var(--active-menu-item-border-height) solid #7b90ff;
+					border-left: none;
+					padding-bottom: calc(var(--wp--style--block-gap) + var(--active-menu-item-border-height, 0px));
+				}
+
+				@media (--short-screen) {
+					padding-bottom: calc(20px - var(--active-menu-item-border-height));
+				}
+			}
+
+			&.has-child {
+				padding-bottom: 0;
+			}
+
+			& ul .current-menu-item a {
+				border-left: none;
+				border-bottom: none;
+			}
+		}
+
+		& .wp-block-navigation-item a {
 			padding-left: var(--wp--style--block-gap);
 			padding-top: calc(var(--wp--style--block-gap) / 2);
 			padding-bottom: calc(var(--wp--style--block-gap) / 2);
 
-			&.has-child {
-				padding-bottom: 0;
-
-				@media (--tablet) {
-					padding-bottom: 37px;
-				}
+			&:hover,
+			&:focus-within {
+				background-color: var(--wp--preset--color--darker-grey);
 			}
 
 			@media (--tablet) {
-				padding-bottom: 37px;
-				padding-top: 42px;
+				padding-bottom: 33px;
+				padding-top: 33px;
 				padding-left: calc(var(--wp--style--block-gap) / 2);
 				padding-right: calc(var(--wp--style--block-gap) / 2);
 			}
 
-			&:hover,
-			&:focus-within {
-				background-color: var(--wp--preset--color--darker-grey);
-
-				& ul {
-					border-top: none;
-					background-color: var(--wp--preset--color--darker-grey);
-				}
-			}
-
-			&.current-menu-item {
-				border-left: var(--active-menu-item-border-height) solid #7b90ff;
-
-				@media (--tablet) {
-					padding-bottom: calc(37px - var(--active-menu-item-border-height));
-					border-bottom: var(--active-menu-item-border-height) solid #7b90ff;
-					border-left: none;
-				}
-
-				& > a {
-					color: #7b90ff;
-					font-weight: 700;
-				}
-			}
-
-			& ul .current-menu-item {
-				border-left: none;
-				border-bottom: none;
+			@media (--short-screen) {
+				padding-bottom: 20px;
+				padding-top: 15px;
 			}
 		}
 	}
@@ -110,22 +112,29 @@
 	& .wp-block-navigation__container .wp-block-navigation__submenu-container {
 		font-size: 15px;
 		gap: 0.5em;
+		padding-top: calc(var(--wp--style--block-gap) / 2);
 		padding-bottom: calc(var(--wp--style--block-gap) / 2);
-		padding-left: calc(var(--wp--style--block-gap) / 2);
+		border: none;
+		left: 0;
 
 		@media (--tablet) {
 			font-size: inherit;
 			gap: inherit;
+			padding-top: 0;
 			padding-bottom: 0;
+
+			& a:hover,
+			& a:focus {
+				text-decoration: underline;
+			}
 		}
 
-		& .wp-block-navigation-item {
+		& .wp-block-navigation-item a {
 			padding: calc(var(--wp--style--block-gap) / 4);
-		}
 
-		& a:hover,
-		& a:focus {
-			text-decoration: underline;
+			@media (--tablet) {
+				padding: calc(var(--wp--style--block-gap) / 2) var(--wp--style--block-gap);
+			}
 		}
 	}
 
@@ -134,8 +143,10 @@
 		@media (--tablet) {
 
 			/* Add extra space around the overflow … to make a bigger tap/hover target. */
-			padding-left: var(--wp--style--block-gap);
-			padding-right: var(--wp--style--block-gap);
+			& a {
+				padding-left: var(--wp--style--block-gap);
+				padding-right: var(--wp--style--block-gap);
+			}
 		}
 
 		& .global-header__overflow-item {
@@ -149,8 +160,8 @@
 		& > ul {
 			padding-left: 0;
 
-			& li {
-				padding-left: calc(var(--wp--style--block-gap) / 2 );
+			& li a {
+				padding-left: var(--wp--style--block-gap);
 			}
 		}
 	}
@@ -175,12 +186,7 @@
 	}
 
 	& .wp-block-navigation__responsive-container.is-menu-open {
-
-		/*
-		 * 117px = height of .global-header
-		 * var() fallback must be `0px` with unit for calc addition to work.
-		 */
-		top: calc(117px + var(--wp-admin--admin-bar--height, 0px));
+		top: calc(var(--wp-global-header-height, 0px) + var(--wp-admin--admin-bar--height, 0px));
 
 		@media (--tablet) {
 			position: absolute;
