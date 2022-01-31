@@ -29,6 +29,8 @@
 			this.removeSubMenu();
 			this.hasHiddenItems = false;
 			this.listItems = this.getListItems();
+
+			this.wrapper.classList.remove( 'has-overflow-menu' );
 		};
 
 		/**
@@ -93,7 +95,9 @@
 
 				let itemsContainer = this.wrapper.querySelector( '.wp-block-navigation__container' );
 
-				//create the ... menu list item
+				this.wrapper.classList.add( 'has-overflow-menu' );
+
+				// Create the ... menu list item.
 				let newItem = document.createElement( 'li' );
 				newItem.classList.add(
 					'wp-block-navigation-item',
@@ -108,12 +112,12 @@
 				newLink.appendChild( document.createTextNode( '...' ) );
 				newItem.appendChild( newLink );
 
-				//create the submenu where the hidden links will live
+				// Create the submenu where the hidden links will live.
 				let newSubMenu = document.createElement( 'ul' );
 				newSubMenu.classList.add( 'wp-block-navigation__submenu-container' );
 				newItem.appendChild( newSubMenu );
 
-				//populate submenu with clones of the hidden menu items
+				// Populate submenu with clones of the hidden menu items.
 				for ( const el of this.listItems ) {
 					if ( el.classList.contains( 'global-header__overflow-item' ) ) {
 						let clone = el.cloneNode( true );
