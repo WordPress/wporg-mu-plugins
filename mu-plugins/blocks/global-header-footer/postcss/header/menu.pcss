@@ -7,7 +7,8 @@
 		order: unset;
 		padding-bottom: 0;
 		text-align: left;
-		overflow-x: clip;
+		overflow: clip;
+		height: var(--wp-global-header-height);
 
 		&.has-overflow-menu {
 			overflow: visible;
@@ -53,8 +54,6 @@
 		padding: 0 0 var(--wp--custom--margin--vertical) 0;
 		row-gap: 0;
 		column-gap: 0;
-		flex-wrap: nowrap;
-		white-space: nowrap;
 
 		@media (--tablet) {
 			padding-bottom: 0;
