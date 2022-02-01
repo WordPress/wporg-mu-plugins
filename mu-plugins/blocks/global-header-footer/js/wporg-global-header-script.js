@@ -30,7 +30,7 @@
 			this.hasHiddenItems = false;
 			this.listItems = this.getListItems();
 
-			this.wrapper.classList.remove( 'has-overflow-menu' );
+			this.wrapper.classList.remove( 'has-menu-loaded' );
 		};
 
 		/**
@@ -90,12 +90,12 @@
 		 * Generates an extra menu item with all the hidden elements inside it
 		 */
 		this.populateExtendedSubmenu = function () {
+			this.wrapper.classList.add( 'has-menu-loaded' );
+
 			if ( this.hasHiddenItems ) {
 				this.removeSubMenu();
 
 				let itemsContainer = this.wrapper.querySelector( '.wp-block-navigation__container' );
-
-				this.wrapper.classList.add( 'has-overflow-menu' );
 
 				// Create the ... menu list item.
 				let newItem = document.createElement( 'li' );
