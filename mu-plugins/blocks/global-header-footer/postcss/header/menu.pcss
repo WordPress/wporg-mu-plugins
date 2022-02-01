@@ -7,6 +7,12 @@
 		order: unset;
 		padding-bottom: 0;
 		text-align: left;
+		overflow: clip;
+		height: var(--wp-global-header-height);
+
+		&.has-overflow-menu {
+			overflow: visible;
+		}
 	}
 
 	& .wp-block-navigation__responsive-container-open {
@@ -103,8 +109,8 @@
 			}
 
 			@media (--short-screen) {
-				padding-bottom: 20px;
-				padding-top: 15px;
+				padding-bottom: 18px;
+				padding-top: 18px;
 			}
 		}
 	}
@@ -115,7 +121,6 @@
 		padding-top: calc(var(--wp--style--block-gap) / 2);
 		padding-bottom: calc(var(--wp--style--block-gap) / 2);
 		border: none;
-		left: 0;
 
 		@media (--tablet) {
 			font-size: inherit;
