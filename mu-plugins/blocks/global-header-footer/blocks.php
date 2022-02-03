@@ -845,7 +845,7 @@ function get_localized_footer_link( $url ) {
  * In those sites, some things need to behave differently (e.g., because `switch_to_blog()` wouldn't work).
  */
 function is_wporg_network() {
-	return 0 === strpos( $_SERVER['SCRIPT_FILENAME'], WPORGPATH );
+	return defined( 'WPORGPATH' ) && 0 === strpos( $_SERVER['SCRIPT_FILENAME'], WPORGPATH );
 }
 
 /**
