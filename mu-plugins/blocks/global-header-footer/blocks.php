@@ -991,7 +991,7 @@ function get_menu_url_for_current_page( $menu_items ) {
 		return 'https://make.wordpress.org/';
 	}
 
-	if ( 'developer.wordpress.prg' === $host ) {
+	if ( 'developer.wordpress.org' === $host ) {
 		// DevHub doesn't exist within the menu.
 		return '';
 	}
