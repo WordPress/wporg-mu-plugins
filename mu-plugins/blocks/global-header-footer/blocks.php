@@ -983,12 +983,15 @@ function set_current_item_class( $menu_items ) {
  * @return string
  */
 function get_menu_url_for_current_page( $menu_items ) {
+	$host    = strtolower( $_SERVER['HTTP_HOST'] );
+	$uri     = strtolower( $_SERVER['REQUEST_URI'] );
+	$compare = "https://{$host}{$uri}";
 
-	if ( 'translate.wordpress.org' === $_SERVER['HTTP_HOST'] ) {
+	if ( 'translate.wordpress.org' === $host ) {
 		return 'https://make.wordpress.org/';
 	}
 
-	if ( 'developer.wordpress.prg' === $_SERVER['HTTP_HOST'] ) {
+	if ( 'developer.wordpress.org' === $host ) {
 		// DevHub doesn't exist within the menu.
 		return '';
 	}
@@ -998,10 +1001,8 @@ function get_menu_url_for_current_page( $menu_items ) {
 		return 'https://wordpress.org/news/';
 	}
 
-	$compare = "https://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
-
 	// Is it the Global Search?
-	if ( 0 === stripos( $compare, 'https://wordpress.org/search/' ) ) {
+	if ( str_starts_with( $compare, 'https://wordpress.org/search/' ) ) {
 		if ( isset( $_GET['in'] ) ) {
 			if ( 'support_docs' === $_GET['in'] ) {
 				return 'https://wordpress.org/support/';
@@ -1014,9 +1015,21 @@ function get_menu_url_for_current_page( $menu_items ) {
 		return 'https://wordpress.org/support/forums/';
 	}
 
-	// These prefixes are Support Forums, not Support Documentation.
-	if ( preg_match( '!/support/(forum|view|topic|reply|users)/!i', $_SERVER['REQUEST_URI'] ) ) {
-		$compare = "https://{$_SERVER['HTTP_HOST']}/support/forums/";
+	// Select the correct Support menu item.
+	if ( str_starts_with( $uri, '/support/' ) ) {
+		// Documentation => /$, /article/*, /wordpress-version/*
+		// Forums => Everything else.
+
+		if (
+			'/support/' === $uri ||
+			str_starts_with( $uri, '/support/article/' ) ||
+			str_starts_with( $uri, '/support/wordpress-version/' ) ||
+			str_starts_with( $uri, '/support/category/' )
+		) {
+			$compare = "https://{$host}/support/";
+		} else {
+			$compare = "https://{$host}/support/forums/";
+		}
 	}
 
 	// Extract all URLs, toplevel and child.
@@ -1036,7 +1049,7 @@ function get_menu_url_for_current_page( $menu_items ) {
 	} );
 
 	foreach ( $urls as $url ) {
-		if ( 0 === stripos( $compare, $url ) ) {
+		if ( str_starts_with( $compare, $url ) ) {
 			return $url;
 		}
 	}
