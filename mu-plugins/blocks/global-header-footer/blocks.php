@@ -7,6 +7,7 @@ use Rosetta_Sites, WP_Post, WP_REST_Server, WP_Theme_JSON_Resolver;
 defined( 'WPINC' ) || die();
 
 add_action( 'init', __NAMESPACE__ . '\register_block_types' );
+add_action( 'init', __NAMESPACE__ . '\remove_admin_bar_callback' );
 add_action( 'enqueue_block_assets', __NAMESPACE__ . '\register_block_types_js' );
 add_action( 'rest_api_init', __NAMESPACE__ . '\register_routes' );
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_compat_wp4_styles', 5 ); // Before any theme CSS.
@@ -67,6 +68,15 @@ function register_block_types() {
 			'editor_style'    => 'wporg-global-header-footer',
 		)
 	);
+}
+
+/**
+ * Remove the default margin-top added when the admin bar is used.
+ *
+ * The core handling uses `!important`, which overrides the sticky header offset in `common.pcss`.
+ */
+function remove_admin_bar_callback() {
+	add_theme_support( 'admin-bar', array( 'callback' => '__return_false' ) );
 }
 
 /**
