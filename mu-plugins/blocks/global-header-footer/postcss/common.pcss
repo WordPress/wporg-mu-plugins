@@ -17,9 +17,16 @@
 /* Height breakpoint to toggle the short header on desktop screens. */
 @custom-media --short-screen (max-height: 800px) and (min-width: 890px);
 
-/* Offset from the top of the page which is covered by "stuck" items (admin bar & header). */
-html {
+/* Two selectors:
+ * - `html[lang]` adds some specificity to override default `html` styles from `p2-breathe`.
+ * - `html` for any sites that don't set the lang attribute (ex, trac).
+ */
+
+html,
+html[lang] {
 	--wp--custom--alignment--scroll-bar-width: 8px;
+
+	/* Offset from the top of the page which is covered by "stuck" items (admin bar & header). */
 	--wp-global-header-offset: calc(var(--wp-global-header-height, 0px) + var(--wp-admin--admin-bar--height, 0px));
 	margin-top: var(--wp-admin--admin-bar--height, 0);
 	height: unset; /* Let height use default browser height. */
