@@ -8,6 +8,7 @@ defined( 'WPINC' ) || die();
 
 add_action( 'init', __NAMESPACE__ . '\register_block_types' );
 add_action( 'init', __NAMESPACE__ . '\remove_admin_bar_callback' );
+add_filter( 'print_styles_array', __NAMESPACE__ . '\output_styles_last' );
 add_action( 'enqueue_block_assets', __NAMESPACE__ . '\register_block_types_js' );
 add_action( 'rest_api_init', __NAMESPACE__ . '\register_routes' );
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_compat_wp4_styles', 5 ); // Before any theme CSS.
@@ -77,6 +78,26 @@ function register_block_types() {
  */
 function remove_admin_bar_callback() {
 	add_theme_support( 'admin-bar', array( 'callback' => '__return_false' ) );
+}
+
+/**
+ * Shift the block styles to be the last stylesheet loaded, to override any default theme styles.
+ *
+ * @param string[] $handles The list of enqueued style handles about to be processed.
+ * @return string[]
+ */
+function output_styles_last( $handles ) {
+	if ( in_array( 'wporg-global-header-footer', $handles ) ) {
+		$handles = array_filter(
+			$handles,
+			function( $handle ) {
+				return 'wporg-global-header-footer' !== $handle;
+			}
+		);
+		$handles[] = 'wporg-global-header-footer';
+	}
+
+	return $handles;
 }
 
 /**
