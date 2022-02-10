@@ -7,7 +7,7 @@ use Rosetta_Sites, WP_Post, WP_REST_Server, WP_Theme_JSON_Resolver;
 defined( 'WPINC' ) || die();
 
 add_action( 'init', __NAMESPACE__ . '\register_block_types' );
-add_action( 'init', __NAMESPACE__ . '\remove_admin_bar_callback' );
+add_action( 'admin_bar_init', __NAMESPACE__ . '\remove_admin_bar_callback', 15 );
 add_action( 'rest_api_init', __NAMESPACE__ . '\register_routes' );
 add_action( 'enqueue_block_assets', __NAMESPACE__ . '\register_block_types_js' );
 add_filter( 'wp_enqueue_scripts', __NAMESPACE__ . '\register_block_assets', 200 ); // Always last.
@@ -83,7 +83,8 @@ function register_block_assets() {
  * The core handling uses `!important`, which overrides the sticky header offset in `common.pcss`.
  */
 function remove_admin_bar_callback() {
-	add_theme_support( 'admin-bar', array( 'callback' => '__return_false' ) );
+	remove_action( 'gp_head', '_admin_bar_bump_cb' );
+	remove_action( 'wp_head', '_admin_bar_bump_cb' );
 }
 
 /**
