@@ -25,8 +25,10 @@ html {
 	z-index: 250;
 
 	@media (--tablet) {
-		position: sticky;
+		position: fixed;
 		top: var(--wp-admin--admin-bar--height, 0);
+		left: 0;
+		right: 0;
 		font-size: var(--wp--preset--font-size--small);
 		line-height: 24px;
 	}
