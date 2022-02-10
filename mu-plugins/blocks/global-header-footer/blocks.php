@@ -8,9 +8,9 @@ defined( 'WPINC' ) || die();
 
 add_action( 'init', __NAMESPACE__ . '\register_block_types' );
 add_action( 'init', __NAMESPACE__ . '\remove_admin_bar_callback' );
-add_filter( 'print_styles_array', __NAMESPACE__ . '\output_styles_last' );
-add_action( 'enqueue_block_assets', __NAMESPACE__ . '\register_block_types_js' );
 add_action( 'rest_api_init', __NAMESPACE__ . '\register_routes' );
+add_action( 'enqueue_block_assets', __NAMESPACE__ . '\register_block_types_js' );
+add_filter( 'wp_enqueue_scripts', __NAMESPACE__ . '\register_block_assets', 200 ); // Always last.
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_compat_wp4_styles', 5 ); // Before any theme CSS.
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_fonts' );
 add_action( 'wp_head', __NAMESPACE__ . '\preload_google_fonts' );
@@ -24,31 +24,6 @@ add_filter( 'render_block_core/navigation-link', __NAMESPACE__ . '\swap_submenu_
  * showing up in the Block Inserter, regardless of which theme is running.
  */
 function register_block_types() {
-	$suffix = is_rtl() ? '-rtl' : '';
-
-	wp_register_style(
-		'wporg-global-header-footer',
-		plugins_url( "/build/style$suffix.css", __FILE__ ),
-		array( 'wp-block-library' ), // Load `block-library` styles first, so that our styles override them.
-		filemtime( __DIR__ . "/build/style$suffix.css" )
-	);
-
-	wp_register_script(
-		'wporg-global-header-script',
-		plugins_url( '/js/wporg-global-header-script.js', __FILE__ ),
-		array(),
-		filemtime( __DIR__ . '/js/wporg-global-header-script.js' ),
-		true
-	);
-	wp_localize_script(
-		'wporg-global-header-script',
-		'wporgGlobalHeaderI18n',
-		array(
-			'openSearchLabel' => __( 'Open Search', 'wporg' ),
-			'closeSearchLabel' => __( 'Close Search', 'wporg' ),
-		)
-	);
-
 	register_block_type(
 		'wporg/global-header',
 		array(
@@ -72,32 +47,43 @@ function register_block_types() {
 }
 
 /**
+ * Register the script & stylesheet for use in the blocks.
+ */
+function register_block_assets() {
+	$suffix = is_rtl() ? '-rtl' : '';
+
+	wp_register_style(
+		'wporg-global-header-footer',
+		plugins_url( "/build/style$suffix.css", __FILE__ ),
+		array( 'wp-block-library' ), // Load `block-library` styles first, so that our styles override them.
+		filemtime( __DIR__ . "/build/style$suffix.css" )
+	);
+
+	wp_register_script(
+		'wporg-global-header-script',
+		plugins_url( '/js/wporg-global-header-script.js', __FILE__ ),
+		array(),
+		filemtime( __DIR__ . '/js/wporg-global-header-script.js' ),
+		true
+	);
+
+	wp_localize_script(
+		'wporg-global-header-script',
+		'wporgGlobalHeaderI18n',
+		array(
+			'openSearchLabel' => __( 'Open Search', 'wporg' ),
+			'closeSearchLabel' => __( 'Close Search', 'wporg' ),
+		)
+	);
+}
+
+/**
  * Remove the default margin-top added when the admin bar is used.
  *
  * The core handling uses `!important`, which overrides the sticky header offset in `common.pcss`.
  */
 function remove_admin_bar_callback() {
 	add_theme_support( 'admin-bar', array( 'callback' => '__return_false' ) );
-}
-
-/**
- * Shift the block styles to be the last stylesheet loaded, to override any default theme styles.
- *
- * @param string[] $handles The list of enqueued style handles about to be processed.
- * @return string[]
- */
-function output_styles_last( $handles ) {
-	if ( in_array( 'wporg-global-header-footer', $handles ) ) {
-		$handles = array_filter(
-			$handles,
-			function( $handle ) {
-				return 'wporg-global-header-footer' !== $handle;
-			}
-		);
-		$handles[] = 'wporg-global-header-footer';
-	}
-
-	return $handles;
 }
 
 /**
