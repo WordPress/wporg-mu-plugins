@@ -36,7 +36,7 @@
 			padding: 0;
 
 			& .wp-block-navigation__container {
-				line-height: 1em;
+				line-height: 1;
 				width: 100%;
 			}
 
@@ -54,6 +54,7 @@
 		padding: 0 0 var(--wp--custom--margin--vertical) 0;
 		row-gap: 0;
 		column-gap: 0;
+		line-height: 24px;
 
 		@media (--tablet) {
 			padding-bottom: 0;
@@ -73,11 +74,11 @@
 				@media (--tablet) {
 					border-bottom: var(--active-menu-item-border-height) solid #7b90ff;
 					border-left: none;
-					padding-bottom: calc(var(--wp--style--block-gap) + var(--active-menu-item-border-height, 0px));
+					padding-bottom: calc(33px - var(--active-menu-item-border-height, 0px));
 				}
 
 				@media (--short-screen) {
-					padding-bottom: calc(20px - var(--active-menu-item-border-height));
+					padding-bottom: calc(18px - var(--active-menu-item-border-height, 0px));
 				}
 			}
 
