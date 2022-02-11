@@ -21,7 +21,6 @@ if ( ! empty( $locale_title ) ) {
 $search_args = array(
 	'label' => _x( 'Search', 'button label', 'wporg' ),
 	'placeholder' => _x( 'Search WP.org...', 'input field placeholder', 'wporg' ),
-	'buttonText' => _x( 'Submit search', 'button label', 'wporg' ),
 	'buttonPosition' => 'button-inside',
 	'buttonUseIcon' => true,
 	'formAction' => 'https://wordpress.org/search/do-search.php',
