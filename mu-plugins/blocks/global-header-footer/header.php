@@ -18,6 +18,14 @@ if ( ! empty( $locale_title ) ) {
 	$container_class .= ' global-header__has-locale-title';
 }
 
+$search_args = array(
+	'label' => _x( 'Search', 'button label', 'wporg' ),
+	'placeholder' => _x( 'Search WP.org...', 'input field placeholder', 'wporg' ),
+	'buttonPosition' => 'button-inside',
+	'buttonUseIcon' => true,
+	'formAction' => 'https://wordpress.org/search/do-search.php',
+);
+
 ?>
 
 <!-- wp:group {"tagName":"header","align":"full","className":"<?php echo esc_attr( $container_class ); ?>"} -->
@@ -89,51 +97,8 @@ if ( ! empty( $locale_title ) ) {
 	<!-- /wp:navigation -->
 
 	<?php if ( $show_search ) : ?>
-	<!--
-		The search block is inside a navigation submenu, because that provides the exact functionality the design
-		calls for. It also provides a consistent experience with the primary navigation menu, with respect to
-		keyboard navigation, ARIA states, etc. It also saves having to write custom code for all the interactions.
-	-->
 	<!-- wp:navigation {"orientation":"vertical","className":"global-header__search","overlayMenu":"always"} -->
-		<!-- wp:html -->
-		<!--
-			This markup is forked from the `wp:search` block. The only reason we're not using that, is because the
-			`action` URL can't be customized.
-
-			@link https://github.com/WordPress/gutenberg/issues/35572
-
-			The only things that changed were:
-
-			1) The instance ID was changed to `99`, to make it likely to be unique.
-			2) Internationalizing the labels. See https://github.com/WordPress/gutenberg/issues/36061 and
-			   related issues for a possible future alternative.
-
-			If that issue is ever resolved, we should be able to replace this with the Search block, without having
-			to change any CSS.
-		-->
-		<form
-			role="search"
-			method="get"
-			action="https://wordpress.org/search/do-search.php"
-			class="wp-block-search__button-outside wp-block-search__text-button global-header__search-form wp-block-search"
-		>
-			<label for="wp-block-search__input-99" class="wp-block-search__label">
-				<?php echo esc_html_x( 'Search', 'button label', 'wporg' ); ?>
-			</label>
-			<div class="wp-block-search__inside-wrapper">
-				<input
-					type="search"
-					id="wp-block-search__input-99"
-					class="wp-block-search__input"
-					name="s"
-					value=""
-					placeholder="<?php echo esc_attr_x( 'Search WP.org...', 'input field placeholder', 'wporg' ); ?>"
-					required=""
-				>
-				<button type="submit" class="wp-block-search__button" aria-label="<?php echo esc_attr_x( 'Submit search', 'button label', 'wporg' ); ?>"></button>
-			</div>
-		</form>
-		<!-- /wp:html -->
+		<!-- wp:search <?php echo wp_json_encode( $search_args ); ?> /-->
 	<!-- /wp:navigation -->
 	<?php endif; ?>
 
