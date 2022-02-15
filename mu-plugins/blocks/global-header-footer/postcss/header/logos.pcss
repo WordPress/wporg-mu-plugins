@@ -3,6 +3,12 @@
 		margin-bottom: 0;
 	}
 
+	& .global-header__wporg-logo-full svg,
+	& .global-header__wporg-logo-mark svg {
+		height: 100%;
+		width: auto;
+	}
+
 	& .global-header__wporg-logo-full {
 		display: none;
 		padding: 0 calc(var(--wp--style--block-gap) / 2);
@@ -35,6 +41,7 @@
 		box-sizing: content-box;
 		height: 27px;
 		padding: 16px calc(var(--wp--style--block-gap) / 2);
+		color: var(--wp--preset--color--white);
 
 		@media (--tablet) {
 			padding-top: 31px;
