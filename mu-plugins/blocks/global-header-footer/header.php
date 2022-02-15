@@ -30,22 +30,20 @@ $search_args = array(
 
 <!-- wp:group {"tagName":"header","align":"full","className":"<?php echo esc_attr( $container_class ); ?>"} -->
 <header class="wp-block-group alignfull <?php echo esc_attr( $container_class ); ?>">
+	<!-- wp:html -->
 	<!-- The design calls for two logos, a small "mark" on mobile/tablet, and the full logo for desktops. -->
-	<!-- wp:image {"width":27,"height":27,"className":"global-header__wporg-logo-mark"} -->
-	<figure class="wp-block-image is-resized global-header__wporg-logo-mark">
-		<a href="<?php echo esc_url( get_home_url() ); ?>">
-			<img src="https://wordpress.org/style/images/w-mark.svg" alt="WordPress.org" width="27" height="27" />
-		</a>
-	</figure>
-	<!-- /wp:image -->
+		<figure class="wp-block-image global-header__wporg-logo-mark">
+			<a href="<?php echo esc_url( get_home_url() ); ?>">
+				<?php require __DIR__ . '/images/w-mark.svg'; ?>
+			</a>
+		</figure>
 
-	<!-- wp:image {"width":160,"height":24,"className":"global-header__wporg-logo-full"} -->
-	<figure class="wp-block-image is-resized global-header__wporg-logo-full">
-		<a href="<?php echo esc_url( get_home_url() ); ?>">
-			<img src="<?php echo plugin_dir_url( __FILE__ ) . 'images/wporg-logo.svg'; ?>" alt="WordPress.org" width="160" height="24" />
-		</a>
-	</figure>
-	<!-- /wp:image -->
+		<figure class="wp-block-image global-header__wporg-logo-full">
+			<a href="<?php echo esc_url( get_home_url() ); ?>">
+				<?php require __DIR__ . '/images/wporg-logo.svg'; ?>
+			</a>
+		</figure>
+	<!-- /wp:html -->
 
 	<?php if ( ! empty( $locale_title ) ) : ?>
 	<!-- wp:paragraph {"className":"global-header__wporg-locale-title"} -->
