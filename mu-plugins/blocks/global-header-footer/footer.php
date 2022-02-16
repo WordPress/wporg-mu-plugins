@@ -57,22 +57,20 @@ defined( 'WPINC' ) || die();
 	<div class="wp-block-group global-footer__logos-container">
 		<!-- wp:group {"layout":{"type":"flex","allowOrientation":false,"justifyContent":"left"}} -->
 		<div class="wp-block-group">
+			<!-- wp:html -->
 			<!-- The design calls for two logos, a small "mark" on mobile/tablet, and the full logo for desktops. -->
-			<!-- wp:image {"width":27,"height":27,"className":"global-footer__wporg-logo-mark"} -->
-			<figure class="wp-block-image is-resized global-footer__wporg-logo-mark">
-				<a href="<?php echo esc_url( get_home_url() ); ?>">
-					<img src="https://wordpress.org/style/images/w-mark.svg" alt="<?php echo esc_html_x( 'WordPress.org', 'Image alt text', 'wporg' ); ?>" width="27" height="27" />
-				</a>
-			</figure>
-			<!-- /wp:image -->
+				<figure class="wp-block-image global-footer__wporg-logo-mark">
+					<a href="<?php echo esc_url( get_home_url() ); ?>">
+						<?php require __DIR__ . '/images/w-mark.svg'; ?>
+					</a>
+				</figure>
 
-			<!-- wp:image {"width":160,"height":24,"className":"global-footer__wporg-logo-full"} -->
-			<figure class="wp-block-image is-resized global-footer__wporg-logo-full">
-				<a href="<?php echo esc_url( get_home_url() ); ?>">
-					<img src="<?php echo plugin_dir_url( __FILE__ ) . 'images/wporg-logo.svg'; ?>" alt="<?php echo esc_html_x( 'WordPress.org', 'Image alt text', 'wporg' ); ?>" width="160" height="24" />
-				</a>
-			</figure>
-			<!-- /wp:image -->
+				<figure class="wp-block-image global-footer__wporg-logo-full">
+					<a href="<?php echo esc_url( get_home_url() ); ?>">
+						<?php require __DIR__ . '/images/wporg-logo.svg'; ?>
+					</a>
+				</figure>
+			<!-- /wp:html -->
 
 			<?php if ( ! empty( $locale_title ) ) : ?>
 			<!-- wp:paragraph {"className":"global-footer__wporg-locale-title"} -->
