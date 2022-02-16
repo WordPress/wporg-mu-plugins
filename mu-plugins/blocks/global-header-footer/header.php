@@ -95,6 +95,11 @@ $search_args = array(
 	<!-- /wp:navigation -->
 
 	<?php if ( $show_search ) : ?>
+	<!--
+		The search block is inside a navigation menu because that provides the exact functionality the design
+		calls for. It also provides a consistent experience with the primary navigation menu, with respect to
+		keyboard navigation, ARIA states, etc. It also saves having to write custom code for all the interactions.
+	-->
 	<!-- wp:navigation {"orientation":"vertical","className":"global-header__search","overlayMenu":"always"} -->
 		<!-- wp:search <?php echo wp_json_encode( $search_args ); ?> /-->
 	<!-- /wp:navigation -->
