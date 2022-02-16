@@ -903,8 +903,8 @@ function get_global_styles() {
 		return fetch_global_styles();
 	}
 
-	// Switch to `w.org/news-test` to generate correct theme properties.
-	switch_to_blog( 706 ); // TODO change this to `w.org/news` when the redesign launches.
+	// Switch to `w.org/news` to generate correct theme properties.
+	switch_to_blog( WPORG_NEWS_BLOGID );
 
 	// Clear the static `$theme` property, which is set by the current (classic theme) site.
 	WP_Theme_JSON_Resolver::clean_cached_data();
