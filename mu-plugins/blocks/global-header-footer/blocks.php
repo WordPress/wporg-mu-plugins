@@ -1015,11 +1015,6 @@ function get_menu_url_for_current_page( $menu_items ) {
 		return '';
 	}
 
-	// Temporary
-	if ( 'https://wordpress.org/news-test/' === home_url( '/' ) ) {
-		return 'https://wordpress.org/news/';
-	}
-
 	// Is it the Global Search?
 	if ( str_starts_with( $compare, 'https://wordpress.org/search/' ) ) {
 		if ( isset( $_GET['in'] ) ) {
