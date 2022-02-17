@@ -10,7 +10,7 @@
 1. Add `<!-- wp:wporg/global-header /-->` to the theme's `block-templates/*.html` files.
 
 
-## Classic themes
+## Classic themes in the w.org network
 
 The same as above, but instead of adding the block to `block-templates/*.html` files, you'd add it to `themes/{name}/header.php`:
 
@@ -23,8 +23,23 @@ echo do_blocks( '<!-- wp:wporg/global-header /-->' );
 ⚠️ You can't just `require header.php` directly, because the dynamic blocks need to be processed by `do_blocks()`, and `blocks.php` does additional work that's necessary.
 
 
+## Classic themes in other networks
+
+If a WP site isn't in the main w.org network (e.g., buddypress.org, *.wordpress.net, etc), then the setup is still the same:
+
+```php
+echo do_blocks( '<!-- wp:wporg/global-footer /-->' );
+```
+
+The only difference is that `get_global_styles()` fetches them via the endpoint rather than using `switch_to_blog()`.
+
+See `r18316-dotorg` for an example.
+
+
 ## Non-WP software (like Trac, Codex, etc)
 
-@todo - probably pull contents from a REST API
+Use the API endpoints to get the markup and styles. See `register_routes()` for the endpoints. Examples:
 
-see https://github.com/WordPress/wporg-mu-plugins/issues/45
+* Trac: [`templates/update-headers.php`](https://github.com/dd32/wordpress.org/blob/c019f1ceb345310c472136d951f82d97fd517cda/trac.wordpress.org/templates/update-headers.php) in Meta SVN.
+* Codex: `grab-wporg-header-footer.sh` runs on a cron and updates `header.inc`, then `skins/codex/Codex.php` includes them. See `r14081-deploy`
+* Planet: `planet/bin/generate-index-template.sh` in `dotorg`.
