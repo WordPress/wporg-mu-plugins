@@ -921,7 +921,7 @@ function get_global_styles() {
 	// Clear the static `$theme` property, which is set by the current (classic theme) site.
 	WP_Theme_JSON_Resolver::clean_cached_data();
 
-	$styles = wp_get_global_stylesheet( [ 'variables' ] );
+	$styles = wp_get_global_stylesheet( [ 'variables', 'presets' ] );
 	// Also set the block-gap style, which isn't technically a theme variable.
 	$styles .= 'body { --wp--style--block-gap: 24px; }';
 
