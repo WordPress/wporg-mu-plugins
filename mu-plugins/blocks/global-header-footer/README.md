@@ -41,5 +41,5 @@ See `r18316-dotorg` for an example.
 Use the API endpoints to get the markup and styles. See `register_routes()` for the endpoints. Examples:
 
 * Trac: [`templates/update-headers.php`](https://github.com/dd32/wordpress.org/blob/c019f1ceb345310c472136d951f82d97fd517cda/trac.wordpress.org/templates/update-headers.php) in Meta SVN.
-* Codex: `grab-wporg-header-footer.sh` runs on a cron and updates `header.inc`, then `skins/codex/Codex.php` includes them. See `r14081-deploy`
+* Codex: `grab-wporg-header-footer.sh` runs on a cron and updates `header.inc`, then `skins/codex/Codex.php` includes them. See `r14081-deploy`. Codex has heavy page caching, only systems can clear the page cache.
 * Planet: `planet/bin/generate-index-template.sh` in `dotorg`.
