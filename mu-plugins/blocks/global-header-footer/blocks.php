@@ -934,7 +934,7 @@ function fetch_global_styles() {
 		$request_args = array();
 
 		// Route request to sandbox when testing.
-		if ( defined( 'WPORG_SANDBOXED' ) && WPORG_SANDBOXED ) {
+		if ( 'staging' === wp_get_environment_type() ) {
 			$hostname                        = '127.0.0.1';
 			$request_args['headers']['host'] = 'wordpress.org';
 
