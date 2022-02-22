@@ -13,6 +13,7 @@ add_action( 'enqueue_block_assets', __NAMESPACE__ . '\register_block_types_js' )
 add_filter( 'wp_enqueue_scripts', __NAMESPACE__ . '\register_block_assets', 200 ); // Always last.
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_compat_wp4_styles', 5 ); // Before any theme CSS.
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_fonts' );
+add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\unregister_classic_global_styles', 20 );
 add_action( 'wp_head', __NAMESPACE__ . '\preload_google_fonts' );
 add_filter( 'style_loader_src', __NAMESPACE__ . '\update_google_fonts_url', 10, 2 );
 add_filter( 'render_block_core/navigation-link', __NAMESPACE__ . '\swap_submenu_arrow_svg' );
@@ -263,6 +264,17 @@ function enqueue_fonts() {
 		array(),
 		null
 	);
+}
+
+/**
+ * Unregister the `global-styles` from classic themes, to avoid overwriting our custom properties.
+ */
+function unregister_classic_global_styles() {
+	if ( wp_is_block_theme() ) {
+		return;
+	}
+
+	wp_deregister_style( 'global-styles' );
 }
 
 /**
@@ -909,7 +921,7 @@ function get_global_styles() {
 	// Clear the static `$theme` property, which is set by the current (classic theme) site.
 	WP_Theme_JSON_Resolver::clean_cached_data();
 
-	$styles = wp_get_global_stylesheet( [ 'variables' ] );
+	$styles = wp_get_global_stylesheet( [ 'variables', 'presets' ] );
 	// Also set the block-gap style, which isn't technically a theme variable.
 	$styles .= 'body { --wp--style--block-gap: 24px; }';
 
