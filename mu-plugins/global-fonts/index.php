@@ -12,7 +12,7 @@ add_filter( 'init', __NAMESPACE__ . '\register_style', 1 );
  * Register stylesheet with font-family declarations.
  */
 function register_style() {
-	$version = 1;
+	$version = filemtime( __DIR__ . '/style.css' );
 	wp_register_style( 'wporg-global-fonts', get_font_stylesheet_url(), array(), $version );
 }
 
