@@ -19,7 +19,7 @@
 	font-weight: 400 700;
 	font-display: swap;
 	font-style: normal;
-	src: url(./EB-Garamond/EB-Garamond.ttf?v=0.017) format("truetype");
+	src: url(./EB-Garamond/EB-Garamond.woff2?v=0.017) format("truetype");
 }
 
 @font-face {
@@ -27,5 +27,5 @@
 	font-weight: 400 700;
 	font-display: swap;
 	font-style: italic;
-	src: url(./EB-Garamond/EB-Garamond-Italic.ttf?v=0.017) format("truetype");
+	src: url(./EB-Garamond/EB-Garamond-Italic.woff2?v=0.017) format("truetype");
 }

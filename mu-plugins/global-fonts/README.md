@@ -5,7 +5,7 @@ Inter and EB Garamond are used across WordPress.org. This mu-plugin sets up loca
 Sources:
 
 - [Inter](https://github.com/rsms/inter)
-- [EB Garamond](https://fonts.google.com/specimen/EB+Garamond)
+- [EB Garamond](https://fonts.google.com/specimen/EB+Garamond), compressed to woff2 with [woff2_compress](https://github.com/google/woff2)
 
 ## How to use:
 
