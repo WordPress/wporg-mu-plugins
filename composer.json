@@ -22,5 +22,10 @@
 	},
 	"require-dev": {
 		"wporg/wporg-repo-tools": "dev-trunk"
+	},
+	"config": {
+		"allow-plugins": {
+			"composer/installers": true
+		}
 	}
 }
