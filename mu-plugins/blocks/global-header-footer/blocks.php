@@ -12,7 +12,6 @@ add_action( 'rest_api_init', __NAMESPACE__ . '\register_routes' );
 add_action( 'enqueue_block_assets', __NAMESPACE__ . '\register_block_types_js' );
 add_filter( 'wp_enqueue_scripts', __NAMESPACE__ . '\register_block_assets', 200 ); // Always last.
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_compat_wp4_styles', 5 ); // Before any theme CSS.
-add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_fonts' );
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\unregister_classic_global_styles', 20 );
 add_action( 'wp_head', __NAMESPACE__ . '\preload_google_fonts' );
 add_filter( 'style_loader_src', __NAMESPACE__ . '\update_google_fonts_url', 10, 2 );
@@ -57,7 +56,8 @@ function register_block_assets() {
 	wp_register_style(
 		'wporg-global-header-footer',
 		plugins_url( "/build/style$suffix.css", __FILE__ ),
-		array( 'wp-block-library' ), // Load `block-library` styles first, so that our styles override them.
+		// Load `block-library` styles first, so that our styles override them.
+		array( 'wp-block-library', 'wporg-global-fonts' ),
 		filemtime( __DIR__ . "/build/style$suffix.css" )
 	);
 
@@ -246,24 +246,6 @@ function enqueue_compat_wp4_styles() {
 
 		wp_enqueue_style( 'wp4-styles' );
 	}
-}
-
-/**
- * Load EB Garamond & Inter (fonts) for use in header & footer on classic themes.
- *
- * In the block theme, this is loaded by `theme.json` & `WordPressdotorg\Theme\News_2021\enqueue_assets`.
- */
-function enqueue_fonts() {
-	if ( wp_is_block_theme() ) {
-		return;
-	}
-
-	wp_enqueue_style(
-		'wporg-news-fonts-css',
-		'https://fonts.googleapis.com/css2?family=Inter:wght@200..700&family=EB+Garamond:wght@400&display=swap',
-		array(),
-		null
-	);
 }
 
 /**
