@@ -274,6 +274,7 @@ function unregister_classic_global_styles() {
 		return;
 	}
 
+	wp_dequeue_style( 'global-styles' );
 	wp_deregister_style( 'global-styles' );
 }
 
