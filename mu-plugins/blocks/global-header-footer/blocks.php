@@ -53,11 +53,15 @@ function register_block_types() {
 function register_block_assets() {
 	$suffix = is_rtl() ? '-rtl' : '';
 
+	// Load `block-library` styles first, so that our styles override them.
+	$style_dependencies = array( 'wp-block-library' );
+	if ( wp_style_is( 'wporg-global-fonts', 'registered' ) ) {
+		$style_dependencies[] = 'wporg-global-fonts';
+	}
 	wp_register_style(
 		'wporg-global-header-footer',
 		plugins_url( "/build/style$suffix.css", __FILE__ ),
-		// Load `block-library` styles first, so that our styles override them.
-		array( 'wp-block-library', 'wporg-global-fonts' ),
+		$style_dependencies,
 		filemtime( __DIR__ . "/build/style$suffix.css" )
 	);
 
