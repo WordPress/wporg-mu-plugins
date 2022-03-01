@@ -25,7 +25,7 @@ function cdnise_with_filemtime_cachebuster( $link, $handle = '' ) {
 	if (
 		! str_starts_with( $link, site_url( '/' ) ) ||
 		! str_contains( $link, 'wordpress.org' ) ||
-    str_contains( $link, 'profiles.wordpress.org' )
+		str_contains( $link, 'profiles.wordpress.org' )
 	) {
 		return $link;
 	}
