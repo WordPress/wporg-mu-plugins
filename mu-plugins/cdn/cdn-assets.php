@@ -20,7 +20,7 @@ namespace WordPressdotorg\MU_Plugins\CDN;
  * @param string $handle The asset handle, used to skip certain assets.
  * @return string The potentially CDNised URL.
  */
-function cdnise_with_filemtime_cachebuster( $link, $handle = '' ) {
+function with_filemtime_cachebuster( $link, $handle = '' ) {
 	// Only same-host resources, and WordPress.org domains.
 	if (
 		! str_starts_with( $link, site_url( '/' ) ) ||
@@ -30,36 +30,41 @@ function cdnise_with_filemtime_cachebuster( $link, $handle = '' ) {
 		return $link;
 	}
 
+	$url_args     = [];
 	$relative_url = str_replace( site_url( '/' ), '', $link );
 
 	if ( str_contains( $relative_url, '?' ) ) {
-		list( $filepath, $url_args ) = explode( '?', $relative_url, 2 );
+		list( $filepath, $url_part_args ) = explode( '?', $relative_url, 2 );
+
+		parse_str( $url_part_args, $url_args );
 	} else {
 		$filepath = $relative_url;
-		$url_args = '';
+		// No `$url_args` here.
 
 		// Webpack files often include the cache-buster in the filename, 'react' does this.
 		// Pretend that's the cache buster for the rest of the function.
 		if ( preg_match( '!\.([a-f0-9]{8})\.(min\.)?js$!', $filepath, $m ) ) {
-			$url_args = 'ver=' . $m[1];
+			$url_args = [
+				'ver' => $m[1]
+			];
 		}
 	}
 
-	// If the link doesn't have a cache-buster already, or has extra args, abort.
+	// If the link doesn't have a cache-buster, or has extra args, abort.
 	if (
-		! $url_args ||
-		! preg_match( '!^ver=(?P<version>[^&]+)$!i', $url_args, $url_cachebuster )
+		empty( $url_args['ver'] ) ||
+		count( $url_args ) > 1
 	) {
 		return $link;
 	}
 
-	$version = false;
 	// Set the version to the file modification time, for consistency.
-	if ( ! is_timestamp( $url_cachebuster['version'] ) ) {
+	$version = false;
+	if ( ! is_timestamp( $url_args['ver'] ) ) {
 		$version = filemtime( ABSPATH . $filepath );
 	}
 	if ( ! $version ) {
-		$version = $url_cachebuster['version'];
+		$version = $url_args['ver'];
 	}
 
 	// Chunk the cache buster on a ~2 minute rolling window.
@@ -97,8 +102,8 @@ function cdnise_with_filemtime_cachebuster( $link, $handle = '' ) {
 
 	return $link;
 }
-add_filter( 'style_loader_src', __NAMESPACE__ . '\cdnise_with_filemtime_cachebuster', 5, 2 );
-add_filter( 'script_loader_src', __NAMESPACE__ . '\cdnise_with_filemtime_cachebuster', 5, 2 );
+add_filter( 'style_loader_src', __NAMESPACE__ . '\with_filemtime_cachebuster', 5, 2 );
+add_filter( 'script_loader_src', __NAMESPACE__ . '\with_filemtime_cachebuster', 5, 2 );
 
 /**
  * Determine if a string appears to be a timestamp.
