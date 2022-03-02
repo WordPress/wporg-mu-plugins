@@ -1,0 +1,51 @@
+name: Build and push to build branch.
+
+on:
+    push:
+        # `try/build-branch` only here for testing, can remove once PR is merged.
+        branches: [trunk, try/build-branch]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Get npm cache directory path
+              id: npm-cache-dir-path
+              run: echo "::set-output name=dir::$(npm config get cache)"
+
+            - name: Cache node modules
+              uses: actions/cache@v2
+              id: npm-cache
+              with:
+                  path: ${{ steps.npm-cache-dir-path.outputs.dir }}
+                  key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-npm-
+
+            - name: Use Node.js 14.x
+              uses: actions/setup-node@v1
+              with:
+                  node-version: 14.x
+
+            - name: Install all dependencies
+              run: |
+                  composer install
+                  npm install
+
+            - name: Build
+              run: npm run build
+
+            - name: Ignore .gitignore
+              run: |
+                  git add mu-plugins/blocks/global-header-footer/build/* --force
+
+            - name: Commit and push
+              # Using a specific hash here instead of a tagged version, for risk mitigation, since this action modifies our repo.
+              uses: actions-js/push@4decc2887d2770f29177082be3c8b04d342f5b64
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  branch: build
+                  force: true
+                  message: 'Build: ${{ github.sha }}'
