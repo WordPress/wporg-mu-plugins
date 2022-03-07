@@ -218,35 +218,38 @@
 	See: https://github.com/WordPress/wporg-mu-plugins/issues/159
 	*/
 
-	& .wp-block-navigation__container {
-		background: var(--wp--preset--color--dark-grey);
-	}
+	@supports not selector(:where(a)){
 
-	& .wp-block-navigation .has-child .wp-block-navigation__submenu-container {
-		background-color: inherit;
-		color: inherit;
-		position: absolute;
-		z-index: 2;
-		display: flex;
-		flex-direction: column;
-		align-items: normal;
-		opacity: 0;
-		transition: opacity 0.1s linear;
-		visibility: hidden;
-		width: 0;
-		height: 0;
-		overflow: hidden;
-		left: -1px;
-		top: 100%;
-	}
+		& .wp-block-navigation__container {
+			background: var(--wp--preset--color--dark-grey);
+		}
 
-	& .wp-block-navigation .has-child:hover > .wp-block-navigation__submenu-container {
-		visibility: visible;
-		overflow: visible;
-		opacity: 1;
-		width: auto;
-		height: auto;
-		min-width: 200px;
+		& .wp-block-navigation .has-child .wp-block-navigation__submenu-container {
+			background-color: inherit;
+			color: inherit;
+			position: absolute;
+			z-index: 2;
+			display: flex;
+			flex-direction: column;
+			align-items: normal;
+			opacity: 0;
+			transition: opacity 0.1s linear;
+			visibility: hidden;
+			width: 0;
+			height: 0;
+			overflow: hidden;
+			left: -1px;
+			top: 100%;
+		}
+
+		& .wp-block-navigation .has-child:hover > .wp-block-navigation__submenu-container {
+			visibility: visible;
+			overflow: visible;
+			opacity: 1;
+			width: auto;
+			height: auto;
+			min-width: 200px;
+		}
 	}
 
 	/* End :where fix */
