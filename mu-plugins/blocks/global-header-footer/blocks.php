@@ -12,7 +12,7 @@ add_action( 'rest_api_init', __NAMESPACE__ . '\register_routes' );
 add_action( 'enqueue_block_assets', __NAMESPACE__ . '\register_block_types_js' );
 add_filter( 'wp_enqueue_scripts', __NAMESPACE__ . '\register_block_assets', 200 ); // Always last.
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_compat_wp4_styles', 5 ); // Before any theme CSS.
-add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_fonts' );
+add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\unregister_classic_global_styles', 20 );
 add_action( 'wp_head', __NAMESPACE__ . '\preload_google_fonts' );
 add_filter( 'style_loader_src', __NAMESPACE__ . '\update_google_fonts_url', 10, 2 );
 add_filter( 'render_block_core/navigation-link', __NAMESPACE__ . '\swap_submenu_arrow_svg' );
@@ -53,10 +53,15 @@ function register_block_types() {
 function register_block_assets() {
 	$suffix = is_rtl() ? '-rtl' : '';
 
+	// Load `block-library` styles first, so that our styles override them.
+	$style_dependencies = array( 'wp-block-library' );
+	if ( wp_style_is( 'wporg-global-fonts', 'registered' ) ) {
+		$style_dependencies[] = 'wporg-global-fonts';
+	}
 	wp_register_style(
 		'wporg-global-header-footer',
 		plugins_url( "/build/style$suffix.css", __FILE__ ),
-		array( 'wp-block-library' ), // Load `block-library` styles first, so that our styles override them.
+		$style_dependencies,
 		filemtime( __DIR__ . "/build/style$suffix.css" )
 	);
 
@@ -240,7 +245,7 @@ function enqueue_compat_wp4_styles() {
 			'wp4-styles',
 			'https://s.w.org/style/wp4' . $suffix . '.css',
 			array( 'open-sans' ),
-			97
+			filemtime( WPORGPATH . '/style/wp4' . $suffix . '.css' )
 		);
 
 		wp_enqueue_style( 'wp4-styles' );
@@ -248,21 +253,15 @@ function enqueue_compat_wp4_styles() {
 }
 
 /**
- * Load EB Garamond & Inter (fonts) for use in header & footer on classic themes.
- *
- * In the block theme, this is loaded by `theme.json` & `WordPressdotorg\Theme\News_2021\enqueue_assets`.
+ * Unregister the `global-styles` from classic themes, to avoid overwriting our custom properties.
  */
-function enqueue_fonts() {
+function unregister_classic_global_styles() {
 	if ( wp_is_block_theme() ) {
 		return;
 	}
 
-	wp_enqueue_style(
-		'wporg-news-fonts-css',
-		'https://fonts.googleapis.com/css2?family=Inter:wght@200..700&family=EB+Garamond:wght@400&display=swap',
-		array(),
-		null
-	);
+	wp_dequeue_style( 'global-styles' );
+	wp_deregister_style( 'global-styles' );
 }
 
 /**
@@ -903,13 +902,13 @@ function get_global_styles() {
 		return fetch_global_styles();
 	}
 
-	// Switch to `w.org/news-test` to generate correct theme properties.
-	switch_to_blog( 706 ); // TODO change this to `w.org/news` when the redesign launches.
+	// Switch to `w.org/news` to generate correct theme properties.
+	switch_to_blog( WPORG_NEWS_BLOGID );
 
 	// Clear the static `$theme` property, which is set by the current (classic theme) site.
 	WP_Theme_JSON_Resolver::clean_cached_data();
 
-	$styles = wp_get_global_stylesheet( [ 'variables' ] );
+	$styles = wp_get_global_stylesheet( [ 'variables', 'presets' ] );
 	// Also set the block-gap style, which isn't technically a theme variable.
 	$styles .= 'body { --wp--style--block-gap: 24px; }';
 
@@ -934,7 +933,7 @@ function fetch_global_styles() {
 		$request_args = array();
 
 		// Route request to sandbox when testing.
-		if ( defined( 'WPORG_SANDBOXED' ) && WPORG_SANDBOXED ) {
+		if ( 'staging' === wp_get_environment_type() ) {
 			$hostname                        = '127.0.0.1';
 			$request_args['headers']['host'] = 'wordpress.org';
 
@@ -1013,11 +1012,6 @@ function get_menu_url_for_current_page( $menu_items ) {
 	if ( 'developer.wordpress.org' === $host ) {
 		// DevHub doesn't exist within the menu.
 		return '';
-	}
-
-	// Temporary
-	if ( 'https://wordpress.org/news-test/' === home_url( '/' ) ) {
-		return 'https://wordpress.org/news/';
 	}
 
 	// Is it the Global Search?

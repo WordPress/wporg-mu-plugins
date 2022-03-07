@@ -197,7 +197,8 @@
 	/* eslint-disable @wordpress/no-global-event-listener */
 	window.addEventListener( 'resize', () => {
 		// Hide any open mobile menus if we're no longer in a mobile view.
-		if ( ! document.querySelector('.global-header__navigation .wp-block-navigation__responsive-container-open').offsetWidth ) {
+		const mobileViewToggle = document.querySelector('.global-header__navigation .wp-block-navigation__responsive-container-open');
+		if ( ! mobileViewToggle || ! mobileViewToggle.offsetWidth ) {
 			const closeMenuButton = document.querySelector( '.wp-block-navigation__responsive-container.is-menu-open button[data-micromodal-close]' );
 			if ( closeMenuButton ) {
 				closeMenuButton.click();
