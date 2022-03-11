@@ -29,7 +29,7 @@ class Users_Controller extends \WP_REST_Users_Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'Unique identifier for the user.' ),
+						'description' => __( 'Unique identifier for the user.', 'wporg' ),
 						'type'        => 'integer',
 					),
 				),
@@ -67,7 +67,7 @@ class Users_Controller extends \WP_REST_Users_Controller {
 	protected function get_user( $id ) {
 		$error = new \WP_Error(
 			'rest_user_invalid_id',
-			__( 'Invalid user ID.' ),
+			__( 'Invalid user ID.', 'wporg' ),
 			array( 'status' => 404 )
 		);
 
