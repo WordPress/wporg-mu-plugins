@@ -734,7 +734,7 @@ function get_download_url() {
 	}
 
 	if ( ! $url ) {
-		$url = 'https://wordpress.org/downloads/';
+		$url = 'https://wordpress.org/download/';
 	}
 
 	return $url;
