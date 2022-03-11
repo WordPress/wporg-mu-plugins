@@ -20,7 +20,7 @@
 		"postcss-custom-media": "^8.0.0",
 		"postcss-import": "^14.0.2",
 		"postcss-nesting": "^8.0.1",
-		"postcss-preset-env": "^7.4.2",
+		"postcss-preset-env": "^6.7.0",
 		"postcss-reporter": "^7.0.2",
 		"rtlcss": "3.5.0"
 	},
