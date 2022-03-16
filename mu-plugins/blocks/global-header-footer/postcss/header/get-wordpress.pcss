@@ -35,8 +35,16 @@
 		width: calc(100% - var(--wp--style--block-gap) - var(--wp--style--block-gap));
 		text-align: center;
 
+		& :hover {
+			cursor: pointer;
+		}
+
 		@media (--tablet) {
 			display: none;
+		}
+
+		& a:hover {
+			background-color: unset;
 		}
 	}
 }
