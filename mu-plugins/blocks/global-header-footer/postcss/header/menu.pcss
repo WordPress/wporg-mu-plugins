@@ -114,6 +114,12 @@
 				padding-top: 18px;
 			}
 		}
+
+		& .wp-block-navigation-item.has-child a {
+			@media (--tablet) {
+				padding-right: 6px;
+			}
+		}
 	}
 
 	& .wp-block-navigation__container .wp-block-navigation__submenu-container {
@@ -179,10 +185,14 @@
 	& .wp-block-navigation-item {
 		padding-bottom: 0;
 	}
+	& .wp-block-navigation__submenu-icon {
+		margin-left: 0;
+		padding-right: 22px;
 
-	& .wp-block-navigation__submenu-icon svg {
-		fill: none;
-		stroke: currentColor;
+		svg {
+			fill: none;
+			stroke: currentColor;
+		}
 	}
 }
 
