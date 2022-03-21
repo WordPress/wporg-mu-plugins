@@ -734,7 +734,8 @@ function get_download_url() {
 	}
 
 	if ( ! $url ) {
-		$url = 'https://wordpress.org/download/';
+		$host = strtolower( $_SERVER['HTTP_HOST'] );
+		$url  = "https://$host/download/";
 	}
 
 	return $url;
