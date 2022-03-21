@@ -975,6 +975,12 @@ function set_current_item_class( $menu_items ) {
 
 	foreach ( $menu_items as & $item ) {
 		$sub = false;
+
+		// The download menu item is a button, we don't highlight it
+		if ( get_download_url() === $item['url'] ) {
+			continue;
+		}
+
 		if ( ! empty( $item['submenu'] ) ) {
 			foreach ( $item['submenu'] as & $subitem ) {
 				if ( $current_url === $subitem['url'] ) {
