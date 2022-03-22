@@ -51,6 +51,12 @@ function register_block_types() {
  * Register the script & stylesheet for use in the blocks.
  */
 function register_block_assets() {
+	// Our custom login screen is technically a front-end page, so the script/style are enqueued by default.
+	// That's unnecessary because the header/footer isn't rendered in there.
+	if ( 'login.wordpress.org' === $_SERVER['SERVER_NAME'] ) {
+		return;
+	}
+
 	$suffix = is_rtl() ? '-rtl' : '';
 
 	// Load `block-library` styles first, so that our styles override them.
