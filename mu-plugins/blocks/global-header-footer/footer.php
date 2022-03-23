@@ -1,7 +1,7 @@
 <?php
 
 namespace WordPressdotorg\MU_Plugins\Global_Header_Footer\Footer;
-use function WordPressdotorg\MU_Plugins\Global_Header_Footer\{ get_home_url };
+use function WordPressdotorg\MU_Plugins\Global_Header_Footer\{ get_cip_text, get_home_url };
 
 defined( 'WPINC' ) || die();
 
@@ -90,14 +90,24 @@ defined( 'WPINC' ) || die();
 			<!-- wp:social-link {"url":"https://twitter.com/WordPress","service":"twitter","label":"<?php echo esc_html_x( 'Visit our Twitter account', 'Menu item title', 'wporg' ); ?>"} /-->
 		</ul> <!-- /wp:social-links -->
 
-		<!-- wp:image {"width":188,"height":13,"className":"global-footer__code_is_poetry"} -->
-		<figure class="wp-block-image is-resized global-footer__code_is_poetry">
-			<img
-				src="https://s.w.org/style/images/code-is-poetry-for-dark-bg.svg"
-				alt="<?php echo esc_html_x( 'Code is Poetry', 'Image alt text', 'wporg' ); ?>"
-				width="188"
-				height="13"
-			/>
-		</figure> <!-- /wp:image -->
+		<?php if ( str_starts_with( get_locale(), 'en_' ) ) : ?>
+			<!-- Use an image so it can have the MrsEaves font. -->
+			<!-- wp:image {"width":188,"height":13,"className":"global-footer__code_is_poetry"} -->
+			<figure class="wp-block-image is-resized global-footer__code_is_poetry">
+				<img
+					src="https://s.w.org/style/images/code-is-poetry-for-dark-bg.svg"
+					alt="<?php echo esc_html_x( 'Code is Poetry', 'Image alt text', 'wporg' ); ?>"
+					width="188"
+					height="13"
+				/>
+			</figure> <!-- /wp:image -->
+
+		<?php else : ?>
+			<!-- Use text so it can be translated. -->
+			<span class="global-footer__code_is_poetry">
+				<?php echo esc_html( get_cip_text() ); ?>
+			</span>
+
+		<?php endif; ?>
 	</div> <!-- /wp:group -->
 </footer> <!-- /wp:group -->

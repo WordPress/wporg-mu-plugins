@@ -1108,3 +1108,17 @@ function swap_header_search_action( $block_content, $block ) {
 
 	return $block_content;
 }
+
+/*
+ * Translate the tagline with the necessary text domain.
+ */
+function get_cip_text() {
+	$english    = 'Code is Poetry.';
+	$translated = __( 'Code is Poetry.', 'wporg' );
+
+	if ( $translated === $english && is_rosetta_site() ) {
+		$translated = __( 'Code is Poetry.', 'rosetta' );
+	}
+
+	return $translated;
+}
