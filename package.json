@@ -14,6 +14,7 @@
 	"dependencies": {},
 	"devDependencies": {
 		"@wordpress/browserslist-config": "^4.1.0",
+		"@wordpress/scripts": "^22.2.1",
 		"cssnano": "^5.0.8",
 		"postcss": "^8.3.7",
 		"postcss-cli": "^8.3.1",
