@@ -4,7 +4,7 @@ Over time, this is intended to become the canonical source repository for all `m
 
 ## Usage
 
-1. Add entries to the `repositories` and `require-dev` sections of `composer.json`. See `wporg-news-2021` as an example.
+1. Add entries to the `repositories` and `require-dev` sections of `composer.json`. See [wporg-news-2021](https://github.com/WordPress/wporg-news-2021/) [composer.json](https://github.com/WordPress/wporg-news-2021/blob/trunk/composer.json) as an example.
 1. Run `composer update` to install it
 1. `require_once` the files that you want. e.g.,
 	```php
