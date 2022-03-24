@@ -6,6 +6,7 @@ namespace WordPressdotorg\MU_Plugins\REST_API;
  * Actions and filters.
  */
 add_action( 'rest_api_init', __NAMESPACE__ . '\initialize_rest_endpoints' );
+add_filter( 'rest_user_query', __NAMESPACE__ . '\modify_user_query_parameters', 10, 2 );
 
 /**
  * Turn on API endpoints.
@@ -17,4 +18,24 @@ function initialize_rest_endpoints() {
 
 	$users_controller = new Users_Controller();
 	$users_controller->register_routes();
+}
+
+/**
+ * Tweak the user query to allow for getting users who aren't blog members.
+ *
+ * @param array            $prepared_args
+ * @param \WP_REST_Request $request
+ *
+ * @return array
+ */
+function modify_user_query_parameters( $prepared_args, $request ) {
+	// Only for this specific endpoint.
+	if ( '/wporg/v1' !== substr( $request->get_route(), 0, 9 ) ) {
+		return $prepared_args;
+	}
+
+	$prepared_args['blog_id'] = 0; // Avoid check for blog membership.
+	unset( $prepared_args['has_published_posts'] ); // Avoid another check for blog membership.
+
+	return $prepared_args;
 }
