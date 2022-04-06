@@ -49,7 +49,7 @@
 
 	/* Mobile - `li` containing `a` */
 	& .wp-block-navigation__container .wp-block-navigation-item.global-header__mobile-get-wordpress {
-		padding: var(--wp--style--block-gap) 65px;
+		padding: 0;
 		margin: 57px var(--wp--style--block-gap) 0 var(--wp--style--block-gap);
 		width: calc(100% - var(--wp--style--block-gap) - var(--wp--style--block-gap));
 		text-align: center;
@@ -59,8 +59,9 @@
 		}
 
 		& a {
-			margin: 0 auto;
-			padding: 0;
+			margin: 0;
+			padding: var(--wp--style--block-gap) 65px;
+			width: 100%;
 
 			&:hover {
 				background-color: unset;
