@@ -283,8 +283,8 @@ function remove_inner_group_container() {
 		return;
 	}
 
-	remove_filter( 'render_block', 'wp_restore_group_inner_container' );
-	remove_filter( 'render_block', 'gutenberg_restore_group_inner_container' );
+	remove_filter( 'render_block_core/group', 'wp_restore_group_inner_container' );
+	remove_filter( 'render_block_core/group', 'gutenberg_restore_group_inner_container' );
 }
 
 /**
@@ -298,9 +298,9 @@ function restore_inner_group_container() {
 	}
 
 	if ( function_exists( 'gutenberg_restore_group_inner_container' ) ) {
-		add_filter( 'render_block', 'gutenberg_restore_group_inner_container', 10, 2 );
+		add_filter( 'render_block_core/group', 'gutenberg_restore_group_inner_container', 10, 2 );
 	} else {
-		add_filter( 'render_block', 'wp_restore_group_inner_container', 10, 2 );
+		add_filter( 'render_block_core/group', 'wp_restore_group_inner_container', 10, 2 );
 	}
 }
 
