@@ -234,7 +234,9 @@
 	*/
 
 	& .wp-block-navigation__container {
-		background: var(--wp--preset--color--dark-grey);
+		@media (--tablet) {
+			background: var(--wp--preset--color--dark-grey);
+		}
 	}
 
 	& .wp-block-navigation .has-child .wp-block-navigation__submenu-container {
