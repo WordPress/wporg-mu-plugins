@@ -2,8 +2,7 @@ name: Build and push to build branch.
 
 on:
     push:
-        # `try/build-branch` only here for testing, can remove once PR is merged.
-        branches: [trunk, try/build-branch]
+        branches: [trunk]
 
 jobs:
     build:
