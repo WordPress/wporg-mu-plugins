@@ -17,11 +17,9 @@
 			"url": "git@github.com:WordPress/wporg-repo-tools.git"
 		}
 	],
-	"require": {
-	},
 	"require-dev": {
 		"composer/installers": "~1.0",
-		"phpunit/phpunit": "^9.5"
+		"phpunit/phpunit": "^9.5",
 		"wporg/wporg-repo-tools": "dev-trunk"
 	},
 	"config": {
