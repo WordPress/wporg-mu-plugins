@@ -1,8 +1,5 @@
 {
 	"config": {
-		"WP_DEBUG": true,
-		"SCRIPT_DEBUG": true,
-		"ALTERNATE_WP_CRON": true
 	},
 	"core": "WordPress/WordPress#master",
 	"mappings": {
