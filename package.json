@@ -11,11 +11,9 @@
 	"bugs": {
 		"url": "https://github.com/WordPress/wporg-mu-plugins/issues"
 	},
-	"dependencies": {
-		"@wordpress/env": "^4.6.0"
-	},
 	"devDependencies": {
 		"@wordpress/browserslist-config": "^4.1.0",
+		"@wordpress/env": "^4.6.0",
 		"cssnano": "^5.0.8",
 		"postcss": "^8.3.7",
 		"postcss-cli": "^8.3.1",
