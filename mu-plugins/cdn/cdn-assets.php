@@ -21,12 +21,15 @@ namespace WordPressdotorg\MU_Plugins\CDN;
  * @return string The potentially CDNised URL.
  */
 function with_filemtime_cachebuster( $link, $handle = '' ) {
-	// Only same-host resources, and WordPress.org domains.
-	if (
-		! str_starts_with( $link, site_url( '/' ) ) ||
-		! str_contains( $link, 'wordpress.org' ) ||
-		str_contains( $link, 'profiles.wordpress.org' )
-	) {
+	$hostname = strtolower( wp_parse_url( $link, PHP_URL_HOST ) );
+
+	// Only WordPress.org domain files
+	if ( 'wordpress.org' !== $hostname && ! str_ends_with( $hostname, '.wordpress.org' ) ) {
+		return $link;
+	}
+
+	// Profiles is hosted on BuddyPress, which is not available via the CDN.
+	if ( 'profiles.wordpress.org' === $hostname ) {
 		return $link;
 	}
 
@@ -55,8 +58,6 @@ function with_filemtime_cachebuster( $link, $handle = '' ) {
 		return $link;
 	}
 
-	$is_production = ( 'production' === wp_get_environment_type() );
-
 	// Set the version to the file modification time, for consistency.
 	$version = false;
 	if ( ! is_timestamp( $url_args['ver'] ) ) {
@@ -65,6 +66,8 @@ function with_filemtime_cachebuster( $link, $handle = '' ) {
 	if ( ! $version ) {
 		$version = $url_args['ver'];
 	}
+
+	$is_production = ( 'production' === wp_get_environment_type() );
 
 	// Chunk the cache buster on a ~2 minute rolling window.
 	// This allows for the production deploy process taking a few minutes, setting different modification times on different servers.
@@ -81,8 +84,14 @@ function with_filemtime_cachebuster( $link, $handle = '' ) {
 		$use_cdn = true;
 	}
 
+	// If we're using the CDN, change the hostname.
+	if ( $use_cdn ) {
+		$hostname = 's.w.org';
+	}
+
 	// Generate the new link.
-	$link = 'https://' . ( $use_cdn ? 's.w.org' : $_SERVER['HTTP_HOST'] ) . '/' . $filepath . '?ver=' . urlencode( $version );
+	$version = urlencode( $version );
+	$link    = "https://{$hostname}/{$filepath}?ver={$version}";
 
 	return $link;
 }
