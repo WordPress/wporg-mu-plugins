@@ -19,6 +19,7 @@ jobs:
         run: |
           npm install
           composer install
+          npm run wp-env start
           npm run build
 
       - name: Run PHP unit tests
