@@ -23,7 +23,9 @@
 		"phpcompatibility/phpcompatibility-wp": "*",
 		"phpunit/phpunit": "^9.5",
 		"wp-coding-standards/wpcs": "2.*",
-		"wporg/wporg-repo-tools": "dev-trunk"
+		"wp-phpunit/wp-phpunit": "^5.9",
+		"wporg/wporg-repo-tools": "dev-trunk",
+		"yoast/phpunit-polyfills": "^1.0"
 	},
 	"config": {
 		"allow-plugins": {
