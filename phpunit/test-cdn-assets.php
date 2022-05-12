@@ -32,6 +32,7 @@ class Test_CDN_Assets extends WP_UnitTestCase {
 
 	public function dataprovider_staging() {
 		$dashicons_time = filemtime( ABSPATH . WPINC . '/css/dashicons.css' );
+		$yesterday      = strtotime( 'yesterday' );
 
 		return [
 			// WordPress files
@@ -49,23 +50,13 @@ class Test_CDN_Assets extends WP_UnitTestCase {
 				'https://make.wordpress.org/multisite-sub-directory/wp-includes/css/dashicons.css?ver=1',
 				'https://make.wordpress.org/wp-includes/css/dashicons.css?ver=' . $dashicons_time
 			],
-
-			// Not WordPress.org should remain the same.
+			// WordPress files with an existing timestamp should be respected.
 			[
-				'https://example.org/example.css',
-				'https://example.org/example.css'
-			],
-			[
-				'https://example.org/example.css?ver=1',
-				'https://example.org/example.css?ver=1'
+				'https://test.wordpress.org/wp-includes/css/dashicons.css?ver=' . $yesterday,
+				'https://test.wordpress.org/wp-includes/css/dashicons.css?ver=' . $yesterday
 			],
 
-			// Profiles.wordpress.org should remain untouched.
-			[
-				'https://profiles.wordpress.org/wp-content/themes/profiles.wordpress.org/style.css?ver=1',
-				'https://profiles.wordpress.org/wp-content/themes/profiles.wordpress.org/style.css?ver=1'
-			],
-		];
+		] + $this->get_untouchables();
 	}
 
 	public function dataprovider_production() {
@@ -73,6 +64,7 @@ class Test_CDN_Assets extends WP_UnitTestCase {
 		$window         = 2 * MINUTE_IN_SECONDS;
 		$dashicons_time = filemtime( ABSPATH . WPINC . '/css/dashicons.css' );
 		$dashicons_time = floor( $dashicons_time / $window ) * $window;
+		$yesterday      = strtotime( 'yesterday' );
 
 		return [
 			// WordPress files
@@ -90,23 +82,36 @@ class Test_CDN_Assets extends WP_UnitTestCase {
 				'https://make.wordpress.org/multisite-sub-directory/wp-includes/css/dashicons.css?ver=1',
 				'https://s.w.org/wp-includes/css/dashicons.css?ver=' . $dashicons_time
 			],
+			// WordPress files with an existing timestamp should be respected.
+			[
+				'https://test.wordpress.org/wp-includes/css/dashicons.css?ver=' . $yesterday,
+				'https://s.w.org/wp-includes/css/dashicons.css?ver=' . $yesterday
+			],
+		] + $this->get_untouchables();
+	}
 
-			// Not WordPress.org should remain the same.
-			[
-				'https://example.org/example.css',
-				'https://example.org/example.css'
-			],
-			[
-				'https://example.org/example.css?ver=1',
-				'https://example.org/example.css?ver=1'
-			],
+	protected function get_untouchables() {
+		$untouchables = [
+			// Not-WordPress.org should remain the same.
+			'https://example.org/example.css',
+			'https://example.org/example.css?ver=1',
 
 			// Profiles.wordpress.org should remain untouched.
-			[
-				'https://profiles.wordpress.org/wp-content/themes/profiles.wordpress.org/style.css?ver=1',
-				'https://profiles.wordpress.org/wp-content/themes/profiles.wordpress.org/style.css?ver=1'
-			],
+			'https://profiles.wordpress.org/wp-content/themes/profiles.wordpress.org/style.css?ver=1',
+
+			// s.w.org urls should remain untouched.
+			'https://s.w.org/style/example.css?ver=1',
+
+			// Supported files with extra URL arguements should be ignored.
+			'https://wordpress.org/wp-includes/css/dashicons.css?ver=1&test-arg=1',
 		];
+
+		$ret = [];
+		foreach ( $untouchables as $u ) {
+			$ret[ $u ] = [ $u, $u ];
+		}
+
+		return $ret;
 	}
 
 }
