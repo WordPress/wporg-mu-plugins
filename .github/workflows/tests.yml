@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches: [ trunk, add/cdn-plugin, try/cdn-tests ]
+  pull_request:
+    branches: [ trunk ]
+
+  workflow_dispatch:
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: npm run build
+
+      - name: Run PHP unit tests
+        run: |
+          npm run env
+          npm run test:php

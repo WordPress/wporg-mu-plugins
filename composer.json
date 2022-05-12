@@ -18,9 +18,10 @@
 		}
 	],
 	"require": {
-		"composer/installers": "~1.0"
 	},
 	"require-dev": {
+		"composer/installers": "~1.0",
+		"phpunit/phpunit": "^9.5"
 		"wporg/wporg-repo-tools": "dev-trunk"
 	},
 	"config": {

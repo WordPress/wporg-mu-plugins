@@ -11,7 +11,9 @@
 	"bugs": {
 		"url": "https://github.com/WordPress/wporg-mu-plugins/issues"
 	},
-	"dependencies": {},
+	"dependencies": {
+		"@wordpress/env": "^4.6.0"
+	},
 	"devDependencies": {
 		"@wordpress/browserslist-config": "^4.1.0",
 		"cssnano": "^5.0.8",
@@ -33,7 +35,9 @@
 		"pre-build": "mkdir -p mu-plugins/blocks/global-header-footer/build",
 		"build": "npm run pre-build && npm run build:css && npm run build:rtl",
 		"build:css": "postcss mu-plugins/blocks/global-header-footer/postcss/style.pcss --output mu-plugins/blocks/global-header-footer/build/style.css",
-		"build:rtl": "rtlcss mu-plugins/blocks/global-header-footer/build/style.css mu-plugins/blocks/global-header-footer/build/style-rtl.css"
+		"build:rtl": "rtlcss mu-plugins/blocks/global-header-footer/build/style.css mu-plugins/blocks/global-header-footer/build/style-rtl.css",
+		"wp-env": "wp-env",
+		"test:php": "wp-env run phpunit 'phpunit -c /var/www/html/phpunit.xml.dist --verbose'"
 	},
 	"rtlcssConfig": {},
 	"stylelint": {
