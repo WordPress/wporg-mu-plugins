@@ -1,6 +1,4 @@
 {
-	"config": {
-	},
 	"core": "WordPress/WordPress#master",
 	"mappings": {
 		"wp-content/mu-plugins": "./mu-plugins"
