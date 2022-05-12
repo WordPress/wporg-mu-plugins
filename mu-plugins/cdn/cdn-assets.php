@@ -3,19 +3,18 @@ namespace WordPressdotorg\MU_Plugins\CDN;
 
 /**
  * CDNise script/style assets to s.w.org.
- * 
+ *
  * This only applies to assets which are:
- *  - Loaded from the same host as this site is served on
  *  - Is a *wordpress.org domain. This ensures that Local environments and other W.org hosted domains are not affected.
  *  - Is NOT profiles.wordpress.org. This site does not use the same docroot as the rest of wordpress.org.
  *  - Only applies to URLs which already include ?ver= cache-busters, and do NOT contain other parameters.
- * 
+ *
  * In CDN'ing, there's a few specific changes made:
  *  - ver= is always changed to the filemtime of the asset (if not already), for consistent and easy cache-busting.
  *  - Caches are chunked into two-minute windows, to avoid slight time differences between servers using different cache keys.
  *  - assets are shared between sites, all use s.w.org/* instead of wordpress.org/wp-includes/* or wordpress.org/plugins/wp-includes/*.
  *  - non-production wp_get_envionment_type() skips CDN'isation.
- * 
+ *
  * @param string $link   The non-CDNised URL.
  * @param string $handle The asset handle, used to skip certain assets.
  * @return string The potentially CDNised URL.
@@ -34,7 +33,10 @@ function with_filemtime_cachebuster( $link, $handle = '' ) {
 	}
 
 	$url_args     = [];
-	$relative_url = str_replace( site_url( '/' ), '', $link );
+	// Trim the scheme & hostname off.
+	$relative_url = preg_replace( '!^(\w+:)?//[^/]+/!', '', $link );
+	// Trim any sub-site path off.
+	$relative_url = preg_replace( '!^[^/]+/(wp-(?:content|includes|admin)/)!', '$1', $relative_url );
 
 	if ( str_contains( $relative_url, '?' ) ) {
 		list( $filepath, $url_part_args ) = explode( '?', $relative_url, 2 );
@@ -100,10 +102,10 @@ add_filter( 'script_loader_src', __NAMESPACE__ . '\with_filemtime_cachebuster', 
 
 /**
  * Determine if a string appears to be a timestamp.
- * 
+ *
  * Due to the use-case here, we're assuming that the timestamp will occur
  * between Y2.01K and now.
- * 
+ *
  * @param string|int $string The string to check.
  * @return bool Whether the input appears to be a UTC timestamp.
  */
