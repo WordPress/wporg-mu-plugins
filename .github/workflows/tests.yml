@@ -25,5 +25,5 @@ jobs:
       - name: Run PHP unit tests
         run: |
           # Delete the default wp-env forced environment type
-          npm run wp-env run tests-cli 'sed "/WP_ENVIRONMENT_TYPE/d" -i phpunit-wp-config.php'
+          sed "/WP_ENVIRONMENT_TYPE/d" -i `npm run wp-env install-path 2>/dev/null | tail -n1`/tests-WordPress/phpunit-wp-config.php
           npm run test:php
