@@ -51,12 +51,11 @@ function with_filemtime_cachebuster( $link, $handle = '' ) {
 	}
 
 	// If the link doesn't have a cache-buster, or has extra args, abort.
-	if (
-		empty( $url_args['ver'] ) ||
-		count( $url_args ) > 1
-	) {
+	if ( empty( $url_args['ver'] ) || count( $url_args ) > 1 ) {
 		return $link;
 	}
+
+	$is_production = ( 'production' === wp_get_environment_type() );
 
 	// Set the version to the file modification time, for consistency.
 	$version = false;
@@ -69,27 +68,21 @@ function with_filemtime_cachebuster( $link, $handle = '' ) {
 
 	// Chunk the cache buster on a ~2 minute rolling window.
 	// This allows for the production deploy process taking a few minutes, setting different modification times on different servers.
-	if (
-		'production' === wp_get_environment_type() &&
-		is_timestamp( $version )
-	) {
+	if ( $is_production && is_timestamp( $version ) ) {
 		$window  = 2 * MINUTE_IN_SECONDS;
 		$version = floor( $version / $window ) * $window;
 	}
 
-	$use_cdn = (
-		// CDN is used in production by default.
-		'production' === wp_get_environment_type() ||
+	// CDN is used in production by default.
+	$use_cdn = $is_production;
 
-		// Allow other environments to opt-in via constant.
-		( defined( 'USE_WPORG_CDN' ) && USE_WPORG_CDN )
-	);
+	// Allow other environments to opt-in via constant.
+	if ( defined( 'USE_WPORG_CDN' ) && USE_WPORG_CDN ) {
+		$use_cdn = true;
+	}
 
-
-	$link = 'https://' . ( $use_cdn ? 's.w.org' : $_SERVER['HTTP_HOST'] ) . '/' . $filepath;
-
-	// Add the version back onto the URL.
-	$link = add_query_arg( 'ver', $version, $link );
+	// Generate the new link.
+	$link = 'https://' . ( $use_cdn ? 's.w.org' : $_SERVER['HTTP_HOST'] ) . '/' . $filepath . '?ver=' . urlencode( $version );
 
 	return $link;
 }
