@@ -85,15 +85,6 @@ function with_filemtime_cachebuster( $link, $handle = '' ) {
 		( defined( 'USE_WPORG_CDN' ) && USE_WPORG_CDN )
 	);
 
-	// These scripts/styles break if loaded from the CDN without CORS headers.
-	// See https://make.wordpress.org/systems/2022/02/22/cors-headers-for-s-w-org/
-	$blocked_handles = [
-		'wporg-news-style', // Mask images
-		'wporg-global-fonts-css', 'jetpack-icons', 'wp-stream-icons', // Fonts
-	];
-	if ( in_array( $handle, $blocked_handles, true ) ) {
-		$use_cdn = false;
-	}
 
 	$link = 'https://' . ( $use_cdn ? 's.w.org' : $_SERVER['HTTP_HOST'] ) . '/' . $filepath;
 
