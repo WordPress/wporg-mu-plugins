@@ -1,0 +1,20 @@
+{
+	"config": {
+		"WP_DEBUG": true,
+		"SCRIPT_DEBUG": true,
+		"ALTERNATE_WP_CRON": true
+	},
+	"core": "WordPress/WordPress#master",
+	"mappings": {
+		"wp-content/mu-plugins": "./mu-plugins"
+	},
+	"env": {
+		"tests": {
+			"mappings": {
+				"vendor": "./vendor",
+				"phpunit": "./phpunit",
+				"phpunit.xml.dist": "./phpunit.xml.dist"
+			}
+		}
+	}
+}

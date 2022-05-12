@@ -18,11 +18,12 @@
 		}
 	],
 	"require": {
-		"composer/installers": "~1.0"
 	},
 	"require-dev": {
+		"composer/installers": "~1.0",
 		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
 		"phpcompatibility/phpcompatibility-wp": "*",
+		"phpunit/phpunit": "^9.5",
 		"wp-coding-standards/wpcs": "2.*",
 		"wporg/wporg-repo-tools": "dev-trunk"
 	},
