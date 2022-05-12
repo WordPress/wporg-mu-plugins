@@ -17,6 +17,13 @@ if ( ! $_tests_dir ) {
 	$_tests_dir = getenv( 'WP_PHPUNIT__DIR' );
 }
 
+// See if we're installed inside an existing WP dev instance.
+if ( ! $_tests_dir ) {
+	$_try_tests_dir = __DIR__ . '/../../../../../tests/phpunit';
+	if ( file_exists( $_try_tests_dir . '/includes/functions.php' ) ) {
+		$_tests_dir = $_try_tests_dir;
+	}
+}
 // Fallback.
 if ( ! $_tests_dir ) {
 	$_tests_dir = '/tmp/wordpress-tests-lib';
