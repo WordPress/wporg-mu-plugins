@@ -17,8 +17,6 @@
 			"url": "git@github.com:WordPress/wporg-repo-tools.git"
 		}
 	],
-	"require": {
-	},
 	"require-dev": {
 		"composer/installers": "~1.0",
 		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
