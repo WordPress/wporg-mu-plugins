@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [ trunk, add/cdn-plugin, try/cdn-tests ]
+  pull_request:
+    branches: [ trunk ]
+
+  workflow_dispatch:
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          npm install
+          composer install
+          npm run wp-env start
+          npm run build
+
+      - name: Run PHP unit tests
+        run: |
+          # Delete the default wp-env forced environment type
+          sed "/WP_ENVIRONMENT_TYPE/d" -i `npm run wp-env install-path 2>/dev/null | tail -n1`/tests-WordPress/phpunit-wp-config.php
+          npm run test:php

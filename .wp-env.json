@@ -1,0 +1,15 @@
+{
+	"core": "WordPress/WordPress#master",
+	"mappings": {
+		"wp-content/mu-plugins": "./mu-plugins"
+	},
+	"env": {
+		"tests": {
+			"mappings": {
+				"vendor": "./vendor",
+				"phpunit": "./phpunit",
+				"phpunit.xml.dist": "./phpunit.xml.dist"
+			}
+		}
+	}
+}
