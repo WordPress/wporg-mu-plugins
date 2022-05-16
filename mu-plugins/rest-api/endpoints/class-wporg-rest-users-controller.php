@@ -58,6 +58,59 @@ class Users_Controller extends \WP_REST_Users_Controller {
 				'schema' => array( $this, 'get_public_item_schema' ),
 			)
 		);
+
+		// Filter the post endpoints to alter the public URL for non-authenticated users.
+		$post_types = get_post_types(
+			array(
+				'public'       => true,
+				'show_in_rest' => true,
+			)
+		);
+
+		foreach ( $post_types as $post_type ) {
+			add_filter( "rest_prepare_{$post_type}", array( $this, 'alter_post_author_link' ) );
+		}
+	}
+
+	/**
+	 * Change the author link for posts to this endpoint.
+	 * 
+	 * @param \WP_REST_Response $response Response object for the request.
+	 * 
+	 * @return \WP_REST_Response Response object for the request.
+	 */
+	public function alter_post_author_link( $response ) {
+		$links = $response->get_links();
+		if (
+			empty( $links['author'][0]['href'] ) ||
+			! preg_match( '!wp/v2/users/(?P<id>\d+)!i', $links['author'][0]['href'], $m )
+		) {
+			return $response;
+		}
+
+		$user_id = absint( $m['id'] );
+
+		// If the core users endpoint will work for this user, no need to change it.
+		if ( is_multisite() && is_user_member_of_blog( $user_id ) ) {
+			return $response;
+		}
+
+		// Get the user
+		$user = get_user_by( 'id', $user_id );
+
+		// Remove the existing author link
+		$response->remove_link( 'author', $links['author'][0]['href'] );
+
+		// Add a link to our endpoint instead
+		$response->add_link(
+			'author',
+			rest_url( $this->namespace . '/' . $this->rest_base . '/' . urlencode( $user->user_nicename ) ),
+			array(
+				'embeddable' => true
+			)
+		);
+
+		return $response;
 	}
 
 	/**
