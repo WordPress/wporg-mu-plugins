@@ -81,8 +81,12 @@ class Users_Controller extends \WP_REST_Users_Controller {
 	 */
 	public function alter_post_author_link( $response ) {
 		$data = $response->get_data();
-		$user = get_user_by( 'id', $data['author'] ?? 0 );
-		if ( ! $user->exists() ) {
+		if ( empty( $data['author'] ) ) {
+			return $response;
+		}
+
+		$user = get_user_by( 'id', $data['author'] );
+		if ( ! $user ) {
 			return $response;
 		}
 
