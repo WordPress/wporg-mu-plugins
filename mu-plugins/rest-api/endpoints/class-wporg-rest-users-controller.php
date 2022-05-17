@@ -80,23 +80,16 @@ class Users_Controller extends \WP_REST_Users_Controller {
 	 * @return \WP_REST_Response Response object for the request.
 	 */
 	public function alter_post_author_link( $response ) {
-		$links = $response->get_links();
-		if (
-			empty( $links['author'][0]['href'] ) ||
-			! preg_match( '!wp/v2/users/(?P<id>\d+)!i', $links['author'][0]['href'], $m )
-		) {
+		$data = $response->get_data();
+		$user = get_user_by( 'id', $data['author'] ?? 0 );
+		if ( ! $user->exists() ) {
 			return $response;
 		}
-
-		$user_id = absint( $m['id'] );
 
 		// If the core users endpoint will work for this user, no need to change it.
-		if ( is_multisite() && is_user_member_of_blog( $user_id ) ) {
+		if ( is_multisite() && is_user_member_of_blog( $user->ID ) ) {
 			return $response;
 		}
-
-		// Get the user
-		$user = get_user_by( 'id', $user_id );
 
 		// Remove the existing author link
 		$response->remove_link( 'author' );
