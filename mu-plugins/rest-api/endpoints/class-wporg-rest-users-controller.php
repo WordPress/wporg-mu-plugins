@@ -99,7 +99,7 @@ class Users_Controller extends \WP_REST_Users_Controller {
 		$user = get_user_by( 'id', $user_id );
 
 		// Remove the existing author link
-		$response->remove_link( 'author', $links['author'][0]['href'] );
+		$response->remove_link( 'author' );
 
 		// Add a link to our endpoint instead
 		$response->add_link(
