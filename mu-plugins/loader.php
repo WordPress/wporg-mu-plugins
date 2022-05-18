@@ -1,6 +1,9 @@
 <?php
+
 /**
  * Load mu-plugins.
+ *
+ * `utilities/` aren't loaded automatically since they're not used globally.
  */
 
 require_once __DIR__ . '/blocks/global-header-footer/blocks.php';
