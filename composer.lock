@@ -165,12 +165,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/wporg-repo-tools.git",
-                "reference": "c6494b75137aa9e81e7a73c3b78ce0fec0bad702"
+                "reference": "325447b539639664a0867d233631e3af84e2d548"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/wporg-repo-tools/zipball/c6494b75137aa9e81e7a73c3b78ce0fec0bad702",
-                "reference": "c6494b75137aa9e81e7a73c3b78ce0fec0bad702",
+                "url": "https://api.github.com/repos/WordPress/wporg-repo-tools/zipball/325447b539639664a0867d233631e3af84e2d548",
+                "reference": "325447b539639664a0867d233631e3af84e2d548",
                 "shasum": ""
             },
             "default-branch": true,
@@ -187,7 +187,7 @@
                 "issues": "https://github.com/WordPress/wporg-repo-tools/issues",
                 "source": "https://github.com/WordPress/wporg-repo-tools/tree/trunk"
             },
-            "time": "2021-12-07T22:35:42+00:00"
+            "time": "2022-04-28T23:06:09+00:00"
         }
     ],
     "aliases": [],
@@ -199,5 +199,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }
