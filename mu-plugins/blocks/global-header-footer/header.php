@@ -28,7 +28,7 @@ $search_args = array(
 );
 
 /**
- * Ouput menu items (`navigation-link`) & submenus (`navigation-submenu`). If a submenu, recursively iterate
+ * Output menu items (`navigation-link`) & submenus (`navigation-submenu`). If a submenu, recursively iterate
  * through submenu items to output links.
  *
  * @param array   $menu_item An item from the array in `get_global_menu_items` or `get_rosetta_menu_items`.
@@ -49,7 +49,7 @@ function recursive_menu( $menu_item, $top_level = true ) {
 		);
 	}
 
-	$ouput = sprintf(
+	$output = sprintf(
 		'<!-- wp:navigation-submenu {"label":"%1$s","url":"%2$s","kind":"%3$s","className":"%4$s"} -->',
 		$menu_item['title'],
 		$menu_item['url'],
@@ -58,12 +58,12 @@ function recursive_menu( $menu_item, $top_level = true ) {
 	);
 
 	foreach ( $menu_item['submenu'] as $submenu_item ) {
-		$ouput .= recursive_menu( $submenu_item, false );
+		$output .= recursive_menu( $submenu_item, false );
 	}
 
-	$ouput .= '<!-- /wp:navigation-submenu -->';
+	$output .= '<!-- /wp:navigation-submenu -->';
 
-	return $ouput;
+	return $output;
 }
 
 ?>
