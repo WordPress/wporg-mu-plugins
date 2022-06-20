@@ -92,7 +92,8 @@
 			}
 		}
 
-		& .wp-block-navigation-item a {
+		& .wp-block-navigation-item a,
+		& .global-header__overflow-menu > button {
 			padding-left: var(--wp--style--block-gap);
 			padding-top: calc(var(--wp--style--block-gap) / 2);
 			padding-bottom: calc(var(--wp--style--block-gap) / 2);
@@ -157,9 +158,13 @@
 		@media (--tablet) {
 
 			/* Add extra space around the overflow … to make a bigger tap/hover target. */
-			& a {
+			& button {
+				margin: 0;
 				padding-left: var(--wp--style--block-gap);
 				padding-right: var(--wp--style--block-gap);
+				height: auto;
+				width: auto;
+				line-height: inherit;
 			}
 		}
 
@@ -195,10 +200,15 @@
 				min-width: 200px;
 				opacity: 1;
 				overflow: visible;
-				visibility: visible;
 				width: auto;
 				padding-left: 1em;
 			}
+		}
+
+		&:hover .wp-block-navigation__submenu-container,
+		& [aria-expanded="true"] ~ .wp-block-navigation__submenu-container,
+		& [aria-expanded="true"] ~ .wp-block-navigation__submenu-container .wp-block-navigation__submenu-container {
+			visibility: visible;
 		}
 	}
 
