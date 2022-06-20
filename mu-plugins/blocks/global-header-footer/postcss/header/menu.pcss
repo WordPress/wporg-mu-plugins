@@ -178,6 +178,28 @@
 				padding-left: var(--wp--style--block-gap);
 			}
 		}
+
+		/* Hide the submenu toggle & display child items inline. */
+		& .wp-block-navigation__submenu-container {
+			& .wp-block-navigation-submenu {
+				display: block;
+			}
+
+			& .wp-block-navigation-submenu__toggle {
+				display: none;
+			}
+
+			& .wp-block-navigation__submenu-container {
+				position: static;
+				height: auto;
+				min-width: 200px;
+				opacity: 1;
+				overflow: visible;
+				visibility: visible;
+				width: auto;
+				padding-left: 1em;
+			}
+		}
 	}
 
 	& .global-header__overflow-item {
