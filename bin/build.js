@@ -87,9 +87,12 @@ async function maybeBuildPostCSS( inputDir, outputDir ) {
 
 // If we have more paths that need building, we could switch this to an array.
 const projectPath = path.join( path.dirname( __dirname ), 'mu-plugins/blocks' );
-const projects = fs
-	.readdirSync( projectPath )
-	.filter( ( file ) => fs.statSync( path.join( projectPath, file ) ).isDirectory() );
+const cliProjects = process.argv.slice( 2 );
+const projects = cliProjects.length
+	? cliProjects
+	: fs
+			.readdirSync( projectPath )
+			.filter( ( file ) => fs.statSync( path.join( projectPath, file ) ).isDirectory() );
 
 /**
  * Build the files.

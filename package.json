@@ -18,6 +18,7 @@
 		"chalk": "4.1.2",
 		"cross-spawn": "7.0.3",
 		"cssnano": "5.1.11",
+		"node-watch": "^0.7.3",
 		"postcss": "8.4.14",
 		"postcss-cli": "9.1.0",
 		"postcss-import": "14.1.0",
@@ -31,6 +32,7 @@
 		"extends @wordpress/browserslist-config"
 	],
 	"scripts": {
+		"start": "./bin/watch.js",
 		"lint:css": "wp-scripts lint-style **/*.pcss",
 		"build": "./bin/build.js"
 	},
