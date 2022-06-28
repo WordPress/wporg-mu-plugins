@@ -93,34 +93,44 @@
 			this.wrapper.classList.add( 'has-menu-loaded' );
 
 			if ( this.hasHiddenItems ) {
+				const labels = window.wporgGlobalHeaderI18n || {};
 				this.removeSubMenu();
 
-				let itemsContainer = this.wrapper.querySelector( '.wp-block-navigation__container' );
+				const itemsContainer = this.wrapper.querySelector( '.wp-block-navigation__container' );
 
 				// Create the ... menu list item.
-				let newItem = document.createElement( 'li' );
+				const newItem = document.createElement( 'li' );
 				newItem.classList.add(
 					'wp-block-navigation-item',
-					'wp-block-navigation-link',
+					'wp-block-navigation-submenu',
 					'has-child',
+					'open-on-hover-click',
 					'global-header__overflow-menu'
 				);
 
-				let newLink = document.createElement( 'a' );
-				newLink.classList.add( 'wp-block-navigation-item__content' );
-				newLink.setAttribute( 'href', '#' );
-				newLink.appendChild( document.createTextNode( '...' ) );
-				newItem.appendChild( newLink );
+				const newButton = document.createElement( 'button' );
+				newButton.classList.add(
+					'wp-block-navigation__submenu-icon',
+					'wp-block-navigation-submenu__toggle'
+				);
+				newButton.appendChild( document.createTextNode( '...' ) );
+				newButton.setAttribute( 'aria-label', labels.overflowMenuLabel );
+				newButton.setAttribute( 'aria-expanded', 'false' );
+				newButton.addEventListener( 'click', function ( event ) {
+					const isOpen = event.target.getAttribute( 'aria-expanded' ) === 'true';
+					event.target.setAttribute( 'aria-expanded', isOpen ? 'false' : 'true' );
+				} );
+				newItem.appendChild( newButton );
 
 				// Create the submenu where the hidden links will live.
-				let newSubMenu = document.createElement( 'ul' );
+				const newSubMenu = document.createElement( 'ul' );
 				newSubMenu.classList.add( 'wp-block-navigation__submenu-container' );
 				newItem.appendChild( newSubMenu );
 
 				// Populate submenu with clones of the hidden menu items.
 				for ( const el of this.listItems ) {
 					if ( el.classList.contains( 'global-header__overflow-item' ) ) {
-						let clone = el.cloneNode( true );
+						const clone = el.cloneNode( true );
 						newSubMenu.appendChild( clone );
 					}
 				}

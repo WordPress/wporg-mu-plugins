@@ -85,6 +85,7 @@ function register_block_assets() {
 		array(
 			'openSearchLabel' => __( 'Open Search', 'wporg' ),
 			'closeSearchLabel' => __( 'Close Search', 'wporg' ),
+			'overflowMenuLabel' => __( 'More menu', 'wporg' ),
 		)
 	);
 }

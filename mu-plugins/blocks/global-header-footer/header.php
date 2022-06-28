@@ -1,6 +1,7 @@
 <?php
 
 namespace WordPressdotorg\MU_Plugins\Global_Header_Footer\Header;
+
 use function WordPressdotorg\MU_Plugins\Global_Header_Footer\{ get_home_url, get_download_url };
 
 defined( 'WPINC' ) || die();
@@ -25,6 +26,45 @@ $search_args = array(
 	'buttonUseIcon' => true,
 	'formAction' => 'https://wordpress.org/search/do-search.php',
 );
+
+/**
+ * Output menu items (`navigation-link`) & submenus (`navigation-submenu`). If a submenu, recursively iterate
+ * through submenu items to output links.
+ *
+ * @param array   $menu_item An item from the array in `get_global_menu_items` or `get_rosetta_menu_items`.
+ * @param boolean $top_level Whether the menu item is a top-level link.
+ * @return string
+ */
+function recursive_menu( $menu_item, $top_level = true ) {
+	$has_submenu = ! empty( $menu_item['submenu'] );
+
+	if ( ! $has_submenu ) {
+		return sprintf(
+			'<!-- wp:navigation-link {"label":"%1$s","url":"%2$s","kind":"%3$s","isTopLevelLink":%4$s,"className":"%5$s"} /-->',
+			$menu_item['title'],
+			$menu_item['url'],
+			$menu_item['type'],
+			$top_level ? 'true' : 'false',
+			$menu_item['classes'] ?? '',
+		);
+	}
+
+	$output = sprintf(
+		'<!-- wp:navigation-submenu {"label":"%1$s","url":"%2$s","kind":"%3$s","className":"%4$s"} -->',
+		$menu_item['title'],
+		$menu_item['url'],
+		$menu_item['type'],
+		$menu_item['classes'] ?? '',
+	);
+
+	foreach ( $menu_item['submenu'] as $submenu_item ) {
+		$output .= recursive_menu( $submenu_item, false );
+	}
+
+	$output .= '<!-- /wp:navigation-submenu -->';
+
+	return $output;
+}
 
 ?>
 
@@ -53,44 +93,15 @@ $search_args = array(
 	<!-- /wp:paragraph -->
 	<?php endif; ?>
 
-	<!-- wp:navigation {"orientation":"horizontal","className":"global-header__navigation","overlayMenu":"mobile"} -->
+	<!-- wp:navigation {"orientation":"horizontal","className":"global-header__navigation","overlayMenu":"mobile","openSubmenusOnClick":false} -->
 		<?php
-
 		/*
-		 * Loop though menu items and create `navigation-link` block comments.
-		 *
-		 * This only supports 1 level deep, but that's currently enough for our needs. More than that could be an
-		 * information architecture smell anyways.
+		 * Loop though menu items and create navigation item blocks. Recurses through any submenu items to output dropdowns.
 		 */
 		foreach ( $menu_items as $item ) {
-			$is_top_level_link = empty( $item['submenu'] );
-
-			printf(
-				'<!-- wp:navigation-link {"label":"%s","url":"%s","kind":"%s","isTopLevelLink":%s,"className":"%s"} %s-->',
-				// These sometimes come from user input (like with Rosetta menus), but `render_block_core_navigation_link()` will escape the values.
-				$item['title'],
-				$item['url'],
-				$item['type'],
-				json_encode( $is_top_level_link ),
-				$item['classes'] ?? '',
-				$is_top_level_link ? '/' : ''
-			);
-
-			if ( ! $is_top_level_link ) {
-				foreach( $item['submenu'] as $submenu_item ) {
-					printf(
-						'<!-- wp:navigation-link {"label":"%s","url":"%s","kind":"%s","isTopLevelLink":true,"className":"%s"} /-->',
-						$submenu_item['title'],
-						$submenu_item['url'],
-						$submenu_item['type'],
-						$submenu_item['classes'] ?? '',
-					);
-				}
-
-				echo '<!-- /wp:navigation-link -->';
-			}
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo recursive_menu( $item );
 		}
-
 		?>
 	<!-- /wp:navigation -->
 
