@@ -13,27 +13,26 @@
 	},
 	"dependencies": {},
 	"devDependencies": {
-		"@wordpress/browserslist-config": "^4.1.0",
-		"cssnano": "^5.1.11",
-		"postcss": "^8.4.14",
-		"postcss-cli": "^9.1.0",
-		"postcss-custom-media": "^8.0.2",
-		"postcss-import": "^14.0.2",
-		"postcss-nesting": "^10.1.8",
-		"postcss-preset-env": "^7.7.1",
-		"postcss-reporter": "^7.0.2",
-		"rtlcss": "3.5.0"
+		"@wordpress/browserslist-config": "4.1.2",
+		"@wordpress/scripts": "23.3.0",
+		"chalk": "4.1.2",
+		"cross-spawn": "7.0.3",
+		"cssnano": "5.1.11",
+		"postcss": "8.4.14",
+		"postcss-cli": "9.1.0",
+		"postcss-import": "14.1.0",
+		"postcss-preset-env": "7.7.1",
+		"resolve-bin": "1.0.1",
+		"rtlcss": "3.5.0",
+		"webpack": "5.47.1",
+		"webpack-cli": "4.9.1"
 	},
 	"browserslist": [
 		"extends @wordpress/browserslist-config"
 	],
 	"scripts": {
-		"start": "npm run build:css -- --watch",
-		"lint:css": "wp-scripts lint-style mu-plugins/blocks/global-header-footer/postcss/**/*.pcss",
-		"pre-build": "mkdir -p mu-plugins/blocks/global-header-footer/build",
-		"build": "npm run pre-build && npm run build:css && npm run build:rtl",
-		"build:css": "postcss mu-plugins/blocks/global-header-footer/postcss/style.pcss --output mu-plugins/blocks/global-header-footer/build/style.css",
-		"build:rtl": "rtlcss mu-plugins/blocks/global-header-footer/build/style.css mu-plugins/blocks/global-header-footer/build/style-rtl.css"
+		"lint:css": "wp-scripts lint-style **/*.pcss",
+		"build": "./bin/build.js"
 	},
 	"rtlcssConfig": {},
 	"stylelint": {
