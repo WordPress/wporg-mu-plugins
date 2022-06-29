@@ -32,6 +32,7 @@
 		"extends @wordpress/browserslist-config"
 	],
 	"scripts": {
+		"prestart": "./bin/build.js",
 		"start": "NODE_ENV=development ./bin/watch.js",
 		"lint:css": "wp-scripts lint-style **/*.pcss",
 		"build": "NODE_ENV=production ./bin/build.js"
