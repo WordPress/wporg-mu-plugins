@@ -89,6 +89,17 @@ html {
 	}
 }
 
+/*
+ * Gutenberg Patches
+ *
+ * See: https://github.com/WordPress/wporg-mu-plugins/issues/216
+ */
+
+.has-modal-open .admin-bar .wp-block-navigation__responsive-dialog,
+.wp-block-group.global-header .has-modal-open .wp-block-navigation__responsive-dialog {
+		margin-top: 0;
+}
+
 @media (--short-screen) {
 	.wp-block-group.global-header {
 		& > * {
