@@ -112,9 +112,7 @@ function ScreenShotImg( { src, isReady = false } ) {
 	}
 
 	if ( hasError || hasAborted ) {
-		return (
-			<div className="wporg-screenshot wporg-screenshot--has-error">{ __( 'error', 'wporg-patterns' ) }</div>
-		);
+		return <div className="wporg-screenshot wporg-screenshot--has-error">{ __( 'error', 'wporg' ) }</div>;
 	}
 
 	return <img src={ base64Img } alt="" />;

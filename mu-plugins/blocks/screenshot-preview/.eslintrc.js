@@ -26,7 +26,7 @@ module.exports = {
 		/*
 		 * Set up our text domain.
 		 */
-		'@wordpress/i18n-text-domain': [ 'error', { allowedTextDomain: [ 'wporg-patterns' ] } ],
+		'@wordpress/i18n-text-domain': [ 'error', { allowedTextDomain: [ 'wporg' ] } ],
 
 		/*
 		 * The rationale behind this rule is that sometimes a variable is defined by a costly operation, but then
