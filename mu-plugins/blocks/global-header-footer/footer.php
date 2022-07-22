@@ -28,6 +28,10 @@ switch ( $attributes['style'] ) {
 		break;
 }
 
+$code_is_poetry_src = str_contains( $container_class, 'has-darker-grey-color' ) ?
+	plugins_url( '/images/code-is-poetry-for-light-bg.svg', __FILE__ ) :
+	'https://s.w.org/style/images/code-is-poetry-for-dark-bg.svg';
+
 ?>
 
 
@@ -113,7 +117,7 @@ switch ( $attributes['style'] ) {
 			<!-- wp:image {"width":188,"height":13,"className":"global-footer__code_is_poetry"} -->
 			<figure class="wp-block-image is-resized global-footer__code_is_poetry">
 				<img
-					src=<?php echo str_contains( $container_class, 'has-darker-grey-color' ) ? 'https://s.w.org/style/images/code-is-poetry-for-light-bg.svg' : 'https://s.w.org/style/images/code-is-poetry-for-dark-bg.svg'; ?>
+					src=<?php echo esc_url( $code_is_poetry_src ); ?>
 					alt="<?php echo esc_html_x( 'Code is Poetry', 'Image alt text', 'wporg' ); ?>"
 					width="188"
 					height="13"
