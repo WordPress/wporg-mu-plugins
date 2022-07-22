@@ -63,16 +63,16 @@
 		& .wp-block-navigation-item {
 			&:hover,
 			&:focus-within {
-				background-color: var(--wp--preset--color--darker-grey);
+				background-color: var(--wp-global-header--background-color--hover);
 			}
 
 			&.current-menu-item > a {
-				border-left: var(--active-menu-item-border-height) solid #7b90ff;
-				color: #7b90ff;
+				border-left: var(--active-menu-item-border-height) solid var(--wp-global-header--link-color--active);
+				color: var(--wp-global-header--link-color--active);
 				font-weight: 700;
 
 				@media (--tablet) {
-					border-bottom: var(--active-menu-item-border-height) solid #7b90ff;
+					border-bottom: var(--active-menu-item-border-height) solid var(--wp-global-header--link-color--active);
 					border-left: none;
 					padding-bottom: calc(33px - var(--active-menu-item-border-height, 0px));
 				}
@@ -102,7 +102,7 @@
 
 			&:hover,
 			&:focus-within {
-				background-color: var(--wp--preset--color--darker-grey);
+				background-color: var(--wp-global-header--background-color--hover);
 			}
 
 			@media (--tablet) {
@@ -255,14 +255,14 @@
 		}
 
 		&:not(.has-background) {
-			background: var(--wp--preset--color--darker-grey);
+			background: var(--wp-global-header--background-color--hover);
 		}
 	}
 
 	& .wp-block-navigation__container {
 
 		@media (--tablet) {
-			background: var(--wp--preset--color--dark-grey);
+			background: var(--wp-global-header--background-color);
 		}
 	}
 }

@@ -31,6 +31,34 @@ html {
 	}
 }
 
+.global-header,
+.global-footer {
+	--wp-global-header--background-color: var(--wp--preset--color--dark-grey);
+	--wp-global-header--background-color--hover: var(--wp--preset--color--darker-grey);
+	--wp-global-header--link-color: var(--wp--preset--color--white);
+	--wp-global-header--link-color--active: var(--wp--preset--color--blue-3);
+	--wp-global-header--text-color: var(--wp--preset--color--white);
+}
+
+.has-darker-grey-color {
+	--wp-global-header--link-color: var(--wp--preset--color--dark-grey);
+	--wp-global-header--link-color--active: var(--wp--preset--color--blue-2);
+	--wp-global-header--text-color: var(--wp--preset--color--dark-grey);
+}
+
+.has-blue-1-background-color {
+	--wp-global-header--background-color: var(--wp--preset--color--blue-1);
+	--wp-global-header--background-color--hover: var(--wp--preset--color--blue-5);
+	--wp-global-header--link-color--active: var(--wp--preset--color--white);
+}
+
+.has-white-background-color {
+	--wp-global-header--background-color: var(--wp--preset--color--white);
+	--wp-global-header--background-color--hover: var(--wp--preset--color--white);
+}
+
+/* @todo Add other colors based on .has-*-color, etc */
+
 /*
  * Shared styles
  */
@@ -39,7 +67,7 @@ html {
 .wp-block-group.global-footer {
 	& svg,
 	& .wp-block-social-links .wp-social-link svg {
-		fill: var(--wp--preset--color--white);
+		fill: var(--wp-global-header--text-color);
 	}
 }
 
@@ -53,8 +81,8 @@ html {
 .wp-block-group.global-footer {
 	--active-menu-item-border-height: 4px;
 
-	background-color: var(--wp--preset--color--dark-grey);
-	color: var(--wp--preset--color--white);
+	background-color: var(--wp-global-header--background-color);
+	color: var(--wp-global-header--text-color);
 	font-family: var(--wp--preset--font-family--inter);
 	font-size: var(--wp--preset--font-size--normal);
 	line-height: var(--wp--custom--body--typography--line-height);
@@ -72,8 +100,8 @@ html {
 .wp-block-group.global-header .global-header__search {
 	&:not(.has-background) .wp-block-navigation__responsive-container,
 	&:not(.has-background) .wp-block-navigation__submenu-container {
-		background-color: var(--wp--preset--color--darker-grey);
-		color: var(--wp--preset--color--white);
+		background-color: var(--wp-global-header--background-color--hover);
+		color: var(--wp-global-header--text-color);
 		font-size: 21px;
 
 		@media (--tablet) {
