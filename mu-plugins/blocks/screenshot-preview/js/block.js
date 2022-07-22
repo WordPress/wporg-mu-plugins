@@ -45,7 +45,6 @@ function Block( { link, previewLink, version } ) {
 			style={ {
 				height: frameHeight,
 			} }
-			tabIndex="-1"
 			href={ link }
 		>
 			<ScreenShot src={ `${ previewLink }&version=${ version }` } isReady={ shouldLoad } />
