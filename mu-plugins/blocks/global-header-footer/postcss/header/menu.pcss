@@ -66,19 +66,25 @@
 				background-color: var(--wp-global-header--background-color--hover);
 			}
 
-			&.current-menu-item > a {
+			@media (--tablet) {
+				border-bottom: var(--active-menu-item-border-height) solid transparent;
+			}
+
+			&.current-menu-item {
 				border-left: var(--active-menu-item-border-height) solid var(--wp-global-header--link-color--active);
-				color: var(--wp-global-header--link-color--active);
-				font-weight: 700;
 
 				@media (--tablet) {
 					border-bottom: var(--active-menu-item-border-height) solid var(--wp-global-header--link-color--active);
 					border-left: none;
-					padding-bottom: calc(33px - var(--active-menu-item-border-height, 0px));
 				}
 
-				@media (--short-screen) {
-					padding-bottom: calc(18px - var(--active-menu-item-border-height, 0px));
+				& > a {
+					color: var(--wp-global-header--link-color--active);
+					font-weight: 700;
+				}
+
+				& > button svg {
+					stroke: var(--wp-global-header--link-color--active);
 				}
 			}
 
@@ -106,14 +112,14 @@
 			}
 
 			@media (--tablet) {
-				padding-bottom: 33px;
+				padding-bottom: calc(33px - var(--active-menu-item-border-height, 0px));
 				padding-top: 33px;
 				padding-left: calc(var(--wp--style--block-gap) / 2);
 				padding-right: calc(var(--wp--style--block-gap) / 2);
 			}
 
 			@media (--short-screen) {
-				padding-bottom: 18px;
+				padding-bottom: calc(18px - var(--active-menu-item-border-height, 0px));
 				padding-top: 18px;
 			}
 		}
@@ -315,8 +321,10 @@ Source: https://github.com/WordPress/gutenberg/blob/3b2eccc289cfc90bd99252b12fc4
 		}
 
 		/* Submenu indentation when there's no background. */
-		left: -1px; /* Border width. */
-		top: 100%;
+
+		/* Changed from source — left has no border, top needs 4px for current item border. */
+		left: 0;
+		top: calc(100% + 4px);
 
 		/*
 		 * Indentation for all submenus.
@@ -327,7 +335,7 @@ Source: https://github.com/WordPress/gutenberg/blob/3b2eccc289cfc90bd99252b12fc4
 		@media (--tablet) {
 			& .wp-block-navigation__submenu-container {
 				left: 100%;
-				top: -1px; /* Border width. */
+				top: 0;
 
 				/* Prevent the menu from disappearing when the mouse is over the gap */
 				&::before {
