@@ -73,9 +73,9 @@ function register_block_assets() {
 
 	wp_register_script(
 		'wporg-global-header-script',
-		plugins_url( '/js/wporg-global-header-script.js', __FILE__ ),
+		plugins_url( '/js/view.js', __FILE__ ),
 		array(),
-		filemtime( __DIR__ . '/js/wporg-global-header-script.js' ),
+		filemtime( __DIR__ . '/js/view.js' ),
 		true
 	);
 
