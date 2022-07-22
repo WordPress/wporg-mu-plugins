@@ -27,7 +27,7 @@ jobs:
 
             - name: Ignore .gitignore
               run: |
-                  git add mu-plugins/blocks/global-header-footer/build/* --force
+                  git add mu-plugins/blocks/*/build/* --force
 
             - name: Commit and push
               # Using a specific hash here instead of a tagged version, for risk mitigation, since this action modifies our repo.
