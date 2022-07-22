@@ -109,6 +109,7 @@
 			-webkit-appearance: none; /* Remove duplicate magnifying glass icon on Safari-mobile. */
 			padding: var(--wp--custom--form--padding);
 			box-shadow: none;
+			border: none;
 
 			@media (--tablet) {
 				padding: calc(var(--wp--custom--form--padding) * 0.5) var(--wp--custom--form--padding);
@@ -147,4 +148,12 @@
 			}
 		}
 	}
+}
+
+.wp-block-group.global-header.has-white-background-color .global-header__search .wp-block-search__inside-wrapper {
+	border: 2px solid var(--wp-global-header--text-color);
+}
+
+.wp-block-group.global-header.has-white-background-color .global-header__search .wp-block-navigation__responsive-container-open {
+	background-image: url(../images/search-for-light-bg.svg);
 }
