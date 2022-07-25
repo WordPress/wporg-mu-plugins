@@ -1,0 +1,50 @@
+name: Static Analysis (Linting)
+
+# This workflow is triggered on pushes to trunk, and any PRs.
+on:
+  push:
+    branches: [trunk]
+  pull_request:
+
+jobs:
+  check:
+    name: All
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Get yarn cache directory path
+      id: yarn-cache-dir-path
+      run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
+
+    - name: Cache node modules
+      uses: actions/cache@v2
+      id: yarn-cache
+      with:
+        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
+
+    - name: Use Node.js 14.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14.x
+
+    - name: composer install
+      run: |
+        composer install
+
+    - name: yarn install
+      run: |
+        yarn
+
+    - name: Lint JavaScript and Styles
+      run: |
+        yarn workspaces run lint:css
+
+    - name: Lint PHP
+      run: |
+        composer run lint
