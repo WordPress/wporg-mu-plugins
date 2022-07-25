@@ -1,0 +1,42 @@
+.wporg-screenshot-card {
+	border-radius: 2px;
+	box-shadow: 0 0 0 1px #f0f0f1;
+	display: block;
+	overflow: hidden;
+	position: relative;
+	transition: all 75ms ease-in-out;
+	width: 100%;
+}
+
+.wporg-screenshot {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+}
+
+.wporg-screenshot:focus {
+	box-shadow: inset 0 0 0 1px #fff, 0 0 0 var(--wp-admin-border-width-focus) var(--wp-admin-theme-color);
+	outline: none;
+}
+
+.wporg-screenshot--has-error,
+.wporg-screenshot--has-error:hover {
+	font-size: 10px;
+	color: #aaa;
+	text-decoration: none;
+}
+
+/**
+* Added for reduncancy.
+* Source: https://github.com/WordPress/wordpress.org/blob/trunk/wordpress.org/public_html/wp-content/themes/pub/wporg/css/objects/_accessibility.scss
+*/
+
+.screen-reader-text {
+	clip: rect(1px, 1px, 1px, 1px);
+	height: 1px;
+	overflow: hidden;
+	position: absolute !important;
+	width: 1px;
+}
