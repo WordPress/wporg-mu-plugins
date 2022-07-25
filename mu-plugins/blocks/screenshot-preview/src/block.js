@@ -10,7 +10,7 @@ import getCardFrameHeight from './get-card-frame-height';
 import useInView from './in-view';
 import ScreenShot from './screenshot';
 
-function Block( { link, previewLink, version } ) {
+function Block( { link, previewLink, version, caption } ) {
 	const wrapperRef = useRef();
 	const [ frameHeight, setFrameHeight ] = useState( '1px' );
 	const isVisible = useInView( { element: wrapperRef } );
@@ -47,6 +47,7 @@ function Block( { link, previewLink, version } ) {
 			} }
 			href={ link }
 		>
+			{ caption && <span className="screen-reader-text">{ caption }</span> }
 			<ScreenShot src={ `${ previewLink }&version=${ version }` } isReady={ shouldLoad } />
 		</a>
 	);

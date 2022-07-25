@@ -62,10 +62,12 @@ function register_assets() {
 
 		wp_enqueue_style(
 			'wporg-screenshot-preview-style',
-			plugin_dir_url( __FILE__ ) . '/css/style.css',
+			plugin_dir_url( __FILE__ ) . '/build/style.css',
 			array(),
-			filemtime( __DIR__ . '/css/style.css' )
+			filemtime( __DIR__ . '/build/style.css' )
 		);
+
+		wp_style_add_data( 'wporg-screenshot-preview-style', 'rtl', 'replace' ); 
 	}
 
 	register_block();

@@ -1,4 +1,9 @@
-.wporg-screenshot-card { 
+
+:root {
+	--wp-screenshot-theme-color: #007cba;
+}
+
+.wporg-screenshot-card {
 	border-radius: 2px;
 	box-shadow: 0 0 0 1px #f0f0f1;
 	display: block;
@@ -6,6 +11,11 @@
 	position: relative;
 	transition: all 75ms ease-in-out;
 	width: 100%;
+}
+
+.wporg-screenshot-card:focus {
+	box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--wp-screenshot-theme-color);
+	outline: none;
 }
 
 .wporg-screenshot {
