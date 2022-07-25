@@ -31,7 +31,7 @@ registerBlockType( metadata.name, {
 
 	variations: variations.map( ( { value, label } ) => ( {
 		name: value,
-		/* translators: %s is the notice type. */
+		/* translators: %s is the color scheme label. */
 		title: sprintf( __( 'Global Footer: %s', 'wporg' ), label ),
 		isActive: ( blockAttributes, variationAttributes ) => blockAttributes.style === variationAttributes.style,
 		scope: [ 'transform' ],
