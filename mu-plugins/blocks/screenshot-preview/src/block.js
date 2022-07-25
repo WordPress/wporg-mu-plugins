@@ -46,7 +46,8 @@ function Block( { link, previewLink, version, caption } ) {
 				height: frameHeight,
 			} }
 			href={ link }
-		>   { caption && <span className="screen-reader-text">{ caption }</span> }
+		>
+			{ caption && <span className="screen-reader-text">{ caption }</span> }
 			<ScreenShot src={ `${ previewLink }&version=${ version }` } isReady={ shouldLoad } />
 		</a>
 	);
