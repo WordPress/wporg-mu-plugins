@@ -15,7 +15,9 @@ defined( 'WPINC' ) || die();
 
 $container_class = 'global-footer has-text-color has-background';
 
-switch ( $attributes['style'] ) {
+$color_scheme = apply_filters( 'wporg_footer_color_scheme', $attributes['style'] );
+
+switch ( $color_scheme ) {
 	case 'white-on-blue':
 		$container_class .= ' has-white-color has-blue-1-background-color';
 		break;
