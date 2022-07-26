@@ -24,6 +24,7 @@ jobs:
 
             - name: Install dependencies & setup configs
               run: |
+                  npm install
                   npm run setup:tools
 
             - name: Lint JavaScript and Styles
