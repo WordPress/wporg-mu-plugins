@@ -2,49 +2,35 @@ name: Static Analysis (Linting)
 
 # This workflow is triggered on pushes to trunk, and any PRs.
 on:
-  push:
-    branches: [trunk]
-  pull_request:
+    push:
+        branches: [trunk]
+    pull_request:
 
 jobs:
-  check:
-    name: All
+    check:
+        name: Lint everything
 
-    runs-on: ubuntu-latest
+        runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v2
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
 
-    - name: Get yarn cache directory path
-      id: yarn-cache-dir-path
-      run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
+            - name: Install NodeJS
+              uses: actions/setup-node@eeb10cff27034e7acf239c5d29f62154018672fd # v3.3.0
+              with:
+                  node-version-file: '.nvmrc'
+                  cache: npm
 
-    - name: Cache node modules
-      uses: actions/cache@v2
-      id: yarn-cache
-      with:
-        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-yarn-
+            - name: Install dependencies & setup configs
+              run: |
+                  npm run setup:tools
 
-    - name: Use Node.js 14.x
-      uses: actions/setup-node@v1
-      with:
-        node-version: 14.x
+            - name: Lint JavaScript and Styles
+              run: |
+                  npm run lint:css
+                  npm run lint:js
 
-    - name: composer install
-      run: |
-        composer install
-
-    - name: yarn install
-      run: |
-        yarn
-
-    - name: Lint JavaScript and Styles
-      run: |
-        yarn workspaces run lint:css
-
-    - name: Lint PHP
-      run: |
-        composer run lint
+            - name: Lint PHP
+              run: |
+                  composer run lint
