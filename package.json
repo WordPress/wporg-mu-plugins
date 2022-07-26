@@ -36,7 +36,7 @@
 		"prestart": "./bin/build.js",
 		"start": "NODE_ENV=development ./bin/watch.js",
 		"lint:css": "wp-scripts lint-style **/*.pcss",
-		"lint:js": "wp-scripts lint-js **/src/**/*.js",
+		"lint:js": "wp-scripts lint-js **/src/**/*.js --config=.eslintrc.js",
 		"setup:tools": "npm install && composer install && TEXTDOMAIN=wporg composer exec update-configs",
 		"update:tools": "composer update && TEXTDOMAIN=wporg composer exec update-configs"
 	},

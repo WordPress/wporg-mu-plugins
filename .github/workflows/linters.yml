@@ -28,8 +28,6 @@ jobs:
 
             - name: Lint JavaScript and Styles
               run: |
-                  npm run lint:css
-                  ls -la
                   npm run lint:js
 
             - name: Lint PHP
