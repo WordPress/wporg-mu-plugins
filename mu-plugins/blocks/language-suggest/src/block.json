@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "wporg/language-suggest",
+	"version": "0.1.0",
+	"title": "Language Suggest",
+	"category": "widgets",
+	"icon": "networking",
+	"description": "A block for use across the whole wp.org network.",
+	"textdomain": "language-suggest",
+	"editorScript": "file:./index.js",
+	"viewScript": "file:./front.js",
+	"style": "file:./style.css",
+	"supports": {
+		"color": {
+			"background": true,
+			"text": true
+		},
+		"typography": {
+			"fontSize": true
+		}
+	}
+}
