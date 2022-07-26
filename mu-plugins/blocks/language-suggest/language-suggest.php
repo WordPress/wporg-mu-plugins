@@ -1,6 +1,6 @@
 <?php
 /**
- * Block Name: Wporg Language Suggest
+ * Block Name: Language Suggest
  * Description: A block for use across the whole wp.org network.
  *
  * @package wporg
@@ -15,7 +15,7 @@ namespace WordPressdotorg\MU_Plugins\wporg;
  *
  * @see https://developer.wordpress.org/reference/functions/register_block_type/
  */
-function wporg_language_suggest_block_init() {
+function language_suggest_block_init() {
 	register_block_type( __DIR__ . '/build' );
 }
-add_action( 'init', __NAMESPACE__ . '\wporg_language_suggest_block_init' );
+add_action( 'init', __NAMESPACE__ . '\language_suggest_block_init' );
