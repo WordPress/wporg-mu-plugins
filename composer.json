@@ -21,11 +21,19 @@
 		"composer/installers": "~1.0"
 	},
 	"require-dev": {
+		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
+		"phpcompatibility/phpcompatibility-wp": "*",
+		"wp-coding-standards/wpcs": "2.*",
 		"wporg/wporg-repo-tools": "dev-trunk"
 	},
 	"config": {
 		"allow-plugins": {
-			"composer/installers": true
+			"composer/installers": true,
+			"dealerdirect/phpcodesniffer-composer-installer": true
 		}
+	},
+	"scripts": {
+		"format": "phpcbf -p",
+		"lint": "phpcs"
 	}
 }

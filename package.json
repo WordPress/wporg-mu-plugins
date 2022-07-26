@@ -32,10 +32,13 @@
 		"extends @wordpress/browserslist-config"
 	],
 	"scripts": {
+		"build": "NODE_ENV=production ./bin/build.js",
 		"prestart": "./bin/build.js",
 		"start": "NODE_ENV=development ./bin/watch.js",
 		"lint:css": "wp-scripts lint-style **/*.pcss",
-		"build": "NODE_ENV=production ./bin/build.js"
+		"lint:js": "wp-scripts lint-js **/src/**/*.js",
+		"setup:tools": "npm install && composer install && TEXTDOMAIN=wporg composer exec update-configs",
+		"update:tools": "composer update && TEXTDOMAIN=wporg composer exec update-configs"
 	},
 	"rtlcssConfig": {},
 	"stylelint": {
