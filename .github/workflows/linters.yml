@@ -23,7 +23,7 @@ jobs:
 
             - name: Install dependencies & setup configs
               run: |
-                  npm run setup:tools
+                  yarn setup:tools
 
             - name: Lint JavaScript and Styles
               run: |
