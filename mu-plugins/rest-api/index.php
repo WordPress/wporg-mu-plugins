@@ -6,6 +6,7 @@ namespace WordPressdotorg\MU_Plugins\REST_API;
  * Actions and filters.
  */
 add_action( 'rest_api_init', __NAMESPACE__ . '\initialize_rest_endpoints' );
+add_action( 'rest_api_init', __NAMESPACE__ . '\initialize_rest_contexts' );
 add_filter( 'rest_user_query', __NAMESPACE__ . '\modify_user_query_parameters', 10, 2 );
 
 /**
@@ -18,6 +19,16 @@ function initialize_rest_endpoints() {
 
 	$users_controller = new Users_Controller();
 	$users_controller->register_routes();
+}
+
+/**
+ * Enable extra contexts.
+ */
+function initialize_rest_contexts() {
+	require_once __DIR__ . '/extras/class-wporg-export-context.php';
+
+	$export_context = new Export_Context();
+	$export_context->init();
 }
 
 /**
