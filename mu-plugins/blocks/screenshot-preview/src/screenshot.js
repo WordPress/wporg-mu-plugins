@@ -45,7 +45,7 @@ function useInterval( callback, delay ) {
  * @param {string}  props.src     The url of the screenshot
  * @param {boolean} props.isReady Whether we should start try to show the image.
  *
- * @return {Object}
+ * @return {Object} React component
  */
 function ScreenShotImg( { src, isReady = false } ) {
 	const fullUrl = `https://s0.wp.com/mshots/v1/${ encodeURIComponent(

@@ -35,7 +35,6 @@ const useInView = ( { element } ) => {
 			return;
 		}
 		const windowHeight = window.innerHeight;
-		const { top } = element.current.getBoundingClientRect();
 
 		// It's hidden
 		if ( element.current.offsetParent === null ) {
@@ -43,6 +42,7 @@ const useInView = ( { element } ) => {
 			return;
 		}
 
+		const { top } = element.current.getBoundingClientRect();
 		if ( top >= 0 && top <= windowHeight ) {
 			setVisible( true );
 		} else {
