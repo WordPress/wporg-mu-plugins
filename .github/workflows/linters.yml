@@ -25,11 +25,11 @@ jobs:
             - name: Install dependencies & setup configs
               run: |
                   npm run setup:tools
-                  cat /home/runner/work/wporg-mu-plugins/wporg-mu-plugins/.eslintrc.js
-                  npm list
+                  npm list --depth=1
 
             - name: Lint JavaScript and Styles
               run: |
+                  whoami
                   npm run lint:js
 
             - name: Lint PHP
