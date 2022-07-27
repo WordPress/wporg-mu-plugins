@@ -30,6 +30,3 @@ jobs:
               run: |
                   yarn lint:js
 
-            - name: Lint PHP
-              run: |
-                  composer run lint
