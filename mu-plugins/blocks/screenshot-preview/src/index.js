@@ -9,7 +9,9 @@ import { createElement, render } from '@wordpress/element';
 import Block from './block.js';
 
 const init = () => {
-	const blockElements = document.getElementsByClassName( 'wporg-screenshot-preview-js' );
+	const blockElements = document.getElementsByClassName(
+		'wporg-screenshot-preview-js'
+	);
 
 	if ( ! blockElements ) {
 		return;

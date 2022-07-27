@@ -19,7 +19,9 @@ function Block( { link, previewLink, version, caption } ) {
 	useEffect( () => {
 		const handleOnResize = () => {
 			try {
-				setFrameHeight( getCardFrameHeight( wrapperRef.current.clientWidth ) );
+				setFrameHeight(
+					getCardFrameHeight( wrapperRef.current.clientWidth )
+				);
 			} catch ( err ) {}
 		};
 
@@ -47,8 +49,13 @@ function Block( { link, previewLink, version, caption } ) {
 			} }
 			href={ link }
 		>
-			{ caption && <span className="screen-reader-text">{ caption }</span> }
-			<ScreenShot src={ `${ previewLink }&version=${ version }` } isReady={ shouldLoad } />
+			{ caption && (
+				<span className="screen-reader-text">{ caption }</span>
+			) }
+			<ScreenShot
+				src={ `${ previewLink }&version=${ version }` }
+				isReady={ shouldLoad }
+			/>
 		</a>
 	);
 }
