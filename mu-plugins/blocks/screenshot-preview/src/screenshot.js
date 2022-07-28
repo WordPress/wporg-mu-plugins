@@ -1,3 +1,4 @@
+/* global FileReader */
 /**
  * WordPress dependencies
  */
@@ -69,7 +70,6 @@ function ScreenShotImg( { src, isReady = false } ) {
 	const convertResponseToBase64 = async ( res ) => {
 		const blob = await res.blob();
 
-		/* eslint-disable no-undef */
 		const reader = new FileReader();
 		reader.onload = ( event ) => {
 			setBase64Img( event.target.result );
