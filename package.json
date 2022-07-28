@@ -14,10 +14,11 @@
 	"dependencies": {},
 	"devDependencies": {
 		"@wordpress/browserslist-config": "4.1.2",
-		"@wordpress/scripts": "23.3.0",
+		"@wordpress/scripts": "23.5.0",
 		"chalk": "4.1.2",
 		"cross-spawn": "7.0.3",
 		"cssnano": "5.1.11",
+		"lodash": "^4.17.21",
 		"node-watch": "^0.7.3",
 		"postcss": "8.4.14",
 		"postcss-cli": "9.1.0",
@@ -32,10 +33,13 @@
 		"extends @wordpress/browserslist-config"
 	],
 	"scripts": {
+		"build": "NODE_ENV=production ./bin/build.js",
 		"prestart": "./bin/build.js",
 		"start": "NODE_ENV=development ./bin/watch.js",
 		"lint:css": "wp-scripts lint-style **/*.pcss",
-		"build": "NODE_ENV=production ./bin/build.js"
+		"lint:js": "wp-scripts lint-js **/src/**/*.js",
+		"setup:tools": "yarn install && composer install && TEXTDOMAIN=wporg composer exec update-configs",
+		"update:tools": "composer update && TEXTDOMAIN=wporg composer exec update-configs"
 	},
 	"rtlcssConfig": {},
 	"stylelint": {
