@@ -5,7 +5,7 @@
 	"version": "0.1.0",
 	"title": "Language Suggest",
 	"category": "widgets",
-	"icon": "networking",
+	"icon": "admin-site-alt3",
 	"description": "A block for use across the whole wp.org network.",
 	"textdomain": "language-suggest",
 	"editorScript": "file:./index.js",
