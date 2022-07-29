@@ -12,6 +12,7 @@
 	"viewScript": "file:./front.js",
 	"style": "file:./style.css",
 	"supports": {
+		"align": true,
 		"color": {
 			"background": true,
 			"text": true
