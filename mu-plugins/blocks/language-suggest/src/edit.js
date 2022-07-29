@@ -1,7 +1,6 @@
 /**
  * WordPress dependencies
  */
-import { __ } from '@wordpress/i18n';
 import { useBlockProps } from '@wordpress/block-editor';
 
 /**
@@ -11,5 +10,9 @@ import { useBlockProps } from '@wordpress/block-editor';
  * @return {WPElement} Element to render.
  */
 export default function Edit() {
-	return <p { ...useBlockProps() }> This is a suggestion, which usually <a href="#">links</a> to something.</p>;
+	return (
+		<p { ...useBlockProps() }>
+			This is a suggestion, which usually <a href="http://wordpress.org">links</a> to something.
+		</p>
+	);
 }

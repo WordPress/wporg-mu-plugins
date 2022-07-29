@@ -10,7 +10,7 @@ const init = () => {
 
 	fetch( `/lang-guess/lang-guess-ajax.php?uri=${ encodeURIComponent( path ) }` )
 		.then( ( response ) => response.text() )
-		.then( ( body ) => container.innerHTML = body );
+		.then( ( body ) => ( container.innerHTML = body ) );
 };
 
 document.addEventListener( 'DOMContentLoaded', init );
