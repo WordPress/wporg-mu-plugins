@@ -9,8 +9,15 @@ const init = () => {
 	const path = window.location.host + window.location.pathname;
 
 	fetch( `/lang-guess/lang-guess-ajax.php?uri=${ encodeURIComponent( path ) }` )
-		.then( ( response ) => response.text() )
-		.then( ( body ) => ( container.innerHTML = body ) );
+		.then( ( response ) => {
+			if ( ! response.ok ) {
+				throw Error( response.statusText );
+			}
+
+			return response.text();
+		} )
+		.then( ( body ) => ( container.innerHTML = body ) )
+		.catch( () => {} );
 };
 
 document.addEventListener( 'DOMContentLoaded', init );
