@@ -8,20 +8,19 @@
 
 namespace WordPressdotorg\MU_Plugins\wporg;
 
-
 function get_categories_via_api( $endpoint ) {
 	$response = wp_remote_get( esc_url_raw( $endpoint . '/categories' . '?per_page=100' ) );
 
-	if( is_wp_error( $response ) ) {
+	if ( is_wp_error( $response ) ) {
 		return false;
 	}
-	
+
 	return json_decode( wp_remote_retrieve_body( $response ) );
 }
 
 function get_by_id( $arr, $id ) {
 	foreach ( $arr as $item ) {
-		if( $id == $item->id ) {
+		if ( $id == $item->id ) {
 			return $item;
 		}
 	}
@@ -29,10 +28,10 @@ function get_by_id( $arr, $id ) {
 	return '';
 }
 
-function get_category( $endpoint, $id ) {	
+function get_category( $endpoint, $id ) {
 	$categories = get_categories_via_api( $endpoint );
 
-	if( is_wp_error( $categories ) ) {
+	if ( is_wp_error( $categories ) ) {
 		return '';
 	}
 
@@ -44,7 +43,7 @@ function get_posts_via_api( $endpoint, $post_type = 'posts', $limit = 10 ) {
 
 	$response = wp_remote_get( esc_url_raw( $url ) );
 
-	if( is_wp_error( $response ) ) {
+	if ( is_wp_error( $response ) ) {
 		return false;
 	}
 
@@ -52,13 +51,13 @@ function get_posts_via_api( $endpoint, $post_type = 'posts', $limit = 10 ) {
 }
 
 function render_block( $attributes ) {
-	if( ! isset( $attributes['endpoint'] ) || ! isset( $attributes['itemsToShow'] ) ) {
+	if ( ! isset( $attributes['endpoint'] ) || ! isset( $attributes['itemsToShow'] ) ) {
 		return '';
 	}
 
 	$posts = get_posts_via_api( $attributes['endpoint'], 'posts', $attributes['itemsToShow'] );
 
-	$list_items = "";
+	$list_items = '';
 	foreach ( $posts as $post ) {
 		$category = get_category( $attributes['endpoint'], $post->categories[0] );
 
@@ -69,7 +68,7 @@ function render_block( $attributes ) {
 		);
 
 		$category_element = '';
-		if( ! empty( $category ) ) {
+		if ( ! empty( $category ) ) {
 			$category_element = sprintf(
 				'<a href="%1$s">%2$s</a>',
 				$category->link,
@@ -81,7 +80,7 @@ function render_block( $attributes ) {
 		$date_element = sprintf(
 			'<time datetime="%1$s">%2$s</time>',
 			$post->date,
-			$date->format('F j, Y')
+			$date->format( 'F j, Y' )
 		);
 
 		$list_items .= sprintf(
@@ -103,9 +102,11 @@ function render_block( $attributes ) {
  * @see https://developer.wordpress.org/reference/functions/register_block_type/
  */
 function block_init() {
-	register_block_type( __DIR__ . '/build',
-	array(
-		'render_callback' => __NAMESPACE__ . '\render_block',
-	) );
+	register_block_type(
+		__DIR__ . '/build',
+		array(
+			'render_callback' => __NAMESPACE__ . '\render_block',
+		)
+	);
 }
 add_action( 'init', __NAMESPACE__ . '\block_init' );
