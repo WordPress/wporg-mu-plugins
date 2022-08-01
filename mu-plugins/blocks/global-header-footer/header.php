@@ -2,7 +2,7 @@
 
 namespace WordPressdotorg\MU_Plugins\Global_Header_Footer\Header;
 
-use function WordPressdotorg\MU_Plugins\Global_Header_Footer\{ get_home_url, get_download_url };
+use function WordPressdotorg\MU_Plugins\Global_Header_Footer\{ get_home_url, get_download_url, get_container_classes };
 
 defined( 'WPINC' ) || die();
 
@@ -15,25 +15,14 @@ defined( 'WPINC' ) || die();
  * @var string $show_search
  */
 
-$container_class = 'global-header has-text-color has-background';
+$container_class = 'global-header';
 if ( ! empty( $locale_title ) ) {
 	$container_class .= ' global-header__has-locale-title';
 }
 
 $color_scheme = apply_filters( 'wporg_header_color_scheme', $attributes['style'] );
 
-switch ( $color_scheme ) {
-	case 'white-on-blue':
-		$container_class .= ' has-white-color has-blue-1-background-color';
-		break;
-	case 'black-on-white':
-		$container_class .= ' has-darker-grey-color has-white-background-color';
-		break;
-	case 'white-on-black':
-	default:
-		$container_class .= ' has-white-color has-dark-grey-background-color';
-		break;
-}
+$container_class .= get_container_classes( $color_scheme );
 
 $search_args = array(
 	'label' => _x( 'Search', 'button label', 'wporg' ),

@@ -954,3 +954,28 @@ function get_cip_text() {
 
 	return $translated;
 }
+
+/**
+ * Generate the classes based on the selected color scheme.
+ *
+ * This applies the expected color class using the format of Gutenberg's text
+ * and background styles, though the actual colors are applied via CSS custom
+ * properties in `_common.scss`.
+ */
+function get_container_classes( $color_scheme ) {
+	$classes = ' has-text-color has-background';
+	switch ( $color_scheme ) {
+		case 'white-on-blue':
+			$classes .= ' has-white-color has-blueberry-1-background-color';
+			break;
+		case 'black-on-white':
+			$classes .= ' has-charcoal-2-color has-white-background-color';
+			break;
+		case 'white-on-black':
+		default:
+			$classes .= ' has-white-color has-charcoal-2-background-color';
+			break;
+	}
+
+	return $classes;
+}
