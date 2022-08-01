@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "wporg/global-header",
+  "title": "Global Header",
+  "category": "design",
+  "description": "Global header for all of WordPress.org",
+  "attributes": {
+    "style": {
+      "type": "string",
+      "default": "white-on-black",
+      "enum": [
+        "white-on-black",
+        "black-on-white",
+        "white-on-blue"
+      ]
+    }
+  },
+  "textdomain": "wporg",
+  "style": "wporg-global-header-footer",
+  "editorStyle": "wporg-global-header-footer",
+  "script": "wporg-global-header-script",
+  "editorScript": "file:./index.js"
+}

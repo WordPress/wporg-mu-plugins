@@ -1,0 +1,23 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "wporg/global-footer",
+  "title": "Global Footer",
+  "category": "design",
+  "description": "Global footer for all of WordPress.org",
+  "attributes": {
+    "style": {
+      "type": "string",
+      "default": "white-on-black",
+      "enum": [
+        "white-on-black",
+        "black-on-white",
+        "white-on-blue"
+      ]
+    }
+  },
+  "textdomain": "wporg",
+  "style": "wporg-global-header-footer",
+  "editorStyle": "wporg-global-header-footer",
+  "editorScript": "file:./index.js"
+}
