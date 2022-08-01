@@ -1,4 +1,3 @@
-/* global wporgGlobalHeaderI18n */
 /**
  * File wporg-global-header-script.js.
  *
@@ -23,8 +22,8 @@
 		 * Resets the menu item classes and removes the extra submenu
 		 */
 		this.resetMenu = function () {
-			for ( const el of this.listItems ) {
-				el.classList.remove( 'global-header__overflow-item' );
+			for ( const elem of this.listItems ) {
+				elem.classList.remove( 'global-header__overflow-item' );
 			}
 			this.removeSubMenu();
 			this.hasHiddenItems = false;
@@ -56,9 +55,9 @@
 		 */
 		this.getItemWidths = function () {
 			this.itemsWidths = [];
-			for ( const el of this.listItems ) {
-				el.classList.remove( 'global-header__overflow-item' );
-				this.itemsWidths.push( el.offsetWidth );
+			for ( const elem of this.listItems ) {
+				elem.classList.remove( 'global-header__overflow-item' );
+				this.itemsWidths.push( elem.offsetWidth );
 			}
 		};
 
@@ -128,9 +127,9 @@
 				newItem.appendChild( newSubMenu );
 
 				// Populate submenu with clones of the hidden menu items.
-				for ( const el of this.listItems ) {
-					if ( el.classList.contains( 'global-header__overflow-item' ) ) {
-						const clone = el.cloneNode( true );
+				for ( const elem of this.listItems ) {
+					if ( elem.classList.contains( 'global-header__overflow-item' ) ) {
+						const clone = elem.cloneNode( true );
 						newSubMenu.appendChild( clone );
 					}
 				}
@@ -143,7 +142,7 @@
 		 * Checks if the responsive menu is visible
 		 */
 		this.isResponsive = function () {
-			let burgerButton = this.wrapper.querySelector( '.wp-block-navigation__responsive-container-open' );
+			const burgerButton = this.wrapper.querySelector( '.wp-block-navigation__responsive-container-open' );
 			if ( burgerButton.offsetWidth > 0 ) {
 				return true;
 			}
@@ -173,7 +172,6 @@
 		);
 	};
 
-	/* eslint-disable @wordpress/no-global-event-listener */
 	window.addEventListener( 'load', function () {
 		new navMenu( '.global-header .global-header__navigation' );
 		const labels = window.wporgGlobalHeaderI18n || {};
@@ -204,12 +202,15 @@
 		} );
 	} );
 
-	/* eslint-disable @wordpress/no-global-event-listener */
 	window.addEventListener( 'resize', () => {
 		// Hide any open mobile menus if we're no longer in a mobile view.
-		const mobileViewToggle = document.querySelector('.global-header__navigation .wp-block-navigation__responsive-container-open');
+		const mobileViewToggle = document.querySelector(
+			'.global-header__navigation .wp-block-navigation__responsive-container-open'
+		);
 		if ( ! mobileViewToggle || ! mobileViewToggle.offsetWidth ) {
-			const closeMenuButton = document.querySelector( '.wp-block-navigation__responsive-container.is-menu-open button[data-micromodal-close]' );
+			const closeMenuButton = document.querySelector(
+				'.wp-block-navigation__responsive-container.is-menu-open button[data-micromodal-close]'
+			);
 			if ( closeMenuButton ) {
 				closeMenuButton.click();
 			}

@@ -15,6 +15,7 @@ html {
 	align-items: flex-start;
 	font-size: 21px;
 	height: var(--wp-global-header-height);
+	padding: 0;
 
 	/*
 	 * Some themes set a `z-index` on content elements that follow the header, like `#masthead` in
@@ -83,9 +84,9 @@ html {
 		top: var(--wp-admin--admin-bar--height, 0);
 		padding-top: 18px; /* Magic numbers to center the 24px icon in 60px height. */
 		padding-right: calc(var(--wp--style--block-gap) + var(--wp--custom--alignment--scroll-bar-width));
-		padding-bottom: 28px; /* Magic numbers to center the 24px icon in 60px height. */
+		padding-bottom: 18px; /* Magic numbers to center the 24px icon in 60px height. */
 		padding-left: var(--wp--style--block-gap);
-		background-color: var(--wp--preset--color--darker-grey);
+		background-color: var(--wp-global-header--background-color--hover);
 	}
 }
 

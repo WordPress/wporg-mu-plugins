@@ -47,7 +47,7 @@
 		}
 
 		&:hover {
-			background-color: var(--wp--preset--color--darker-grey);
+			background-color: var(--wp-global-header--background-color--hover);
 		}
 
 		& svg {
@@ -58,6 +58,7 @@
 	& .wp-block-navigation__responsive-container-close {
 		right: calc(73px + var(--wp--custom--alignment--scroll-bar-width));
 		padding-right: var(--wp--style--block-gap);
+		background-color: var(--wp-global-header--background-color--hover);
 
 		@media (--tablet) {
 			position: absolute;
@@ -108,6 +109,7 @@
 			-webkit-appearance: none; /* Remove duplicate magnifying glass icon on Safari-mobile. */
 			padding: var(--wp--custom--form--padding);
 			box-shadow: none;
+			border: none;
 
 			@media (--tablet) {
 				padding: calc(var(--wp--custom--form--padding) * 0.5) var(--wp--custom--form--padding);
@@ -146,4 +148,12 @@
 			}
 		}
 	}
+}
+
+.wp-block-group.global-header.has-white-background-color .global-header__search .wp-block-search__inside-wrapper {
+	border: 2px solid var(--wp-global-header--text-color);
+}
+
+.wp-block-group.global-header.has-white-background-color .global-header__search .wp-block-navigation__responsive-container-open {
+	background-image: url(../images/search-for-light-bg.svg);
 }

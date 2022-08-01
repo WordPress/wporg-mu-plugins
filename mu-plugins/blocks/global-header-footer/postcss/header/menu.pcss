@@ -63,22 +63,32 @@
 		& .wp-block-navigation-item {
 			&:hover,
 			&:focus-within {
-				background-color: var(--wp--preset--color--darker-grey);
+				background-color: var(--wp-global-header--background-color--hover);
 			}
 
-			&.current-menu-item > a {
-				border-left: var(--active-menu-item-border-height) solid #7b90ff;
-				color: #7b90ff;
-				font-weight: 700;
+			@media (--tablet) {
+				border-bottom: var(--active-menu-item-border-height) solid transparent;
+			}
+
+			&.current-menu-item {
+				border-left: var(--active-menu-item-border-height) solid var(--wp-global-header--link-color--active);
 
 				@media (--tablet) {
-					border-bottom: var(--active-menu-item-border-height) solid #7b90ff;
+					border-bottom: var(--active-menu-item-border-height) solid var(--wp-global-header--link-color--active);
 					border-left: none;
-					padding-bottom: calc(33px - var(--active-menu-item-border-height, 0px));
 				}
 
-				@media (--short-screen) {
-					padding-bottom: calc(18px - var(--active-menu-item-border-height, 0px));
+				& > a {
+					color: var(--wp-global-header--link-color--active);
+					font-weight: 700;
+				}
+
+				& > button svg {
+					stroke: var(--wp-global-header--link-color--active);
+				}
+
+				& .current-menu-item {
+					border: none;
 				}
 			}
 
@@ -86,7 +96,7 @@
 				padding-bottom: 0;
 			}
 
-			& ul .current-menu-item a {
+			& ul .current-menu-item {
 				border-left: none;
 				border-bottom: none;
 			}
@@ -102,18 +112,18 @@
 
 			&:hover,
 			&:focus-within {
-				background-color: var(--wp--preset--color--darker-grey);
+				background-color: var(--wp-global-header--background-color--hover);
 			}
 
 			@media (--tablet) {
-				padding-bottom: 33px;
+				padding-bottom: calc(33px - var(--active-menu-item-border-height, 0px));
 				padding-top: 33px;
 				padding-left: calc(var(--wp--style--block-gap) / 2);
 				padding-right: calc(var(--wp--style--block-gap) / 2);
 			}
 
 			@media (--short-screen) {
-				padding-bottom: 18px;
+				padding-bottom: calc(18px - var(--active-menu-item-border-height, 0px));
 				padding-top: 18px;
 			}
 		}
@@ -255,14 +265,14 @@
 		}
 
 		&:not(.has-background) {
-			background: var(--wp--preset--color--darker-grey);
+			background: var(--wp-global-header--background-color--hover);
 		}
 	}
 
 	& .wp-block-navigation__container {
 
 		@media (--tablet) {
-			background: var(--wp--preset--color--dark-grey);
+			background: var(--wp-global-header--background-color);
 		}
 	}
 }
@@ -315,8 +325,10 @@ Source: https://github.com/WordPress/gutenberg/blob/3b2eccc289cfc90bd99252b12fc4
 		}
 
 		/* Submenu indentation when there's no background. */
-		left: -1px; /* Border width. */
-		top: 100%;
+
+		/* Changed from source — left has no border, top needs 4px for current item border. */
+		left: 0;
+		top: calc(100% + var(--active-menu-item-border-height));
 
 		/*
 		 * Indentation for all submenus.
@@ -327,7 +339,7 @@ Source: https://github.com/WordPress/gutenberg/blob/3b2eccc289cfc90bd99252b12fc4
 		@media (--tablet) {
 			& .wp-block-navigation__submenu-container {
 				left: 100%;
-				top: -1px; /* Border width. */
+				top: 0;
 
 				/* Prevent the menu from disappearing when the mouse is over the gap */
 				&::before {

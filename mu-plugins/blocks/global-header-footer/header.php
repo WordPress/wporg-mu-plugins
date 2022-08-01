@@ -9,14 +9,30 @@ defined( 'WPINC' ) || die();
 /**
  * Defined in `render_global_header()`.
  *
+ * @var array  $attributes
  * @var array  $menu_items
  * @var string $locale_title
  * @var string $show_search
  */
 
-$container_class = 'global-header';
+$container_class = 'global-header has-text-color has-background';
 if ( ! empty( $locale_title ) ) {
 	$container_class .= ' global-header__has-locale-title';
+}
+
+$color_scheme = apply_filters( 'wporg_header_color_scheme', $attributes['style'] );
+
+switch ( $color_scheme ) {
+	case 'white-on-blue':
+		$container_class .= ' has-white-color has-blue-1-background-color';
+		break;
+	case 'black-on-white':
+		$container_class .= ' has-darker-grey-color has-white-background-color';
+		break;
+	case 'white-on-black':
+	default:
+		$container_class .= ' has-white-color has-dark-grey-background-color';
+		break;
 }
 
 $search_args = array(

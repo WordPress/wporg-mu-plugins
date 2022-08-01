@@ -9,7 +9,6 @@ defined( 'WPINC' ) || die();
 add_action( 'init', __NAMESPACE__ . '\register_block_types' );
 add_action( 'admin_bar_init', __NAMESPACE__ . '\remove_admin_bar_callback', 15 );
 add_action( 'rest_api_init', __NAMESPACE__ . '\register_routes' );
-add_action( 'enqueue_block_assets', __NAMESPACE__ . '\register_block_types_js' );
 add_filter( 'wp_enqueue_scripts', __NAMESPACE__ . '\register_block_assets', 200 ); // Always last.
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_compat_wp4_styles', 5 ); // Before any theme CSS.
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\unregister_classic_global_styles', 20 );
@@ -26,23 +25,16 @@ add_filter( 'render_block_core/search', __NAMESPACE__ . '\swap_header_search_act
  */
 function register_block_types() {
 	register_block_type(
-		'wporg/global-header',
+		__DIR__ . '/build/header/block.json',
 		array(
-			'title'           => 'Global Header',
 			'render_callback' => __NAMESPACE__ . '\render_global_header',
-			'style'           => 'wporg-global-header-footer',
-			'editor_style'    => 'wporg-global-header-footer',
-			'script'          => 'wporg-global-header-script',
 		)
 	);
 
 	register_block_type(
-		'wporg/global-footer',
+		__DIR__ . '/build/footer/block.json',
 		array(
-			'title'           => 'Global Footer',
 			'render_callback' => __NAMESPACE__ . '\render_global_footer',
-			'style'           => 'wporg-global-header-footer',
-			'editor_style'    => 'wporg-global-header-footer',
 		)
 	);
 }
@@ -73,9 +65,9 @@ function register_block_assets() {
 
 	wp_register_script(
 		'wporg-global-header-script',
-		plugins_url( '/js/wporg-global-header-script.js', __FILE__ ),
+		plugins_url( '/js/view.js', __FILE__ ),
 		array(),
-		filemtime( __DIR__ . '/js/wporg-global-header-script.js' ),
+		filemtime( __DIR__ . '/js/view.js' ),
 		true
 	);
 
@@ -166,46 +158,6 @@ function register_routes() {
 			)
 		);
 	}
-}
-
-/**
- * Register block types in JS, for the editor.
- *
- * Blocks need to be registered in JS to show up in the editor. We can dynamically register the blocks using
- * ServerSideRender, which will render the PHP callback. This runs through the existing blocks to find any
- * matching `wporg/global-*` blocks, so it will match the header & footer, and any other pattern-blocks we
- * might add in the future.
- *
- * Watch https://github.com/WordPress/gutenberg/issues/28734 for a possible core solution.
- */
-function register_block_types_js() {
-	$blocks = \WP_Block_Type_Registry::get_instance()->get_all_registered();
-	$wporg_global_blocks = array_filter(
-		$blocks,
-		function ( $block ) {
-			return 'wporg/global-' === substr( $block->name, 0, 13 );
-		}
-	);
-	ob_start();
-	?>
-	( function( wp ) {
-		<?php foreach ( $wporg_global_blocks as $block ) : ?>
-		wp.blocks.registerBlockType(
-			'<?php echo esc_html( $block->name ); ?>',
-			{
-				title: '<?php echo esc_html( $block->title ); ?>',
-				edit: function( props ) {
-					return wp.element.createElement( wp.serverSideRender, {
-						block: '<?php echo esc_html( $block->name ); ?>',
-						attributes: props.attributes
-					} );
-				},
-			}
-		);
-		<?php endforeach; ?>
-	}( window.wp ));
-	<?php
-	wp_add_inline_script( 'wp-editor', ob_get_clean(), 'after' );
 }
 
 /**
@@ -393,9 +345,11 @@ function rest_render_planet_global_header( $request ) {
 /**
  * Render the global header in a block context.
  *
- * @return string
+ * @param array $attributes The block attributes.
+ *
+ * @return string Returns the block content.
  */
-function render_global_header() {
+function render_global_header( $attributes ) {
 	remove_inner_group_container();
 
 	if ( is_rosetta_site() ) {
@@ -776,9 +730,11 @@ function rest_render_global_footer( $request ) {
 /**
  * Render the global footer in a block context.
  *
+ * @param array $attributes The block attributes.
+ *
  * @return string
  */
-function render_global_footer() {
+function render_global_footer( $attributes ) {
 	remove_inner_group_container();
 
 	if ( is_rosetta_site() ) {

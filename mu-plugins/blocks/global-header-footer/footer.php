@@ -1,6 +1,7 @@
 <?php
 
 namespace WordPressdotorg\MU_Plugins\Global_Header_Footer\Footer;
+
 use function WordPressdotorg\MU_Plugins\Global_Header_Footer\{ get_cip_text, get_home_url };
 
 defined( 'WPINC' ) || die();
@@ -8,13 +9,36 @@ defined( 'WPINC' ) || die();
 /**
  * Defined in `render_global_footer()`.
  *
+ * @var array  $attributes
  * @var string $locale_title
  */
 
+$container_class = 'global-footer has-text-color has-background';
+
+$color_scheme = apply_filters( 'wporg_footer_color_scheme', $attributes['style'] );
+
+switch ( $color_scheme ) {
+	case 'white-on-blue':
+		$container_class .= ' has-white-color has-blue-1-background-color';
+		break;
+	case 'black-on-white':
+		$container_class .= ' has-darker-grey-color has-white-background-color';
+		break;
+	case 'white-on-black':
+	default:
+		$container_class .= ' has-white-color has-darker-grey-background-color';
+		break;
+}
+
+$code_is_poetry_src = str_contains( $container_class, 'has-darker-grey-color' ) ?
+	plugins_url( '/images/code-is-poetry-for-light-bg.svg', __FILE__ ) :
+	'https://s.w.org/style/images/code-is-poetry-for-dark-bg.svg';
+
 ?>
 
-<!-- wp:group {"tagName":"footer","align":"full","className":"global-footer"} -->
-<footer class="wp-block-group global-footer alignfull">
+
+<!-- wp:group {"tagName":"footer","align":"full","className":"<?php echo esc_attr( $container_class ); ?>"} -->
+<footer class="wp-block-group alignfull <?php echo esc_attr( $container_class ); ?>">
 	<!-- wp:group {"className":"global-footer__navigation-container"} -->
 	<div class="wp-block-group global-footer__navigation-container">
 		<!-- wp:navigation {"orientation":"vertical","className":"global-footer__navigation-important","overlayMenu":"never"} -->
@@ -95,7 +119,7 @@ defined( 'WPINC' ) || die();
 			<!-- wp:image {"width":188,"height":13,"className":"global-footer__code_is_poetry"} -->
 			<figure class="wp-block-image is-resized global-footer__code_is_poetry">
 				<img
-					src="https://s.w.org/style/images/code-is-poetry-for-dark-bg.svg"
+					src=<?php echo esc_url( $code_is_poetry_src ); ?>
 					alt="<?php echo esc_html_x( 'Code is Poetry', 'Image alt text', 'wporg' ); ?>"
 					width="188"
 					height="13"
