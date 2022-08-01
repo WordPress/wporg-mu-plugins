@@ -11,7 +11,6 @@ add_action( 'admin_bar_init', __NAMESPACE__ . '\remove_admin_bar_callback', 15 )
 add_action( 'rest_api_init', __NAMESPACE__ . '\register_routes' );
 add_filter( 'wp_enqueue_scripts', __NAMESPACE__ . '\register_block_assets', 200 ); // Always last.
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_compat_wp4_styles', 5 ); // Before any theme CSS.
-add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\unregister_classic_global_styles', 20 );
 add_action( 'wp_head', __NAMESPACE__ . '\preload_google_fonts' );
 add_filter( 'style_loader_src', __NAMESPACE__ . '\update_google_fonts_url', 10, 2 );
 add_filter( 'render_block_core/navigation-link', __NAMESPACE__ . '\swap_submenu_arrow_svg' );
@@ -194,18 +193,6 @@ function enqueue_compat_wp4_styles() {
 
 		wp_enqueue_style( 'wp4-styles' );
 	}
-}
-
-/**
- * Unregister the `global-styles` from classic themes, to avoid overwriting our custom properties.
- */
-function unregister_classic_global_styles() {
-	if ( wp_is_block_theme() ) {
-		return;
-	}
-
-	wp_dequeue_style( 'global-styles' );
-	wp_deregister_style( 'global-styles' );
 }
 
 /**
