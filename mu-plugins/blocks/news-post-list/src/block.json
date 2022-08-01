@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "wporg/news-post-list",
+	"version": "0.1.0",
+	"title": "News Post List",
+	"category": "widgets",
+	"icon": "networking",
+	"description": "A block for use across the whole wp.org network.",
+	"textdomain": "news-post-list",
+	"editorScript": "file:./index.js",
+	"style": "file:./style.css",
+	"attributes": {
+		"endpoint" : {
+			"type": "string",
+			"default": "http://wordpress.org/news/wp-json/wp/v2"
+		},
+		"itemsToShow": {
+			"type": "integer",
+			"default": 3
+		}
+	}
+}
