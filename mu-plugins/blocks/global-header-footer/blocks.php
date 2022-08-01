@@ -349,7 +349,7 @@ function rest_render_planet_global_header( $request ) {
  *
  * @return string Returns the block content.
  */
-function render_global_header( $attributes ) {
+function render_global_header( $attributes = array() ) {
 	remove_inner_group_container();
 
 	if ( is_rosetta_site() ) {
@@ -734,7 +734,7 @@ function rest_render_global_footer( $request ) {
  *
  * @return string
  */
-function render_global_footer( $attributes ) {
+function render_global_footer( $attributes = array() ) {
 	remove_inner_group_container();
 
 	if ( is_rosetta_site() ) {
