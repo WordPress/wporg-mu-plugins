@@ -31,24 +31,53 @@ html {
 	}
 }
 
+/**
+ * Set up custom properties.
+ *
+ * Usually these values are provided by the `theme.json` in block themes, but to
+ * keep them consistent across themes, we define them here on the `.global-*`
+ * classes.
+ */
+
 .global-header,
 .global-footer {
-	--wp-global-header--background-color: var(--wp--preset--color--dark-grey);
-	--wp-global-header--background-color--hover: var(--wp--preset--color--darker-grey);
+	--wp--preset--font-family--eb-garamond: "EB Garamond", serif;
+	--wp--preset--font-family--inter: "Inter", sans-serif;
+	--wp--preset--font-size--small: 14px;
+	--wp--preset--font-size--normal: 16px;
+	--wp--preset--font-size--large: 20px;
+	--wp--custom--alignment--edge-spacing: clamp(24px, calc(100vw / 18), 80px);
+	--wp--custom--body--typography--line-height: 1.9;
+	--wp--custom--margin--vertical: 30px;
+	--wp--custom--form--padding: calc(0.5 * var(--wp--custom--margin--horizontal));
+	--wp--style--block-gap: 24px;
+
+	/* This is a subset of the colors provided by `theme.json`, set here to prevent conflicts across other block themes. */
+	--wp--preset--color--charcoal-1: #1e1e1e;
+	--wp--preset--color--charcoal-5: #1c2024; /* charcoal-5 is only used in the header (hovers), it's not used in the parent/child themes. */
+	--wp--preset--color--charcoal-2: #23282d;
+	--wp--preset--color--white: #fff;
+	--wp--preset--color--deep-blueberry: #213fd4;
+	--wp--preset--color--blueberry-1: #3858e9;
+	--wp--preset--color--blueberry-2: #7b90ff;
+
+	--wp-global-header--background-color: var(--wp--preset--color--charcoal-2);
+	--wp-global-header--background-color--hover: var(--wp--preset--color--charcoal-5);
 	--wp-global-header--link-color: var(--wp--preset--color--white);
-	--wp-global-header--link-color--active: var(--wp--preset--color--blue-3);
+
+	--wp-global-header--link-color--active: var(--wp--preset--color--blueberry-2);
 	--wp-global-header--text-color: var(--wp--preset--color--white);
 }
 
-.has-darker-grey-color {
-	--wp-global-header--link-color: var(--wp--preset--color--dark-grey);
-	--wp-global-header--link-color--active: var(--wp--preset--color--blue-2);
-	--wp-global-header--text-color: var(--wp--preset--color--dark-grey);
+.has-charcoal-2-color {
+	--wp-global-header--link-color: var(--wp--preset--color--charcoal-2);
+	--wp-global-header--link-color--active: var(--wp--preset--color--deep-blueberry);
+	--wp-global-header--text-color: var(--wp--preset--color--charcoal-2);
 }
 
-.has-blue-1-background-color {
-	--wp-global-header--background-color: var(--wp--preset--color--blue-1);
-	--wp-global-header--background-color--hover: var(--wp--preset--color--blue-5);
+.has-blueberry-1-background-color {
+	--wp-global-header--background-color: var(--wp--preset--color--blueberry-1);
+	--wp-global-header--background-color--hover: var(--wp--preset--color--deep-blueberry);
 	--wp-global-header--link-color--active: var(--wp--preset--color--white);
 }
 

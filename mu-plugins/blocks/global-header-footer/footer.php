@@ -2,7 +2,7 @@
 
 namespace WordPressdotorg\MU_Plugins\Global_Header_Footer\Footer;
 
-use function WordPressdotorg\MU_Plugins\Global_Header_Footer\{ get_cip_text, get_home_url };
+use function WordPressdotorg\MU_Plugins\Global_Header_Footer\{ get_cip_text, get_home_url, get_container_classes };
 
 defined( 'WPINC' ) || die();
 
@@ -13,24 +13,11 @@ defined( 'WPINC' ) || die();
  * @var string $locale_title
  */
 
-$container_class = 'global-footer has-text-color has-background';
-
 $color_scheme = apply_filters( 'wporg_footer_color_scheme', $attributes['style'] );
 
-switch ( $color_scheme ) {
-	case 'white-on-blue':
-		$container_class .= ' has-white-color has-blue-1-background-color';
-		break;
-	case 'black-on-white':
-		$container_class .= ' has-darker-grey-color has-white-background-color';
-		break;
-	case 'white-on-black':
-	default:
-		$container_class .= ' has-white-color has-darker-grey-background-color';
-		break;
-}
+$container_class = 'global-footer ' . get_container_classes( $color_scheme );
 
-$code_is_poetry_src = str_contains( $container_class, 'has-darker-grey-color' ) ?
+$code_is_poetry_src = str_contains( $container_class, 'has-charcoal-2-color' ) ?
 	plugins_url( '/images/code-is-poetry-for-light-bg.svg', __FILE__ ) :
 	'https://s.w.org/style/images/code-is-poetry-for-dark-bg.svg';
 
