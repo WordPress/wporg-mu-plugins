@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: News Post List
+ * Plugin Name: Multisite Latest Posts
  * Description: A block for use across the whole wp.org network.
  *
  * @package wporg
@@ -10,13 +10,13 @@ namespace WordPressdotorg\MU_Plugins\wporg;
 
 
 function get_categories_via_api( $endpoint ) {
-	$response = wp_remote_get( esc_url_raw( $endpoint . '/categories' ) );
+	$response = wp_remote_get( esc_url_raw( $endpoint . '/categories' . '?per_page=100' ) );
 
 	if( is_wp_error( $response ) ) {
 		return false;
 	}
 	
-	return json_decode( wp_remote_retrieve_body($response) );
+	return json_decode( wp_remote_retrieve_body( $response ) );
 }
 
 function get_by_id( $arr, $id ) {
@@ -39,8 +39,6 @@ function get_category( $endpoint, $id ) {
 	return get_by_id( $categories, $id );
 }
 
-
-
 function get_posts_via_api( $endpoint, $post_type = 'posts', $limit = 10 ) {
 	$url = $endpoint . '/' . $post_type . '?per_page=' . $limit;
 
@@ -50,38 +48,51 @@ function get_posts_via_api( $endpoint, $post_type = 'posts', $limit = 10 ) {
 		return false;
 	}
 
-	return json_decode( wp_remote_retrieve_body($response) );
+	return json_decode( wp_remote_retrieve_body( $response ) );
 }
 
 function render_block( $attributes ) {
-	if( ! isset( $attributes['endpoint'] ) ) {
+	if( ! isset( $attributes['endpoint'] ) || ! isset( $attributes['itemsToShow'] ) ) {
 		return '';
 	}
 
-	$posts = get_posts_via_api( $attributes['endpoint'] );
+	$posts = get_posts_via_api( $attributes['endpoint'], 'posts', $attributes['itemsToShow'] );
 
 	$list_items = "";
 	foreach ( $posts as $post ) {
 		$category = get_category( $attributes['endpoint'], $post->categories[0] );
 
-		var_dump( $post->categories[0] );
-
-		$link = sprintf(
+		$title_element = sprintf(
 			'<a href="%1$s">%2$s</a>',
 			$post->link,
 			$post->title->rendered
 		);
 
+		$category_element = '';
+		if( ! empty( $category ) ) {
+			$category_element = sprintf(
+				'<a href="%1$s">%2$s</a>',
+				$category->link,
+				$category->name
+			);
+		}
+
+		$date = new \DateTime( $post->date );
+		$date_element = sprintf(
+			'<time datetime="%1$s">%2$s</time>',
+			$post->date,
+			$date->format('F j, Y')
+		);
 
 		$list_items .= sprintf(
-			'<li>%1$s, %2$s category: %3$s</li>',
-			$link,
-			! empty( $category ) ? $category->name : '',
-			$post->date,
+			'<li>%1$s <div>%2$s <span>·</span> %3$s</div></li>',
+			$title_element,
+			$category_element,
+			$date_element,
 		);
 	}
 
-	return sprintf( '<ul>%s</ul>', $list_items );
+	return sprintf( '<ul class="wporg-latest-post-multisite">%s</ul>', $list_items );
 }
 
 /**
@@ -91,10 +102,10 @@ function render_block( $attributes ) {
  *
  * @see https://developer.wordpress.org/reference/functions/register_block_type/
  */
-function news_post_list_block_init() {
+function block_init() {
 	register_block_type( __DIR__ . '/build',
 	array(
 		'render_callback' => __NAMESPACE__ . '\render_block',
-	));
+	) );
 }
-add_action( 'init', __NAMESPACE__ . '\news_post_list_block_init' );
+add_action( 'init', __NAMESPACE__ . '\block_init' );
