@@ -56,10 +56,8 @@ function render_block( $attributes ) {
 	}
 
 	$posts = get_posts_via_api( $attributes['endpoint'], 'posts', $attributes['itemsToShow'] );
-
 	$list_items = '';
 	foreach ( $posts as $post ) {
-		$category = get_category( $attributes['endpoint'], $post->categories[0] );
 
 		$title_element = sprintf(
 			'<a href="%1$s">%2$s</a>',
@@ -68,12 +66,16 @@ function render_block( $attributes ) {
 		);
 
 		$category_element = '';
-		if ( ! empty( $category ) ) {
-			$category_element = sprintf(
-				'<a href="%1$s">%2$s</a>',
-				$category->link,
-				$category->name
-			);
+		if ( isset( $post->categories[0] ) ) {
+			$category = get_category( $attributes['endpoint'], $post->categories[0] );
+
+			if ( ! empty( $category ) ) {
+				$category_element = sprintf(
+					'<a href="%1$s">%2$s</a>',
+					$category->link,
+					$category->name
+				);
+			}
 		}
 
 		$date = new \DateTime( $post->date );
