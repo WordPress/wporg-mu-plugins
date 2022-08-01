@@ -1,9 +1,10 @@
-/**
- * The following styles get applied both on the front of your site
- * and in the editor.
- *
- * Replace them with your own styles or remove the file completely.
- */
+
+body {
+	--wporg-link-title-color: var(--wp--preset--color--charcoal-1);
+	--wporg-link-title-font-family: var(--wp--preset--font-family--eb-garamond);
+	--wporg-link-title-font-size: var(--wp--preset--font-size--large);
+	--wporg-link-spacing: var(--wp--custom--margin--horizontal, 16px);
+}
 
 .wporg-latest-post-multisite {
 	margin: 0;
@@ -11,16 +12,20 @@
 	list-style: none;
 }
 
-.wporg-latest-post-multisite li {
-	padding: 16px 0;
+.wporg-latest-post-multisite li:not(:last-child) {
+	padding-bottom: var(--wporg-link-spacing);
 }
 
 .wporg-latest-post-multisite li a {
 	text-decoration: none;
 }
 
+.wporg-latest-post-multisite li a:hover {
+	text-decoration: underline;
+}
+
 .wporg-latest-post-multisite li > a {
-	color: var(--wp--preset--color--charcoal-1);
-	font-family: var(--wp--preset--font-family--eb-garamond);
-	font-size: var(--wp--preset--font-size--large);
+	color: var(--wporg-link-title-color);
+	font-family: var(--wporg-link-title-font-family);
+	font-size: var(--wporg-link-title-font-size);
 }
