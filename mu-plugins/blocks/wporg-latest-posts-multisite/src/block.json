@@ -1,13 +1,13 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 2,
-	"name": "wporg/news-post-list",
+	"name": "wporg/wporg-latest-posts-multisite",
 	"version": "0.1.0",
-	"title": "News Post List",
+	"title": "Multisite Latest Posts",
 	"category": "widgets",
 	"icon": "networking",
 	"description": "A block for use across the whole wp.org network.",
-	"textdomain": "news-post-list",
+	"textdomain": "wporg-latest-posts-multisite",
 	"editorScript": "file:./index.js",
 	"style": "file:./style.css",
 	"attributes": {

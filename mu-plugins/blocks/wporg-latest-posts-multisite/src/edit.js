@@ -1,7 +1,8 @@
 /**
  * WordPress dependencies
  */
-import { __ } from '@wordpress/i18n';
+import ServerSideRender from '@wordpress/server-side-render';
+
 import { useBlockProps } from '@wordpress/block-editor';
 
 /**
@@ -11,5 +12,10 @@ import { useBlockProps } from '@wordpress/block-editor';
  * @return {WPElement} Element to render.
  */
 export default function Edit() {
-	return <p { ...useBlockProps() }>{ __( 'News Post List – hello from the editor!', 'wporg' ) }</p>;
+	const blockProps = useBlockProps();
+	return (
+		<div { ...blockProps }>
+			<ServerSideRender block={ blockProps[ 'data-type' ] } attributes={ blockProps } />
+		</div>
+	);
 }
