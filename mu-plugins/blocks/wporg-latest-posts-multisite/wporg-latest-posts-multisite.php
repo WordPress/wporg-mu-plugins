@@ -81,7 +81,7 @@ function render_block( $attributes ) {
 		$date = new \DateTime( $post->date );
 		$date_element = sprintf(
 			'<time datetime="%1$s">%2$s</time>',
-			$post->date,
+			$date->format( 'c' ),
 			$date->format( 'F j, Y' )
 		);
 
