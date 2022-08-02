@@ -44,7 +44,7 @@ function get_posts_via_api( $endpoint, $post_type = 'posts', $limit = 10 ) {
 	$response = wp_remote_get( esc_url_raw( $url ) );
 
 	if ( is_wp_error( $response ) ) {
-		return false;
+		return [];
 	}
 
 	return json_decode( wp_remote_retrieve_body( $response ) );
@@ -66,7 +66,7 @@ function render_block( $attributes ) {
 		);
 
 		$category_element = '';
-		if ( isset( $post->categories[0] ) ) {
+		if ( isset( $post->categories ) && isset( $post->categories[0] ) ) {
 			$category = get_category( $attributes['endpoint'], $post->categories[0] );
 
 			if ( ! empty( $category ) ) {
