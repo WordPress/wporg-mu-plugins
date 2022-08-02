@@ -12,7 +12,7 @@ import { useBlockProps } from '@wordpress/block-editor';
 export default function Edit() {
 	return (
 		<p { ...useBlockProps() }>
-			This is a suggestion, which usually <a href="http://wordpress.org">links</a> to something.
+			WordPress is also available in <a href="http://wordpress.org">language</a> (if applicable).
 		</p>
 	);
 }
