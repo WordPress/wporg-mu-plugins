@@ -7,7 +7,7 @@
 	"category": "widgets",
 	"icon": "editor-ul",
 	"description": "A block for use across the whole wp.org network.",
-	"textdomain": "wporg-multisite-latest-posts",
+	"textdomain": "wporg",
 	"editorScript": "file:./index.js",
 	"style": "file:./style.css",
 	"attributes": {
