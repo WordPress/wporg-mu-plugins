@@ -4,7 +4,8 @@ body {
 	--wporg-link-title-font-family: var(--wp--preset--font-family--eb-garamond);
 	--wporg-link-title-font-size: var(--wp--preset--font-size--heading-5);
 	--wporg-link-title-font-size-line-height: var(--wp--custom--heading--level-3--typography--line-height);
-	--wporg-link-spacing: var(--wp--preset--spacing--30, 30px);
+	--wporg-link-spacing: var(--wp--preset--spacing--20, 20px);
+	--wporg-post-spacing: var(--wp--preset--spacing--30, 30px);
 	--wporg-link-details-font-size: var(--wp--preset--font-size--small);
 }
 
@@ -15,7 +16,7 @@ body {
 }
 
 .wporg-multisite-latest-posts li:not(:last-child) {
-	padding-bottom: var(--wporg-link-spacing);
+	padding-bottom: var(--wporg-post-spacing);
 }
 
 .wporg-multisite-latest-posts li a {
@@ -27,6 +28,8 @@ body {
 }
 
 .wporg-multisite-latest-posts li > a {
+	display: block;
+	margin-bottom: var(--wporg-link-spacing);
 	color: var(--wporg-link-title-color);
 	font-family: var(--wporg-link-title-font-family);
 	font-size: var(--wporg-link-title-font-size);
