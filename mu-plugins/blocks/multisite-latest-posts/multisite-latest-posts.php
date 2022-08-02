@@ -61,8 +61,8 @@ function render_block( $attributes ) {
 	foreach ( $posts as $post ) {
 		$title_element = sprintf(
 			'<a href="%1$s">%2$s</a>',
-			$post->link,
-			$post->title->rendered
+			esc_html( $post->link ),
+			esc_html( $post->title->rendered )
 		);
 
 		$category_element = '';
@@ -72,8 +72,8 @@ function render_block( $attributes ) {
 			if ( ! empty( $category ) ) {
 				$category_element = sprintf(
 					'<a href="%1$s">%2$s</a>',
-					$category->link,
-					$category->name
+					esc_html( $category->link ),
+					esc_html( $category->name )
 				);
 			}
 		}
