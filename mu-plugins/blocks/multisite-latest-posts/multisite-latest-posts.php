@@ -121,7 +121,7 @@ function render_block( $attributes ) {
 
 			if ( ! empty( $category ) ) {
 				$category_element = sprintf(
-					'<a href="%1$s">%2$s</a>',
+					'<a href="%1$s" class="wporg-multisite-latest-posts-category">%2$s</a>',
 					esc_html( $category->link ),
 					esc_html( $category->name )
 				);
