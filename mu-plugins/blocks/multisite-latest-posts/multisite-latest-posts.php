@@ -31,6 +31,7 @@ function get_by_id( $arr, $id ) {
 function get_category( $endpoint, $id ) {
 	$categories = get_categories_via_api( $endpoint );
 
+	// We are okay if we can't find the category
 	if ( is_wp_error( $categories ) ) {
 		return '';
 	}
@@ -38,16 +39,31 @@ function get_category( $endpoint, $id ) {
 	return get_by_id( $categories, $id );
 }
 
+/**
+ * Undocumented function
+ *
+ * @param string  $endpoint
+ * @param string  $post_type
+ * @param integer $limit
+ * @return array|WP_Error
+ */
 function get_posts_via_api( $endpoint, $post_type = 'posts', $limit = 10 ) {
 	$url = $endpoint . '/' . $post_type . '?_embed=true&per_page=' . $limit;
 
 	$response = wp_remote_get( esc_url_raw( $url ) );
 
 	if ( is_wp_error( $response ) ) {
+		return new \WP_Error( 500, __( 'An error has occurred loading posts.', 'wporg' ) );
+	}
+
+	// Returns empty string if anything goes wrong
+	$body = wp_remote_retrieve_body( $response );
+
+	if ( empty( $body ) ) {
 		return [];
 	}
 
-	return json_decode( wp_remote_retrieve_body( $response ) );
+	return json_decode( $body );
 }
 
 function render_block( $attributes ) {
@@ -56,6 +72,14 @@ function render_block( $attributes ) {
 	}
 
 	$posts = get_posts_via_api( $attributes['endpoint'], 'posts', $attributes['itemsToShow'] );
+
+	if ( is_wp_error( $posts ) ) {
+		return $posts->get_error_message();
+	}
+
+	if ( empty( $posts ) ) {
+		return __( 'No posts found.' );
+	}
 
 	$list_items = '';
 	foreach ( $posts as $post ) {
