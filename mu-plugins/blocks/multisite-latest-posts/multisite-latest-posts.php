@@ -70,7 +70,7 @@ function get_category( $endpoint, $id ) {
  *
  * @param string  $endpoint URL
  * @param string  $post_type WP_Post_Type label
- * @param integer $limit
+ * @param integer $limit Numbers of posts to return
  * @return WP_Post[]|WP_Error
  */
 function get_posts_via_api( $endpoint, $post_type = 'posts', $limit = 10 ) {
