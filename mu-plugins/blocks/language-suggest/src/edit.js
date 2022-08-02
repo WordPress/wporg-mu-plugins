@@ -11,8 +11,10 @@ import { useBlockProps } from '@wordpress/block-editor';
  */
 export default function Edit() {
 	return (
-		<p { ...useBlockProps() }>
-			WordPress is also available in <a href="http://wordpress.org">language</a> (if applicable).
-		</p>
+		<div { ...useBlockProps() }>
+			<div>
+				WordPress is also available in <a href="http://wordpress.org">language</a> (if applicable).
+			</div>
+		</div>
 	);
 }
