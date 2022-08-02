@@ -6,7 +6,7 @@
  * @package wporg
  */
 
-namespace WordPressdotorg\MU_Plugins\wporg;
+namespace WordPressdotorg\MU_Plugins\Multisite_Latest_Posts;
 
 /**
  * Helper function to find item in array by id.
