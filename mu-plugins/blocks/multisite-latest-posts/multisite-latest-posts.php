@@ -97,10 +97,18 @@ function render_block( $attributes ) {
 		return '';
 	}
 
-	$posts = get_posts_via_api( $attributes['endpoint'], 'posts', $attributes['itemsToShow'] );
+	// Check cache
+	$posts = get_transient( __NAMESPACE__ );
 
-	if ( is_wp_error( $posts ) ) {
-		return $posts->get_error_message();
+	if ( ! $posts ) {
+		$posts = get_posts_via_api( $attributes['endpoint'], 'posts', $attributes['itemsToShow'] );
+
+		if ( is_wp_error( $posts ) ) {
+			return $posts->get_error_message();
+		}
+
+		// Set Cache
+		set_transient( __NAMESPACE__, $posts, HOUR_IN_SECONDS );
 	}
 
 	if ( empty( $posts ) ) {
