@@ -13,7 +13,7 @@
 	"attributes": {
 		"endpoint" : {
 			"type": "string",
-			"default": "http://wordpress.org/news/wp-json/wp/v2"
+			"default": "wordpress.org/news/wp-json/wp/v2"
 		},
 		"itemsToShow": {
 			"type": "integer",
