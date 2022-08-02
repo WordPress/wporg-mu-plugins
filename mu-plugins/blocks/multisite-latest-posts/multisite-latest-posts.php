@@ -8,16 +8,13 @@
 
 namespace WordPressdotorg\MU_Plugins\wporg;
 
-function get_categories_via_api( $endpoint ) {
-	$response = wp_remote_get( esc_url_raw( $endpoint . '/categories' . '?per_page=100' ) );
-
-	if ( is_wp_error( $response ) ) {
-		return false;
-	}
-
-	return json_decode( wp_remote_retrieve_body( $response ) );
-}
-
+/**
+ * Helper function to find item in array by id.
+ *
+ * @param WP_Term[] $arr List of categories
+ * @param number    $id Category ID
+ * @return WP_Term|string
+ */
 function get_by_id( $arr, $id ) {
 	foreach ( $arr as $item ) {
 		if ( $id == $item->id ) {
@@ -28,6 +25,35 @@ function get_by_id( $arr, $id ) {
 	return '';
 }
 
+/**
+ * Fetches categories from REST endpoint.
+ *
+ * @param string $endpoint URL
+ * @return WP_Term[]|WP_Error
+ */
+function get_categories_via_api( $endpoint ) {
+	$response = wp_remote_get( esc_url_raw( $endpoint . '/categories' . '?per_page=100' ) );
+
+	if ( is_wp_error( $response ) ) {
+		return new \WP_Error( 500, __( 'An error has occurred fetching categories.', 'wporg' ) );
+	}
+
+	$body = wp_remote_retrieve_body( $response );
+
+	if ( empty( $body ) ) {
+		return new \WP_Error( 500, __( 'An error has occurred fetching categories.', 'wporg' ) );
+	}
+
+	return json_decode( $body );
+}
+
+/**
+ * Returns the category based on its ID.
+ *
+ * @param string $endpoint URL
+ * @param number $id Category ID
+ * @return WP_Term[]|string
+ */
 function get_category( $endpoint, $id ) {
 	$categories = get_categories_via_api( $endpoint );
 
@@ -40,12 +66,12 @@ function get_category( $endpoint, $id ) {
 }
 
 /**
- * Undocumented function
+ * Returns a list of posts.
  *
- * @param string  $endpoint
- * @param string  $post_type
+ * @param string  $endpoint URL
+ * @param string  $post_type WP_Post_Type label
  * @param integer $limit
- * @return array|WP_Error
+ * @return WP_Post[]|WP_Error
  */
 function get_posts_via_api( $endpoint, $post_type = 'posts', $limit = 10 ) {
 	$url = $endpoint . '/' . $post_type . '?_embed=true&per_page=' . $limit;
