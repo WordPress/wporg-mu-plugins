@@ -56,7 +56,7 @@ function render_block( $attributes ) {
 	}
 
 	$posts = get_posts_via_api( $attributes['endpoint'], 'posts', $attributes['itemsToShow'] );
-	
+
 	$list_items = '';
 	foreach ( $posts as $post ) {
 		$title_element = sprintf(
@@ -94,7 +94,7 @@ function render_block( $attributes ) {
 		);
 	}
 
-	return sprintf( '<ul class="wporg-latest-post-multisite">%s</ul>', $list_items );
+	return sprintf( '<ul class="wporg-multisite-latest-posts">%s</ul>', $list_items );
 }
 
 /**
@@ -104,7 +104,7 @@ function render_block( $attributes ) {
  *
  * @see https://developer.wordpress.org/reference/functions/register_block_type/
  */
-function block_init() {
+function multisite_latest_posts_block_init() {
 	register_block_type(
 		__DIR__ . '/build',
 		array(
@@ -112,4 +112,4 @@ function block_init() {
 		)
 	);
 }
-add_action( 'init', __NAMESPACE__ . '\block_init' );
+add_action( 'init', __NAMESPACE__ . '\multisite_latest_posts_block_init' );
