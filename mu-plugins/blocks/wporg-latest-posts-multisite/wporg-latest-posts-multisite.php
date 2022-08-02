@@ -39,7 +39,7 @@ function get_category( $endpoint, $id ) {
 }
 
 function get_posts_via_api( $endpoint, $post_type = 'posts', $limit = 10 ) {
-	$url = $endpoint . '/' . $post_type . '?per_page=' . $limit;
+	$url = $endpoint . '/' . $post_type . '?_embed=true&per_page=' . $limit;
 
 	$response = wp_remote_get( esc_url_raw( $url ) );
 
@@ -56,9 +56,9 @@ function render_block( $attributes ) {
 	}
 
 	$posts = get_posts_via_api( $attributes['endpoint'], 'posts', $attributes['itemsToShow'] );
+	
 	$list_items = '';
 	foreach ( $posts as $post ) {
-
 		$title_element = sprintf(
 			'<a href="%1$s">%2$s</a>',
 			$post->link,
@@ -86,9 +86,10 @@ function render_block( $attributes ) {
 		);
 
 		$list_items .= sprintf(
-			'<li>%1$s <div>%2$s <span>·</span> %3$s</div></li>',
+			'<li>%1$s <div>%2$s %3$s %4$s</div></li>',
 			$title_element,
 			$category_element,
+			! empty( $category_element ) ? '<span>·</span>' : '',
 			$date_element,
 		);
 	}
