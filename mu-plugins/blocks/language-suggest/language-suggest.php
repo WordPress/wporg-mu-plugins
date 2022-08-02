@@ -6,7 +6,7 @@
  * @package wporg
  */
 
-namespace WordPressdotorg\MU_Plugins\wporg;
+namespace WordPressdotorg\MU_Plugins\Language_Suggest;
 
 /**
  * Registers the block using the metadata loaded from the `block.json` file.
