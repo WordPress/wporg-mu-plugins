@@ -224,7 +224,7 @@ function render_block( $attributes ) {
 		);
 	}
 
-	return sprintf( '<ul class="wporg-multisite-latest-posts">%s</ul>', $list_items );
+	return sprintf( '<ul class="wporg-multisite-latest-posts wp-block-wporg-multisite-latest-posts">%s</ul>', $list_items );
 }
 
 /**
