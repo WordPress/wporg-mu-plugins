@@ -21,6 +21,6 @@
 		"typography": {
 			"fontSize": true
 		},
-		multiple: false
+		"multiple": false
 	}
 }
