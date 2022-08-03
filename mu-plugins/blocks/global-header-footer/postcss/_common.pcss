@@ -123,6 +123,18 @@ html {
 	& * {
 		box-sizing: border-box;
 	}
+
+	& a {
+		text-decoration: none;
+		text-decoration-thickness: 1px;
+		text-underline-offset: 0.15em;
+
+		&:hover,
+		&:focus {
+			text-decoration-line: underline;
+			color: inherit;
+		}
+	}
 }
 
 .wp-block-group.global-header .global-header__navigation,
