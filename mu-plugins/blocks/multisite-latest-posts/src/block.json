@@ -10,14 +10,11 @@
 	"textdomain": "wporg",
 	"editorScript": "file:./index.js",
 	"style": "file:./style.css",
+	"viewScript": "file:./front.js",
 	"attributes": {
-		"blogId" : {
-			"type": "integer",
-			"default": -1
-		},
 		"endpoint" : {
 			"type": "string",
-			"default": "wordpress.org/news/wp-json/wp/v2"
+			"default": "https://wordpress.org/news/wp-json/wp/v2"
 		},
 		"itemsToShow": {
 			"type": "integer",

@@ -1,8 +1,6 @@
 /**
  * WordPress dependencies
  */
-import ServerSideRender from '@wordpress/server-side-render';
-
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import {
 	__experimentalNumberControl as NumberControl, // eslint-disable-line
@@ -44,7 +42,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 				</PanelBody>
 			</InspectorControls>
-			<ServerSideRender block={ blockProps[ 'data-type' ] } attributes={ attributes } />
+			<div>A list of posts will render on the front end.</div>
 		</div>
 	);
 }
