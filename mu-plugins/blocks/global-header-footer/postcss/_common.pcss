@@ -123,6 +123,17 @@ html {
 	& * {
 		box-sizing: border-box;
 	}
+
+	& .wp-block-navigation-item__content {
+		text-decoration: none;
+		text-decoration-thickness: 1px;
+		text-underline-offset: 0.15em;
+
+		&:hover,
+		&:focus {
+			text-decoration-line: underline;
+		}
+	}
 }
 
 .wp-block-group.global-header .global-header__navigation,
