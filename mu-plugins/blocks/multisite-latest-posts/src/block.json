@@ -11,6 +11,10 @@
 	"editorScript": "file:./index.js",
 	"style": "file:./style.css",
 	"attributes": {
+		"blogId" : {
+			"type": "integer",
+			"default": -1
+		},
 		"endpoint" : {
 			"type": "string",
 			"default": "wordpress.org/news/wp-json/wp/v2"

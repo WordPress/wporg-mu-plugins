@@ -8,6 +8,14 @@
 
 namespace WordPressdotorg\MU_Plugins\Multisite_Latest_Posts;
 
+class WPORG_Latest_Post {
+	public $post_date;
+	public $post_title;
+	public $post_link;
+	public $post_category_name;
+	public $post_category_link;
+}
+
 /**
  * Helper function to find item in array by id.
  *
@@ -54,7 +62,7 @@ function get_categories_via_api( $endpoint ) {
  * @param number $id Category ID
  * @return WP_Term[]|string
  */
-function get_category( $endpoint, $id ) {
+function get_categories( $endpoint ) {
 	$categories = get_categories_via_api( $endpoint );
 
 	// We are okay if we can't find the category
@@ -62,7 +70,7 @@ function get_category( $endpoint, $id ) {
 		return '';
 	}
 
-	return get_by_id( $categories, $id );
+	return $categories;
 }
 
 /**
@@ -73,7 +81,7 @@ function get_category( $endpoint, $id ) {
  * @param integer $limit Numbers of posts to return
  * @return WP_Post[]|WP_Error
  */
-function get_posts_via_api( $endpoint, $post_type = 'posts', $limit = 10 ) {
+function get_posts_via_api( $endpoint, $post_type = 'posts', $limit = 100 ) {
 	$url = $endpoint . '/' . $post_type . '?_embed=true&per_page=' . $limit;
 
 	$response = wp_remote_get( esc_url_raw( $url ) );
@@ -89,19 +97,87 @@ function get_posts_via_api( $endpoint, $post_type = 'posts', $limit = 10 ) {
 		return [];
 	}
 
-	return json_decode( $body );
+	$posts = json_decode( $body );
+	$categories = get_categories( $endpoint );
+
+	$results = array();
+	foreach ( $posts as $post ) {
+		$latest_post = new WPORG_Latest_Post();
+		$latest_post->post_title = $post->title->rendered;
+		$latest_post->post_link = $post->link;
+		$latest_post->post_date = $post->date;
+
+		if ( isset( $post->categories ) && isset( $post->categories[0] ) ) {
+			$category = get_by_id( $categories, $post->categories[0] );
+			var_dump( $category );
+			if ( ! empty( $category ) ) {
+				$latest_post->post_category_name = $category->name;
+				$latest_post->post_category_link = $category->term_id;
+			}
+		}
+
+		$results[] = $latest_post;
+	}
+
+	return $results;
+}
+
+/**
+ * Undocumented function
+ *
+ * @param [type]  $endpoint URL
+ * @param [type]  $blog_id A blog's id
+ * @param integer $limit Numbers of posts to return
+ * @return WPORG_Latest_Post[]|WP_Error
+ */
+function get_post_results( $endpoint, $blog_id, $limit = 3 ) {
+
+	// If we don't have a blog id we'll try a rest call
+	if ( ! is_multisite() || ! isset( $blog_id ) ) {
+		if ( empty( $endpoint ) ) {
+			return new \WP_Error( 500, __( 'This block is configured incorrectly.', 'wporg' ) );
+		}
+
+		return get_posts_via_api( $endpoint, 'posts', $limit );
+	}
+
+	switch_to_blog( $blog_id );
+
+	$posts = wp_get_recent_posts(
+		array(
+			'numberposts' => $limit,
+			'post_status' => 'publish',
+		)
+	);
+
+	$results = array();
+	foreach ( $posts as $post ) {
+		$latest_post = new WPORG_Latest_Post();
+		$latest_post->post_title = $post['post_title'];
+		$latest_post->post_link = get_permalink( $post['ID'] );
+		$latest_post->post_date = $post['post_date'];
+
+		$category = get_the_category( $post['ID'] );
+
+		if ( isset( $category[0] ) ) {
+			$latest_post->post_category_name = $category[0]->name;
+			$latest_post->post_category_link = get_category_link( $category[0]->term_id );
+		}
+
+		$results[] = $latest_post;
+	}
+
+	restore_current_blog();
+
+	return $results;
 }
 
 function render_block( $attributes ) {
-	if ( ! isset( $attributes['endpoint'] ) || ! isset( $attributes['itemsToShow'] ) ) {
-		return '';
-	}
-
 	// Check cache
 	$posts = get_transient( __NAMESPACE__ );
 
 	if ( ! $posts ) {
-		$posts = get_posts_via_api( $attributes['endpoint'], 'posts', $attributes['itemsToShow'] );
+		$posts = get_post_results( $attributes['endpoint'], isset( $attributes['blogId'] ) ? $attributes['blogId'] : '', $attributes['itemsToShow'] );
 
 		if ( is_wp_error( $posts ) ) {
 			return $posts->get_error_message();
@@ -119,24 +195,20 @@ function render_block( $attributes ) {
 	foreach ( $posts as $post ) {
 		$title_element = sprintf(
 			'<a href="%1$s">%2$s</a>',
-			esc_html( $post->link ),
-			esc_html( $post->title->rendered )
+			esc_html( $post->post_link ),
+			esc_html( $post->post_title )
 		);
 
 		$category_element = '';
-		if ( isset( $post->categories ) && isset( $post->categories[0] ) ) {
-			$category = get_category( $attributes['endpoint'], $post->categories[0] );
-
-			if ( ! empty( $category ) ) {
-				$category_element = sprintf(
-					'<a href="%1$s" class="wporg-multisite-latest-posts-category">%2$s</a>',
-					esc_html( $category->link ),
-					esc_html( $category->name )
-				);
-			}
+		if ( ! empty( $post->post_category_name ) ) {
+			$category_element = sprintf(
+				'<a href="%1$s" class="wporg-multisite-latest-posts-category">%2$s</a>',
+				esc_html( $post->post_category_link ),
+				esc_html( $post->post_category_name )
+			);
 		}
 
-		$date = new \DateTime( $post->date );
+		$date = new \DateTime( $post->post_date );
 		$date_element = sprintf(
 			'<time datetime="%1$s">%2$s</time>',
 			$date->format( 'c' ),
