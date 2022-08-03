@@ -20,6 +20,7 @@
 		},
 		"typography": {
 			"fontSize": true
-		}
+		},
+		multiple: false
 	}
 }
