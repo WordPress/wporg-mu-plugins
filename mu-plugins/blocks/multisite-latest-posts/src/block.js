@@ -24,15 +24,20 @@ const Block = ( { endpoint, itemsToShow } ) => {
 
 	const getPosts = async () => {
 		setLoading( true );
-		const response = await fetch( `${ endpoint }/posts?per_page=${ itemsToShow }&_embed=true` );
+		try {
+			const response = await fetch( `${ endpoint }/posts?per_page=${ itemsToShow }&_embed=true` );
 
-		if ( response.ok ) {
-			const result = await response.json();
+			if ( response.ok ) {
+				const result = await response.json();
 
-			setPosts( result );
-		} else {
+				setPosts( result );
+			} else {
+				throw new Error( __( 'Error loading posts.', 'wporg' ) );
+			}
+		} catch ( exception ) {
 			setError( __( 'Error loading posts.', 'wporg' ) );
 		}
+
 		setLoading( false );
 	};
 
