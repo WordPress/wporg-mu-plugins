@@ -43,7 +43,7 @@ const Block = ( { endpoint, perPage } ) => {
 
 	useEffect( () => {
 		getPosts();
-	}, [] );
+	}, [ endpoint, perPage ] );
 
 	if ( loading ) {
 		return __( 'Loading posts …', 'wporg' );
