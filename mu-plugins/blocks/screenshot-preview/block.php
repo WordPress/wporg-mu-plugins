@@ -51,7 +51,7 @@ function register_assets() {
 
 	$block_info = require $deps_path;
 
-	if ( ! is_admin() ) {
+	if ( ! is_admin() && get_current_blog_id() === WPORG_THEME_DIRECTORY_BLOGID ) {
 		wp_enqueue_script(
 			'wporg-screenshot-preview',
 			plugin_dir_url( __FILE__ ) . 'build/index.js',
