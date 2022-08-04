@@ -32,7 +32,7 @@ const Block = ( { endpoint, itemsToShow } ) => {
 
 				setPosts( result );
 			} else {
-				throw new Error( __( 'Error loading posts.', 'wporg' ) );
+				throw new Error();
 			}
 		} catch ( exception ) {
 			setError( __( 'Error loading posts.', 'wporg' ) );
