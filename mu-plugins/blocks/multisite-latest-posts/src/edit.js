@@ -24,12 +24,12 @@ import Block from './block.js';
  * @return {WPElement} Element to render.
  */
 export default function Edit( { attributes, setAttributes } ) {
-	const { endpoint, itemsToShow } = attributes;
+	const { endpoint, perPage } = attributes;
 
 	const blockProps = useBlockProps();
 
-	const handleEndpoint = ( value ) => setAttributes( { endpoint: value } );
-	const handleItems = ( value ) => setAttributes( { itemsToShow: value } );
+	const onEndpointChange = ( value ) => setAttributes( { endpoint: value } );
+	const onPerPageChange = ( value ) => setAttributes( { perPage: value * 1 } );
 
 	return (
 		<div { ...blockProps }>
@@ -38,16 +38,16 @@ export default function Edit( { attributes, setAttributes } ) {
 					<TextControl
 						label={ __( 'Endpoint', 'wporg' ) }
 						value={ endpoint }
-						onChange={ handleEndpoint }
+						onChange={ onEndpointChange }
 					/>
 					<NumberControl
 						label={ __( 'Items To Show', 'wporg' ) }
-						onChange={ handleItems }
-						value={ itemsToShow }
+						onChange={ onPerPageChange }
+						value={ perPage }
 					/>
 				</PanelBody>
 			</InspectorControls>
-			<Block endpoint={ endpoint } itemsToShow={ itemsToShow } />
+			<Block endpoint={ endpoint } perPage={ perPage } />
 		</div>
 	);
 }

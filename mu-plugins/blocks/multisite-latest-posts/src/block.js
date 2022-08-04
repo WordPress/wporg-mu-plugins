@@ -17,7 +17,7 @@ const getCategory = ( embed, id ) => {
 	}
 };
 
-const Block = ( { endpoint, itemsToShow } ) => {
+const Block = ( { endpoint, perPage } ) => {
 	const [ posts, setPosts ] = useState( [] );
 	const [ error, setError ] = useState();
 	const [ loading, setLoading ] = useState( false );
@@ -25,7 +25,7 @@ const Block = ( { endpoint, itemsToShow } ) => {
 	const getPosts = async () => {
 		setLoading( true );
 		try {
-			const response = await fetch( `${ endpoint }/posts?per_page=${ itemsToShow }&_embed=true` );
+			const response = await fetch( `${ endpoint }/posts?per_page=${ perPage }&_embed=true` );
 
 			if ( response.ok ) {
 				const result = await response.json();

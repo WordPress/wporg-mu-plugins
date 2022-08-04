@@ -16,7 +16,7 @@
 			"type": "string",
 			"default": "https://wordpress.org/news/wp-json/wp/v2"
 		},
-		"itemsToShow": {
+		"perPage": {
 			"type": "integer",
 			"default": 3
 		}
