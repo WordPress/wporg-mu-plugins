@@ -9,7 +9,7 @@ import { render } from '@wordpress/element';
 import Block from './block.js';
 
 const init = () => {
-	const blockElements = document.querySelectorAll( '.wporg-multisite-latest-posts-js' );
+	const blockElements = document.querySelectorAll( '.wp-block-wporg-multisite-latest-posts' );
 
 	if ( ! blockElements ) {
 		return;
