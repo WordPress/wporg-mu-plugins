@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-import { createElement, render } from '@wordpress/element';
+import { render } from '@wordpress/element';
 
 /**
  * Internal dependencies
@@ -18,7 +18,7 @@ const init = () => {
 	for ( let i = 0; i < blockElements.length; i++ ) {
 		const blockEl = blockElements[ i ];
 
-		render( createElement( Block, blockEl.dataset ), blockEl );
+		render( <Block { ...blockEl.dataset } />, blockEl );
 	}
 };
 
