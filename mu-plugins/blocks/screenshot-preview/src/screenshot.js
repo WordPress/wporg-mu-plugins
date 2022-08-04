@@ -4,7 +4,6 @@
  */
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from '@wordpress/element';
-import { Spinner } from '@wordpress/components';
 
 /**
  * Module constants
@@ -105,15 +104,11 @@ function ScreenShotImg( { src, isReady = false } ) {
 	}
 
 	if ( isLoading ) {
-		return (
-			<div className="wporg-screenshot">
-				<Spinner />
-			</div>
-		);
+		return <div className="wporg-screenshot wporg-screenshot__loading">{ __( 'Loading …', 'wporg' ) }</div>;
 	}
 
 	if ( hasError || hasAborted ) {
-		return <div className="wporg-screenshot wporg-screenshot--has-error">{ __( 'error', 'wporg' ) }</div>;
+		return <div className="wporg-screenshot wporg-screenshot__has-error">{ __( 'error', 'wporg' ) }</div>;
 	}
 
 	return <img src={ base64Img } alt="" />;
