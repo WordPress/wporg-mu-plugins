@@ -8,9 +8,6 @@
 
 namespace WordPressdotorg\MU_Plugins\Multisite_Latest_Posts;
 
-add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\register_assets', 20 );
-add_action( 'init', __NAMESPACE__ . '\multisite_latest_posts_block_init' );
-
 /**
  * Renders the `wporg/mulsite-latest-posts` block on the server.
  *
@@ -20,7 +17,9 @@ add_action( 'init', __NAMESPACE__ . '\multisite_latest_posts_block_init' );
  *
  * @return string Returns the event year for the current post.
  */
-function render_block( $attributes ) {
+function render_block(  $attributes, $content, $block ) {
+	wp_enqueue_script( $block->block_type->view_script );
+
 	return sprintf(
 		'<div 
 			class="wporg-multisite-latest-posts-js"
@@ -30,39 +29,6 @@ function render_block( $attributes ) {
 		esc_attr( $attributes['endpoint'] ),		
 		esc_attr( $attributes['itemsToShow'] )
 	);
-}
-
-
-/**
- * Register scripts, styles, and block.
- */
-function register_assets() {
-	$deps_path = __DIR__ . '/build/index.asset.php';
-	
-	if ( ! file_exists( $deps_path ) ) {
-		return;
-	}
-
-	$block_info = require $deps_path;
-
-	if ( ! is_admin() ) {
-		wp_enqueue_script(
-			'wporg-multisite-latest-post',
-			plugin_dir_url( __FILE__ ) . 'build/front.js',
-			$block_info['dependencies'],
-			$block_info['version'],
-			true
-		);
-
-		wp_enqueue_style(
-			'wporg-multisite-latest-post-style',
-			plugin_dir_url( __FILE__ ) . '/build/style.css',
-			array(),
-			filemtime( __DIR__ . '/build/style.css' )
-		);
-
-		wp_style_add_data( 'wporg-multisite-latest-post-style', 'rtl', 'replace' ); 
-	}
 }
 
 /**
@@ -80,4 +46,4 @@ function multisite_latest_posts_block_init() {
 		)
 	);
 }
-
+add_action( 'init', __NAMESPACE__ . '\multisite_latest_posts_block_init' );

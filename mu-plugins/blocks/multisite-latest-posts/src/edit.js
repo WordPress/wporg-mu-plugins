@@ -10,6 +10,11 @@ import {
 import { __ } from '@wordpress/i18n';
 
 /**
+ * Internal Dependencies
+ */
+import Block from './block.js';
+
+/**
  * Renders controls and a preview of this dynamic block.
  *
  * @param {Object}   props
@@ -42,7 +47,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 				</PanelBody>
 			</InspectorControls>
-			<div>A list of posts will render on the front end.</div>
+			<Block endpoint={ endpoint } itemsToShow={ itemsToShow } />
 		</div>
 	);
 }
