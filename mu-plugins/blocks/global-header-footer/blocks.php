@@ -255,7 +255,7 @@ function rest_render_global_header( $request ) {
 		return true;
 	}, 10, 2 );
 
-	return render_global_header();
+	return do_blocks( '<!-- wp:wporg/global-header /-->' );
 }
 
 /**
@@ -684,7 +684,7 @@ function rest_render_global_footer( $request ) {
 	 * Render the header but discard the markup, so that any header styles/scripts
 	 * required are then available for output in the footer.
 	 */
-	render_global_header();
+	do_blocks( '<!-- wp:wporg/global-header /-->' );
 
 	// Serve the request as HTML
 	add_filter( 'rest_pre_serve_request', function( $served, $result ) {
@@ -696,7 +696,7 @@ function rest_render_global_footer( $request ) {
 		return true;
 	}, 10, 2 );
 
-	return render_global_footer();
+	return do_blocks( '<!-- wp:wporg/global-footer /-->' );
 }
 
 /**
