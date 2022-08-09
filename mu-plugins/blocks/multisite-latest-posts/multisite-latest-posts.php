@@ -17,5 +17,8 @@ namespace WordPressdotorg\MU_Plugins\Multisite_Latest_Posts;
  */
 function multisite_latest_posts_block_init() {
 	register_block_type( __DIR__ . '/build' );
+
+	// Move the view script to the "footer" group so it prints at the end of the page.
+	wp_script_add_data( 'wporg-multisite-latest-posts-view-script', 'group', 1 );
 }
 add_action( 'init', __NAMESPACE__ . '\multisite_latest_posts_block_init' );
