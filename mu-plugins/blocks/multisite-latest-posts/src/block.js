@@ -5,6 +5,8 @@ import { Fragment, useEffect, useState } from '@wordpress/element';
 import { gmdate, gmdateI18n } from '@wordpress/date';
 import { __ } from '@wordpress/i18n';
 
+/* global DOMParser */
+
 const getCategory = ( embed, id ) => {
 	if ( ! embed[ 'wp:term' ] ) {
 		return;
@@ -53,13 +55,27 @@ const Block = ( { endpoint, perPage } ) => {
 		return <div>{ error }</div>;
 	}
 
+	let domParser;
+	if ( 'function' === typeof DOMParser ) {
+		domParser = new DOMParser();
+	}
+
 	return (
 		<ul className="wporg-multisite-latest-posts">
 			{ posts.map( ( i ) => {
+				let title;
 				const category = getCategory( i._embedded, i.categories[ 0 ] );
+
+				// Decode HTML entities that appear in titles in a way that is safe against XSS.
+				if ( 'object' === typeof domParser ) {
+					title = domParser.parseFromString( i.title.rendered, 'text/html' ).documentElement.textContent;
+				} else {
+					title = i.title.rendered;
+				}
+
 				return (
 					<li key={ i.id }>
-						<a href={ i.link }>{ i.title.rendered }</a>
+						<a href={ i.link }>{ title }</a>
 						<div className="wporg-multisite-latest-posts-details">
 							{ category && (
 								<Fragment>
