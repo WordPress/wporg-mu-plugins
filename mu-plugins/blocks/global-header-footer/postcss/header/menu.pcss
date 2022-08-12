@@ -21,6 +21,10 @@
 		@media (--tablet) {
 			display: none;
 		}
+
+		&:hover {
+			background-color: var(--wp-global-header--background-color--hover);
+		}
 	}
 
 	& .wp-block-navigation__responsive-container {
@@ -70,7 +74,7 @@
 				border-bottom: var(--active-menu-item-border-height) solid transparent;
 			}
 
-			&.current-menu-item {
+			&.current-menu-item:not(.global-header__get-wordpress) {
 				border-left: var(--active-menu-item-border-height) solid var(--wp-global-header--link-color--active);
 
 				@media (--tablet) {
