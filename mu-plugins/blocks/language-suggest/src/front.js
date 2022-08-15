@@ -5,10 +5,7 @@ const init = () => {
 		return;
 	}
 
-	// Construct the URL without protocol
-	const path = window.location.host + window.location.pathname;
-
-	fetch( `/lang-guess/lang-guess-ajax.php?uri=${ encodeURIComponent( path ) }` )
+	fetch( `https://wordpress.org/lang-guess/lang-guess-ajax.php?uri=${ encodeURIComponent( window.location.pathname ) }` )
 		.then( ( response ) => {
 			if ( ! response.ok ) {
 				throw Error( response.statusText );
