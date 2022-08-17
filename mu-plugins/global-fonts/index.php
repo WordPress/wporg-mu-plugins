@@ -8,6 +8,7 @@ namespace WordPressdotorg\MU_Plugins\Global_Fonts;
 
 add_filter( 'init', __NAMESPACE__ . '\register_style', 1 );
 add_filter( 'block_editor_settings_all', __NAMESPACE__ . '\relative_to_absolute_urls' );
+add_filter( 'wp_preload_resources', __NAMESPACE__ . '\maybe_preload_font' );
 
 /**
  * Register stylesheet with font-family declarations.
@@ -45,4 +46,61 @@ function relative_to_absolute_urls( $editor_settings ) {
 	}
 
 	return $editor_settings;
+}
+
+/**
+ * Add any fonts specified for preloading to the WordPress preload stack.
+ */
+function maybe_preload_font( $preload ) {
+	$style = wp_styles()->query( 'wporg-global-fonts' );
+
+	if ( ! $style || empty( $style->extra['preload'] ) ) {
+		return $preload;
+	}
+
+	foreach ( (array) $style->extra['preload'] as $font_face ) {
+		$font = get_font_details( $font_face );
+		if ( ! $font ) {
+			continue;
+		}
+
+		$preload[] = [
+			'href'        => $font['url'],
+			'as'          => 'font',
+			'crossorigin' => 'crossorigin',
+			'type'        => $font['type'],
+		];
+	}
+
+	return $preload;
+}
+
+/**
+ * Return the details about a specific font face.
+ */
+function get_font_details( $font ) {
+	switch ( $font ) {
+		case 'Inter':
+			return [
+				'url' => plugins_url( 'Inter/Inter.woff2?v=3.19', __FILE__ ),
+				'type' => 'font/woff2'
+			];
+		case 'Inter italic':
+			return [
+				'url' => plugins_url( 'Inter/Inter-Italic.woff2?v=3.19', __FILE__ ),
+				'type' => 'font/woff2'
+			];
+		case 'EB Garamond':
+			return [
+				'url' => plugins_url( 'EB-Garamond/EB-Garamond.woff2?v=0.017', __FILE__ ),
+				'type' => 'font/woff2'
+			];
+		case 'EB Garamond italic':
+			return [
+				'url' => plugins_url( 'EB-Garamond/EB-Garamond-Italic.woff2?v=0.017', __FILE__ ),
+				'type' => 'font/woff2'
+			];
+	}
+
+	return false;
 }
