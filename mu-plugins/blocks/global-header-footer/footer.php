@@ -20,7 +20,6 @@ $container_class = 'global-footer ' . get_container_classes( $color_scheme );
 $code_is_poetry_src = str_contains( $container_class, 'has-charcoal-2-color' ) ?
 	plugins_url( '/images/code-is-poetry-for-light-bg.svg', __FILE__ ) :
 	'https://s.w.org/style/images/code-is-poetry-for-dark-bg.svg';
-
 ?>
 
 
@@ -115,7 +114,7 @@ $code_is_poetry_src = str_contains( $container_class, 'has-charcoal-2-color' ) ?
 
 		<?php else : ?>
 			<!-- Use text so it can be translated. -->
-			<span class="global-footer__code_is_poetry">
+			<span class="global-footer__code_is_poetry <?php echo str_ends_with( $color_scheme , 'white' ) ? 'is-dark' : '' ;?>">
 				<?php echo esc_html( get_cip_text() ); ?>
 			</span>
 
