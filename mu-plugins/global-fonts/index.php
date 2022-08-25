@@ -6,6 +6,9 @@
 
 namespace WordPressdotorg\MU_Plugins\Global_Fonts;
 
+// Include helper functions that exist in global-scope.
+include __DIR__ . '/helper-functions.php';
+
 add_filter( 'init', __NAMESPACE__ . '\register_style', 1 );
 add_filter( 'block_editor_settings_all', __NAMESPACE__ . '\relative_to_absolute_urls' );
 add_filter( 'wp_preload_resources', __NAMESPACE__ . '\maybe_preload_font' );

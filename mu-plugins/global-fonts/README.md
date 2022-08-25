@@ -20,10 +20,10 @@ wp_register_style(
 );
 ```
 
-If you wish to have one (or more) fonts preloaded automatically, you can add the `preload` style data.
+If you wish to have one (or more) fonts preloaded automatically, you can call the global function `global_fonts_preload()`.
 
 For example, to preload Inter in normal and italic:
 
 ```php
-wp_style_add_data( 'wporg-global-fonts', 'preload', [ 'Inter', 'Inter italic' ] );
+global_fonts_preload( [ 'Inter', 'Inter italic' ] );
 ```
