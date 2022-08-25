@@ -84,16 +84,16 @@ function maybe_preload_font( $preload ) {
 	}
 
 	foreach ( (array) $style->extra['preload'] as $font_face ) {
-		$font = get_font_details( $font_face );
-		if ( ! $font ) {
+		$font_url = get_font_url( $font_face );
+		if ( ! $font_url ) {
 			continue;
 		}
 
 		$preload[] = [
-			'href'        => $font['url'],
+			'href'        => $font_url,
 			'as'          => 'font',
 			'crossorigin' => 'crossorigin',
-			'type'        => $font['type'],
+			'type'        => 'font/woff2',
 		];
 	}
 
@@ -103,28 +103,16 @@ function maybe_preload_font( $preload ) {
 /**
  * Return the details about a specific font face.
  */
-function get_font_details( $font ) {
-	switch ( $font ) {
-		case 'Inter':
-			return [
-				'url' => plugins_url( 'Inter/Inter.woff2?v=3.19', __FILE__ ),
-				'type' => 'font/woff2'
-			];
-		case 'Inter italic':
-			return [
-				'url' => plugins_url( 'Inter/Inter-Italic.woff2?v=3.19', __FILE__ ),
-				'type' => 'font/woff2'
-			];
-		case 'EB Garamond':
-			return [
-				'url' => plugins_url( 'EB-Garamond/EB-Garamond.woff2?v=0.017', __FILE__ ),
-				'type' => 'font/woff2'
-			];
-		case 'EB Garamond italic':
-			return [
-				'url' => plugins_url( 'EB-Garamond/EB-Garamond-Italic.woff2?v=0.017', __FILE__ ),
-				'type' => 'font/woff2'
-			];
+function get_font_url( $font ) {
+	switch ( strtolower( $font ) ) {
+		case 'inter':
+			return plugins_url( 'Inter/Inter.woff2?v=3.19', __FILE__ );
+		case 'inter italic':
+			return plugins_url( 'Inter/Inter-Italic.woff2?v=3.19', __FILE__ );
+		case 'eb garamond':
+			return plugins_url( 'EB-Garamond/EB-Garamond.woff2?v=0.017', __FILE__ );
+		case 'eb garamond italic':
+			return plugins_url( 'EB-Garamond/EB-Garamond-Italic.woff2?v=0.017', __FILE__ );
 	}
 
 	return false;
