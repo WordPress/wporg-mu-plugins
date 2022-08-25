@@ -20,6 +20,7 @@ $container_class = 'global-footer ' . get_container_classes( $color_scheme );
 $code_is_poetry_src = str_contains( $container_class, 'has-charcoal-2-color' ) ?
 	plugins_url( '/images/code-is-poetry-for-light-bg.svg', __FILE__ ) :
 	'https://s.w.org/style/images/code-is-poetry-for-dark-bg.svg';
+
 ?>
 
 
