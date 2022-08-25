@@ -49,6 +49,31 @@ function relative_to_absolute_urls( $editor_settings ) {
 }
 
 /**
+ * Specify a font to be preloaded.
+ *
+ * @param array|string $font_faces The font(s) to preload.
+ * @return bool If the font will be preloaded.
+ */
+function preload_font( $font_faces ) {
+	$style = wp_styles()->query( 'wporg-global-fonts' );
+	if ( ! $style ) {
+		return false;
+	}
+
+	if ( ! is_array( $font_faces ) ) {
+		$font_faces = [ $font_faces ];
+	}
+
+	$preload = $style->extra['preload'] ?? [];
+	$preload = array_merge( $preload, $font_faces );
+	$preload = array_unique( $preload );
+
+	wp_style_add_data( 'wporg-global-fonts', 'preload', $preload );
+
+	return true;
+}
+
+/**
  * Add any fonts specified for preloading to the WordPress preload stack.
  */
 function maybe_preload_font( $preload ) {
