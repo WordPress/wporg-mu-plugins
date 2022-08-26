@@ -115,7 +115,7 @@ $code_is_poetry_src = str_contains( $container_class, 'has-charcoal-2-color' ) ?
 
 		<?php else : ?>
 			<!-- Use text so it can be translated. -->
-			<span class="global-footer__code_is_poetry <?php echo str_ends_with( $color_scheme , 'white' ) ? 'is-dark' : '' ;?>">
+			<span class="global-footer__code_is_poetry">
 				<?php echo esc_html( get_cip_text() ); ?>
 			</span>
 
