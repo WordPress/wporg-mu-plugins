@@ -2,6 +2,7 @@
 	"name": "wporg-mu-plugins",
 	"version": "0.0.1",
 	"description": "Over time, this is intended to become the canonical source repository for all `mu-plugins` on the WordPress.org network. At the moment, it only includes a few.",
+	"type": "module",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/WordPress/wporg-mu-plugins.git"
@@ -34,6 +35,7 @@
 	],
 	"scripts": {
 		"build": "NODE_ENV=production ./bin/build.js",
+		"font-subset": "./bin/font-subset.js",
 		"prestart": "./bin/build.js",
 		"start": "NODE_ENV=development ./bin/watch.js",
 		"lint:css": "wp-scripts lint-style **/*.pcss",
