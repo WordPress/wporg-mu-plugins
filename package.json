@@ -2,7 +2,6 @@
 	"name": "wporg-mu-plugins",
 	"version": "0.0.1",
 	"description": "Over time, this is intended to become the canonical source repository for all `mu-plugins` on the WordPress.org network. At the moment, it only includes a few.",
-	"type": "module",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/WordPress/wporg-mu-plugins.git"

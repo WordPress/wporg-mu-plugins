@@ -2,14 +2,16 @@
 /* eslint-disable no-console */
 /**
  * Prerequisite:
- * Install glyphhanger - https://github.com/zachleat/glyphhanger
+ * 1. Install glyphhanger - https://github.com/zachleat/glyphhanger
  * Usage:
- * 1. mkdir output fonts.
- * 2. Put all font files into /fonts and change the file name if it's hard to read.
- * 3. Change the fontFileName, fontWeight and fontFamily etc. accroding to the font you use in this script.
- * 4. npm run font-subset.
- * 5. Copy subsetting files and css styles to where they should be placed.
- * 6. remove output and fonts.
+ * 1. Add {"type": "module"} to package.json.
+ * 2. mkdir output fonts.
+ * 3. Put all font files into /fonts and change the file name if it's hard to read.
+ * 4. Change the fontFileName, fontWeight and fontFamily etc. accroding to the font you use in this script.
+ * 5. npm run font-subset.
+ * 6. Copy subsetting files and css styles to where they should be placed.
+ * 7. remove output and fonts.
+ * 8. Remove {"type": "module"} from package.json or the linter would prompt an error.
  */
 import { spawn } from 'child_process';
 import path from 'path';
