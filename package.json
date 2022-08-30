@@ -34,6 +34,7 @@
 	],
 	"scripts": {
 		"build": "NODE_ENV=production ./bin/build.js",
+		"font-subset": "./bin/font-subset.js",
 		"prestart": "./bin/build.js",
 		"start": "NODE_ENV=development ./bin/watch.js",
 		"lint:css": "wp-scripts lint-style **/*.pcss",
