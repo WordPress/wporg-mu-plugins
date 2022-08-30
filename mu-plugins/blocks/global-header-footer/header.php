@@ -76,18 +76,11 @@ function recursive_menu( $menu_item, $top_level = true ) {
 <!-- wp:group {"tagName":"header","align":"full","className":"<?php echo esc_attr( $container_class ); ?>"} -->
 <header class="wp-block-group alignfull <?php echo esc_attr( $container_class ); ?>">
 	<!-- wp:html -->
-	<!-- The design calls for two logos, a small "mark" on mobile/tablet, and the full logo for desktops. -->
-		<figure class="wp-block-image global-header__wporg-logo-mark">
-			<a href="<?php echo esc_url( get_home_url() ); ?>">
-				<?php require __DIR__ . '/images/w-mark.svg'; ?>
-			</a>
-		</figure>
-
-		<figure class="wp-block-image global-header__wporg-logo-full">
-			<a href="<?php echo esc_url( get_home_url() ); ?>">
-				<?php require __DIR__ . '/images/wporg-logo.svg'; ?>
-			</a>
-		</figure>
+	<figure class="wp-block-image global-header__wporg-logo-mark">
+		<a href="<?php echo esc_url( get_home_url() ); ?>">
+			<?php require __DIR__ . '/images/w-mark.svg'; ?>
+		</a>
+	</figure>
 	<!-- /wp:html -->
 
 	<?php if ( ! empty( $locale_title ) ) : ?>
