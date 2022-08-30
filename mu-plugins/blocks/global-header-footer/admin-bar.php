@@ -67,6 +67,8 @@ function filter_admin_bar_links( $wp_admin_bar ) {
 				$ab_item->parent = 'edit-actions';
 				$wp_admin_bar->remove_node( $ab_item->id );
 				$edit_items[] = $ab_item;
+			} else if ( preg_match( '/blog-\d+/', $ab_item->parent ) ) {
+				$wp_admin_bar->remove_node( $ab_item->id );
 			}
 		}
 
