@@ -17,7 +17,6 @@ add_filter( 'show_admin_bar', __NAMESPACE__ . '\should_show_admin_bar' );
  * @return bool
  */
 function should_show_admin_bar( $show_admin_bar ) {
-	// @todo Don't enable on the login page.
 	return true;
 }
 
