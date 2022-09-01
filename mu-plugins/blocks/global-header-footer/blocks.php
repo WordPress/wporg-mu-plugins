@@ -6,6 +6,8 @@ use Rosetta_Sites, WP_Post, WP_REST_Server, WP_Theme_JSON_Resolver;
 
 defined( 'WPINC' ) || die();
 
+require_once __DIR__ . '/admin-bar.php';
+
 add_action( 'init', __NAMESPACE__ . '\register_block_types' );
 add_action( 'admin_bar_init', __NAMESPACE__ . '\remove_admin_bar_callback', 15 );
 add_action( 'rest_api_init', __NAMESPACE__ . '\register_routes' );
