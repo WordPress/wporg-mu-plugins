@@ -876,17 +876,12 @@ function set_current_item_class( $menu_items ) {
  * @return string
  */
 function get_menu_url_for_current_page( $menu_items ) {
-	$host    = strtolower( $_SERVER['HTTP_HOST'] );
-	$uri     = strtolower( $_SERVER['REQUEST_URI'] );
+	$host    = strtolower( $_SERVER['HTTP_HOST'] ); // phpcs:ignore
+	$uri     = strtolower( $_SERVER['REQUEST_URI'] ); // phpcs:ignore
 	$compare = "https://{$host}{$uri}";
 
 	if ( 'translate.wordpress.org' === $host ) {
 		return 'https://make.wordpress.org/';
-	}
-
-	if ( 'developer.wordpress.org' === $host ) {
-		// DevHub doesn't exist within the menu.
-		return '';
 	}
 
 	// Is it the Global Search?
@@ -895,8 +890,7 @@ function get_menu_url_for_current_page( $menu_items ) {
 			if ( 'support_docs' === $_GET['in'] ) {
 				return 'https://wordpress.org/support/';
 			} elseif ( 'developer_documentation' === $_GET['in'] ) {
-				// DevHub doesn't exist within the menu.
-				return '';
+				return 'https://developer.wordpress.org/';
 			}
 		}
 
@@ -932,9 +926,12 @@ function get_menu_url_for_current_page( $menu_items ) {
 	);
 
 	// Sort long to short, we need the deepest path to match.
-	usort( $urls, function( $a, $b ) {
-		return strlen( $b ) - strlen( $a );
-	} );
+	usort(
+		$urls,
+		function( $a, $b ) {
+			return strlen( $b ) - strlen( $a );
+		}
+	);
 
 	foreach ( $urls as $url ) {
 		if ( str_starts_with( $compare, $url ) ) {
@@ -942,7 +939,7 @@ function get_menu_url_for_current_page( $menu_items ) {
 		}
 	}
 
-	return home_url('/');
+	return home_url( '/' );
 }
 
 /**
