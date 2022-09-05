@@ -11,7 +11,6 @@
 		padding: 10px 19px;
 		border-radius: 2px;
 		font-weight: 700;
-		border: 1px dashed transparent;
 
 		&:hover {
 			cursor: pointer;
@@ -24,8 +23,10 @@
 		}
 
 		&:focus,
+		&:focus-visible,
 		&:focus-within {
-			border-color: var(--wp--preset--color--white);
+			outline: 1px dashed currentcolor;
+			outline-offset: -2px;
 		}
 	}
 
@@ -68,8 +69,10 @@
 
 			&:hover,
 			&:focus,
-			&:focus-within {
+			&:focus-visible {
 				background-color: unset;
+				text-decoration: none;
+				outline: none;
 			}
 		}
 	}

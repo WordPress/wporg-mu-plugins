@@ -28,8 +28,9 @@
 			background-position: center;
 		}
 
-		&:focus {
-			outline: 1px dotted currentcolor;
+		&:focus-visible {
+			outline: 1px dashed currentcolor;
+			outline-offset: -2px;
 		}
 	}
 
@@ -46,7 +47,8 @@
 			background-position: center;
 		}
 
-		&:hover {
+		&:hover,
+		&:focus {
 			background-color: var(--wp-global-header--background-color--hover);
 		}
 
@@ -119,10 +121,6 @@
 				color: #6a6a6a;
 				opacity: 1;
 			}
-
-			&:focus {
-				outline: revert;
-			}
 		}
 
 		& .wp-block-search__button {
@@ -141,10 +139,6 @@
 					min-width: 20px;
 					width: 20px;
 				}
-			}
-
-			&:focus {
-				outline: revert;
 			}
 		}
 	}

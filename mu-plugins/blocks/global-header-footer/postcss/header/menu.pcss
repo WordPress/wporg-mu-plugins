@@ -17,13 +17,27 @@
 
 	& .wp-block-navigation__responsive-container-open {
 		display: flex; /* Gutenberg has the button hardcoded to hide at 600px, but we need it to wait until `--tablet`. */
+		padding-right: calc(var(--wp--style--block-gap) + var(--wp--custom--alignment--scroll-bar-width));
 
 		@media (--tablet) {
 			display: none;
 		}
 
-		&:hover {
+		&:hover,
+		&:focus {
 			background-color: var(--wp-global-header--background-color--hover);
+		}
+
+		&:focus-visible {
+			outline: 1px dashed currentcolor;
+			outline-offset: -2px;
+		}
+	}
+
+	& .wp-block-navigation__responsive-container-close {
+		&:focus-visible {
+			outline: 1px dashed currentcolor;
+			outline-offset: -2px;
 		}
 	}
 
@@ -107,15 +121,20 @@
 		}
 
 		& .wp-block-navigation-item a,
-		& .global-header__overflow-menu > button {
+		& .wp-block-navigation-submenu__toggle {
 			padding-left: var(--wp--style--block-gap);
 			padding-top: calc(var(--wp--style--block-gap) / 2);
 			padding-bottom: calc(var(--wp--style--block-gap) / 2);
 			padding-right: var(--wp--style--block-gap);
 
 			&:hover,
-			&:focus-within {
+			&:focus {
 				background-color: var(--wp-global-header--background-color--hover);
+			}
+
+			&:focus-visible {
+				outline: 1px dashed currentcolor;
+				outline-offset: -2px;
 			}
 
 			@media (--tablet) {
@@ -128,6 +147,17 @@
 			@media (--short-screen) {
 				padding-bottom: calc(18px - var(--active-menu-item-border-height, 0px));
 				padding-top: 18px;
+			}
+		}
+
+		& .wp-block-navigation-submenu__toggle {
+
+			@media (--tablet) {
+				padding-left: calc(var(--wp--style--block-gap) / 2);
+				padding-right: calc(var(--wp--style--block-gap) / 2);
+				height: auto;
+				width: auto;
+				line-height: inherit;
 			}
 		}
 
@@ -176,9 +206,6 @@
 				margin: 0;
 				padding-left: var(--wp--style--block-gap);
 				padding-right: var(--wp--style--block-gap);
-				height: auto;
-				width: auto;
-				line-height: inherit;
 			}
 		}
 
