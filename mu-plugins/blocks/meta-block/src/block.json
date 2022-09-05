@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "wporg/meta-block",
+	"version": "0.1.0",
+	"title": "Meta Block",
+	"category": "design",
+	"icon": "networking",
+	"description": "A server-side dynamic block to set meta fields for SEO.",
+	"textdomain": "wporg",
+	"attributes": {
+		"description": {
+			"type": "string"
+		}
+	},
+	"supports": {
+		"html": false,
+		"multiple": false
+	},
+	"editorScript": "file:./index.js"
+}
