@@ -15,10 +15,10 @@ function should_switch_to_blog() {
 function render_block( $attributes ) {
 
 	if(  should_switch_to_blog() ) {
-		switch_to_blog( 8 );
+		switch_to_blog( $attributes['blogId'] );
 	}
 
-	$posts = get_transient( __NAMESPACE__.'m' );
+	$posts = get_transient( __NAMESPACE__ );
 	if ( ! $posts ) {
 		$posts = wp_get_recent_posts(
 			array(
@@ -28,7 +28,7 @@ function render_block( $attributes ) {
 		);
 
 		// Set Cache
-		set_transient( __NAMESPACE__.'m', $posts, HOUR_IN_SECONDS );
+		set_transient( __NAMESPACE__, $posts, HOUR_IN_SECONDS );
 	}
 
 	if ( is_wp_error( $posts ) ) {
