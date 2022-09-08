@@ -1,12 +1,12 @@
 <?php
 /**
- * Plugin Name: Multisite Latest Posts
+ * Block Name: Latest News
  * Description: A block for use across the whole wp.org network.
  *
  * @package wporg
  */
 
-namespace WordPressdotorg\MU_Plugins\Multisite_Latest_Posts;
+namespace WordPressdotorg\MU_Plugins\Latest_News;
 
 /**
  * Determines whether we can switch blogs.
@@ -18,39 +18,49 @@ function should_switch_to_blog() {
 }
 
 /**
- * Renders the `wporg/multisite-latest-posts` block on server.
+ * Renders the `wporg/latest-news` block on server.
  *
  * @param array $attributes The block attributes.
  *
  * @return string Returns the block content with received post items.
  */
 function render_block( $attributes ) {
+	$defaults = array(
+		'perPage' => 3,
+	);
+	$attributes = wp_parse_args( $attributes, $defaults );
+	$blog_switched = false;
 
-	// We allow the block to render even if we can't blog switch in case we're working locally.
-	if ( should_switch_to_blog() ) {
-		switch_to_blog( $attributes['blogId'] );
+	// Check if we can switch to the News blog.
+	// @todo Prevent switch if Rosetta, Rosetta should use local posts.
+	if ( should_switch_to_blog() && defined( 'WPORG_NEWS_BLOGID' ) ) {
+		switch_to_blog( WPORG_NEWS_BLOGID );
+		$blog_switched = true;
 	}
 
-	$posts = get_transient( __NAMESPACE__ );
+	$cache_key = 'wporg-latest-news-' . $attributes['perPage'];
+	$posts = get_transient( $cache_key );
 	if ( ! $posts ) {
 		$posts = wp_get_recent_posts(
 			array(
-				'numberposts' => isset( $attributes['perPage'] ) ? $attributes['perPage'] : 3,
+				'numberposts' => $attributes['perPage'],
 				'post_status' => 'publish',
 			)
 		);
 
+		if ( is_wp_error( $posts ) ) {
+			return $posts->get_error_message();
+		}
+
+		if ( empty( $posts ) ) {
+			return __( 'No posts found.', 'wporg' );
+		}
+
 		// Set Cache
-		set_transient( __NAMESPACE__, $posts, HOUR_IN_SECONDS );
+		set_transient( $cache_key, $posts, HOUR_IN_SECONDS );
 	}
 
-	if ( is_wp_error( $posts ) ) {
-		return $posts->get_error_message();
-	}
-
-	if ( empty( $posts ) ) {
-		return __( 'No posts found.' );
-	}
+	$list_items = '';
 
 	foreach ( $posts as $post ) {
 		$title_element = sprintf(
@@ -65,7 +75,7 @@ function render_block( $attributes ) {
 		if ( ! empty( $category ) ) {
 			if ( isset( $category[0] ) ) {
 				$category_element = sprintf(
-					'<a href="%1$s" class="wporg-multisite-latest-posts-category">%2$s</a>',
+					'<a href="%1$s" class="wporg-latest-news__category">%2$s</a>',
 					esc_html( get_category_link( $category[0]->term_id ) ),
 					esc_html( $category[0]->name )
 				);
@@ -80,7 +90,7 @@ function render_block( $attributes ) {
 		);
 
 		$list_items .= sprintf(
-			'<li>%1$s <div class="wporg-multisite-latest-posts-details">%2$s %3$s %4$s</div></li>',
+			'<li>%1$s <div class="wporg-latest-news__details">%2$s %3$s %4$s</div></li>',
 			$title_element,
 			$category_element,
 			! empty( $category_element ) ? '<span>·</span>' : '',
@@ -88,11 +98,11 @@ function render_block( $attributes ) {
 		);
 	}
 
-	if ( should_switch_to_blog() ) {
+	if ( $blog_switched ) {
 		restore_current_blog();
 	}
 
-	return sprintf( '<ul class="wporg-multisite-latest-posts">%s</ul>', $list_items );
+	return sprintf( '<ul class="wporg-latest-news">%s</ul>', $list_items );
 }
 
 /**
@@ -102,7 +112,7 @@ function render_block( $attributes ) {
  *
  * @see https://developer.wordpress.org/reference/functions/register_block_type/
  */
-function multisite_latest_posts_block_init() {
+function block_init() {
 	register_block_type(
 		__DIR__ . '/build',
 		array(
@@ -110,4 +120,4 @@ function multisite_latest_posts_block_init() {
 		)
 	);
 }
-add_action( 'init', __NAMESPACE__ . '\multisite_latest_posts_block_init' );
+add_action( 'init', __NAMESPACE__ . '\block_init' );

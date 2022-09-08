@@ -1,7 +1,0 @@
-{
-	"name": "wporg-multisite-latest-posts",
-	"version": "0.1.0",
-	"description": "A block for use across the whole wp.org network.",
-	"author": "The WordPress Meta Team",
-	"license": "GPL-2.0-or-later"
-}
