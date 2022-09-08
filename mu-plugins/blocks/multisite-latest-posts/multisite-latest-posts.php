@@ -8,12 +8,25 @@
 
 namespace WordPressdotorg\MU_Plugins\Multisite_Latest_Posts;
 
+/**
+ * Determines whether we can switch blogs.
+ *
+ * @return boolean
+ */
 function should_switch_to_blog() {
 	return function_exists( 'is_multisite' ) && is_multisite();
 }
 
+/**
+ * Renders the `wporg/multisite-latest-posts` block on server.
+ *
+ * @param array $attributes The block attributes.
+ *
+ * @return string Returns the block content with received post items.
+ */
 function render_block( $attributes ) {
 
+	// We allow the block to render even if we can't blog switch in case we're working locally.
 	if(  should_switch_to_blog() ) {
 		switch_to_blog( $attributes['blogId'] );
 	}
@@ -22,7 +35,7 @@ function render_block( $attributes ) {
 	if ( ! $posts ) {
 		$posts = wp_get_recent_posts(
 			array(
-				'numberposts' => $attributes['perPage'],
+				'numberposts' => isset( $attributes['perPage'] ) ? $attributes['perPage'] : 3,
 				'post_status' => 'publish',
 			)
 		);
