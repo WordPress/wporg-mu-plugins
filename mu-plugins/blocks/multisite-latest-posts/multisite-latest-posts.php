@@ -27,7 +27,7 @@ function should_switch_to_blog() {
 function render_block( $attributes ) {
 
 	// We allow the block to render even if we can't blog switch in case we're working locally.
-	if(  should_switch_to_blog() ) {
+	if ( should_switch_to_blog() ) {
 		switch_to_blog( $attributes['blogId'] );
 	}
 
@@ -88,7 +88,7 @@ function render_block( $attributes ) {
 		);
 	}
 
-	if( should_switch_to_blog() ) {
+	if ( should_switch_to_blog() ) {
 		restore_current_blog();
 	}
 
