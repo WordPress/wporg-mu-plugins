@@ -39,7 +39,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 				</PanelBody>
 			</InspectorControls>
-			<ServerSideRender block="wporg/multisite-latest-posts" attributes={ attributes } />
+			<ServerSideRender block={ blockProps['data-type'] } attributes={ attributes } />
 		</div>
 	);
 }
