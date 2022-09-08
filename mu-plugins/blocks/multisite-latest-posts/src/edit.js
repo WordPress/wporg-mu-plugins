@@ -7,12 +7,8 @@ import {
 	PanelBody,
 	TextControl,
 } from '@wordpress/components';
+import ServerSideRender from '@wordpress/server-side-render';
 import { __ } from '@wordpress/i18n';
-
-/**
- * Internal Dependencies
- */
-import Block from './block.js';
 
 /**
  * Renders controls and a preview of this dynamic block.
@@ -24,22 +20,18 @@ import Block from './block.js';
  * @return {WPElement} Element to render.
  */
 export default function Edit( { attributes, setAttributes } ) {
-	const { endpoint, perPage } = attributes;
+	const { blogId, perPage } = attributes;
 
 	const blockProps = useBlockProps();
 
-	const onEndpointChange = ( value ) => setAttributes( { endpoint: value } );
+	const onBlogIdChange = ( value ) => setAttributes( { blogId: value } );
 	const onPerPageChange = ( value ) => setAttributes( { perPage: value * 1 } );
 
 	return (
 		<div { ...blockProps }>
 			<InspectorControls>
 				<PanelBody title={ __( 'Settings', 'wporg' ) }>
-					<TextControl
-						label={ __( 'Endpoint', 'wporg' ) }
-						value={ endpoint }
-						onChange={ onEndpointChange }
-					/>
+					<TextControl label={ __( 'Blog Id', 'wporg' ) } value={ blogId } onChange={ onBlogIdChange } />
 					<NumberControl
 						label={ __( 'Items To Show', 'wporg' ) }
 						onChange={ onPerPageChange }
@@ -47,7 +39,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 				</PanelBody>
 			</InspectorControls>
-			<Block endpoint={ endpoint } perPage={ perPage } />
+			<ServerSideRender block="wporg/multisite-latest-posts" attributes={ attributes } />
 		</div>
 	);
 }
