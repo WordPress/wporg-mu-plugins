@@ -1,18 +1,14 @@
 /**
  * WordPress dependencies
  */
+import { __ } from '@wordpress/i18n';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import {
-	__experimentalNumberControl as NumberControl, // eslint-disable-line
+	Disabled,
+	__experimentalNumberControl as NumberControl, // eslint-disable-line @wordpress/no-unsafe-wp-apis
 	PanelBody,
-	TextControl,
 } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
-
-/**
- * Internal Dependencies
- */
-import Block from './block.js';
+import ServerSideRender from '@wordpress/server-side-render';
 
 /**
  * Renders controls and a preview of this dynamic block.
@@ -20,26 +16,19 @@ import Block from './block.js';
  * @param {Object}   props
  * @param {Object}   props.attributes
  * @param {Function} props.setAttributes
+ * @param {string}   props.name
  *
  * @return {WPElement} Element to render.
  */
-export default function Edit( { attributes, setAttributes } ) {
-	const { endpoint, perPage } = attributes;
+export default function Edit( { attributes, setAttributes, name } ) {
+	const { perPage } = attributes;
 
-	const blockProps = useBlockProps();
-
-	const onEndpointChange = ( value ) => setAttributes( { endpoint: value } );
 	const onPerPageChange = ( value ) => setAttributes( { perPage: value * 1 } );
 
 	return (
-		<div { ...blockProps }>
+		<div { ...useBlockProps() }>
 			<InspectorControls>
 				<PanelBody title={ __( 'Settings', 'wporg' ) }>
-					<TextControl
-						label={ __( 'Endpoint', 'wporg' ) }
-						value={ endpoint }
-						onChange={ onEndpointChange }
-					/>
 					<NumberControl
 						label={ __( 'Items To Show', 'wporg' ) }
 						onChange={ onPerPageChange }
@@ -47,7 +36,9 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 				</PanelBody>
 			</InspectorControls>
-			<Block endpoint={ endpoint } perPage={ perPage } />
+			<Disabled>
+				<ServerSideRender block={ name } attributes={ attributes } />
+			</Disabled>
 		</div>
 	);
 }
