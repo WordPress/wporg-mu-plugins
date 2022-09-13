@@ -405,6 +405,11 @@ function get_global_menu_items() {
 			'type'    => 'custom',
 			'submenu' => array(
 				array(
+					'title' => esc_html_x( 'Get WordPress', 'Menu item title', 'wporg' ),
+					'url'   => 'https://wordpress.org/download/',
+					'type'  => 'custom',
+				),
+				array(
 					'title' => esc_html_x( 'Themes', 'Menu item title', 'wporg' ),
 					'url'   => 'https://wordpress.org/themes/',
 					'type'  => 'custom',
@@ -442,6 +447,11 @@ function get_global_menu_items() {
 			'type'    => 'custom',
 			'submenu' => array(
 				array(
+					'title' => esc_html_x( 'Learn WordPress', 'Menu item title', 'wporg' ),
+					'url'   => 'https://learn.wordpress.org/',
+					'type'  => 'custom',
+				),
+				array(
 					'title' => esc_html_x( 'Support', 'Menu item title', 'wporg' ),
 					'url'   => 'https://wordpress.org/support/',
 					'type'  => 'custom',
@@ -468,6 +478,11 @@ function get_global_menu_items() {
 			'url'     => 'https://make.wordpress.org/',
 			'type'    => 'custom',
 			'submenu' => array(
+				array(
+					'title' => esc_html_x( 'Make WordPress', 'Menu item title', 'wporg' ),
+					'url'   => 'https://make.wordpress.org/',
+					'type'  => 'custom',
+				),
 				array(
 					'title' => esc_html_x( 'WordCamp', 'Menu item title', 'wporg' ),
 					'url'   => 'https://central.wordcamp.org/',
@@ -500,6 +515,11 @@ function get_global_menu_items() {
 			'url'     => 'https://wordpress.org/about/',
 			'type'    => 'custom',
 			'submenu' => array(
+				array(
+					'title' => esc_html_x( 'About WordPress', 'Menu item title', 'wporg' ),
+					'url'   => 'https://wordpress.org/about/',
+					'type'  => 'custom',
+				),
 				array(
 					'title' => esc_html_x( 'Showcase', 'Menu item title', 'wporg' ),
 					'url'   => 'https://wordpress.org/showcase/',
