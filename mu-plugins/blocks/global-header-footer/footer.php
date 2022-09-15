@@ -66,7 +66,7 @@ $code_is_poetry_src = str_contains( $container_class, 'has-charcoal-2-color' ) ?
 
 	<!-- wp:group {"className":"global-footer__logos-container"} -->
 	<div class="wp-block-group global-footer__logos-container">
-		<!-- wp:group {"layout":{"type":"flex","allowOrientation":false,"justifyContent":"left"}} -->
+		<!-- wp:group {"layout":{"type":"flex","allowOrientation":false,"justifyContent":"left","flexWrap":"nowrap"}} -->
 		<div class="wp-block-group">
 			<!-- wp:html -->
 			<!-- The design calls for two logos, a small "mark" on mobile/tablet, and the full logo for desktops. -->
