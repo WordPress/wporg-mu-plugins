@@ -41,17 +41,21 @@ const alphabets = [
 	{
 		name: 'latin',
 		unicodeRange:
-			'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD',
+			'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2212, U+2215, U+FEFF, U+FFFD',
+	},
+	{
+		name: 'arrows',
+		unicodeRange: 'U+2190-2199',
 	},
 ];
 
 const __dirname = process.cwd();
 const fontFileName = 'Inter';
-const fontFileExt = 'woff2';
+const fontFileExt = 'ttf';
 const fontFamily = 'Inter';
 const fontWeight = '100 900';
 const fontStyle = 'normal';
-const fontDir = 'Inter';
+const fontFinalDir = 'Inter';
 
 for ( const alphabet of alphabets ) {
 	await new Promise( ( resolve ) => {
@@ -92,7 +96,7 @@ alphabets.forEach( ( alphabet ) => {
 		font-weight: ${ fontWeight };
 		font-style: ${ fontStyle };
       	font-display: swap;
-      	src: url(./${ fontDir }/${ fontFileName }-${ alphabet.name }.woff2) format("woff2");
+      	src: url(./${ fontFinalDir }/${ fontFileName }-${ alphabet.name }.woff2) format("woff2");
       	unicode-range: ${ alphabet.unicodeRange };
     }
   `;
