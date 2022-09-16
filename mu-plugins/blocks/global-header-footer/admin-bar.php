@@ -37,7 +37,7 @@ function filter_admin_bar_links( $wp_admin_bar ) {
 
 		// Remove all these items (includes the top-level items from the parent list).
 		$remove_list = array_merge(
-			$parent_remove_list,
+			array_diff( $parent_remove_list, [ 'site-name' ] ),
 			[ 'comments', 'stats', 'search', 'my-sites', 'admin-bar-likes-widget' ]
 		);
 
@@ -82,9 +82,9 @@ function filter_admin_bar_links( $wp_admin_bar ) {
 			$wp_admin_bar->add_node(
 				array(
 					'id' => 'edit-actions',
-					'title' => __( 'Edit', 'wporg' ),
+					'title' => $edit_items[0]->title,
 					'parent' => false,
-					'href' => false,
+					'href' => $edit_items[0]->href,
 				)
 			);
 
