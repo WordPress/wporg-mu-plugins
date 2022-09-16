@@ -91,7 +91,7 @@ function recursive_menu( $menu_item, $top_level = true ) {
 	<!-- /wp:paragraph -->
 	<?php endif; ?>
 
-	<!-- wp:navigation {"orientation":"horizontal","className":"global-header__navigation","overlayMenu":"mobile","openSubmenusOnClick":false} -->
+	<!-- wp:navigation {"className":"global-header__navigation","layout":{"type":"flex","orientation":"horizontal"}} -->
 		<?php
 		/*
 		 * Loop though menu items and create navigation item blocks. Recurses through any submenu items to output dropdowns.
@@ -109,7 +109,7 @@ function recursive_menu( $menu_item, $top_level = true ) {
 		calls for. It also provides a consistent experience with the primary navigation menu, with respect to
 		keyboard navigation, ARIA states, etc. It also saves having to write custom code for all the interactions.
 	-->
-	<!-- wp:navigation {"orientation":"vertical","className":"global-header__search","overlayMenu":"always"} -->
+	<!-- wp:navigation {"className":"global-header__search","layout":{"type":"flex","orientation":"vertical"},"overlayMenu":"always"} -->
 		<!-- wp:search <?php echo wp_json_encode( $search_args ); ?> /-->
 	<!-- /wp:navigation -->
 	<?php endif; ?>

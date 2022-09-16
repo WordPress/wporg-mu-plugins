@@ -41,6 +41,11 @@
 		}
 	}
 
+	/* Remove the max-width, see https://github.com/WordPress/wporg-mu-plugins/issues/274. */
+	& .wp-block-navigation__responsive-close {
+		max-width: revert;
+	}
+
 	& .wp-block-navigation__responsive-container {
 		&:not(.is-menu-open) {
 			display: none; /* Gutenberg has the menu hardcoded to open at 600px, but we need it to wait until `--tablet`. */
@@ -309,7 +314,8 @@
 }
 
 /* Gutenberg bug: Close button is not visible in Safari; override it locally */
-.global-header__navigation .is-menu-open {
+.global-header__navigation .is-menu-open,
+.global-header__search .is-menu-open {
 	overflow: visible;
 
 	& > div {
