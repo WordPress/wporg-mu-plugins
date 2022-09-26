@@ -106,12 +106,16 @@
 
 		& .wp-block-search__input {
 			-webkit-appearance: none; /* Remove duplicate magnifying glass icon on Safari-mobile. */
+			margin: 0;
 			padding: var(--wp--custom--form--padding);
 			box-shadow: none;
 			border: none;
+			font-size: var(--wp--preset--font-size--normal);
+			line-height: 1.5;
 
 			@media (--tablet) {
 				padding: calc(var(--wp--custom--form--padding) * 0.5) var(--wp--custom--form--padding);
+				font-size: var(--wp--preset--font-size--small);
 			}
 
 			&::placeholder {
