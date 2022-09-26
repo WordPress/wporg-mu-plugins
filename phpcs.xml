@@ -1,0 +1,42 @@
+<?xml version="1.0" ?>
+<ruleset name="Project-specific Coding Standards Overrides">
+    <!--
+        Use the WordPress.org Meta Coding Standards for the project (from wporg-repo-tools),
+        but override a few specific rules in a few directories. This will let us keep using phpcs
+        on those directories without flagging known non-issues from generated or forked code.
+    -->
+
+    <!-- Import the shared PHPCS settings. -->
+    <rule ref="./phpcs.xml.dist" />
+
+    <!-- Don't enforce commenting on forked files. -->
+    <rule ref="Squiz.Commenting.ClassComment.WrongStyle">
+        <exclude-pattern>mu-plugins/utilities/block-parser/index.php</exclude-pattern>
+        <exclude-pattern>mu-plugins/utilities/block-parser/parsers/*</exclude-pattern>
+    </rule>
+    <rule ref="Squiz.Commenting.FunctionComment.Missing">
+        <exclude-pattern>mu-plugins/utilities/block-parser/index.php</exclude-pattern>
+        <exclude-pattern>mu-plugins/utilities/block-parser/class-block-parser.php</exclude-pattern>
+        <exclude-pattern>mu-plugins/utilities/block-parser/parsers/*</exclude-pattern>
+    </rule>
+    <rule ref="Squiz.Commenting.FunctionComment.WrongStyle">
+        <exclude-pattern>mu-plugins/utilities/block-parser/index.php</exclude-pattern>
+        <exclude-pattern>mu-plugins/utilities/block-parser/parsers/*</exclude-pattern>
+    </rule>
+
+    <!-- Don't enforce yoda on forked files. -->
+    <rule ref="WordPress.PHP.YodaConditions.NotYoda">
+        <exclude-pattern>mu-plugins/utilities/block-parser/parsers/*</exclude-pattern>
+    </rule>
+
+    <!-- Don't enforce file names on forked files. -->
+    <rule ref="WordPress.Files.FileName">
+        <exclude-pattern>mu-plugins/utilities/block-parser/parsers/*</exclude-pattern>
+    </rule>
+
+    <!-- Don't enforce naming conventions, DomDocument/DOMXPath returns classes that use camelCase. -->
+    <rule ref="WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase">
+        <exclude-pattern>mu-plugins/utilities/block-parser/index.php</exclude-pattern>
+        <exclude-pattern>mu-plugins/utilities/block-parser/parsers/*</exclude-pattern>
+    </rule>
+</ruleset>
