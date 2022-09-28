@@ -38,7 +38,7 @@ function filter_admin_bar_links( $wp_admin_bar ) {
 		// Remove all these items (includes the top-level items from the parent list).
 		$remove_list = array_merge(
 			array_diff( $parent_remove_list, [ 'site-name' ] ),
-			[ 'comments', 'stats', 'search', 'my-sites', 'admin-bar-likes-widget' ]
+			[ 'updates', 'stats', 'search', 'my-sites', 'admin-bar-likes-widget' ]
 		);
 
 		// Empty array so we can reverse it to keep the correct order.
