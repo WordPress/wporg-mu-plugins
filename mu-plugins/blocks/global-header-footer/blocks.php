@@ -351,7 +351,7 @@ function render_global_header( $attributes = array() ) {
 	 * Allow multiple includes to allow for the double `site-header-offset` workaround.
 	 */
 	ob_start();
-	require __DIR__ . '/header.php';
+	require_once __DIR__ . '/header.php';
 	$markup = do_blocks( ob_get_clean() );
 
 	restore_inner_group_container();
@@ -365,7 +365,7 @@ function render_global_header( $attributes = array() ) {
 	 */
 	if ( ! wp_is_block_theme() || $is_rest_request ) {
 		ob_start();
-		require __DIR__ . '/classic-header.php';
+		require_once __DIR__ . '/classic-header.php';
 		$markup = ob_get_clean() . $markup;
 	}
 
