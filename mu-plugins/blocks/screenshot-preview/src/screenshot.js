@@ -42,7 +42,7 @@ function useInterval( callback, delay ) {
  * we need to do some custom handling.
  *
  * @param {Object}  props
- * @param {string}  props.queryString Properties that are passed to mShots.
+ * @param {string}  props.queryString Arguments that are passed to mShots.
  * @param {string}  props.src         The url of the screenshot.
  * @param {boolean} props.isReady     Whether we should start try to show the image.
  *
