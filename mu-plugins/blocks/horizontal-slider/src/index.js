@@ -8,8 +8,8 @@ import { render } from '@wordpress/element';
  */
 import Block from './block';
 
-const init = () => {
-	const blockElements = document.getElementsByClassName( 'wporg-horizontal-slider-js' );
+const init = ( containerClassName = 'wporg-horizontal-slider-js' ) => {
+	const blockElements = document.getElementsByClassName( containerClassName );
 
 	if ( ! blockElements.length ) {
 		return;

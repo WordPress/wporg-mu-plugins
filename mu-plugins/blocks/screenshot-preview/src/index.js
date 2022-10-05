@@ -8,8 +8,8 @@ import { createElement, render } from '@wordpress/element';
  */
 import Block from './block.js';
 
-const init = () => {
-	const blockElements = document.getElementsByClassName( 'wporg-screenshot-preview-js' );
+const init = ( containerClassName = 'wporg-screenshot-preview-js' ) => {
+	const blockElements = document.getElementsByClassName( containerClassName );
 
 	if ( ! blockElements ) {
 		return;

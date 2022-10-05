@@ -7,13 +7,18 @@ import { useEffect, useRef, useState } from '@wordpress/element';
 /**
  * Internal dependencies
  */
-import ScreenshotPreview from '../../screenshot-preview/src/block';
+import ScreenShot from '../../screenshot-preview/src/block';
 import Handle from './handle';
 
 /**
  * Module constants
  */
-const CARD_WIDTH = 124;
+const CARD_WIDTH = 100;
+const CARD_GAP = 12;
+/**
+ * The default number of tiles that are advanced on next arrow click.
+ */
+const SET_WIDTH = CARD_WIDTH * 3;
 
 function Block( { items, title } ) {
 	const outerRef = useRef();
@@ -21,8 +26,8 @@ function Block( { items, title } ) {
 	const [ canPrevious, setCanPrevious ] = useState( false );
 	const [ canNext, setCanNext ] = useState( true );
 
-	const totalContainerWidth = items.length * CARD_WIDTH;
-	const setWidth = CARD_WIDTH * 3;
+	// Calculate to total width of the content
+	const totalContainerWidth = items.length * ( CARD_WIDTH + CARD_GAP ) - CARD_GAP;
 
 	const scrollContainer = ( pos ) => {
 		outerRef.current.scrollTo( {
@@ -35,21 +40,38 @@ function Block( { items, title } ) {
 		if ( ! canPrevious ) {
 			return;
 		}
-		setScrollLeftPos( outerRef.current.scrollLeft - setWidth );
+		setScrollLeftPos( outerRef.current.scrollLeft - SET_WIDTH );
 	};
 
 	const handleNext = () => {
 		if ( ! canNext ) {
 			return;
 		}
-		setScrollLeftPos( outerRef.current.scrollLeft + setWidth );
+		setScrollLeftPos( outerRef.current.scrollLeft + SET_WIDTH );
 	};
 
 	useEffect( () => {
 		scrollContainer( scrollLeftPos );
-		setCanPrevious( scrollLeftPos > 0 );
-		setCanNext( scrollLeftPos < totalContainerWidth );
 	}, [ scrollLeftPos ] );
+
+	useEffect( () => {
+		if ( ! outerRef.current ) {
+			return;
+		}
+
+		const handleScrollEvent = () => {
+			setCanPrevious( outerRef.current.scrollLeft > 0 );
+			setCanNext( totalContainerWidth - outerRef.current.scrollLeft > outerRef.current.offsetWidth );
+		};
+
+		handleScrollEvent();
+
+		outerRef.current.addEventListener( 'scroll', handleScrollEvent );
+
+		return () => {
+			outerRef.current.removeEventListener( 'scroll', handleScrollEvent );
+		};
+	}, [ outerRef ] );
 
 	return (
 		<div>
@@ -58,24 +80,21 @@ function Block( { items, title } ) {
 					<h3 className="horizontal-slider-title">{ title }</h3>
 				</span>
 				<span className="horizontal-slider-controls">
-					<Handle disabled={ ! canPrevious } onClick={ handlePrev }>
-						{ __( 'Previous', 'wporg' ) }
-					</Handle>
-					<Handle disabled={ ! canNext } onClick={ handleNext }>
-						{ __( 'Next', 'wporg' ) }
-					</Handle>
+					<Handle
+						text={ __( 'Previous style variations', 'wporg' ) }
+						disabled={ ! canPrevious }
+						onClick={ handlePrev }
+					/>
+					<Handle
+						text={ __( 'Next style variations', 'wporg' ) }
+						disabled={ ! canNext }
+						onClick={ handleNext }
+					/>
 				</span>
 			</div>
 			<div className="horizontal-slider-wrapper" ref={ outerRef }>
 				{ items.map( ( item ) => (
-					<div
-						key={ item.title }
-						style={ {
-							width: `${ CARD_WIDTH }px`,
-						} }
-					>
-						<ScreenshotPreview { ...item } />
-					</div>
+					<ScreenShot key={ item.title } { ...item } width="100px" isReady={ true } />
 				) ) }
 			</div>
 		</div>

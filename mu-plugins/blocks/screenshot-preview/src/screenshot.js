@@ -42,13 +42,14 @@ function useInterval( callback, delay ) {
  * we need to do some custom handling.
  *
  * @param {Object}  props
- * @param {string}  props.src     The url of the screenshot
- * @param {boolean} props.isReady Whether we should start try to show the image.
+ * @param {string}  props.queryString The url of the screenshot
+ * @param {string}  props.src         The url of the screenshot
+ * @param {boolean} props.isReady     Whether we should start try to show the image.
  *
  * @return {Object} React component
  */
-function ScreenShotImg( { src, isReady = false } ) {
-	const fullUrl = `https://s0.wp.com/mshots/v1/${ encodeURIComponent( src ) }`;
+function ScreenShotImg( { queryString, src, isReady = false } ) {
+	const fullUrl = `https://s0.wp.com/mshots/v1/${ encodeURIComponent( src ) }${ queryString }`;
 
 	const [ attempts, setAttempts ] = useState( 0 );
 	const [ hasLoaded, setHasLoaded ] = useState( false );

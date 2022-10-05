@@ -10,16 +10,28 @@ import getCardFrameHeight from './get-card-frame-height';
 import useInView from './in-view';
 import ScreenShot from './screenshot';
 
-function Block( { link, previewLink, version, caption } ) {
+/**
+ * Module constants
+ */
+
+function Block( {
+	link,
+	previewLink,
+	caption,
+	height = '1px',
+	width = '100%',
+	aspectRatio = 2 / 3,
+	queryString = '?vpw=1200&vph=800',
+} ) {
 	const wrapperRef = useRef();
-	const [ frameHeight, setFrameHeight ] = useState( '1px' );
+	const [ frameHeight, setFrameHeight ] = useState( height );
 	const isVisible = useInView( { element: wrapperRef } );
 	const [ shouldLoad, setShouldLoad ] = useState( false );
 
 	useEffect( () => {
 		const handleOnResize = () => {
 			try {
-				setFrameHeight( getCardFrameHeight( wrapperRef.current.clientWidth ) );
+				setFrameHeight( getCardFrameHeight( wrapperRef.current.clientWidth, aspectRatio ) );
 			} catch ( err ) {}
 		};
 
@@ -28,9 +40,9 @@ function Block( { link, previewLink, version, caption } ) {
 		window.addEventListener( 'resize', handleOnResize );
 
 		return () => {
-			window.addEventListener( 'resize', handleOnResize );
+			window.removeEventListener( 'resize', handleOnResize );
 		};
-	}, [ isVisible ] );
+	}, [ shouldLoad ] );
 
 	useEffect( () => {
 		if ( isVisible ) {
@@ -44,11 +56,12 @@ function Block( { link, previewLink, version, caption } ) {
 			ref={ wrapperRef }
 			style={ {
 				height: frameHeight,
+				width: width,
 			} }
 			href={ link }
 		>
 			{ caption && <span className="screen-reader-text">{ caption }</span> }
-			<ScreenShot src={ `${ previewLink }&version=${ version }` } isReady={ shouldLoad } />
+			<ScreenShot queryString={ queryString } src={ previewLink } isReady={ shouldLoad } />
 		</a>
 	);
 }

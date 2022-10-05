@@ -2,7 +2,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 1rem 0;
+	padding: 0.5rem 0;
 }
 
 .horizontal-slider-title {
@@ -13,7 +13,7 @@
 .horizontal-slider-handle {
 	position: relative;
 	background: transparent;
-	border: 1px solid #ccc;
+	border: 1px solid #d9d9d9;
 	width: 24px;
 	height: 24px;
 }
@@ -32,11 +32,11 @@
 
 .horizontal-slider-handle:first-child {
 	border-right: none;
-	border-radius: 2px 0 0 2px;
+	border-radius: 1px 0 0 1px;
 }
 
 .horizontal-slider-handle:last-child {
-	border-radius: 0 2px 2px 0;
+	border-radius: 0 1px 1px 0;
 }
 
 .horizontal-slider-handle:after {
@@ -62,6 +62,7 @@
 
 .horizontal-slider-handle:disabled {
 	opacity: 0.5;
+	pointer-events: none;
 }
 
 button[disabled]::after {
@@ -73,9 +74,19 @@ button[disabled]::after {
 	scroll-snap-type: inline mandatory;
 	overflow-x: scroll;
 	overscroll-behavior: contain;
+	gap: 12px;
+	padding-bottom: 24px;
+	padding-top: 6px;
+	
+	/* So item focus states are not clipped */
+	margin-left: -4px;
+	margin-right: -4px;
+	padding-left: 4px;
+	padding-right: 4px;
 }
 
-.horizontal-slider-wrapper > * {
-	scroll-snap-align: start;
+.horizontal-slider-wrapper > a {
+	position: relative;
+	scroll-snap-align: center;
 	flex: none;
 }

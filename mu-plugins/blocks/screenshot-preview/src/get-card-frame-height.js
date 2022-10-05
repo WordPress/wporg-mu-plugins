@@ -1,13 +1,9 @@
 /**
- * Module constants
- */
-const ASPECT_RATIO = 2 / 3;
-
-/**
  * Returns the height of the preview window.
  *
- * @param {number} cardWidth The width of the card
+ * @param {number} cardWidth   The width of the card
+ * @param {number} aspectRatio The aspect ration of the card
  */
-export default function getCardFrameHeight( cardWidth ) {
-	return cardWidth * ASPECT_RATIO;
+export default function getCardFrameHeight( cardWidth, aspectRatio ) {
+	return cardWidth * aspectRatio;
 }
