@@ -39,8 +39,8 @@
 	border-radius: 0 1px 1px 0;
 }
 
-.horizontal-slider-handle:after {
-	content: '';
+.horizontal-slider-handle::after {
+	content: "";
 	height: 6px;
 	width: 6px;
 	border-left: 1px solid #000;
@@ -50,13 +50,13 @@
 	top: 8px;
 }
 
-.horizontal-slider-handle:first-child:after {
-	transform: rotate( 45deg );
+.horizontal-slider-handle:first-child::after {
+	transform: rotate(45deg);
 	left: 9px;
 }
 
-.horizontal-slider-handle:last-child:after {
-	transform: rotate( -135deg );
+.horizontal-slider-handle:last-child::after {
+	transform: rotate(-135deg);
 	left: 7px;
 }
 
@@ -77,7 +77,7 @@ button[disabled]::after {
 	gap: 12px;
 	padding-bottom: 24px;
 	padding-top: 6px;
-	
+
 	/* So item focus states are not clipped */
 	margin-left: -4px;
 	margin-right: -4px;
