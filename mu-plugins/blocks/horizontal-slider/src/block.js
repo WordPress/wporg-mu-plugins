@@ -7,8 +7,8 @@ import { useEffect, useRef, useState } from '@wordpress/element';
 /**
  * Internal dependencies
  */
-import ScreenShot from '../../screenshot-preview/src/block';
 import Handle from './handle';
+import ScreenShot from '../../screenshot-preview/src/block';
 
 /**
  * Module constants
