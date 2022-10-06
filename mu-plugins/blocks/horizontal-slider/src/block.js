@@ -29,8 +29,8 @@ const SET_WIDTH = CARD_WIDTH * 3;
 /**
  *
  * @param {Object}       props
- * @param {ScreenShot[]} props.items Url for anchor tag.
- * @param {string}       props.title Url used for the screenshot preview.
+ * @param {ScreenShot[]} props.items List of ScreenShot objects.
+ * @param {string}       props.title Text to be displayed as the title of the slider.
  *
  * @return {Object} React element
  */
