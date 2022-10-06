@@ -11,9 +11,18 @@ import useInView from './in-view';
 import ScreenShot from './screenshot';
 
 /**
- * Module constants
+ *
+ * @param {Object} props
+ * @param {string} props.link        Url for anchor tag.
+ * @param {string} props.previewLink Url used for the screenshot preview.
+ * @param {string} props.caption     Text for screen readers.
+ * @param {string} props.height      Initial height for the preview, include unit.
+ * @param {string} props.width       Desired with of the preview element, include unit.
+ * @param {number} props.aspectRatio Aspect ratio for the preview element.
+ * @param {string} props.queryString Arguments passed to screenshot service.
+ *
+ * @return {Object} React element
  */
-
 function Block( {
 	link,
 	previewLink,

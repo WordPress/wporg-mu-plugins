@@ -20,6 +20,20 @@ const CARD_GAP = 12;
  */
 const SET_WIDTH = CARD_WIDTH * 3;
 
+/**
+ * Properties of the ScreenShot object.
+ *
+ * @typedef {{link: string, previewLink: string, caption: string, title: string}} ScreenShot
+ */
+
+/**
+ *
+ * @param {Object}       props
+ * @param {ScreenShot[]} props.items Url for anchor tag.
+ * @param {string}       props.title Url used for the screenshot preview.
+ *
+ * @return {Object} React element
+ */
 function Block( { items, title } ) {
 	const outerRef = useRef();
 	const [ scrollLeftPos, setScrollLeftPos ] = useState( 0 );
