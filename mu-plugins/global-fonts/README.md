@@ -6,6 +6,7 @@ Sources:
 
 - [Inter](https://github.com/rsms/inter), compressed and subsetted to woff2 with [glyphhanger](https://github.com/zachleat/glyphhanger)
 - [EB Garamond](https://fonts.google.com/specimen/EB+Garamond), compressed and subsetted to woff2 with [glyphhanger](https://github.com/zachleat/glyphhanger)
+- [IBM Plex Mono](https://fonts.google.com/specimen/IBM+Plex+Mono), compressed and subsetted to woff2 with [glyphhanger](https://github.com/zachleat/glyphhanger)
 
 ## How to use:
 
