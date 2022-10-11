@@ -93,18 +93,20 @@ function Block( { items, title } ) {
 				<span>
 					<h3 className="horizontal-slider-title">{ title }</h3>
 				</span>
-				<span className="horizontal-slider-controls">
-					<Handle
-						text={ __( 'Previous style variations', 'wporg' ) }
-						disabled={ ! canPrevious }
-						onClick={ handlePrev }
-					/>
-					<Handle
-						text={ __( 'Next style variations', 'wporg' ) }
-						disabled={ ! canNext }
-						onClick={ handleNext }
-					/>
-				</span>
+				{ ( canNext || canPrevious ) && (
+					<span className="horizontal-slider-controls">
+						<Handle
+							text={ __( 'Previous style variations', 'wporg' ) }
+							disabled={ ! canPrevious }
+							onClick={ handlePrev }
+						/>
+						<Handle
+							text={ __( 'Next style variations', 'wporg' ) }
+							disabled={ ! canNext }
+							onClick={ handleNext }
+						/>
+					</span>
+				) }
 			</div>
 			<div className="horizontal-slider-wrapper" ref={ outerRef }>
 				{ items.map( ( item ) => (
