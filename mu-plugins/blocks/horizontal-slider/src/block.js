@@ -87,6 +87,13 @@ function Block( { items, title } ) {
 		};
 	}, [ outerRef ] );
 
+	// Taken from @wordpress/edit-site proportions
+	const initialWidth = 118;
+	const initialHeight = 74;
+	const aspectRatio = initialHeight / initialWidth;
+	const width = 100;
+	const height = width * aspectRatio;
+
 	return (
 		<div>
 			<div className="horizontal-slider-header">
@@ -110,7 +117,15 @@ function Block( { items, title } ) {
 			</div>
 			<div className="horizontal-slider-wrapper" ref={ outerRef }>
 				{ items.map( ( item ) => (
-					<ScreenShot key={ item.title } { ...item } width="100px" isReady={ true } />
+					<ScreenShot
+						key={ item.title }
+						{ ...item }
+						width={ `${ width }px` }
+						height={ `${ height }px` }
+						aspectRatio={ aspectRatio }
+						queryString={ `?vpw=${ initialWidth * 10 }&vph=${ initialHeight * 10 }` }
+						isReady={ true }
+					/>
 				) ) }
 			</div>
 		</div>
