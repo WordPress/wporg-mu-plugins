@@ -74,6 +74,7 @@ button[disabled]::after {
 	scroll-snap-type: inline mandatory;
 	overflow-x: scroll;
 	overscroll-behavior: contain;
+	scrollbar-width: none;
 	gap: 12px;
 	padding-bottom: 24px;
 	padding-top: 6px;
@@ -83,6 +84,10 @@ button[disabled]::after {
 	margin-right: -4px;
 	padding-left: 4px;
 	padding-right: 4px;
+}
+
+.horizontal-slider-wrapper::-webkit-scrollbar {
+		height: 0;
 }
 
 .horizontal-slider-wrapper > a {
