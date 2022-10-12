@@ -105,11 +105,7 @@ function ScreenShotImg( { queryString, src, isReady = false } ) {
 	}
 
 	if ( isLoading ) {
-		return (
-			<div className="wporg-screenshot wporg-screenshot-loader">
-				<span />
-			</div>
-		);
+		return <div className="wporg-screenshot wporg-screenshot-loader" />;
 	}
 
 	if ( hasError || hasAborted ) {
