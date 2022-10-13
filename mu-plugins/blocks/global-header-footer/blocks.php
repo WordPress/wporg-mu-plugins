@@ -338,7 +338,7 @@ function render_global_header( $attributes = array() ) {
 
 	// Preload the menu font.
 	if ( is_callable( 'global_fonts_preload' ) ) {
-		global_fonts_preload( 'Inter' );
+		global_fonts_preload( 'Inter latin' );
 	}
 
 	// The mobile Get WordPress button needs to be in both menus.
