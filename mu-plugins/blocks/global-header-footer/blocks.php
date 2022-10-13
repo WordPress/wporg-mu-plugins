@@ -336,6 +336,13 @@ function render_global_header( $attributes = array() ) {
 		$show_search  = true;
 	}
 
+	// Preload the menu font.
+	if ( is_callable( 'global_fonts_preload' ) ) {
+		if ( ! is_rosetta_site() ) {
+			global_fonts_preload( 'Inter latin' );
+		}
+	}
+
 	// The mobile Get WordPress button needs to be in both menus.
 	$menu_items[] = array(
 		'title'   => esc_html_x( 'Get WordPress', 'Menu item title', 'wporg' ),
