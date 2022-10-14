@@ -95,10 +95,12 @@ function Block( { items, title } ) {
 	const height = width * aspectRatio;
 
 	return (
-		<div>
+		<div aria-labelledby="sliderHeading">
 			<div className="horizontal-slider-header">
 				<span>
-					<h3 className="horizontal-slider-title">{ title }</h3>
+					<h3 id="sliderHeading" className="horizontal-slider-title">
+						{ title }
+					</h3>
 				</span>
 				{ ( canNext || canPrevious ) && (
 					<span className="horizontal-slider-controls">
@@ -115,19 +117,25 @@ function Block( { items, title } ) {
 					</span>
 				) }
 			</div>
-			<div className="horizontal-slider-wrapper" ref={ outerRef }>
+			<ul className="horizontal-slider-wrapper" ref={ outerRef } role="tablist">
 				{ items.map( ( item ) => (
-					<ScreenShot
-						key={ item.title }
-						{ ...item }
-						width={ `${ width }px` }
-						height={ `${ height }px` }
-						aspectRatio={ aspectRatio }
-						queryString={ `?vpw=${ initialWidth * 10 }&vph=${ initialHeight * 10 }` }
-						isReady={ true }
-					/>
+					<li key={ item.title } role="presentation">
+						<ScreenShot
+							{ ...item }
+							width={ `${ width }px` }
+							height={ `${ height }px` }
+							aspectRatio={ aspectRatio }
+							queryString={ `?vpw=${ initialWidth * 10 }&vph=${ initialHeight * 10 }` }
+							isReady={ true }
+							tagProps={ {
+								'aria-controls': item.title,
+								'aria-selected': 'true',
+								role: 'tab',
+							} }
+						/>
+					</li>
 				) ) }
-			</div>
+			</ul>
 		</div>
 	);
 }

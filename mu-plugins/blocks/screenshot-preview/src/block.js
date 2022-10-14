@@ -20,6 +20,7 @@ import ScreenShot from './screenshot';
  * @param {string} props.width       Desired with of the preview element, include unit.
  * @param {number} props.aspectRatio Aspect ratio for the preview element.
  * @param {string} props.queryString Arguments passed to screenshot service.
+ * @param {Object} props.tagProps    Props added to block tag.
  *
  * @return {Object} React element
  */
@@ -31,6 +32,7 @@ function Block( {
 	width = '100%',
 	aspectRatio = 2 / 3,
 	queryString = '?vpw=1200&vph=800',
+	tagProps = {},
 } ) {
 	const wrapperRef = useRef();
 	const [ frameHeight, setFrameHeight ] = useState( height );
@@ -68,9 +70,9 @@ function Block( {
 				width: width,
 			} }
 			href={ link }
+			{ ...tagProps }
 		>
-			{ caption && <span className="screen-reader-text">{ caption }</span> }
-			<ScreenShot queryString={ queryString } src={ previewLink } isReady={ shouldLoad } />
+			<ScreenShot queryString={ queryString } src={ previewLink } isReady={ shouldLoad } alt={ caption } />
 		</a>
 	);
 }
