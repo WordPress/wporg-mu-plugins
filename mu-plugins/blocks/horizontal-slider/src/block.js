@@ -36,12 +36,11 @@ const SET_WIDTH = CARD_WIDTH * 3;
  */
 function Block( { items, title } ) {
 	const outerRef = useRef();
-	const [ scrollLeftPos, setScrollLeftPos ] = useState( 0 );
 	const [ canPrevious, setCanPrevious ] = useState( false );
 	const [ canNext, setCanNext ] = useState( true );
 
 	// Calculate to total width of the content
-	const totalContainerWidth = items.length * ( CARD_WIDTH + CARD_GAP ) - CARD_GAP;
+	const innerContainerWidth = items.length * ( CARD_WIDTH + CARD_GAP ) - CARD_GAP;
 
 	const scrollContainer = ( pos ) => {
 		outerRef.current.scrollTo( {
@@ -54,28 +53,29 @@ function Block( { items, title } ) {
 		if ( ! canPrevious ) {
 			return;
 		}
-		setScrollLeftPos( outerRef.current.scrollLeft - SET_WIDTH );
+		scrollContainer( outerRef.current.scrollLeft - SET_WIDTH );
 	};
 
 	const handleNext = () => {
 		if ( ! canNext ) {
 			return;
 		}
-		setScrollLeftPos( outerRef.current.scrollLeft + SET_WIDTH );
-	};
 
-	useEffect( () => {
-		scrollContainer( scrollLeftPos );
-	}, [ scrollLeftPos ] );
+		scrollContainer( outerRef.current.scrollLeft + SET_WIDTH );
+	};
 
 	useEffect( () => {
 		if ( ! outerRef.current ) {
 			return;
 		}
 
+		const { paddingLeft, paddingRight } = window.getComputedStyle( outerRef.current );
+		const outerContainerWidth =
+			outerRef.current.clientWidth - parseFloat( paddingLeft ) - parseFloat( paddingRight );
+
 		const handleScrollEvent = () => {
 			setCanPrevious( outerRef.current.scrollLeft > 0 );
-			setCanNext( totalContainerWidth - outerRef.current.scrollLeft > outerRef.current.offsetWidth );
+			setCanNext( innerContainerWidth - outerRef.current.scrollLeft > outerContainerWidth );
 		};
 
 		handleScrollEvent();
