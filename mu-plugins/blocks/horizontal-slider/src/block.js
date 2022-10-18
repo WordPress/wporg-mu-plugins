@@ -123,7 +123,7 @@ function Block( { items, title } ) {
 							aspectRatio={ aspectRatio }
 							queryString={ `?vpw=${ initialWidth * 10 }&vph=${ initialHeight * 10 }` }
 							isReady={ true }
-							tagProps={ {
+							anchorTagProps={ {
 								'aria-controls': item.title,
 								'aria-selected': false,
 								role: 'tab',
