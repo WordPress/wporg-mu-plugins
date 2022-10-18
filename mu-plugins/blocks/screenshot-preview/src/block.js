@@ -20,7 +20,7 @@ import ScreenShot from './screenshot';
  * @param {string} props.width       Desired with of the preview element, include unit.
  * @param {number} props.aspectRatio Aspect ratio for the preview element.
  * @param {string} props.queryString Arguments passed to screenshot service.
- * @param {Object} props.tagProps    Props added to block tag.
+ * @param {Object} props.anchorTagProps    HTMLAnchorElement attributes to be added to the block anchor tag.
  *
  * @return {Object} React element
  */
