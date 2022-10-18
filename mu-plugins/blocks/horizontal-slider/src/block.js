@@ -40,7 +40,7 @@ function Block( { items, title } ) {
 	const [ canNext, setCanNext ] = useState( true );
 
 	// Calculate to total width of the content
-	const totalContainerWidth = items.length * ( CARD_WIDTH + CARD_GAP ) - CARD_GAP;
+	const innerContainerWidth = items.length * ( CARD_WIDTH + CARD_GAP ) - CARD_GAP;
 
 	const scrollContainer = ( pos ) => {
 		outerRef.current.scrollTo( {
@@ -70,12 +70,12 @@ function Block( { items, title } ) {
 		}
 
 		const { paddingLeft, paddingRight } = window.getComputedStyle( outerRef.current );
-		const innerContainerWidth =
+		const outerContainerWidth =
 			outerRef.current.clientWidth - parseFloat( paddingLeft ) - parseFloat( paddingRight );
 
 		const handleScrollEvent = () => {
 			setCanPrevious( outerRef.current.scrollLeft > 0 );
-			setCanNext( totalContainerWidth - outerRef.current.scrollLeft > innerContainerWidth );
+			setCanNext( innerContainerWidth - outerRef.current.scrollLeft > outerContainerWidth );
 		};
 
 		handleScrollEvent();
