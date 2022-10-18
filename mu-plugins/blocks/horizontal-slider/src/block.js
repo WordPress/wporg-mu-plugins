@@ -95,13 +95,9 @@ function Block( { items, title } ) {
 	const height = width * aspectRatio;
 
 	return (
-		<div aria-labelledby="sliderHeading">
+		<div>
 			<div className="horizontal-slider-header">
-				<span>
-					<h3 id="sliderHeading" className="horizontal-slider-title">
-						{ title }
-					</h3>
-				</span>
+				<h3 className="horizontal-slider-title">{ title }</h3>
 				{ ( canNext || canPrevious ) && (
 					<span className="horizontal-slider-controls">
 						<Handle
