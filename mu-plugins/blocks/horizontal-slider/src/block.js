@@ -129,7 +129,7 @@ function Block( { items, title } ) {
 							isReady={ true }
 							tagProps={ {
 								'aria-controls': item.title,
-								'aria-selected': 'true',
+								'aria-selected': false,
 								role: 'tab',
 							} }
 						/>
