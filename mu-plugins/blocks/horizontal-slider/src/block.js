@@ -97,9 +97,7 @@ function Block( { items, title } ) {
 	return (
 		<div>
 			<div className="horizontal-slider-header">
-				<span>
-					<h3 className="horizontal-slider-title">{ title }</h3>
-				</span>
+				<h3 className="horizontal-slider-title">{ title }</h3>
 				{ ( canNext || canPrevious ) && (
 					<span className="horizontal-slider-controls">
 						<Handle
@@ -115,19 +113,25 @@ function Block( { items, title } ) {
 					</span>
 				) }
 			</div>
-			<div className="horizontal-slider-wrapper" ref={ outerRef }>
+			<ul className="horizontal-slider-wrapper" ref={ outerRef } role="tablist">
 				{ items.map( ( item ) => (
-					<ScreenShot
-						key={ item.title }
-						{ ...item }
-						width={ `${ width }px` }
-						height={ `${ height }px` }
-						aspectRatio={ aspectRatio }
-						queryString={ `?vpw=${ initialWidth * 10 }&vph=${ initialHeight * 10 }` }
-						isReady={ true }
-					/>
+					<li key={ item.title } role="presentation">
+						<ScreenShot
+							{ ...item }
+							width={ `${ width }px` }
+							height={ `${ height }px` }
+							aspectRatio={ aspectRatio }
+							queryString={ `?vpw=${ initialWidth * 10 }&vph=${ initialHeight * 10 }` }
+							isReady={ true }
+							anchorTagProps={ {
+								'aria-controls': item.title,
+								'aria-selected': false,
+								role: 'tab',
+							} }
+						/>
+					</li>
 				) ) }
-			</div>
+			</ul>
 		</div>
 	);
 }

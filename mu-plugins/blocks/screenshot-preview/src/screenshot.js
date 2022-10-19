@@ -42,13 +42,14 @@ function useInterval( callback, delay ) {
  * we need to do some custom handling.
  *
  * @param {Object}  props
+ * @param {string}  props.alt         Alternate text for image.
  * @param {string}  props.queryString Arguments that are passed to mShots.
  * @param {string}  props.src         The url of the screenshot.
  * @param {boolean} props.isReady     Whether we should start try to show the image.
  *
  * @return {Object} React component
  */
-function ScreenShotImg( { queryString, src, isReady = false } ) {
+function ScreenShotImg( { alt = '', queryString, src, isReady = false } ) {
 	const fullUrl = `https://s0.wp.com/mshots/v1/${ encodeURIComponent( src ) }${ queryString }`;
 
 	const [ attempts, setAttempts ] = useState( 0 );
@@ -112,7 +113,7 @@ function ScreenShotImg( { queryString, src, isReady = false } ) {
 		return <div className="wporg-screenshot wporg-screenshot__has-error">{ __( 'error', 'wporg' ) }</div>;
 	}
 
-	return <img src={ base64Img } alt="" />;
+	return <img src={ base64Img } alt={ alt } />;
 }
 
 export default ScreenShotImg;
