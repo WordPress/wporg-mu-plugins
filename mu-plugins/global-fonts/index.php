@@ -87,19 +87,17 @@ function maybe_preload_font( $preload ) {
 	}
 
 	foreach ( (array) $style->extra['preload'] as $font_face ) {
-		$font_urls = get_font_urls( $font_face );
-		if ( ! $font_urls ) {
+		$font_url = get_font_url( $font_face );
+		if ( ! $font_url ) {
 			continue;
 		}
 
-		foreach ( $font_urls as $font_url ) {
-			$preload[] = [
-				'href'        => $font_url,
-				'as'          => 'font',
-				'crossorigin' => 'crossorigin',
-				'type'        => 'font/woff2',
-			];
-		}
+		$preload[] = [
+			'href'        => $font_url,
+			'as'          => 'font',
+			'crossorigin' => 'crossorigin',
+			'type'        => 'font/woff2',
+		];
 	}
 
 	return $preload;
@@ -108,36 +106,57 @@ function maybe_preload_font( $preload ) {
 /**
  * Return the details about a specific font face.
  */
-function get_font_urls( $font ) {
+function get_font_url( $font ) {
 	switch ( strtolower( $font ) ) {
+		// inter
 		case 'inter arrows':
-			return [ plugins_url( 'Inter/Inter-arrows.woff2', __FILE__ ) ];
+			return plugins_url( 'Inter/Inter-arrows.woff2', __FILE__ );
 		case 'inter cyrillic':
-			return [ plugins_url( 'Inter/Inter-cyrillic.woff2', __FILE__ ), plugins_url( 'Inter/Inter-cyrillic-ext.woff2', __FILE__ ) ];
+			return plugins_url( 'Inter/Inter-cyrillic.woff2', __FILE__ );
+		case 'inter cyrillic-ext':
+			return plugins_url( 'Inter/Inter-cyrillic-ext.woff2', __FILE__ );
 		case 'inter greek':
-			return [ plugins_url( 'Inter/Inter-greek.woff2', __FILE__ ), plugins_url( 'Inter/Inter-greek-ext.woff2', __FILE__ ) ];
+			return plugins_url( 'Inter/Inter-greek.woff2', __FILE__ );
+		case 'inter greek-ext':
+			return plugins_url( 'Inter/Inter-greek-ext.woff2', __FILE__ );
 		case 'inter latin':
-			return [ plugins_url( 'Inter/Inter-latin.woff2', __FILE__ ), plugins_url( 'Inter/Inter-latin-ext.woff2', __FILE__ ) ];
+			return plugins_url( 'Inter/Inter-latin.woff2', __FILE__ );
+		case 'inter latin-ext':
+			return plugins_url( 'Inter/Inter-latin-ext.woff2', __FILE__ );
 		case 'inter vietnamese':
-			return [ plugins_url( 'Inter/Inter-vietnamese.woff2', __FILE__ ) ];
+			return plugins_url( 'Inter/Inter-vietnamese.woff2', __FILE__ );
+		// eb garamond
 		case 'eb garamond arrows':
-			return [ plugins_url( 'EB-Garamond/EBGaramond-arrows.woff2', __FILE__ ) ];
+			return plugins_url( 'EB-Garamond/EBGaramond-arrows.woff2', __FILE__ );
 		case 'eb garamond cyrillic':
-			return [ plugins_url( 'EB-Garamond/EBGaramond-cyrillic.woff2', __FILE__ ), plugins_url( 'EB-Garamond/EBGaramond-cyrillic-ext.woff2', __FILE__ ) ];
+			return plugins_url( 'EB-Garamond/EBGaramond-cyrillic.woff2', __FILE__ );
+		case 'eb garamond cyrillic-ext':
+			return plugins_url( 'EB-Garamond/EBGaramond-cyrillic-ext.woff2', __FILE__ );
 		case 'eb garamond greek':
-			return [ plugins_url( 'EB-Garamond/EBGaramond-greek.woff2', __FILE__ ), plugins_url( 'EB-Garamond/EBGaramond-greek-ext.woff2', __FILE__ ) ];
+			return plugins_url( 'EB-Garamond/EBGaramond-greek.woff2', __FILE__ );
+		case 'eb garamond greek-ext':
+			return plugins_url( 'EB-Garamond/EBGaramond-greek-ext.woff2', __FILE__ );
 		case 'eb garamond latin':
-			return [ plugins_url( 'EB-Garamond/EBGaramond-latin.woff2', __FILE__ ), plugins_url( 'EB-Garamond/EBGaramond-latin-ext.woff2', __FILE__ ) ];
+			return plugins_url( 'EB-Garamond/EBGaramond-latin.woff2', __FILE__ );
+		case 'eb garamond latin-ext':
+			return plugins_url( 'EB-Garamond/EBGaramond-latin-ext.woff2', __FILE__ );
 		case 'eb garamond vietnamese':
-			return [ plugins_url( 'EB-Garamond/EBGaramond-vietnamese.woff2', __FILE__ ) ];
+			return plugins_url( 'EB-Garamond/EBGaramond-vietnamese.woff2', __FILE__ );
+		// // eb garamond italic
 		case 'eb garamond cyrillic italic':
-			return [ plugins_url( 'EB-Garamond/EBGaramond-Italic-cyrillic.woff2', __FILE__ ), plugins_url( 'EB-Garamond/EBGaramond-Italic-cyrillic-ext.woff2', __FILE__ ) ];
+			return plugins_url( 'EB-Garamond/EBGaramond-Italic-cyrillic.woff2', __FILE__ );
+		case 'eb garamond cyrillic-ext italic':
+			return plugins_url( 'EB-Garamond/EBGaramond-Italic-cyrillic-ext.woff2', __FILE__ );
 		case 'eb garamond greek italic':
-			return [ plugins_url( 'EB-Garamond/EBGaramond-Italic-greek.woff2', __FILE__ ), plugins_url( 'EB-Garamond/EBGaramond-Italic-greek-ext.woff2', __FILE__ ) ];
+			return plugins_url( 'EB-Garamond/EBGaramond-Italic-greek.woff2', __FILE__ );
+		case 'eb garamond greek-ext italic':
+			return plugins_url( 'EB-Garamond/EBGaramond-Italic-greek-ext.woff2', __FILE__ );
 		case 'eb garamond latin italic':
-			return [ plugins_url( 'EB-Garamond/EBGaramond-Italic-latin.woff2', __FILE__ ), plugins_url( 'EB-Garamond/EBGaramond-Italic-latin-ext.woff2', __FILE__ ) ];
+			return plugins_url( 'EB-Garamond/EBGaramond-Italic-latin.woff2', __FILE__ );
+		case 'eb garamond latin-ext italic':
+			return plugins_url( 'EB-Garamond/EBGaramond-Italic-latin-ext.woff2', __FILE__ );
 		case 'eb garamond vietnamese italic':
-			return [ plugins_url( 'EB-Garamond/EBGaramond-Italic-vietnamese.woff2', __FILE__ ) ];
+			return plugins_url( 'EB-Garamond/EBGaramond-Italic-vietnamese.woff2', __FILE__ );
 	}
 
 	return false;
