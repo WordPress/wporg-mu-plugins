@@ -3,6 +3,7 @@
 namespace WordPressdotorg\MU_Plugins\Utilities\BlockParser;
 
 require_once __DIR__ . '/parsers/BlockParser.php';
+require_once __DIR__ . '/parsers/AttributeParser.php';
 require_once __DIR__ . '/parsers/HTMLParser.php';
 require_once __DIR__ . '/parsers/BasicText.php';
 require_once __DIR__ . '/parsers/Button.php';
@@ -30,7 +31,11 @@ class BlockParser {
 			//'core/buttons'     => new Parsers\BasicText(),
 			'core/button'      => new Parsers\HTMLParser( 'a', [ 'href', 'title' ] ),
 
-			// Generic shortcode handler..
+			// Attributes handler.
+			'core/navigation-link' => new Parsers\AttributeParser( [ 'label', 'url' ] ),
+			'core/social-link'     => new Parsers\AttributeParser( [ 'label' ] ),
+
+			// Generic shortcode handler.
 			'core/shortcode'   => new Parsers\ShortcodeBlock(),
 
 			'core/spacer'      => new Parsers\Noop(),
@@ -41,7 +46,6 @@ class BlockParser {
 
 			// Common core blocks that use the default parser.
 			'core/media-text'  => new Parsers\BasicText(),
-			'core/social-link' => new Parsers\BasicText(),
 		];
 	}
 
