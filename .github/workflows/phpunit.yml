@@ -1,0 +1,35 @@
+name: Static Analysis (Linting)
+
+# This workflow is triggered on pushes to trunk, and any PRs.
+on:
+    push:
+        branches: [trunk]
+    pull_request:
+
+jobs:
+    check:
+        name: Lint everything
+
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # v3.1.0
+
+            - name: Install NodeJS
+              uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516 # v3.5.1
+              with:
+                  node-version-file: '.nvmrc'
+                  cache: npm
+
+            - name: Install dependencies, setup configs, build
+              run: |
+                  npm run setup:tools
+                  npm run build
+
+            - name: Install WordPress
+              run: |
+                  npm run wp-env start
+
+            - name: Running PHP unit tests
+              run: npm run test:php
