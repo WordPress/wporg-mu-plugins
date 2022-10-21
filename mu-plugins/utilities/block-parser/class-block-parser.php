@@ -3,52 +3,115 @@
 namespace WordPressdotorg\MU_Plugins\Utilities\BlockParser;
 
 require_once __DIR__ . '/parsers/BlockParser.php';
+require_once __DIR__ . '/parsers/HTMLParser.php';
 require_once __DIR__ . '/parsers/BasicText.php';
 require_once __DIR__ . '/parsers/Button.php';
-require_once __DIR__ . '/parsers/Heading.php';
 require_once __DIR__ . '/parsers/Noop.php';
-require_once __DIR__ . '/parsers/Paragraph.php';
-
-// Unused.
 require_once __DIR__ . '/parsers/ShortcodeBlock.php';
 require_once __DIR__ . '/parsers/TextNode.php';
 
 class BlockParser {
-	public $pattern;
+	public $content;
 	public $parsers = [];
 	public $fallback;
 
-	public function __construct() {
-		$this->parsers = [
-			// Core blocks that have custom parsers.
-			'core/paragraph' => new Parsers\Paragraph(),
-			'core/heading'   => new Parsers\Heading(),
-			'core/button'    => new Parsers\Button(),
-			'core/spacer'    => new Parsers\Noop(),
+	public function __construct( string $content = '' ) {
+		$this->content  = $content;
+		$this->fallback = new Parsers\BasicText();
+		$this->parsers  = [
+			// Blocks that have custom parsers.
+			'core/paragraph'   => new Parsers\HTMLParser( 'p' ),
+			'core/image'       => new Parsers\HTMLParser( 'figcaption', [ 'alt', 'title' ] ),
+			'core/list'        => new Parsers\HTMLParser( 'li' ),
+			'core/quote'       => new Parsers\HTMLParser( [ 'p', 'cite' ] ),
+			'core/heading'     => new Parsers\HTMLRegexParser( '/h[1-6]/' ),
+
+			//'core/button'      => new Parsers\Button(),
+			//'core/buttons'     => new Parsers\BasicText(),
+			'core/button'      => new Parsers\HTMLParser( 'a', [ 'href', 'title' ] ),
+
+			// Generic shortcode handler..
+			'core/shortcode'   => new Parsers\ShortcodeBlock(),
+
+			'core/spacer'      => new Parsers\Noop(),
+			// These contain other blocks to be parsed.
+			'core/column'      => new Parsers\Noop(),
+			'core/columns'     => new Parsers\Noop(),
+			'core/group'       => new Parsers\Noop(),
 
 			// Common core blocks that use the default parser.
-			'core/buttons'     => new Parsers\BasicText(),
-			'core/list'        => new Parsers\BasicText(),
-			'core/column'      => new Parsers\BasicText(),
-			'core/columns'     => new Parsers\BasicText(),
-			'core/cover'       => new Parsers\BasicText(),
-			'core/group'       => new Parsers\BasicText(),
-			'core/image'       => new Parsers\BasicText(),
 			'core/media-text'  => new Parsers\BasicText(),
-			'core/separator'   => new Parsers\BasicText(),
 			'core/social-link' => new Parsers\BasicText(),
 		];
-
-		$this->fallback = new Parsers\BasicText();
 	}
 
-	public function replace_with_i18n( string $content ) : string {
-		$strings = $this->to_strings( $content );
-		$i18n_strings = [];
-		foreach ( $strings as $string ) {
-			$i18n_strings[ $string ] = sprintf( "<?php _e( '%s', 'wporg' ); ?>", str_replace( "'", '&#039;', $string ) );
+	public static function post_to_strings( $post ) {
+		// TODO: Detect post using a block template, pull strings from there.
+		$self    = new self( $post->post_content );
+		$strings = $self->to_strings();
+
+		if ( $post->post_title ) {
+			$strings[] = $post->post_title;
 		}
-		return $this->replace_strings( $content, $i18n_strings );
+		if ( $post->post_excerpt ) {
+			$strings[] = $post->post_excerpt;
+		}
+
+		$post_meta_to_include = apply_filters( 'translatable_post_meta', [] );
+		foreach ( $post_meta_to_include as $meta_key ) {
+			$strings[] = get_post_meta( $post->ID, $meta_key, true );
+		}
+
+		return $strings;
+	}
+
+	public static function translate_post( $post, callable $callback_translate ) {
+		$post->post_content = self::translate_blocks( $post->post_content, $callback_translate ) ?: $post->post_content;
+		$post->post_title   = $callback_translate( $post->post_title ) ?: $post->post_title;
+		$post->post_excerpt = $callback_translate( $post->post_excerpt ) ?: $post->post_excerpt;
+
+		return $post;
+	}
+
+	public static function translate_blocks( string $content, callable $callback_translate ) /*: bool|string*/ {
+		$self         = new self( $content );
+
+		$translations = [];
+		$translated   = false;
+		$strings      = $self->to_strings();
+
+		// var_dump( $strings );
+		foreach ( $strings as $string ) {
+			$translations[ $string ] = $callback_translate( $string );
+
+			$translated = $translated || ( $string !== $translations[ $string ] );
+		}
+
+		// Are there any translations?
+		if ( ! $translated ) {
+			return false;
+		}
+
+		return $self->replace_strings_with_kses( $translations );
+	}
+
+	public static function translate_block( string $content, $block, callable $callback_translate ) /* :bool|string */ {
+		$self    = new self();
+		$parser  = $self->parsers[ $block['blockName'] ] ?? $self->fallback;
+		$strings = $parser->to_strings( $block ); // does not do innerBlocks, intentionally.
+
+		if ( ! $strings ) {
+			return $content;
+		}
+
+		$replacements = [];
+		foreach ( $strings as $string ) {
+			$replacements[ $string ] = $callback_translate( $string ) ?: $string;
+		}
+
+		$block = $parser->replace_strings( $block, $replacements );
+
+		return $block['innerContent'][0] ?: $content;
 	}
 
 	public function block_parser_to_strings( array $block ) : array {
@@ -60,7 +123,7 @@ class BlockParser {
 			$strings = array_merge( $strings, $this->block_parser_to_strings( $inner_block ) );
 		}
 
-		return $strings;
+		return array_unique( $strings );
 	}
 
 	public function block_parser_replace_strings( array &$block, array $replacements ) : array {
@@ -74,11 +137,11 @@ class BlockParser {
 		return $block;
 	}
 
-	public function to_strings( string $content ) : array {
-		$blocks = parse_blocks( $content );
-
+	public function to_strings() : array {
 		$strings = [];
 
+		$blocks = parse_blocks( $this->content );
+		//var_Dump( $blocks, $this->content ); die();
 		foreach ( $blocks as $block ) {
 			$strings = array_merge( $strings, $this->block_parser_to_strings( $block ) );
 		}
@@ -86,9 +149,19 @@ class BlockParser {
 		return array_unique( $strings );
 	}
 
-	public function replace_strings( string $content, array $replacements ) : string {
-		$blocks = parse_blocks( $content );
+	public function replace_strings_with_kses( array $replacements ) : string {
+		// Sanitize replacement strings before injecting them into blocks and block attributes.
+		$sanitized_replacements = $replacements;
+		foreach ( $sanitized_replacements as &$replacement ) {
+			$replacement = wp_kses_post( $replacement );
+		}
+		return $this->replace_strings( $sanitized_replacements );
+	}
 
+	public function replace_strings( array $replacements ) : string {
+		$translated = $this->content;
+
+		$blocks = parse_blocks( $translated );
 		foreach ( $blocks as &$block ) {
 			$block = $this->block_parser_replace_strings( $block, $replacements );
 		}
@@ -98,9 +171,9 @@ class BlockParser {
 		// "subscribePlaceholder":"😀" becomes "subscribePlaceholder":"\ud83d\ude00".
 		// After we get the serialized blocks back from `serialize_blocks` we need to convert these
 		// characters back to their unicode form so that we don't break blocks in the editor.
-		$new_content = $this->decode_unicode_characters( serialize_blocks( $blocks ) );
+		$translated = $this->decode_unicode_characters( serialize_blocks( $blocks ) );
 
-		return $new_content;
+		return $translated;
 	}
 
 	/**
