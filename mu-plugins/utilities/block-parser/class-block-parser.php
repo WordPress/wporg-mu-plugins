@@ -219,6 +219,28 @@ class BlockParser {
 			$string
 		);
 
+		// Decode < & > if they're part of a PHP tag.
+		$decoded_string = str_replace( [ '\\u003c?', '?\\u003e' ], [ '<?', '?>' ], $decoded_string );
+
 		return $decoded_string;
 	}
+}
+
+/**
+ * Helper function to replace all strings in content with i18n-wrapped strings.
+ */
+function replace_with_i18n( string $content, string $textdomain = 'wporg' ) : string {
+	$parser = new BlockParser( $content );
+	$strings = $parser->to_strings();
+
+	$i18n_strings = [];
+	foreach ( $strings as $string ) {
+		$i18n_strings[ $string ] = sprintf(
+			"<?php _e( '%s', '%s' ); ?>",
+			str_replace( "'", '&#039;', $string ),
+			$textdomain
+		);
+	}
+
+	return $parser->replace_strings( $i18n_strings );
 }
