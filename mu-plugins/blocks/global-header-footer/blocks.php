@@ -339,7 +339,7 @@ function render_global_header( $attributes = array() ) {
 	// Preload the menu font.
 	if ( is_callable( 'global_fonts_preload' ) ) {
 		if ( ! is_rosetta_site() ) {
-			global_fonts_preload( 'Inter latin' );
+			global_fonts_preload( 'Inter', 'latin' );
 		}
 	}
 
