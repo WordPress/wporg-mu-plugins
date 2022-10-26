@@ -54,22 +54,25 @@ function relative_to_absolute_urls( $editor_settings ) {
 /**
  * Specify a font to be preloaded.
  *
- * @param array|string $font_faces The font(s) to preload.
+ * @param string $fonts The font(s) to preload.
+ * @param string $subsets The subset(s) to preload.
  * @return bool If the font will be preloaded.
  */
-function preload_font( $font_faces ) {
+function preload_font( $fonts, $subsets ) {
 	$style = wp_styles()->query( 'wporg-global-fonts' );
-	if ( ! $style ) {
+	if ( ! $style || empty( $fonts ) || empty( $subsets ) ) {
 		return false;
 	}
 
-	if ( ! is_array( $font_faces ) ) {
-		$font_faces = [ $font_faces ];
-	}
+	$fonts = explode( ',', $fonts );
+	$subsets = explode( ',', $subsets );
 
 	$preload = $style->extra['preload'] ?? [];
-	$preload = array_merge( $preload, $font_faces );
-	$preload = array_unique( $preload );
+	$new_preload = [
+		'fonts' => array_unique( $fonts ),
+		'subsets' => array_unique( $subsets ),
+	];
+	$preload = array_merge_recursive( $preload, $new_preload );
 
 	wp_style_add_data( 'wporg-global-fonts', 'preload', $preload );
 
@@ -86,8 +89,14 @@ function maybe_preload_font( $preload ) {
 		return $preload;
 	}
 
-	foreach ( (array) $style->extra['preload'] as $font_face ) {
-		$font_url = get_font_url( $font_face );
+	$combined_fonts_subsets = array_combine( (array) $style->extra['preload']['fonts'], (array) $style->extra['preload']['subsets'] );
+
+	foreach ( $combined_fonts_subsets as $font => $subset ) {
+		if ( empty( $font ) || empty( $subset ) ) {
+			continue;
+		}
+
+		$font_url = get_font_url( $font, $subset );
 		if ( ! $font_url ) {
 			continue;
 		}
@@ -106,57 +115,23 @@ function maybe_preload_font( $preload ) {
 /**
  * Return the details about a specific font face.
  */
-function get_font_url( $font ) {
-	switch ( strtolower( $font ) ) {
-		// inter
-		case 'inter arrows':
-			return plugins_url( 'Inter/Inter-arrows.woff2', __FILE__ );
-		case 'inter cyrillic':
-			return plugins_url( 'Inter/Inter-cyrillic.woff2', __FILE__ );
-		case 'inter cyrillic-ext':
-			return plugins_url( 'Inter/Inter-cyrillic-ext.woff2', __FILE__ );
-		case 'inter greek':
-			return plugins_url( 'Inter/Inter-greek.woff2', __FILE__ );
-		case 'inter greek-ext':
-			return plugins_url( 'Inter/Inter-greek-ext.woff2', __FILE__ );
-		case 'inter latin':
-			return plugins_url( 'Inter/Inter-latin.woff2', __FILE__ );
-		case 'inter latin-ext':
-			return plugins_url( 'Inter/Inter-latin-ext.woff2', __FILE__ );
-		case 'inter vietnamese':
-			return plugins_url( 'Inter/Inter-vietnamese.woff2', __FILE__ );
-		// eb garamond
-		case 'eb garamond arrows':
-			return plugins_url( 'EB-Garamond/EBGaramond-arrows.woff2', __FILE__ );
-		case 'eb garamond cyrillic':
-			return plugins_url( 'EB-Garamond/EBGaramond-cyrillic.woff2', __FILE__ );
-		case 'eb garamond cyrillic-ext':
-			return plugins_url( 'EB-Garamond/EBGaramond-cyrillic-ext.woff2', __FILE__ );
-		case 'eb garamond greek':
-			return plugins_url( 'EB-Garamond/EBGaramond-greek.woff2', __FILE__ );
-		case 'eb garamond greek-ext':
-			return plugins_url( 'EB-Garamond/EBGaramond-greek-ext.woff2', __FILE__ );
-		case 'eb garamond latin':
-			return plugins_url( 'EB-Garamond/EBGaramond-latin.woff2', __FILE__ );
-		case 'eb garamond latin-ext':
-			return plugins_url( 'EB-Garamond/EBGaramond-latin-ext.woff2', __FILE__ );
-		case 'eb garamond vietnamese':
-			return plugins_url( 'EB-Garamond/EBGaramond-vietnamese.woff2', __FILE__ );
-		// // eb garamond italic
-		case 'eb garamond cyrillic italic':
-			return plugins_url( 'EB-Garamond/EBGaramond-Italic-cyrillic.woff2', __FILE__ );
-		case 'eb garamond cyrillic-ext italic':
-			return plugins_url( 'EB-Garamond/EBGaramond-Italic-cyrillic-ext.woff2', __FILE__ );
-		case 'eb garamond greek italic':
-			return plugins_url( 'EB-Garamond/EBGaramond-Italic-greek.woff2', __FILE__ );
-		case 'eb garamond greek-ext italic':
-			return plugins_url( 'EB-Garamond/EBGaramond-Italic-greek-ext.woff2', __FILE__ );
-		case 'eb garamond latin italic':
-			return plugins_url( 'EB-Garamond/EBGaramond-Italic-latin.woff2', __FILE__ );
-		case 'eb garamond latin-ext italic':
-			return plugins_url( 'EB-Garamond/EBGaramond-Italic-latin-ext.woff2', __FILE__ );
-		case 'eb garamond vietnamese italic':
-			return plugins_url( 'EB-Garamond/EBGaramond-Italic-vietnamese.woff2', __FILE__ );
+function get_font_url( $font, $subset ) {
+	$lower_font = strtolower( trim( $font ) );
+	$lower_subset = strtolower( trim( $subset ) );
+
+	switch ( $lower_font ) {
+		case 'inter':
+			$font_folder = 'Inter/';
+			$font_file_name = 'Inter-';
+			return plugins_url( $font_folder . $font_file_name . $lower_subset . '.woff2', __FILE__ );
+		case 'eb garamond':
+			$font_folder = 'EB-Garamond/';
+			$font_file_name = 'EBGaramond-';
+			return plugins_url( $font_folder . $font_file_name . $lower_subset . '.woff2', __FILE__ );
+		case 'eb garamond italic':
+			$font_folder = 'EB-Garamond/';
+			$font_file_name = 'EBGaramond-Italic-';
+			return plugins_url( $font_folder . $font_file_name . $lower_subset . '.woff2', __FILE__ );
 	}
 
 	return false;
