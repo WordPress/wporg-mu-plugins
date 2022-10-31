@@ -21,18 +21,18 @@ jobs:
         with:
             node-version-file: '.nvmrc'
             cache: yarn
-        
-        - name: Install dependencies & setup configs
-          run: |
+
+      - name: Install dependencies & setup configs
+        run: |
               yarn setup:tools
 
-        - name: Install dependencies
-          run: |
-              yarn
-              composer install
-              yarn build
-              yarn wp-env start
+      - name: Install dependencies
+        run: |
+            yarn
+            composer install
+            yarn build
+            yarn wp-env start
 
-        - name: Run PHP unit tests
-          run: |
-              yarn test:php
+      - name: Run PHP unit tests
+        run: |
+            yarn test:php
