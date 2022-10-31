@@ -5,6 +5,9 @@
 	},
 	"env": {
 		"tests": {
+			"config": {
+				"WP_ENVIRONMENT_TYPE": false
+			},
 			"mappings": {
 				"vendor": "./vendor",
 				"phpunit": "./phpunit",
