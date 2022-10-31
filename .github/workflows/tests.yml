@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ trunk, add/cdn-plugin, try/cdn-tests ]
+    branches: [ trunk, try/phpunit-tests ]
   pull_request:
     branches: [ trunk ]
 
