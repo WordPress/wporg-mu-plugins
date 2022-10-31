@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "217fa3d2f307c8c55875c98c2cf7a798",
+    "content-hash": "41ca30816731208b6aee30a8798b7355",
     "packages": [],
     "packages-dev": [
         {
@@ -2246,16 +2246,16 @@
         },
         {
             "name": "wp-phpunit/wp-phpunit",
-            "version": "5.9.5",
+            "version": "6.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wp-phpunit/wp-phpunit.git",
-                "reference": "f9b5b3a44d3677c7d4803074d81ad3cd12b0eeea"
+                "reference": "88c786f68c6abe1061f9e40f5e8b299e41a50287"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wp-phpunit/wp-phpunit/zipball/f9b5b3a44d3677c7d4803074d81ad3cd12b0eeea",
-                "reference": "f9b5b3a44d3677c7d4803074d81ad3cd12b0eeea",
+                "url": "https://api.github.com/repos/wp-phpunit/wp-phpunit/zipball/88c786f68c6abe1061f9e40f5e8b299e41a50287",
+                "reference": "88c786f68c6abe1061f9e40f5e8b299e41a50287",
                 "shasum": ""
             },
             "type": "library",
