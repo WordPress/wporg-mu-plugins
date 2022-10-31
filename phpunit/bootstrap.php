@@ -7,7 +7,16 @@
 
 // Require composer dependencies.
 require_once dirname( __DIR__ ) . '/vendor/autoload.php';
-require_once dirname( __DIR__ ) . '/vendor/wp-phpunit/wp-phpunit/includes/functions.php';
+
+// Detect where to load the WordPress tests environment from.
+if ( false !== getenv( 'WP_TESTS_DIR' ) ) {
+	$_test_root = getenv( 'WP_TESTS_DIR' );
+} else {
+	$_test_root = dirname( __DIR__ ) . '/vendor/wp-phpunit/wp-phpunit';
+}
+
+// Give access to tests_add_filter() function.
+require_once $_test_root . '/includes/functions.php';
 
 /**
  * Manually load the plugin being tested.
@@ -39,7 +48,7 @@ function fail_if_died( $message ) {
 tests_add_filter( 'wp_die_handler', 'fail_if_died' );
 
 // Start up the WP testing environment.
-require dirname( __DIR__ ) . '/vendor/wp-phpunit/wp-phpunit/includes/bootstrap.php';
+require_once $_test_root . '/includes/bootstrap.php';
 
 // Use existing behavior for wp_die during actual test execution.
 remove_filter( 'wp_die_handler', 'fail_if_died' );
