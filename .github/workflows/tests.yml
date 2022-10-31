@@ -13,17 +13,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
 
-      - name: Install dependencies
-        run: |
-          npm install
-          composer install
-          npm run wp-env start
-          npm run build
+      - name: Install NodeJS
+        uses: actions/setup-node@eeb10cff27034e7acf239c5d29f62154018672fd # v3.3.0
+        with:
+            node-version-file: '.nvmrc'
+            cache: yarn
+        
+        - name: Install dependencies & setup configs
+          run: |
+              yarn setup:tools
 
-      - name: Run PHP unit tests
-        run: |
-          # Delete the default wp-env forced environment type
-          sed "/WP_ENVIRONMENT_TYPE/d" -i `npm run wp-env install-path 2>/dev/null | tail -n1`/tests-WordPress/phpunit-wp-config.php
-          npm run test:php
+        - name: Install dependencies
+          run: |
+              yarn
+              composer install
+              yarn build
+              yarn wp-env start
+
+        - name: Run PHP unit tests
+          run: |
+              yarn test:php
