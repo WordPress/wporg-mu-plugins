@@ -68,11 +68,13 @@ function preload_font( $fonts, $subsets ) {
 	$subsets = explode( ',', $subsets );
 
 	$preload = $style->extra['preload'] ?? [];
-	$new_preload = [
-		'fonts' => array_unique( $fonts ),
-		'subsets' => array_unique( $subsets ),
-	];
-	$preload = array_merge_recursive( $preload, $new_preload );
+
+	foreach ( $fonts as $font ) {
+		$new_preload = [
+			$font => $subsets,
+		];
+		$preload = array_merge_recursive( $preload, $new_preload );
+	}
 
 	wp_style_add_data( 'wporg-global-fonts', 'preload', $preload );
 
@@ -89,24 +91,29 @@ function maybe_preload_font( $preload ) {
 		return $preload;
 	}
 
-	$combined_fonts_subsets = array_combine( (array) $style->extra['preload']['fonts'], (array) $style->extra['preload']['subsets'] );
-
-	foreach ( $combined_fonts_subsets as $font => $subset ) {
-		if ( empty( $font ) || empty( $subset ) ) {
+	foreach ( (array) $style->extra['preload'] as $font => $subsets ) {
+		if ( empty( $font ) || empty( $subsets ) ) {
 			continue;
 		}
 
-		$font_url = get_font_url( $font, $subset );
-		if ( ! $font_url ) {
-			continue;
-		}
+		$subsets = array_unique( $subsets );
+		foreach ( $subsets as $subset ) {
+			if ( empty( $subset ) ) {
+				continue;
+			}
 
-		$preload[] = [
-			'href'        => $font_url,
-			'as'          => 'font',
-			'crossorigin' => 'crossorigin',
-			'type'        => 'font/woff2',
-		];
+			$font_url = get_font_url( $font, $subset );
+			if ( ! $font_url ) {
+				continue;
+			}
+
+			$preload[] = [
+				'href'        => $font_url,
+				'as'          => 'font',
+				'crossorigin' => 'crossorigin',
+				'type'        => 'font/woff2',
+			];
+		}
 	}
 
 	return $preload;

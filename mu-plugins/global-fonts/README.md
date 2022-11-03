@@ -23,13 +23,13 @@ wp_register_style(
 
 If you wish to have one (or more) font subsets preloaded automatically, you can call the global function `global_fonts_preload()`.
 
-For example, to preload Inter Latin:
+For example, to preload `Inter Latin`:
 
 ```php
 global_fonts_preload( 'Inter', 'Latin' );
 ```
 
-or to also preload EB Garamond Italic Cyrillic:
+to preload `Inter Latin`, `Inter Cyrillic`, `EB Garamond Italic Latin`, and `EB Garamond Italic Cyrillic`:
 
 ```php
 global_fonts_preload( 'Inter, EB Garamond Italic', 'Latin, Cyrillic' );
