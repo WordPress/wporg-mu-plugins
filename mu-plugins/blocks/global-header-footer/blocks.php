@@ -339,10 +339,8 @@ function render_global_header( $attributes = array() ) {
 	// Preload the menu font.
 	if ( is_callable( 'global_fonts_preload' ) ) {
 		/* translators: Subsets can be any of cyrillic, cyrillic-ext, greek, greek-ext, vietnamese, latin, latin-ext.  */
-		$subsets = explode( ',', _x( 'latin', 'Global menu font subsets, comma separated', 'wporg' ) );
-		foreach ( $subsets as $subset ) {
-			global_fonts_preload( 'Inter', $subset );
-		}
+		$subsets = _x( 'latin', 'Global menu font subsets, comma separated', 'wporg' );
+		global_fonts_preload( 'Inter', $subsets );
 	}
 
 	// The mobile Get WordPress button needs to be in both menus.
