@@ -11,9 +11,9 @@
 	"bugs": {
 		"url": "https://github.com/WordPress/wporg-mu-plugins/issues"
 	},
-	"dependencies": {},
 	"devDependencies": {
 		"@wordpress/browserslist-config": "4.1.2",
+		"@wordpress/env": "5.5.0",
 		"@wordpress/scripts": "23.5.0",
 		"chalk": "4.1.2",
 		"cross-spawn": "7.0.3",
@@ -40,7 +40,9 @@
 		"lint:css": "wp-scripts lint-style **/*.pcss",
 		"lint:js": "wp-scripts lint-js **/src/**/*.js",
 		"setup:tools": "yarn install && composer install && TEXTDOMAIN=wporg composer exec update-configs",
-		"update:tools": "composer update && TEXTDOMAIN=wporg composer exec update-configs"
+		"update:tools": "composer update && TEXTDOMAIN=wporg composer exec update-configs",
+		"wp-env": "wp-env",
+		"test:php": "wp-env run phpunit 'phpunit -c /var/www/html/phpunit.xml.dist --verbose'"
 	},
 	"rtlcssConfig": {},
 	"stylelint": {
