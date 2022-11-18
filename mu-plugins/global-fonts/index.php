@@ -123,23 +123,39 @@ function maybe_preload_font( $preload ) {
  * Return the details about a specific font face.
  */
 function get_font_url( $font, $subset ) {
-	$lower_font = strtolower( trim( $font ) );
+	$lower_font   = strtolower( trim( $font ) );
 	$lower_subset = strtolower( trim( $subset ) );
+
+	$valid_subsets = array( 'arrows', 'cyrillic-ext', 'cyrillic', 'greek-ext', 'greek', 'latin-ext', 'latin', 'vietnamese' );
+	if ( ! in_array( $lower_subset, $valid_subsets ) ) {
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			trigger_error( sprintf( 'Requested font subset %s does not exist.', esc_html( $lower_subset ) ), E_USER_WARNING );
+		}
+		return false;
+	}
 
 	switch ( $lower_font ) {
 		case 'inter':
 			$font_folder = 'Inter/';
 			$font_file_name = 'Inter-';
-			return plugins_url( $font_folder . $font_file_name . $lower_subset . '.woff2', __FILE__ );
+			break;
 		case 'eb garamond':
 			$font_folder = 'EB-Garamond/';
 			$font_file_name = 'EBGaramond-';
-			return plugins_url( $font_folder . $font_file_name . $lower_subset . '.woff2', __FILE__ );
+			break;
 		case 'eb garamond italic':
 			$font_folder = 'EB-Garamond/';
 			$font_file_name = 'EBGaramond-Italic-';
 			return plugins_url( $font_folder . $font_file_name . $lower_subset . '.woff2', __FILE__ );
 	}
 
-	return false;
+	$filepath = $font_folder . $font_file_name . $lower_subset . '.woff2';
+	if ( ! file_exists( __DIR__ . '/' . $filepath ) ) {
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			trigger_error( sprintf( 'Requested font file %s does not exist.', esc_html( $filepath ) ), E_USER_WARNING );
+		}
+		return false;
+	}
+
+	return plugins_url( $filepath, __FILE__ );
 }
