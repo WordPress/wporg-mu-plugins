@@ -54,22 +54,33 @@ function relative_to_absolute_urls( $editor_settings ) {
 /**
  * Specify a font to be preloaded.
  *
- * @param array|string $font_faces The font(s) to preload.
- * @return bool If the font will be preloaded.
+ * This adds the font name (optionally with style and weight) and subset to the
+ * preload list. No validation is done at this point, so this won't tell you if
+ * the font or subset is invalid. That check is done in `maybe_preload_font` by
+ * the `get_font_url` call.
+ *
+ * @param string $fonts   The font(s) to preload, comma-separated.
+ * @param string $subsets The subset(s) to preload, comma-separated.
+ *
+ * @return bool If the font has been added to the preload list.
  */
-function preload_font( $font_faces ) {
+function preload_font( $fonts, $subsets ) {
 	$style = wp_styles()->query( 'wporg-global-fonts' );
-	if ( ! $style ) {
+	if ( ! $style || empty( $fonts ) || empty( $subsets ) ) {
 		return false;
 	}
 
-	if ( ! is_array( $font_faces ) ) {
-		$font_faces = [ $font_faces ];
-	}
+	$fonts = explode( ',', $fonts );
+	$subsets = explode( ',', $subsets );
 
 	$preload = $style->extra['preload'] ?? [];
-	$preload = array_merge( $preload, $font_faces );
-	$preload = array_unique( $preload );
+
+	foreach ( $fonts as $font ) {
+		$new_preload = [
+			$font => $subsets,
+		];
+		$preload = array_merge_recursive( $preload, $new_preload );
+	}
 
 	wp_style_add_data( 'wporg-global-fonts', 'preload', $preload );
 
@@ -86,13 +97,22 @@ function maybe_preload_font( $preload ) {
 		return $preload;
 	}
 
-	foreach ( (array) $style->extra['preload'] as $font_face ) {
-		$font_urls = get_font_urls( $font_face );
-		if ( ! $font_urls ) {
+	foreach ( (array) $style->extra['preload'] as $font => $subsets ) {
+		if ( empty( $font ) || empty( $subsets ) ) {
 			continue;
 		}
 
-		foreach ( $font_urls as $font_url ) {
+		$subsets = array_unique( $subsets );
+		foreach ( $subsets as $subset ) {
+			if ( empty( $subset ) ) {
+				continue;
+			}
+
+			$font_url = get_font_url( $font, $subset );
+			if ( ! $font_url ) {
+				continue;
+			}
+
 			$preload[] = [
 				'href'        => $font_url,
 				'as'          => 'font',
@@ -108,37 +128,64 @@ function maybe_preload_font( $preload ) {
 /**
  * Return the details about a specific font face.
  */
-function get_font_urls( $font ) {
-	switch ( strtolower( $font ) ) {
-		case 'inter arrows':
-			return [ plugins_url( 'Inter/Inter-arrows.woff2', __FILE__ ) ];
-		case 'inter cyrillic':
-			return [ plugins_url( 'Inter/Inter-cyrillic.woff2', __FILE__ ), plugins_url( 'Inter/Inter-cyrillic-ext.woff2', __FILE__ ) ];
-		case 'inter greek':
-			return [ plugins_url( 'Inter/Inter-greek.woff2', __FILE__ ), plugins_url( 'Inter/Inter-greek-ext.woff2', __FILE__ ) ];
-		case 'inter latin':
-			return [ plugins_url( 'Inter/Inter-latin.woff2', __FILE__ ), plugins_url( 'Inter/Inter-latin-ext.woff2', __FILE__ ) ];
-		case 'inter vietnamese':
-			return [ plugins_url( 'Inter/Inter-vietnamese.woff2', __FILE__ ) ];
-		case 'eb garamond arrows':
-			return [ plugins_url( 'EB-Garamond/EBGaramond-arrows.woff2', __FILE__ ) ];
-		case 'eb garamond cyrillic':
-			return [ plugins_url( 'EB-Garamond/EBGaramond-cyrillic.woff2', __FILE__ ), plugins_url( 'EB-Garamond/EBGaramond-cyrillic-ext.woff2', __FILE__ ) ];
-		case 'eb garamond greek':
-			return [ plugins_url( 'EB-Garamond/EBGaramond-greek.woff2', __FILE__ ), plugins_url( 'EB-Garamond/EBGaramond-greek-ext.woff2', __FILE__ ) ];
-		case 'eb garamond latin':
-			return [ plugins_url( 'EB-Garamond/EBGaramond-latin.woff2', __FILE__ ), plugins_url( 'EB-Garamond/EBGaramond-latin-ext.woff2', __FILE__ ) ];
-		case 'eb garamond vietnamese':
-			return [ plugins_url( 'EB-Garamond/EBGaramond-vietnamese.woff2', __FILE__ ) ];
-		case 'eb garamond cyrillic italic':
-			return [ plugins_url( 'EB-Garamond/EBGaramond-Italic-cyrillic.woff2', __FILE__ ), plugins_url( 'EB-Garamond/EBGaramond-Italic-cyrillic-ext.woff2', __FILE__ ) ];
-		case 'eb garamond greek italic':
-			return [ plugins_url( 'EB-Garamond/EBGaramond-Italic-greek.woff2', __FILE__ ), plugins_url( 'EB-Garamond/EBGaramond-Italic-greek-ext.woff2', __FILE__ ) ];
-		case 'eb garamond latin italic':
-			return [ plugins_url( 'EB-Garamond/EBGaramond-Italic-latin.woff2', __FILE__ ), plugins_url( 'EB-Garamond/EBGaramond-Italic-latin-ext.woff2', __FILE__ ) ];
-		case 'eb garamond vietnamese italic':
-			return [ plugins_url( 'EB-Garamond/EBGaramond-Italic-vietnamese.woff2', __FILE__ ) ];
+function get_font_url( $font, $subset ) {
+	$lower_font   = strtolower( trim( $font ) );
+	$lower_subset = strtolower( trim( $subset ) );
+
+	$valid_subsets = array( 'arrows', 'cyrillic-ext', 'cyrillic', 'greek-ext', 'greek', 'latin-ext', 'latin', 'vietnamese' );
+	if ( ! in_array( $lower_subset, $valid_subsets ) ) {
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			trigger_error( sprintf( 'Requested font subset %s does not exist.', esc_html( $lower_subset ) ), E_USER_WARNING );
+		}
+		return false;
 	}
 
-	return false;
+	switch ( $lower_font ) {
+		case 'inter':
+			$font_folder = 'Inter/';
+			$font_file_name = 'Inter-';
+			break;
+		case 'eb garamond':
+			$font_folder = 'EB-Garamond/';
+			$font_file_name = 'EBGaramond-';
+			break;
+		case 'eb garamond italic':
+			$font_folder = 'EB-Garamond/';
+			$font_file_name = 'EBGaramond-Italic-';
+			break;
+		case 'ibm plex mono extralight':
+			$font_folder = 'IBMPlexMono/';
+			$font_file_name = 'IBMPlexMono-ExtraLight-';
+			break;
+		case 'ibm plex mono extralight italic':
+			$font_folder = 'IBMPlexMono/';
+			$font_file_name = 'IBMPlexMono-ExtraLightItalic-';
+			break;
+		case 'ibm plex mono':
+			$font_folder = 'IBMPlexMono/';
+			$font_file_name = 'IBMPlexMono-Regular-';
+			break;
+		case 'ibm plex mono italic':
+			$font_folder = 'IBMPlexMono/';
+			$font_file_name = 'IBMPlexMono-Italic-';
+			break;
+		case 'ibm plex mono bold':
+			$font_folder = 'IBMPlexMono/';
+			$font_file_name = 'IBMPlexMono-Bold-';
+			break;
+		case 'ibm plex mono bold italic':
+			$font_folder = 'IBMPlexMono/';
+			$font_file_name = 'IBMPlexMono-BoldItalic-';
+			break;
+	}
+
+	$filepath = $font_folder . $font_file_name . $lower_subset . '.woff2';
+	if ( ! file_exists( __DIR__ . '/' . $filepath ) ) {
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			trigger_error( sprintf( 'Requested font file %s does not exist.', esc_html( $filepath ) ), E_USER_WARNING );
+		}
+		return false;
+	}
+
+	return plugins_url( $filepath, __FILE__ );
 }
