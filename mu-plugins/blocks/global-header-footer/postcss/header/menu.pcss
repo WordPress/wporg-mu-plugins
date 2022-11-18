@@ -17,7 +17,7 @@
 
 	& .wp-block-navigation__responsive-container-open {
 		display: flex; /* Gutenberg has the button hardcoded to hide at 600px, but we need it to wait until `--tablet`. */
-		padding-right: calc(var(--wp--style--block-gap) + var(--wp--custom--alignment--scroll-bar-width));
+		padding-right: calc(16px + var(--wp--custom--alignment--scroll-bar-width));
 
 		@media (--tablet) {
 			display: none;

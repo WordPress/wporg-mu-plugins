@@ -12,9 +12,10 @@
 		flex-basis: 100%;
 		flex-shrink: 1;
 		text-align: left;
-		min-width: 73px;
+
+		/* Subtract the left padding from the first menu item. */
+		min-width: calc(80px - var(--wp--style--block-gap) / 2);
 		padding: 0;
-		padding-left: calc(var(--wp--style--block-gap) / 2);
 
 		@media (--tablet) {
 			flex-basis: auto;
@@ -26,7 +27,7 @@
 		display: inline-flex;
 		box-sizing: content-box;
 		height: 27px;
-		padding: 16px calc(var(--wp--style--block-gap) / 2);
+		padding: 16px var(--wp--style--block-gap);
 		color: var(--wp-global-header--text-color);
 
 		@media (--tablet) {
