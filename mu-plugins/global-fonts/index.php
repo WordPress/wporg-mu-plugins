@@ -54,9 +54,15 @@ function relative_to_absolute_urls( $editor_settings ) {
 /**
  * Specify a font to be preloaded.
  *
- * @param string $fonts The font(s) to preload.
- * @param string $subsets The subset(s) to preload.
- * @return bool If the font will be preloaded.
+ * This adds the font name (optionally with style and weight) and subset to the
+ * preload list. No validation is done at this point, so this won't tell you if
+ * the font or subset is invalid. That check is done in `maybe_preload_font` by
+ * the `get_font_url` call.
+ *
+ * @param string $fonts   The font(s) to preload, comma-separated.
+ * @param string $subsets The subset(s) to preload, comma-separated.
+ *
+ * @return bool If the font has been added to the preload list.
  */
 function preload_font( $fonts, $subsets ) {
 	$style = wp_styles()->query( 'wporg-global-fonts' );
