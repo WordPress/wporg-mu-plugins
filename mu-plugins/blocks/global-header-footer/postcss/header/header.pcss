@@ -53,7 +53,7 @@ html {
 		& .wp-block-navigation__responsive-container-open {
 
 			/* Magic numbers to center the 24px icon in 60px height. */
-			padding: 18px var(--wp--style--block-gap) 18px;
+			padding: 18px 16px 18px;
 
 			@media (--tablet) {
 				padding-top: 37px;
@@ -83,9 +83,9 @@ html {
 		right: 0;
 		top: calc(-1 * var(--wp-global-header-height));
 		padding-top: 18px; /* Magic numbers to center the 24px icon in 60px height. */
-		padding-right: calc(var(--wp--style--block-gap) + var(--wp--custom--alignment--scroll-bar-width));
+		padding-right: calc(16px + var(--wp--custom--alignment--scroll-bar-width));
 		padding-bottom: 18px; /* Magic numbers to center the 24px icon in 60px height. */
-		padding-left: var(--wp--style--block-gap);
+		padding-left: 16px;
 		background-color: var(--wp-global-header--background-color--hover);
 	}
 }
