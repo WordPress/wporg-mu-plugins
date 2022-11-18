@@ -146,7 +146,31 @@ function get_font_url( $font, $subset ) {
 		case 'eb garamond italic':
 			$font_folder = 'EB-Garamond/';
 			$font_file_name = 'EBGaramond-Italic-';
-			return plugins_url( $font_folder . $font_file_name . $lower_subset . '.woff2', __FILE__ );
+			break;
+		case 'ibm plex mono extralight':
+			$font_folder = 'IBMPlexMono/';
+			$font_file_name = 'IBMPlexMono-ExtraLight-';
+			break;
+		case 'ibm plex mono extralight italic':
+			$font_folder = 'IBMPlexMono/';
+			$font_file_name = 'IBMPlexMono-ExtraLightItalic-';
+			break;
+		case 'ibm plex mono':
+			$font_folder = 'IBMPlexMono/';
+			$font_file_name = 'IBMPlexMono-Regular-';
+			break;
+		case 'ibm plex mono italic':
+			$font_folder = 'IBMPlexMono/';
+			$font_file_name = 'IBMPlexMono-Italic-';
+			break;
+		case 'ibm plex mono bold':
+			$font_folder = 'IBMPlexMono/';
+			$font_file_name = 'IBMPlexMono-Bold-';
+			break;
+		case 'ibm plex mono bold italic':
+			$font_folder = 'IBMPlexMono/';
+			$font_file_name = 'IBMPlexMono-BoldItalic-';
+			break;
 	}
 
 	$filepath = $font_folder . $font_file_name . $lower_subset . '.woff2';
