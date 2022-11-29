@@ -26,7 +26,6 @@
 		},
 		"multiple": false
 	},
-	"usesContext": [ "postId" ],
 	"editorScript": "file:./index.js",
 	"style": "file:./style.css"
 }

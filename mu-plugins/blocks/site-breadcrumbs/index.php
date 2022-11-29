@@ -36,10 +36,6 @@ function init() {
  * @return string Returns the block markup.
  */
 function render_block( $attributes, $content, $block ) {
-	if ( ! isset( $block->context['postId'] ) ) {
-		return '';
-	}
-
 	$breadcrumbs = array(
 		array(
 			'url'   => get_site_url(),
