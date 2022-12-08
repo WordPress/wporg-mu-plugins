@@ -14,7 +14,7 @@ import metadata from './block.json';
 
 const variations = [
 	{ label: __( 'White on black (default)', 'wporg' ), value: 'white-on-black' },
-	{ label: __( 'White on dark black', 'wporg' ), value: 'white-on-black-dark' },
+	{ label: __( 'White on dark black', 'wporg' ), value: 'white-on-dark-black' },
 	{ label: __( 'Black on white', 'wporg' ), value: 'black-on-white' },
 	{ label: __( 'White on blue', 'wporg' ), value: 'white-on-blue' },
 ];
