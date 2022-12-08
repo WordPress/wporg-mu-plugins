@@ -9,7 +9,12 @@
 		"style": {
 			"type": "string",
 			"default": "white-on-black",
-			"enum": [ "white-on-black", "black-on-white", "white-on-blue" ]
+			"enum": [ 
+				"white-on-black",
+				"white-on-dark-black",
+				"black-on-white",
+				"white-on-blue"
+			]
 		}
 	},
 	"textdomain": "wporg",

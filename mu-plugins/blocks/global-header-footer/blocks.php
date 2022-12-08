@@ -1028,6 +1028,9 @@ function get_container_classes( $color_scheme ) {
 		case 'black-on-white':
 			$classes .= ' has-charcoal-2-color has-white-background-color';
 			break;
+		case 'white-on-dark-black':			
+			$classes .= ' has-white-color has-charcoal-1-background-color';
+			break;
 		case 'white-on-black':
 		default:
 			$classes .= ' has-white-color has-charcoal-2-background-color';
