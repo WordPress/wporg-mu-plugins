@@ -45,6 +45,12 @@ function render_block( $attributes, $content, $block ) {
 
 	$title = get_the_title();
 
+	// truncate title without breaking words for mobile devices
+	if( wp_is_mobile() && strlen( $title ) > 30) {
+		$title = explode( "\n", wordwrap( $title , 30));
+		$title = $title[0] . ' ...';
+	}
+
 	if ( is_home() ) {
 		$title = esc_html__( 'Archives', 'wporg' );
 	} elseif ( is_search() ) {
