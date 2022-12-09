@@ -58,6 +58,7 @@ function render_block( $attributes, $content, $block ) {
 	$breadcrumbs[] = array(
 		'url'   => false,
 		'title' => $title,
+		'img'   => false,
 	);
 
 	/**
@@ -75,7 +76,7 @@ function render_block( $attributes, $content, $block ) {
 		if ( ! $crumb['url'] ) {
 			$content .= sprintf( '<span class="is-current-page">%s</span>', esc_html( $crumb['title'] ) );
 		} else {
-			$content .= sprintf( '<span><a href="%s">%s</a></span>', esc_url( $crumb['url'] ), esc_html( $crumb['title'] ) );
+			$content .= sprintf( '<span><a href="%s" style="display:flex;">%s</a></span>', esc_url( $crumb['url'] ), $crumb['img'] ?? esc_html( $crumb['title'] ) );
 		}
 	}
 
