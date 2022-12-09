@@ -13,10 +13,10 @@ import { useBlockProps } from '@wordpress/block-editor';
 import metadata from './block.json';
 
 const variations = [
-	{ label: __( 'White on black (default)', 'wporg' ), value: 'white-on-black' },
-	{ label: __( 'White on dark black', 'wporg' ), value: 'white-on-dark-black' },
+	{ label: __( 'White on charcoal-1', 'wporg' ), value: 'white-on-dark-black' },
+	{ label: __( 'White on charcoal-2 (default)', 'wporg' ), value: 'white-on-black' },		
+	{ label: __( 'White on blueberry-1', 'wporg' ), value: 'white-on-blue' },
 	{ label: __( 'Black on white', 'wporg' ), value: 'black-on-white' },
-	{ label: __( 'White on blue', 'wporg' ), value: 'white-on-blue' },
 ];
 
 const Edit = ( { attributes } ) => (
