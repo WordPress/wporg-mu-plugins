@@ -9,6 +9,18 @@ defined( 'WPINC' ) || die();
  */
 add_filter( 'wp_stream_record_array', __NAMESPACE__ . '\include_user_name_in_creation_log' );
 add_filter( 'wp_stream_is_record_excluded', __NAMESPACE__ . '\exclude_profile_updates_as_part_of_user_creation', 10, 2 );
+add_filter( 'bbp_set_user_role', __NAMESPACE__ . '\bbp_set_user_role', 10, 2 );
+
+/**
+ * Log the bbPress forum role being changed.
+ */
+function bbp_set_user_role( $new_role, $user_id ) {
+	if ( $new_role ) {
+		log( 'Forum role set to %s', compact( 'new_role' ), $user_id, 'bbpress', 'role', 'updated' );
+	}
+
+	return $new_role;
+}
 
 /**
  * Stream by default logs new user registrations as 'New user registration' which doesn't come up in search-by-username.
@@ -56,4 +68,26 @@ function exclude_profile_updates_as_part_of_user_creation( $exclude, $record ) {
 	}
 
 	return $exclude;
+}
+
+/**
+ * Helper Functions
+ */
+
+/**
+ * Log audit log entries into Stream.
+ *
+ * This is a shortcut past the Stream Connectors, reaching in and calling the logging function directly..
+ *
+ * @see https://github.com/xwp/stream/blob/develop/classes/class-log.php#L57-L70 for args.
+ */
+function log( $message, $args, $object_id, $connector, $context, $action, $user_id = null ) {
+	if (
+		! function_exists( 'wp_stream_get_instance' ) ||
+		! is_callable( [ wp_stream_get_instance()->log, 'log' ] )
+	) {
+		return false;
+	}
+
+	wp_stream_get_instance()->log->log( $connector, $message, $args, $object_id, $context, $action, $user_id );
 }
