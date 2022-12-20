@@ -734,6 +734,23 @@ function get_download_url() {
 }
 
 /**
+ * Render a banner that other plugins can add alerts to.
+ */
+function render_header_alert_banner() {
+	$markup = '';
+	$alerts = apply_filters( 'wporg_global_header_alert_markup', '' );
+
+	if ( $alerts ) {
+		$markup = sprintf(
+			'<div class="global-header__alert-banner">%s</div>',
+			$alerts
+		);
+	}
+
+	return $markup;
+}
+
+/**
  * Render the global footer via a REST request.
  *
  * @return string

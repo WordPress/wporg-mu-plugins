@@ -90,6 +90,39 @@ html {
 	}
 }
 
+.global-header__alert-banner {
+	--wp-global-header--link-color: #3e58e1;
+
+	background-color: #eff2ff;
+	color: #1e1e1e;
+	font-size: 12px;
+	line-height: 1.2;
+	text-align: center;
+	margin: 0;
+	padding: 10px 20px;
+
+	& p {
+		color: inherit; /* Override some Classic themes. */
+
+		&:first-child {
+			margin-top: 0;
+		}
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	& a:hover,
+	& a:focus {
+
+		/* !important is needed because the build process wraps some of the selectors in `_common.pcss` in an
+		 * `:is()` pseudo-class, which increases their specificity.
+		 */
+		color: var(--wp-global-header--link-color) !important;
+	}
+}
+
 /*
  * Gutenberg Patches
  *
