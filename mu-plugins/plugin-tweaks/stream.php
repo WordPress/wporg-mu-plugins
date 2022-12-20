@@ -9,14 +9,14 @@ defined( 'WPINC' ) || die();
  */
 add_filter( 'wp_stream_log_data', __NAMESPACE__ . '\include_user_name_in_creation_log' );
 add_filter( 'wp_stream_is_record_excluded', __NAMESPACE__ . '\exclude_profile_updates_as_part_of_user_creation', 10, 2 );
-add_filter( 'bbp_set_user_role', __NAMESPACE__ . '\bbp_set_user_role', 10, 2 );
+add_filter( 'bbp_set_user_role', __NAMESPACE__ . '\bbp_set_user_role', 10, 3 );
 
 /**
  * Log the bbPress forum role being changed.
  */
-function bbp_set_user_role( $new_role, $user_id ) {
+function bbp_set_user_role( $new_role, $user_id, $user ) {
 	if ( $new_role ) {
-		log( 'Forum role set to %s', compact( 'new_role' ), $user_id, 'bbpress', 'role', 'updated' );
+		log( "%s's forum role set to %s", [ $user->user_login, $new_role ], $user_id, 'bbpress', 'role', 'updated' );
 	}
 
 	return $new_role;
