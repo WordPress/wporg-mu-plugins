@@ -10,3 +10,4 @@ namespace WordPressdotorg\MU_Plugins\Plugin_Tweaks;
 defined( 'WPINC' ) || die();
 
 require_once __DIR__ . '/wporg-internal-notes.php';
+require_once __DIR__ . '/stream.php';
