@@ -7,7 +7,7 @@ defined( 'WPINC' ) || die();
 /**
  * Actions and filters.
  */
-add_filter( 'wp_stream_record_array', __NAMESPACE__ . '\include_user_name_in_creation_log' );
+add_filter( 'wp_stream_log_data', __NAMESPACE__ . '\include_user_name_in_creation_log' );
 add_filter( 'wp_stream_is_record_excluded', __NAMESPACE__ . '\exclude_profile_updates_as_part_of_user_creation', 10, 2 );
 add_filter( 'bbp_set_user_role', __NAMESPACE__ . '\bbp_set_user_role', 10, 2 );
 
@@ -38,8 +38,9 @@ function include_user_name_in_creation_log( $record ) {
 		'created' === $record['action']
 	) {
 		$user = get_user_by( 'id', $record['object_id'] );
-		if ( $user && ! str_contains( $record['summary'], $user->user_login ) ) {
-			$record['summary'] .= ': ' . $user->user_login;
+		if ( $user && ! str_contains( $record['message'], '%s' ) ) {
+			$record['message'] = 'New user registration: %s';
+			$record['args'] = [ 'user_login' => $user->user_login ];
 		}
 	}
 
