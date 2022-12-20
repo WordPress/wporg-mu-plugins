@@ -21,6 +21,7 @@ add_filter( 'wp_stream_is_record_excluded', __NAMESPACE__ . '\exclude_profile_up
  */
 function include_user_name_in_creation_log( $record ) {
 	if (
+		'users' === $record['connector'] &&
 		'users' === $record['context'] &&
 		'created' === $record['action']
 	) {
@@ -42,15 +43,14 @@ function include_user_name_in_creation_log( $record ) {
  */
 function exclude_profile_updates_as_part_of_user_creation( $exclude, $record ) {
 	if (
-		! $exclude &&
+		// Users are not logged in as part of registration.
+		! is_user_logged_in() &&
 		doing_action( 'profile_update' ) &&
 		defined( 'WPORG_LOGIN_REGISTER_BLOGID' ) &&
-		WPORG_LOGIN_REGISTER_BLOGID == $record['blog_id'] &&
+		WPORG_LOGIN_REGISTER_BLOGID === get_current_blog_id() &&
+		'users' === $record['connector'] &&
 		'profiles' === $record['context'] &&
-		'updated' === $record['action'] &&
-		// This is a sanity check, the user is stored in 'object_id', and 'user_id' is the user updating the data.
-		// If a user_id is set, this was not during a user registration.
-		! $record['user_id']
+		'updated' === $record['action']
 	) {
 		$exclude = true;
 	}
