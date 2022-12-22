@@ -2,7 +2,7 @@
 
 namespace WordPressdotorg\MU_Plugins\Global_Header_Footer\Header;
 
-use function WordPressdotorg\MU_Plugins\Global_Header_Footer\{ get_home_url, get_download_url, get_container_classes };
+use function WordPressdotorg\MU_Plugins\Global_Header_Footer\{ get_home_url, get_download_url, get_container_classes, render_header_alert_banner };
 
 defined( 'WPINC' ) || die();
 
@@ -123,3 +123,5 @@ function recursive_menu( $menu_item, $top_level = true ) {
 		</a>
 	</div> <!-- /wp:group -->
 </header> <!-- /wp:group -->
+
+<?php echo wp_kses_post( render_header_alert_banner() ); ?>
