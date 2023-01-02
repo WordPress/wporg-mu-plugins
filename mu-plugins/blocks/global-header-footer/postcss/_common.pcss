@@ -55,7 +55,13 @@ html {
 	--wp--custom--form--padding: calc(0.5 * var(--wp--custom--margin--horizontal));
 	--wp--style--block-gap: 20px;
 
-	/* This is a subset of the colors provided by `theme.json`, set here to prevent conflicts across other block themes. */
+	/*
+	 * This is a subset of the colors provided by `theme.json`, set here to prevent conflicts across other block
+	 * themes. The others should be added as needed. Once all sites are running child themes of
+	 * `wporg-parent-2021` this section can be removed.
+	 *
+	 * @link https://github.com/WordPress/wporg-parent-2021/#colors
+	 */
 	--wp--preset--color--charcoal-1: #1e1e1e;
 	--wp--preset--color--charcoal-5: #1c2024; /* charcoal-5 is only used in the header (hovers), it's not used in the parent/child themes. */
 	--wp--preset--color--charcoal-2: #23282d;
@@ -64,6 +70,8 @@ html {
 	--wp--preset--color--deep-blueberry: #213fd4;
 	--wp--preset--color--blueberry-1: #3858e9;
 	--wp--preset--color--blueberry-2: #7b90ff;
+	--wp--preset--color--blueberry-3: #c7d1ff;
+	--wp--preset--color--blueberry-4: #eff2ff;
 
 	--wp-global-header--background-color: var(--wp--preset--color--charcoal-2);
 	--wp-global-header--background-color--hover: var(--wp--preset--color--charcoal-5);
