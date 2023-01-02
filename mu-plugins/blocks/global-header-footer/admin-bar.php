@@ -11,12 +11,27 @@ add_action( 'admin_bar_menu', __NAMESPACE__ . '\filter_admin_bar_links', 500 ); 
 add_filter( 'show_admin_bar', __NAMESPACE__ . '\should_show_admin_bar' );
 
 /**
- * Always show the admin bar.
+ * Show the admin bar most of the time.
  *
  * @param bool $show_admin_bar Whether the admin bar should be shown.
  * @return bool
  */
 function should_show_admin_bar( $show_admin_bar ) {
+	/*
+	 * Visitors are confused by the admin bar on w.org/home and w.org/download, and it generates a large
+	 * number of support requests. Folks mistakenly assume they have to register for a w.org account in
+	 * order to download WP or setup a site.
+	 *
+	 * Super Admins and folks with a role on the site should always see the bar, for convenience.
+	 */
+	if ( 'production' === wp_get_environment_type() && ! is_super_admin() && ! current_user_can( 'read' ) ) {
+		if ( 1 === get_current_blog_id() ) {
+			if ( is_front_page() || 371 === get_the_ID() ) {
+				return false;
+			}
+		}
+	}
+
 	return true;
 }
 
