@@ -86,13 +86,14 @@ class Meetup_Client extends API_Client {
 			self::cli_message( 'Meetup Client debug is on. Results will be truncated.' );
 		}
 
-		$this->oauth_client = new Meetup_OAuth2_Client();
+		add_action( 'api_client_tenacious_remote_request_attempt', array( $this, 'maybe_reset_oauth_token' ) );
+		add_action( 'api_client_handle_error_response', array( $this, 'maybe_reset_oauth_token' ) );
+
+		$this->oauth_client = new Meetup_OAuth2_Client;
 
 		if ( ! empty( $this->oauth_client->error->get_error_messages() ) ) {
 			$this->error = $this->merge_errors( $this->error, $this->oauth_client->error );
 		}
-
-		add_action( 'api_client_tenacious_remote_request_attempt', array( $this, 'maybe_reset_oauth_token' ) );
 	}
 
 	/**
@@ -106,6 +107,12 @@ class Meetup_Client extends API_Client {
 	 * @return void
 	 */
 	public function maybe_reset_oauth_token( $response ) {
+		static $resetting = false;
+		// Avoid recursive calls.
+		if ( $resetting ) {
+			return;
+		}
+
 		$code = wp_remote_retrieve_response_code( $response );
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );
 
@@ -115,6 +122,8 @@ class Meetup_Client extends API_Client {
 			( 400 === $code && $parsed_error->get_error_message( 'invalid_grant' ) )
 			|| ( 401 === $code && $parsed_error->get_error_message( 'auth_fail' ) )
 		) {
+			$resetting = true;
+
 			$this->oauth_client->reset_oauth_token();
 
 			if ( ! empty( $this->oauth_client->error->get_error_messages() ) ) {
@@ -123,6 +132,8 @@ class Meetup_Client extends API_Client {
 
 			// Reset the request headers, so that they include the new oauth token.
 			$this->current_request_args = $this->get_request_args();
+
+			$resetting = false;
 		}
 	}
 

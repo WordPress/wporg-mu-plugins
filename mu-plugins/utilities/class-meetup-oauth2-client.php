@@ -87,7 +87,7 @@ class Meetup_OAuth2_Client extends API_Client {
 			 *  See API_Client::tenacious_remote_request.
 			 */
 			'breaking_response_codes' => array(
-				400, // Bad request.
+				400, // Bad request. This happens for invalid_grant during refresh
 				401, // Unauthorized (invalid key).
 				429, // Too many requests (rate-limited).
 				404, // Unable to find group
@@ -219,48 +219,49 @@ class Meetup_OAuth2_Client extends API_Client {
 			return $this->oauth_token['access_token'];
 		}
 
+		// Get cached access token
 		$token = get_site_option( self::SITE_OPTION_KEY_OAUTH, array() );
+		$valid = $this->is_valid_token( $token, 'access_token' );
 
-		if ( ! $this->is_valid_token( $token, 'access_token' ) ) {
-
-			// At this point, we need to get a new oAuth done.
-			if ( empty( $_GET['code'] ) ) {
-				$_GET['code'] = get_site_option( self::SITE_OPTION_KEY_AUTHORIZATION, false );
-
-				if ( ! $_GET['code'] ) {
-					$message = sprintf(
-						"Meetup.com oAuth expired. Please access the following url while logged into the %s meetup.com account: \n\n%s\n\n" .
-						"For sites other than WordCamp Central, the ?code=... parameter will need to be stored on this site via wp-cli and this task run again: `wp --url=%s site option update '%s' '...'`",
-						self::EMAIL,
-						sprintf(
-							'https://secure.meetup.com/oauth2/authorize?client_id=%s&response_type=code&redirect_uri=%s&state=meetup-oauth',
-							self::CONSUMER_KEY,
-							self::REDIRECT_URI
-						),
-						network_site_url('/'),
-						self::SITE_OPTION_KEY_AUTHORIZATION
-					);
-
-					if ( admin_url( '/' ) === self::REDIRECT_URI ) {
-						printf( '<div class="notice notice-error"><p>%s</p></div>', nl2br( make_clickable( $message ) ) );
-					}
-
-					trigger_error( $message, E_USER_WARNING );
-
-					return false;
-				}
-			}
-
-			$token = $this->request_token( 'access_token', array( 'code' => $_GET['code'] ) );
-
-			if ( $this->is_valid_token( $token, 'access_token' ) ) {
-				delete_site_option( self::SITE_OPTION_KEY_AUTHORIZATION, false );
-			}
-		} elseif ( $this->is_expired_token( $token ) ) {
+		// If it's a valid token, but expired, refresh it.
+		if ( $valid && $this->is_expired_token( $token ) ) {
 			$token = $this->request_token( 'refresh_token', $token );
+			$valid = $this->is_valid_token( $token, 'access_token' );
 		}
 
-		if ( ! $this->is_valid_token( $token, 'access_token' ) ) {
+		// If it's not a valid token, or the refresh token wasn't valid, check to see if we're able to fetch a new one.
+		if ( ! $valid ) {
+			$auth_code = $_GET['code'] ?? get_site_option( self::SITE_OPTION_KEY_AUTHORIZATION, false );
+
+			if ( $auth_code ) {
+				$token = $this->request_token( 'access_token', array( 'code' => $auth_code ) );
+				$valid = $this->is_valid_token( $token, 'access_token' );
+				if ( $valid ) {
+					delete_site_option( self::SITE_OPTION_KEY_AUTHORIZATION, false );
+				}
+			}
+		}
+
+		// If we're unable to find a valid token, and we're not mid-refresh, throw a Warning & Notice.
+		if ( ! $valid ) {
+			$message = sprintf(
+				"Meetup.com oAuth expired. Please access the following url while logged into the %s meetup.com account: \n\n%s\n\n" .
+				"For sites other than WordCamp Central, the ?code=... parameter will need to be stored on this site via wp-cli and this task run again: `wp --url=%s site option update '%s' '...'`",
+				self::EMAIL,
+				sprintf(
+					'https://secure.meetup.com/oauth2/authorize?client_id=%s&response_type=code&redirect_uri=%s&state=meetup-oauth',
+					self::CONSUMER_KEY,
+					self::REDIRECT_URI
+				),
+				network_site_url('/'),
+				self::SITE_OPTION_KEY_AUTHORIZATION
+			);
+
+			if ( admin_url( '/' ) === self::REDIRECT_URI ) {
+				printf( '<div class="notice notice-error"><p>%s</p></div>', nl2br( make_clickable( $message ) ) );
+			}
+			trigger_error( $message, E_USER_WARNING );
+
 			return false;
 		}
 
@@ -283,7 +284,7 @@ class Meetup_OAuth2_Client extends API_Client {
 	public function reset_oauth_token() {
 		// NO. JUST NO. Do not delete the oAuth token.
 		// This is temporarily disabled while Meetup.com server-to-server authentication is unavailable.
-		// delete_site_option( self::SITE_OPTION_KEY_OAUTH );
+		delete_site_option( self::SITE_OPTION_KEY_OAUTH );
 
 		$this->oauth_token = array();
 		$this->error       = new WP_Error();
