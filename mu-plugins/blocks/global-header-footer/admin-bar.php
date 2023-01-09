@@ -17,16 +17,19 @@ add_filter( 'show_admin_bar', __NAMESPACE__ . '\should_show_admin_bar' );
  * @return bool
  */
 function should_show_admin_bar( $show_admin_bar ) {
+	$can_access_admin = is_super_admin() || current_user_can( 'read' );
+	$is_download_page = get_permalink() === get_download_url();
+
 	/*
 	 * Visitors are confused by the admin bar on w.org/home and w.org/download, and it generates a large
 	 * number of support requests. Folks mistakenly assume they have to register for a w.org account in
-	 * order to download WP or setup a site.
+	 * order to download WP or set up a site.
 	 *
-	 * Super Admins and folks with a role on the site should always see the bar, for convenience.
+	 * Folks who can access wp-admin should always see the bar, for convenience.
 	 */
-	if ( 'production' === wp_get_environment_type() && ! is_super_admin() && ! current_user_can( 'read' ) ) {
-		if ( 1 === get_current_blog_id() ) {
-			if ( is_front_page() || 371 === get_the_ID() ) {
+	if ( ! $can_access_admin ) {
+		if ( 1 === get_current_blog_id() || is_rosetta_site() ) { // 1 is wordpress.org/.
+			if ( is_front_page() || $is_download_page ) {
 				return false;
 			}
 		}
