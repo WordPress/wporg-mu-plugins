@@ -33,6 +33,7 @@ $code_is_poetry_src = str_contains( $container_class, 'has-charcoal-2-color' ) ?
 			<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'News', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/news/","kind":"custom","isTopLevelLink":true} /-->
 			<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Hosting', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/hosting/","kind":"custom","isTopLevelLink":true} /-->
 			<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Donate', 'Menu item title', 'wporg' ); ?>","url":"https://wordpressfoundation.org/donate/","kind":"custom","isTopLevelLink":true} /-->
+			<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Swag', 'Menu item title', 'wporg' ); ?>","url":"https://mercantile.wordpress.org/","kind":"custom","isTopLevelLink":true} /-->
 		<!-- /wp:navigation -->
 
 		<!-- wp:navigation {"orientation":"vertical","className":"global-footer__navigation-information","overlayMenu":"never"} -->
