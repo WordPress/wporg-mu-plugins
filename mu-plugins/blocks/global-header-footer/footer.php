@@ -41,6 +41,7 @@ $code_is_poetry_src = str_contains( $container_class, 'has-charcoal-2-color' ) ?
 			<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Developers', 'Menu item title', 'wporg' ); ?>","url":"https://developer.wordpress.org/","kind":"custom","isTopLevelLink":true} /-->
 			<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Get Involved', 'Menu item title', 'wporg' ); ?>","url":"https://make.wordpress.org/","kind":"custom","isTopLevelLink":true} /-->
 			<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Learn', 'Menu item title', 'wporg' ); ?>","url":"https://learn.wordpress.org/","kind":"custom","isTopLevelLink":true} /-->
+			<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Mobile', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/mobile/","kind":"custom","isTopLevelLink":true} /-->
 		<!-- /wp:navigation -->
 
 		<!-- wp:navigation {"orientation":"vertical","className":"global-footer__navigation-resources","overlayMenu":"never"} -->
@@ -48,6 +49,7 @@ $code_is_poetry_src = str_contains( $container_class, 'has-charcoal-2-color' ) ?
 			<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Plugins', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/plugins/","kind":"custom","isTopLevelLink":true} /-->
 			<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Themes', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/themes/","kind":"custom","isTopLevelLink":true} /-->
 			<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Patterns', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/patterns/","kind":"custom","isTopLevelLink":true} /-->
+			<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Photos', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/photos/","kind":"custom","isTopLevelLink":true} /-->
 		<!-- /wp:navigation -->
 
 		<!-- wp:navigation {"orientation":"vertical","className":"global-footer__navigation-community","overlayMenu":"never"} -->
@@ -55,6 +57,7 @@ $code_is_poetry_src = str_contains( $container_class, 'has-charcoal-2-color' ) ?
 			<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'WordPress.TV', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.tv/","kind":"custom","isTopLevelLink":true} /-->
 			<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'BuddyPress', 'Menu item title', 'wporg' ); ?>","url":"https://buddypress.org/","kind":"custom","isTopLevelLink":true} /-->
 			<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'bbPress', 'Menu item title', 'wporg' ); ?>","url":"https://bbpress.org/","kind":"custom","isTopLevelLink":true} /-->
+			<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Openverse', 'Menu item title', 'wporg' ); ?>","url":"https://openverse.org/","kind":"custom","isTopLevelLink":true} /-->
 		<!-- /wp:navigation -->
 
 		<!-- wp:navigation {"orientation":"vertical","className":"global-footer__navigation-external","overlayMenu":"never"} -->
@@ -62,6 +65,7 @@ $code_is_poetry_src = str_contains( $container_class, 'has-charcoal-2-color' ) ?
 			<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Matt', 'Menu item title', 'wporg' ); ?>","url":"https://ma.tt/","kind":"custom","isTopLevelLink":true} /-->
 			<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Privacy', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/about/privacy/","kind":"custom","isTopLevelLink":true} /-->
 			<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Public Code', 'Menu item title', 'wporg' ); ?>","url":"https://publiccode.eu/","kind":"custom","isTopLevelLink":true} /-->
+			<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Job Board', 'Menu item title', 'wporg' ); ?>","url":"https://jobs.wordpress.net/","kind":"custom","isTopLevelLink":true} /-->
 		<!-- /wp:navigation -->
 	</div> <!-- /wp:group -->
 
