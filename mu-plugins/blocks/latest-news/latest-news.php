@@ -33,8 +33,10 @@ function render_block( $attributes ) {
 
 	// Check if we can switch to the News blog.
 	// @todo Prevent switch if Rosetta, Rosetta should use local posts.
-	if ( should_switch_to_blog() && defined( 'WPORG_NEWS_BLOGID' ) ) {
-		switch_to_blog( WPORG_NEWS_BLOGID );
+	if ( should_switch_to_blog() && ( defined( 'WPORG_NEWS_BLOGID' ) || isset( $attributes['blogId'] ) ) ) {
+		// Prefer the attribute blogId over the constant.
+		$blog_id = isset( $attributes['blogId'] ) ? $attributes['blogId'] : WPORG_NEWS_BLOGID;
+		switch_to_blog( $blog_id );
 		$blog_switched = true;
 	}
 
