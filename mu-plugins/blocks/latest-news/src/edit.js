@@ -21,14 +21,20 @@ import ServerSideRender from '@wordpress/server-side-render';
  * @return {WPElement} Element to render.
  */
 export default function Edit( { attributes, setAttributes, name } ) {
-	const { perPage } = attributes;
+	const { blogId, perPage } = attributes;
 
 	const onPerPageChange = ( value ) => setAttributes( { perPage: value * 1 } );
+	const onBlogIdChange = ( value ) => setAttributes( { blogId: Number( value ) } );
 
 	return (
 		<div { ...useBlockProps() }>
 			<InspectorControls>
 				<PanelBody title={ __( 'Settings', 'wporg' ) }>
+					<NumberControl
+						label={ __( 'Blog Id', 'wporg' ) }
+						onChange={ onBlogIdChange }
+						value={ blogId }
+					/>
 					<NumberControl
 						label={ __( 'Items To Show', 'wporg' ) }
 						onChange={ onPerPageChange }

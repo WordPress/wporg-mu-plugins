@@ -12,7 +12,8 @@
 	"style": "file:./style.css",
 	"attributes": {
 		"blogId": {
-			"type": "integer"
+			"type": "integer",
+			"default": 0
 		},
 		"perPage": {
 			"type": "integer",
