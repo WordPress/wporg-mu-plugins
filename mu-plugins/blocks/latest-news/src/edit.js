@@ -34,6 +34,10 @@ export default function Edit( { attributes, setAttributes, name } ) {
 						label={ __( 'Blog ID', 'wporg' ) }
 						onChange={ onBlogIdChange }
 						value={ blogId }
+						help={ __(
+							'For example, 8 for wordpress.org/news, 719 for developer.wordpress.org/news',
+							'wporg'
+						) }
 					/>
 					<NumberControl
 						label={ __( 'Items To Show', 'wporg' ) }
