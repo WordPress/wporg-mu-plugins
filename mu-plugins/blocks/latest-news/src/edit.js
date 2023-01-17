@@ -31,7 +31,7 @@ export default function Edit( { attributes, setAttributes, name } ) {
 			<InspectorControls>
 				<PanelBody title={ __( 'Settings', 'wporg' ) }>
 					<NumberControl
-						label={ __( 'Blog Id', 'wporg' ) }
+						label={ __( 'Blog ID', 'wporg' ) }
 						onChange={ onBlogIdChange }
 						value={ blogId }
 					/>
