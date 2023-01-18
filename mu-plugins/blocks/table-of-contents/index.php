@@ -6,7 +6,7 @@
  * @package wporg
  */
 
-namespace WordPressdotorg\Theme\Documentation_2022\Dynamic_ToC_Block;
+namespace WordPressdotorg\MU_Plugins\Dynamic_ToC_Block;
 
 add_action( 'init', __NAMESPACE__ . '\init' );
 
