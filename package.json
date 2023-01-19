@@ -26,6 +26,7 @@
 		"postcss-preset-env": "7.7.1",
 		"resolve-bin": "1.0.1",
 		"rtlcss": "3.5.0",
+		"url-loader": "^3.0.0",
 		"webpack": "5.47.1",
 		"webpack-cli": "4.9.1"
 	},
@@ -62,5 +63,6 @@
 			],
 			"selector-class-pattern": null
 		}
-	}
+	},
+	"dependencies": {}
 }
