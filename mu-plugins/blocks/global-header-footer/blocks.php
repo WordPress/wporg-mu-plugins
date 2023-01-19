@@ -459,8 +459,8 @@ function get_global_menu_items() {
 					'type'  => 'custom',
 				),
 				array(
-					'title' => esc_html_x( 'Support', 'Menu item title', 'wporg' ),
-					'url'   => 'https://wordpress.org/support/',
+					'title' => esc_html_x( 'Documentation', 'Menu item title', 'wporg' ),
+					'url'   => 'https://wordpress.org/documentation/',
 					'type'  => 'custom',
 				),
 				array(
