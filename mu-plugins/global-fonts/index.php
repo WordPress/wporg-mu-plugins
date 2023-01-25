@@ -170,9 +170,9 @@ function get_font_url( $font, $subset ) {
 			$font_file_name = 'IBMPlexMono-Italic-';
 			break;
 		case 'ibm plex mono medium':
-				$font_folder = 'IBMPlexMono/';
-				$font_file_name = 'IBMPlexMono-Medium-';
-				break;
+			$font_folder = 'IBMPlexMono/';
+			$font_file_name = 'IBMPlexMono-Medium-';
+			break;
 		case 'ibm plex mono bold':
 			$font_folder = 'IBMPlexMono/';
 			$font_file_name = 'IBMPlexMono-Bold-';
