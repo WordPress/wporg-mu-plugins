@@ -11,6 +11,10 @@
 	"editorScript": "file:./index.js",
 	"style": "file:./style.css",
 	"attributes": {
+		"blogId": {
+			"type": "integer",
+			"default": 0
+		},
 		"perPage": {
 			"type": "integer",
 			"default": 3
