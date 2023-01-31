@@ -141,44 +141,52 @@ function get_font_url( $font, $subset ) {
 	}
 
 	switch ( $lower_font ) {
+		case 'courier prime':
+			$font_folder    = 'Courier Prime/';
+			$font_file_name = 'CourierPrime-Regular';
+			break;
+		case 'courier prime bold':
+			$font_folder    = 'Courier Prime/';
+			$font_file_name = 'CourierPrime-Bold';
+			break;
 		case 'inter':
-			$font_folder = 'Inter/';
+			$font_folder    = 'Inter/';
 			$font_file_name = 'Inter-';
 			break;
 		case 'eb garamond':
-			$font_folder = 'EB-Garamond/';
+			$font_folder    = 'EB-Garamond/';
 			$font_file_name = 'EBGaramond-';
 			break;
 		case 'eb garamond italic':
-			$font_folder = 'EB-Garamond/';
+			$font_folder    = 'EB-Garamond/';
 			$font_file_name = 'EBGaramond-Italic-';
 			break;
 		case 'ibm plex mono extralight':
-			$font_folder = 'IBMPlexMono/';
+			$font_folder    = 'IBMPlexMono/';
 			$font_file_name = 'IBMPlexMono-ExtraLight-';
 			break;
 		case 'ibm plex mono extralight italic':
-			$font_folder = 'IBMPlexMono/';
+			$font_folder    = 'IBMPlexMono/';
 			$font_file_name = 'IBMPlexMono-ExtraLightItalic-';
 			break;
 		case 'ibm plex mono':
-			$font_folder = 'IBMPlexMono/';
+			$font_folder    = 'IBMPlexMono/';
 			$font_file_name = 'IBMPlexMono-Regular-';
 			break;
 		case 'ibm plex mono italic':
-			$font_folder = 'IBMPlexMono/';
+			$font_folder    = 'IBMPlexMono/';
 			$font_file_name = 'IBMPlexMono-Italic-';
 			break;
 		case 'ibm plex mono medium':
-			$font_folder = 'IBMPlexMono/';
+			$font_folder    = 'IBMPlexMono/';
 			$font_file_name = 'IBMPlexMono-Medium-';
 			break;
 		case 'ibm plex mono bold':
-			$font_folder = 'IBMPlexMono/';
+			$font_folder    = 'IBMPlexMono/';
 			$font_file_name = 'IBMPlexMono-Bold-';
 			break;
 		case 'ibm plex mono bold italic':
-			$font_folder = 'IBMPlexMono/';
+			$font_folder    = 'IBMPlexMono/';
 			$font_file_name = 'IBMPlexMono-BoldItalic-';
 			break;
 	}
