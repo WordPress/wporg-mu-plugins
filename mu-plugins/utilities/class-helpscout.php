@@ -85,7 +85,7 @@ class HelpScout {
 		// Prepend API URL host-less URLs.
 		if ( ! str_starts_with( $url, self::API_BASE ) ) {
 			// Prepend API version when not specified.
-			if ( ! str_starts_with( $url, '/v' ) ) {
+			if ( ! preg_match( '!^/v\d{1}!', $url ) ) {
 				$url = '/v' . self::DEFAULT_VERSION . '/' . ltrim( $url, '/' );
 			}
 
