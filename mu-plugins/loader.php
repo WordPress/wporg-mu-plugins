@@ -1,4 +1,5 @@
 <?php
+namespace WordPressdotorg\MU_Plugins;
 
 /**
  * Load mu-plugins.
@@ -19,3 +20,8 @@ require_once __DIR__ . '/global-fonts/index.php';
 require_once __DIR__ . '/plugin-tweaks/index.php';
 require_once __DIR__ . '/rest-api/index.php';
 require_once __DIR__ . '/skip-to/skip-to.php';
+
+// Load and register the Autoloader for various things.
+require_once __DIR__ . '/utilities/class-autoloader.php';
+
+Utilities\register_class_path( __NAMESPACE__ . '\Utilities', __DIR__ . '/utilities' );
