@@ -52,6 +52,21 @@ class HelpScout {
 	}
 
 	/**
+	 * Retrieve the mailbox ID for an inbox.
+	 *
+	 * @param string $mailbox The mailbox. Accepts 'plugins', 'data', 'jobs', 'openverse', 'photos', 'themes', etc.
+	 * @return int The numeric mailbox ID.
+	 */
+	public static function get_mailbox_id( $mailbox ) {
+		$define = 'HELPSCOUT_' . strtoupper( $mailbox ) . '_MAILBOXID';
+		if ( ! defined( $define ) ) {
+			return false;
+		}
+
+		return constant( $define );
+	}
+
+	/**
 	 * Call a HelpScout API endpoint.
 	 *
 	 * @param string $url    The API endpoint to request.
