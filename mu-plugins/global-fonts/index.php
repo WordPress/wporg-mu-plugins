@@ -142,12 +142,12 @@ function get_font_url( $font, $subset ) {
 
 	switch ( $lower_font ) {
 		case 'courier prime':
-			$font_folder    = 'Courier Prime/';
-			$font_file_name = 'CourierPrime-Regular';
+			$font_folder    = 'CourierPrime/';
+			$font_file_name = 'CourierPrime-Regular-';
 			break;
 		case 'courier prime bold':
-			$font_folder    = 'Courier Prime/';
-			$font_file_name = 'CourierPrime-Bold';
+			$font_folder    = 'CourierPrime/';
+			$font_file_name = 'CourierPrime-Bold-';
 			break;
 		case 'inter':
 			$font_folder    = 'Inter/';
