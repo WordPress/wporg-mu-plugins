@@ -23,7 +23,7 @@ class HelpScout {
 	/**
 	 * Fetch an instance of the HelpScout API.
 	 */
-	public function instance( $app_id = false, $secret = false ) {
+	public static function instance( $app_id = false, $secret = false ) {
 		static $instances = [];
 
 		if ( ! $app_id && ! $secret ) {
@@ -70,13 +70,64 @@ class HelpScout {
 	}
 
 	/**
+	 * Retrieve a GET API endpoint.
+	 *
+	 * @param string $url  API Endpoint.
+	 * @param array  $args Optional. The API args.
+	 * @return bool|object False on failure, results on success.
+	 */
+	public function get( $url, $args = null ) {
+		return $this->api( $url, $args, 'GET' );
+	}
+
+	/**
+	 * Retrieve a POST API endpoint.
+	 *
+	 * @param string $url  API Endpoint.
+	 * @param array  $args Optional. The API args.
+	 * @return bool|object False on failure, results on success.
+	 */
+	public function post( $url, $args = null ) {
+		return $this->api( $url, $args, 'POST' );
+	}
+
+	/**
+	 * Retrieve a GET API and recurse pages.
+	 *
+	 * @param string $url  API Endpoint.
+	 * @param array  $args Optional. The API args.
+	 * @return bool|object False on failure, results on success.
+	 */
+	public function get_paged( $url, $args = null ) {
+		$api      = $this->get( $url, $args );
+		$response = clone $api;
+
+		while ( ! empty( $api->_links->next->href ) ) {
+			$api = $this->get( $api->_links->next->href );
+
+			if ( is_array( $api->_embedded ) ) {
+				
+			} else {
+				foreach ( $api->_embedded as $field => $value ) {
+					$response->_embedded->$field = array_merge( $response->_embedded->$field, $value );
+				}
+			}
+		}
+
+		unset( $response->page, $response->_links );
+
+		return $response;
+	}
+
+	/**
 	 * Call a HelpScout API endpoint.
 	 *
 	 * @param string $url    The API endpoint to request.
-	 * @param array  $args   Any parameters to pass to the API.
-	 * @param string $method The HTTP method for the request. 'GET' or 'POST'. Default 'GET'.
+	 * @param array  $args   Optional. Any parameters to pass to the API.
+	 * @param string $method Optional. The HTTP method for the request. 'GET' or 'POST'. Default 'GET'.
+	 * @return bool|object False on failure, results on success.
 	 */
-	public static function api( $url, $args = null, $method = 'GET' ) {
+	public function api( $url, $args = null, $method = 'GET' ) {
 		// Support static calls for back-compat.
 		if ( ! isset( $this ) ) {
 			return self::instance()->api( $url, $args, $method ) ?? false;
@@ -158,3 +209,4 @@ class HelpScout {
 	}
 
 }
+
