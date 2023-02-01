@@ -12,8 +12,10 @@ class HelpScout {
 
 	/**
 	 * The HTTP timeout for the HelpScout API.
+	 *
+	 * @var int
 	 */
-	const TIMEOUT = 15;
+	public $timeout = 15;
 
 	protected $app_id     = '';
 	protected $app_secret = '';
@@ -103,7 +105,7 @@ class HelpScout {
 					'Accept'        => 'application/json',
 					'Authorization' => $this->get_auth_string(),
 				],
-				'timeout' => self::TIMEOUT,
+				'timeout' => $this->timeout,
 				'body'    => ( 'POST' === $method && $args ) ? $args : null,
 			)
 		);
@@ -124,7 +126,7 @@ class HelpScout {
 		$request = wp_remote_post(
 			self::API_BASE . '/v2/oauth2/token',
 			array(
-				'timeout' => self::TIMEOUT,
+				'timeout' => $this->timeout,
 				'body'    => array(
 					'grant_type'    => 'client_credentials',
 					'client_id'     => $this->app_id,
