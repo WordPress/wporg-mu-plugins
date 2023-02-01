@@ -7,7 +7,8 @@ namespace WordPressdotorg\MU_Plugins\Utilities;
  * @package WordPressdotorg\MU_Plugins\Utilities
  */
 class HelpScout {
-	const API_BASE = 'https://api.helpscout.net';
+	const API_BASE        = 'https://api.helpscout.net';
+	const DEFAULT_VERSION = 2;
 
 	/**
 	 * The HTTP timeout for the HelpScout API.
@@ -81,6 +82,11 @@ class HelpScout {
 
 		// Prepend API URL host-less URLs.
 		if ( ! str_starts_with( $url, self::API_BASE ) ) {
+			// Prepend API version when not specified.
+			if ( ! str_starts_with( $url, '/v' ) ) {
+				$url = '/v' . self::DEFAULT_VERSION . '/' . ltrim( $url, '/' );
+			}
+
 			$url = self::API_BASE . '/' . ltrim( $url, '/' );
 		}
 
