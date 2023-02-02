@@ -37,7 +37,7 @@ function init() {
  */
 function render( $attributes, $content, $block ) {
 	$post = get_post();
-	$post_content = apply_filters( 'the_content', get_the_content( $post ), $post );
+	$post_content = apply_filters( 'the_content', get_the_content( $post ) );
 	$items = get_headings( $post_content );
 	if ( ! $items ) {
 		return '';
