@@ -36,7 +36,9 @@ function init() {
  * @return string Returns the block markup.
  */
 function render( $attributes, $content, $block ) {
-	$items = get_headings( get_the_content() );
+	$post = get_post();
+	$post_content = apply_filters( 'the_content', get_the_content( $post ), $post );
+	$items = get_headings( $post_content );
 	if ( ! $items ) {
 		return '';
 	}
@@ -69,8 +71,8 @@ function render( $attributes, $content, $block ) {
 	// Use the parsed headings & IDs to inject IDs into the post content.
 	add_filter(
 		'the_content',
-		function( $content ) use ( $items ) {
-			return inject_ids_into_headings( $content, $items );
+		function() use ( $items, $post_content ) {
+			return inject_ids_into_headings( $post_content, $items );
 		},
 		5 // Run early, before special character handling, so the items match.
 	);
