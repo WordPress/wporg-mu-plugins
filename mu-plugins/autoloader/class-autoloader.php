@@ -1,5 +1,5 @@
 <?php
-namespace WordPressdotorg\MU_Plugins\Utilities;
+namespace WordPressdotorg\Autoload;
 
 /**
  * An Autoloader which respects WordPress's filename standards.

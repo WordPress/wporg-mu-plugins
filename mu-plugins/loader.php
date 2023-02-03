@@ -7,6 +7,11 @@ namespace WordPressdotorg\MU_Plugins;
  * `utilities/` aren't loaded automatically since they're not used globally.
  */
 
+// Load and register the Autoloader for various things.
+require_once __DIR__ . '/autoloader/class-autoloader.php';
+
+Utilities\register_class_path( __NAMESPACE__ . '\Utilities', __DIR__ . '/utilities' );
+
 require_once __DIR__ . '/helpers/helpers.php';
 require_once __DIR__ . '/blocks/global-header-footer/blocks.php';
 require_once __DIR__ . '/blocks/horizontal-slider/horizontal-slider.php';
@@ -20,8 +25,3 @@ require_once __DIR__ . '/global-fonts/index.php';
 require_once __DIR__ . '/plugin-tweaks/index.php';
 require_once __DIR__ . '/rest-api/index.php';
 require_once __DIR__ . '/skip-to/skip-to.php';
-
-// Load and register the Autoloader for various things.
-require_once __DIR__ . '/utilities/class-autoloader.php';
-
-Utilities\register_class_path( __NAMESPACE__ . '\Utilities', __DIR__ . '/utilities' );
