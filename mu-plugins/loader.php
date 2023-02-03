@@ -1,5 +1,6 @@
 <?php
 namespace WordPressdotorg\MU_Plugins;
+use WordPressdotorg\Autoload;
 
 /**
  * Load mu-plugins.
@@ -10,7 +11,7 @@ namespace WordPressdotorg\MU_Plugins;
 // Load and register the Autoloader for various things.
 require_once __DIR__ . '/autoloader/class-autoloader.php';
 
-Utilities\register_class_path( __NAMESPACE__ . '\Utilities', __DIR__ . '/utilities' );
+Autoload\register_class_path( __NAMESPACE__ . '\Utilities', __DIR__ . '/utilities' );
 
 require_once __DIR__ . '/helpers/helpers.php';
 require_once __DIR__ . '/blocks/global-header-footer/blocks.php';
