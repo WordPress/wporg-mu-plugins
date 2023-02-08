@@ -36,7 +36,12 @@ function init() {
  * @return string Returns the block markup.
  */
 function render( $attributes, $content, $block ) {
-	$items = get_headings( get_the_content() );
+	if ( ! isset( $block->context['postId'] ) ) {
+		return '';
+	}
+	$post = get_post( $block->context['postId'] );
+	$post_content = apply_filters( 'the_content', get_the_content( $post ) );
+	$items = get_headings( $post_content );
 	if ( ! $items ) {
 		return '';
 	}

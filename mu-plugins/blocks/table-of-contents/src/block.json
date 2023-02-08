@@ -8,6 +8,7 @@
 	"keywords": [ "document outline", "summary" ],
 	"textdomain": "wporg",
 	"attributes": {},
+	"usesContext": [ "postId" ],
 	"supports": {
 		"html": false,
 		"color": {
