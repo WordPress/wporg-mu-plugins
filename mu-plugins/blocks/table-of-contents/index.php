@@ -39,9 +39,8 @@ function render( $attributes, $content, $block ) {
 	if ( ! isset( $block->context['postId'] ) ) {
 		return '';
 	}
-	$post = get_post( $block->context['postId'] );
-	$post_content = apply_filters( 'the_content', get_the_content( $post ) );
-	$items = get_headings( $post_content );
+
+	$items = get_headings( get_the_content() );
 	if ( ! $items ) {
 		return '';
 	}
