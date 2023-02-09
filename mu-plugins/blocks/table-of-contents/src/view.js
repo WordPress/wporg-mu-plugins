@@ -67,12 +67,19 @@ function onScroll() {
 
 function init() {
 	const container = document.querySelector( '.wp-block-wporg-table-of-contents' );
+	// Margin offset from the top of the sidebar.
+	const gap = getCustomPropValue( '--wp--preset--spacing--edge-space' );
 
 	if ( container ) {
+		// Usable viewport height.
 		const viewHeight = window.innerHeight - FIXED_HEADER_HEIGHT;
+		// Get the height of the sidebar, plus the top margin and 50px for the
+		// "Back to top" link, which isn't visible until `is-fixed-sidebar` is
+		// added, therefore not included in the parentNode.offsetHeight value.
+		const sidebarHeight = container.parentNode?.offsetHeight + gap + 50;
 		// If the table of contents sidebar is shorter than the view area, apply the
 		// class so that it's fixed and scrolls with the page content.
-		if ( container.parentNode?.offsetHeight < viewHeight ) {
+		if ( sidebarHeight < viewHeight ) {
 			container.parentNode.classList.add( 'is-fixed-sidebar' );
 			onScroll(); // Run once to avoid footer collisions on load (ex, when linked to #reply-title).
 			window.addEventListener( 'scroll', onScroll );
