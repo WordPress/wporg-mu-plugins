@@ -40,7 +40,9 @@ function render( $attributes, $content, $block ) {
 		return '';
 	}
 
-	$items = get_headings( get_the_content() );
+	$post         = get_post( $block->context['postId'] );
+	$post_content = apply_filters( 'wporg_table_of_contents_post_content', get_the_content( null, false, $post ) );
+	$items        = get_headings( $post_content );
 	if ( ! $items ) {
 		return '';
 	}
