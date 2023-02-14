@@ -433,7 +433,7 @@ function get_global_menu_items() {
 				),
 				array(
 					'title' => esc_html_x( 'Openverse', 'Menu item title', 'wporg' ),
-					'url'   => 'https://wordpress.org/openverse/',
+					'url'   => 'https://openverse.org/',
 					'type'  => 'custom',
 				),
 				array(
