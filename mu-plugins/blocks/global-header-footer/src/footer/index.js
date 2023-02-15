@@ -21,7 +21,7 @@ const variations = [
 const Edit = ( { attributes } ) => (
 	<div { ...useBlockProps() }>
 		<Disabled>
-			<ServerSideRender block={ metadata.name } attributes={ attributes } />
+			<ServerSideRender block={ metadata.name } attributes={ attributes } skipBlockSupportAttributes />
 		</Disabled>
 	</div>
 );
