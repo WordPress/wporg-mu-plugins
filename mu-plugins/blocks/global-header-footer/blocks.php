@@ -17,6 +17,7 @@ add_action( 'wp_head', __NAMESPACE__ . '\preload_google_fonts' );
 add_filter( 'style_loader_src', __NAMESPACE__ . '\update_google_fonts_url', 10, 2 );
 add_filter( 'render_block_core/navigation-link', __NAMESPACE__ . '\swap_submenu_arrow_svg' );
 add_filter( 'render_block_core/search', __NAMESPACE__ . '\swap_header_search_action', 10, 2 );
+add_filter( 'render_block_data', __NAMESPACE__ . '\update_block_style_colors' );
 
 /**
  * Register block types
@@ -828,6 +829,32 @@ function render_global_footer( $attributes, $content, $block ) {
 		$markup,
 	);
 }
+
+/**
+ * Convert the `style` attribute on the footer block to use color settings.
+ *
+ * @param array $block The parsed block data.
+ *
+ * @return array
+ */
+function update_block_style_colors( $block ) {
+	if (
+		! empty( $block['blockName'] ) &&
+		'wporg/global-footer' === $block['blockName'] &&
+		! empty( $block['attrs']['style'] )
+	) {
+		if ( 'black-on-white' === $block['attrs']['style'] ) {
+			$block['attrs']['textColor']       = 'charcoal-2';
+			$block['attrs']['backgroundColor'] = 'white';
+		} elseif ( 'white-on-blue' === $block['attrs']['style'] ) {
+			$block['attrs']['textColor']       = 'white';
+			$block['attrs']['backgroundColor'] = 'blueberry-1';
+		}
+	}
+
+	return $block;
+}
+
 
 /**
  * Localise a `core/navigation-link` block link to point to the Rosetta site resource.
