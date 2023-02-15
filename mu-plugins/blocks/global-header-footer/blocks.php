@@ -784,11 +784,13 @@ function rest_render_global_footer( $request ) {
 /**
  * Render the global footer in a block context.
  *
- * @param array $attributes The block attributes.
+ * @param array    $attributes Block attributes.
+ * @param string   $content    Block default content.
+ * @param WP_Block $block      Block instance.
  *
- * @return string
+ * @return string Returns the block markup.
  */
-function render_global_footer( $attributes = array() ) {
+function render_global_footer( $attributes, $content, $block ) {
 	remove_inner_group_container();
 
 	if ( is_rosetta_site() ) {
@@ -816,7 +818,15 @@ function render_global_footer( $attributes = array() ) {
 
 	remove_filter( 'render_block_data', __NAMESPACE__ . '\localize_nav_links' );
 
-	return $markup;
+	$wrapper_attributes = get_block_wrapper_attributes(
+		array( 'class' => 'global-footer wp-block-group' )
+	);
+	// var_dump( $wrapper_attributes );
+	return sprintf(
+		'<footer %1$s>%2$s</footer>',
+		$wrapper_attributes,
+		$markup,
+	);
 }
 
 /**
