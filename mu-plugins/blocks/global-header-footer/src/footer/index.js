@@ -28,13 +28,4 @@ const Edit = ( { attributes } ) => (
 
 registerBlockType( metadata.name, {
 	edit: Edit,
-
-	variations: variations.map( ( { value, label } ) => ( {
-		name: value,
-		/* translators: %s is the color scheme label. */
-		title: sprintf( __( 'Global Footer: %s', 'wporg' ), label ),
-		isActive: ( blockAttributes, variationAttributes ) => blockAttributes.style === variationAttributes.style,
-		scope: [ 'transform' ],
-		attributes: { style: value },
-	} ) ),
 } );

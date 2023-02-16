@@ -26,13 +26,7 @@
 			"width": true
 		}
 	},
-	"attributes": {
-		"style": {
-			"type": "string",
-			"default": "white-on-black",
-			"enum": [ "white-on-black", "black-on-white", "white-on-blue" ]
-		}
-	},
+	"attributes": {},
 	"textdomain": "wporg",
 	"style": "wporg-global-header-footer",
 	"editorStyle": "wporg-global-header-footer",
