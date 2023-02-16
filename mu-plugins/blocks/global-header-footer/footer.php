@@ -13,8 +13,6 @@ defined( 'WPINC' ) || die();
  * @var string $locale_title
  */
 
-$color_scheme = apply_filters( 'wporg_footer_color_scheme', $attributes['style'] );
-
 $container_class = 'global-footer';
 
 $code_is_poetry_src = isset( $attributes['textColor'] ) && str_contains( $attributes['textColor'], 'charcoal' ) ?
