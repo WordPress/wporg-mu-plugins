@@ -377,7 +377,15 @@ function render_global_header( $attributes = array() ) {
 		$markup = ob_get_clean() . $markup;
 	}
 
-	return $markup;
+	$wrapper_attributes = get_block_wrapper_attributes(
+		array( 'class' => 'global-header wp-block-group' )
+	);
+	return sprintf(
+		'<header %1$s>%2$s</header>%3$s',
+		$wrapper_attributes,
+		$markup,
+		wp_kses_post( render_header_alert_banner() )
+	);
 }
 
 /**
@@ -822,7 +830,6 @@ function render_global_footer( $attributes, $content, $block ) {
 	$wrapper_attributes = get_block_wrapper_attributes(
 		array( 'class' => 'global-footer wp-block-group' )
 	);
-	// var_dump( $wrapper_attributes );
 	return sprintf(
 		'<footer %1$s>%2$s</footer>',
 		$wrapper_attributes,
@@ -840,7 +847,7 @@ function render_global_footer( $attributes, $content, $block ) {
 function update_block_style_colors( $block ) {
 	if (
 		! empty( $block['blockName'] ) &&
-		'wporg/global-footer' === $block['blockName'] &&
+		in_array( $block['blockName'], [ 'wporg/global-footer', 'wporg/global-header' ], true ) &&
 		! empty( $block['attrs']['style'] )
 	) {
 		if ( 'black-on-white' === $block['attrs']['style'] ) {
@@ -1062,7 +1069,7 @@ function swap_header_search_action( $block_content, $block ) {
 	return $block_content;
 }
 
-/*
+/**
  * Translate the tagline with the necessary text domain.
  */
 function get_cip_text() {
@@ -1074,29 +1081,4 @@ function get_cip_text() {
 	}
 
 	return $translated;
-}
-
-/**
- * Generate the classes based on the selected color scheme.
- *
- * This applies the expected color class using the format of Gutenberg's text
- * and background styles, though the actual colors are applied via CSS custom
- * properties in `_common.scss`.
- */
-function get_container_classes( $color_scheme ) {
-	$classes = ' has-text-color has-background';
-	switch ( $color_scheme ) {
-		case 'white-on-blue':
-			$classes .= ' has-white-color has-blueberry-1-background-color';
-			break;
-		case 'black-on-white':
-			$classes .= ' has-charcoal-2-color has-white-background-color';
-			break;
-		case 'white-on-black':
-		default:
-			$classes .= ' has-white-color has-charcoal-2-background-color';
-			break;
-	}
-
-	return $classes;
 }

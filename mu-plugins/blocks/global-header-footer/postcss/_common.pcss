@@ -87,6 +87,10 @@ html {
 	--wp-global-header--link-color: var(--wp--preset--color--charcoal-2);
 	--wp-global-header--link-color--active: var(--wp--preset--color--deep-blueberry);
 	--wp-global-header--text-color: var(--wp--preset--color--charcoal-2);
+
+	&.has-background[style*="background-color:"] {
+		--wp-global-header--background-color--hover: var(--wp--preset--color--light-grey-2);
+	}
 }
 
 .has-blueberry-1-background-color {
