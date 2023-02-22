@@ -83,7 +83,7 @@ function Block( { items, title } ) {
 		outerRef.current.addEventListener( 'scroll', handleScrollEvent );
 
 		return () => {
-			outerRef.current.removeEventListener( 'scroll', handleScrollEvent );
+			outerRef.current?.removeEventListener( 'scroll', handleScrollEvent );
 		};
 	}, [ outerRef ] );
 
