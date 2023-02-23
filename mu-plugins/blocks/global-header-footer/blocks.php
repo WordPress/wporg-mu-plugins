@@ -892,6 +892,11 @@ function is_wporg_network() {
 function set_current_item_class( $menu_items ) {
 	$current_url = get_menu_url_for_current_page( $menu_items );
 
+	// The download menu item is a button, we don't highlight it
+	if ( get_download_url() === $current_url ) {
+		return $menu_items;
+	}
+
 	foreach ( $menu_items as & $item ) {
 		$sub = false;
 		if ( ! empty( $item['submenu'] ) ) {
