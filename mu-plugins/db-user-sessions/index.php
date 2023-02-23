@@ -6,6 +6,9 @@ add_filter( 'session_token_manager', function( $manager ) {
 		require_once __DIR__ . '/class-tokens.php';
 
 		$manager = __NAMESPACE__ . '\Tokens';
+
+		// The user sesions are global, not per-site.
+		wp_cache_add_global_groups( 'user_sessions' );
 	}
 
 	return $manager;
