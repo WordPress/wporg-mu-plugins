@@ -11,7 +11,7 @@ use WordPressdotorg\Autoload;
 // Load and register the Autoloader for various things.
 require_once __DIR__ . '/autoloader/class-autoloader.php';
 
-Autoload\register_class_path( __NAMESPACE__ . '\Utilities', __DIR__ . '/utilities' );
+Autoload\register_class_path( __NAMESPACE__, __DIR__ );
 
 require_once __DIR__ . '/helpers/helpers.php';
 require_once __DIR__ . '/blocks/global-header-footer/blocks.php';
