@@ -1,10 +1,19 @@
 <?php
+namespace WordPressdotorg\MU_Plugins;
+use WordPressdotorg\Autoload;
 
 /**
  * Load mu-plugins.
  *
  * `utilities/` aren't loaded automatically since they're not used globally.
  */
+
+// Load and register the Autoloader.
+if ( ! class_exists( '\WordPressdotorg\Autoload\Autoloader', false ) ) {
+	require_once __DIR__ . '/autoloader/class-autoloader.php';
+}
+
+Autoload\register_class_path( __NAMESPACE__, __DIR__ );
 
 require_once __DIR__ . '/helpers/helpers.php';
 require_once __DIR__ . '/blocks/global-header-footer/blocks.php';
