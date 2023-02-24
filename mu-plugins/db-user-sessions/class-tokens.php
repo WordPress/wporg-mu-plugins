@@ -7,11 +7,6 @@ class Tokens extends \WP_Session_Tokens {
 
 	protected function get_sessions() {
 		$user_sessions = $this->get_all_user_sessions();
-		if ( ! is_array( $user_sessions ) ) {
-			return [];
-		}
-
-		$user_sessions = array_filter( $user_sessions, [ $this, 'is_still_valid' ] );
 
 		return array_filter( $user_sessions, [ $this, 'is_still_valid' ] );
 	}
@@ -175,10 +170,10 @@ class Tokens extends \WP_Session_Tokens {
 
 		$user_sessions = $wpdb->last_result;
 		if ( false === $num_sessions || ! is_array( $user_sessions ) ) {
-			return array();
+			return [];
 		}
 
-		$sessions = array();
+		$sessions = [];
 		foreach ( $user_sessions as $user_session ) {
 			$sessions[ $user_session->verifier ] = $this->convert_session_from_db_format( $user_session );
 		}
