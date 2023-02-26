@@ -542,6 +542,11 @@ function get_global_menu_items() {
 					'url'   => 'https://wordpress.org/enterprise/',
 					'type'  => 'custom',
 				),
+				array(
+					'title' => esc_html_x( 'WordPress Swag Store', 'Menu item title', 'wporg' ),
+					'url'   => 'https://mercantile.wordpress.org/',
+					'type'  => 'custom',
+				),
 			),
 		),
 	);
