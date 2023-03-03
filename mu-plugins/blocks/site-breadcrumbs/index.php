@@ -70,12 +70,28 @@ function render_block( $attributes, $content, $block ) {
 	$breadcrumbs = apply_filters( 'wporg_block_site_breadcrumbs', $breadcrumbs, $attributes, $block );
 
 	$content = '';
+	$count = count( $breadcrumbs );
+	$max_to_show = 4;
+	$max_characters = 25;
 	foreach ( $breadcrumbs as $i => $crumb ) {
+
 		// We can assume that the item without a URL is the current page.
 		if ( ! $crumb['url'] ) {
 			$content .= sprintf( '<span class="is-current-page">%s</span>', esc_html( $crumb['title'] ) );
 		} else {
-			$content .= sprintf( '<span><a href="%s">%s</a></span>', esc_url( $crumb['url'] ), esc_html( $crumb['title'] ) );
+			$title = trim( $crumb['title'] );
+			$classes = '';
+
+			// if the crumb is not the first or last, and there are more than 4 crumbs, truncate the title but still leave a total of 4
+			if ( $i > 0 && $i < $count - 1 && $count > $max_to_show && $i <= $count - $max_to_show ) {
+				$classes = 'truncated';
+			}
+
+			if ( strlen( $title ) > $max_characters ) {
+				$classes = 'partially-truncated';
+			}
+
+			$content .= sprintf( '<span><a  href="%s" class="%s"><span>%s</span></a></span>', esc_url( $crumb['url'] ), $classes, esc_html( $title ) );
 		}
 	}
 

@@ -33,6 +33,24 @@
 				}
 			}
 		}
+
+		&.partially-truncated {
+			& span {
+				display: inline-block;
+				overflow-x: hidden;
+				white-space: nowrap;
+				width: 100px;
+				text-overflow: ellipsis;
+				vertical-align: middle;
+				transition: width 400ms ease-in-out;
+			}
+
+			&:focus span,
+			&:hover span {
+				width: auto;
+				overflow-x: visible;
+			}
+		}
 	}
 
 	& > span:not(:last-child) {
