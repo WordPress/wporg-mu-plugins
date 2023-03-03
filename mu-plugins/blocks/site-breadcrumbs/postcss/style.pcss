@@ -1,6 +1,7 @@
 .wp-block-wporg-site-breadcrumbs {
-	display: flex;
-	align-items: center;
+	& span {
+		display: inline-block;
+	}
 
 	& a {
 		color: var(--wp--preset--color--charcoal-1);
@@ -8,16 +9,38 @@
 		&:hover {
 			text-decoration-line: underline;
 		}
+
+		/* Show full crumb on interaction. */
+		&.truncated {
+			& span {
+				position: absolute;
+				opacity: 0;
+			}
+
+			&::before {
+				content: "...";
+			}
+
+			&:focus,
+			&:hover {
+				& span {
+					position: relative;
+					opacity: 1;
+				}
+
+				&::before {
+					display: none;
+				}
+			}
+		}
 	}
 
-	& > span:not(:first-child) {
+	& > span:not(:last-child) {
 
 		/* This ensures that the square separator is reliably centered. */
-		display: flex;
-		align-items: center;
 		margin-top: 0;
 
-		&::before {
+		&::after {
 			content: "/";
 			display: inline-block;
 			font-weight: 400;
