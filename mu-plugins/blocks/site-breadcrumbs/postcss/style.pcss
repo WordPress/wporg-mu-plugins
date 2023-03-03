@@ -10,44 +10,44 @@
 			text-decoration-line: underline;
 		}
 
-		/* Show full crumb on interaction. */
-		&.truncated {
-			& span {
-				position: absolute;
-				opacity: 0;
-			}
+		@media (min-width: 800px) {
 
-			&::before {
-				content: "...";
-			}
-
-			&:focus,
-			&:hover {
+			/* Show full crumb on interaction. */
+			&.truncated {
 				& span {
-					position: relative;
-					opacity: 1;
+					position: absolute;
+					opacity: 0;
 				}
 
 				&::before {
-					display: none;
+					content: "...";
+				}
+
+				&:focus,
+				&:hover {
+					& span {
+						position: relative;
+						opacity: 1;
+					}
+
+					&::before {
+						display: none;
+					}
 				}
 			}
-		}
 
-		&.partially-truncated {
 			& span {
 				display: inline-block;
 				overflow-x: hidden;
 				white-space: nowrap;
-				width: 100px;
+				max-width: 125px;
 				text-overflow: ellipsis;
 				vertical-align: middle;
-				transition: width 400ms ease-in-out;
 			}
 
 			&:focus span,
 			&:hover span {
-				width: auto;
+				max-width: fit-content;
 				overflow-x: visible;
 			}
 		}
