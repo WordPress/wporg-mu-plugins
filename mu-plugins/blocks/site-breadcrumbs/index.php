@@ -76,10 +76,7 @@ function render_block( $attributes, $content, $block ) {
 		if ( ! $crumb['url'] ) {
 			$content .= sprintf( '<span class="is-current-page">%s</span>', esc_html( $crumb['title'] ) );
 		} else {
-			$title = trim( $crumb['title'] );
-			$classes = '';
-
-			$content .= sprintf( '<span><a href="%1$s" class="%2$s" data-title="%3$s"><span>%3$s</span></a></span>', esc_url( $crumb['url'] ), $classes, esc_html( $title ) );
+			$content .= sprintf( '<span><a href="%1$s" class="%2$s" data-title="%3$s"><span>%3$s</span></a></span>', esc_url( $crumb['url'] ), esc_html( $crumb['title'] ) );
 		}
 	}
 
