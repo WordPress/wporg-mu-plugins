@@ -1,6 +1,5 @@
 <?php
 namespace WordPressdotorg\MU_Plugins;
-
 use WordPressdotorg\Autoload;
 
 /**
