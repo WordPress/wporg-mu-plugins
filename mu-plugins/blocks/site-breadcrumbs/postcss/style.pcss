@@ -1,6 +1,12 @@
 .wp-block-wporg-site-breadcrumbs {
+	white-space: nowrap;
+
 	& span {
 		display: inline-block;
+
+		&.hidden {
+			display: none;
+		}
 	}
 
 	& a {
@@ -10,60 +16,53 @@
 			text-decoration-line: underline;
 		}
 
-		@media (min-width: 800px) {
-
-			/* Show full crumb on interaction. */
-			&.truncated {
-				& span {
-					position: absolute;
-					opacity: 0;
-				}
-
-				&::before {
-					content: "...";
-				}
-
-				&:focus,
-				&:hover {
-					& span {
-						position: relative;
-						opacity: 1;
-					}
-
-					&::before {
-						display: none;
-					}
-				}
-			}
-
+		/* Show full crumb on interaction. */
+		&.truncated {
 			& span {
-				display: inline-block;
-				overflow-x: hidden;
-				white-space: nowrap;
-				max-width: 125px;
-				text-overflow: ellipsis;
-				vertical-align: middle;
+				position: absolute;
+				opacity: 0;
 			}
 
-			&:focus span,
-			&:hover span {
-				max-width: fit-content;
-				overflow-x: visible;
+			&::before {
+				content: "...";
 			}
+
+			&:focus::after,
+			&:hover::after {
+				background: var(--wp--preset--color--charcoal-1);
+				border-radius: 2px;
+				color: var(--wp--preset--color--white);
+				padding: 2px 4px;
+				position: absolute;
+				width: max-content;
+				left: -100%;
+				bottom: -40px;
+				font-size: var(--wp--preset--font-size--small);
+				content: attr(data-title);
+				z-index: 1000;
+			}
+		}
+
+		& span {
+			display: inline-block;
+			overflow-x: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			vertical-align: middle;
+		}
+
+		&:focus span,
+		&:hover span {
+			max-width: fit-content;
+			overflow-x: visible;
 		}
 	}
 
-	& > span:not(:last-child) {
-
-		/* This ensures that the square separator is reliably centered. */
-		margin-top: 0;
-
-		&::after {
-			content: "/";
-			display: inline-block;
-			font-weight: 400;
-			margin: 0 0.5rem;
-		}
+	& > span:not(:last-child)::after {
+		content: "/";
+		display: inline-block;
+		font-weight: 400;
+		margin: 0 0.5rem;
 	}
 
 	& .is-current-page {

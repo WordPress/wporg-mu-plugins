@@ -27,5 +27,6 @@
 		"multiple": false
 	},
 	"editorScript": "file:./index.js",
-	"style": "file:./style.css"
+	"style": "file:./style.css",
+	"viewScript": "file:./view.js"
 }
