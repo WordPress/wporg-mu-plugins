@@ -7,8 +7,8 @@
 namespace WordPressdotorg\MU_Plugins\NO_JS;
 
 // Actions & Filters
-add_filter( 'language_attributes', __NAMESPACE__ . '\add_no_js_class_to_html_tag', 10, 2 );
-add_action( 'wp_head', __NAMESPACE__ . '\add_custom_js' );
+add_filter( 'language_attributes', __NAMESPACE__ . '\add_no_js_tag', 10, 2 );
+add_action( 'wp_head', __NAMESPACE__ . '\remove_js_tag' );
 
 /**
  * Add a 'no-js' tag by default.
