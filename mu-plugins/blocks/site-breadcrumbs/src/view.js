@@ -63,19 +63,19 @@ const expandCrumbs = ( arr, container, breakpoint ) => {
 	}
 
 	/**
+	 * If there are hidden elements, show them first.
+	 */
+	const hiddenEls = arr.filter( ( crumb ) => crumb.classList.contains( 'hidden' ) );
+
+	if ( hiddenEls.length ) {
+		hiddenEls[ 0 ].classList.remove( 'hidden' );
+		return;
+	}
+
+	/**
 	 * Loop through right to left, expand
 	 */
 	for ( let i = arr.length - 1; i >= 0; i-- ) {
-		/**
-		 * If there are hidden elements, show them first.
-		 */
-		const hiddenEls = arr.filter( ( crumb ) => crumb.classList.contains( 'hidden' ) );
-
-		if ( hiddenEls.length ) {
-			hiddenEls[ 0 ].classList.remove( 'hidden' );
-			return;
-		}
-
 		const anchorElement = arr[ i ].firstChild;
 
 		// We don't need to do anything if the element is already expanded.
