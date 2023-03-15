@@ -35,12 +35,12 @@ const collapseCrumbs = ( arr, container, breakpoint ) => {
 		}
 
 		const allTruncated =
-			arr.filter( ( crumb ) => crumb.firstChild.classList.contains( 'truncated' ) ).length === arr.length;
+			arr.filter( ( crumb ) => crumb.firstChild.classList.contains( 'is-truncated' ) ).length === arr.length;
 
 		if ( allTruncated ) {
 			arr[ i ].classList.add( 'hidden' );
 		} else {
-			arr[ i ].firstChild.classList.add( 'truncated' );
+			arr[ i ].firstChild.classList.add( 'is-truncated' );
 		}
 	}
 };
@@ -79,7 +79,7 @@ const expandCrumbs = ( arr, container, breakpoint ) => {
 		const anchorElement = arr[ i ].firstChild;
 
 		// We don't need to do anything if the element is already expanded.
-		if ( ! anchorElement.classList.contains( 'truncated' ) ) {
+		if ( ! anchorElement.classList.contains( 'is-truncated' ) ) {
 			continue;
 		}
 
@@ -90,7 +90,7 @@ const expandCrumbs = ( arr, container, breakpoint ) => {
 			return;
 		}
 
-		anchorElement.classList.remove( 'truncated' );
+		anchorElement.classList.remove( 'is-truncated' );
 
 		pixelToAllocate -= spanWidth;
 	}
