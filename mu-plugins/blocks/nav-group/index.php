@@ -20,10 +20,8 @@ add_action( 'init', __NAMESPACE__ . '\init' );
  * @return string Returns the block markup.
  */
 function render( $attributes, $content, $block ) {
-	$wrapper_attributes = get_block_wrapper_attributes();
 	return sprintf(
-		'<div %1$s>%2$s</div>',
-		$wrapper_attributes,
+		'<div>%2$s</div>',
 		$content
 	);
 }
@@ -37,9 +35,7 @@ function render( $attributes, $content, $block ) {
  */
 function init() {
 	register_block_type(
-		dirname( dirname( __DIR__ ) ) . '/build/nav-group',
-		array(
-			'render_callback' => __NAMESPACE__ . '\render',
-		)
+		__DIR__ . '/build'
 	);
 }
+
