@@ -26,23 +26,24 @@ const getAvailableSpace = ( parent ) => {
  * @return {void}
  */
 const collapseCrumbs = ( arr, container, breakpoint ) => {
-	/**
-	 * Loop through left to right, truncate until space exceeds breakpoint.
-	 */
-	for ( let i = 0; i < arr.length; i++ ) {
-		if ( getAvailableSpace( container ) > breakpoint ) {
-			return;
-		}
+	// First, try to truncate the text
+	const allTruncated = () =>
+		arr.every( ( { firstChild: anchorElement } ) => anchorElement.classList.contains( 'is-truncated' ) );
 
-		const allTruncated =
-			arr.filter( ( crumb ) => crumb.firstChild.classList.contains( 'is-truncated' ) ).length === arr.length;
+	let index = 0;
+	while ( getAvailableSpace( container ) < breakpoint && ! allTruncated() ) {
+		arr[ index ].firstChild.classList.add( 'is-truncated' );
+		arr[ index ].firstChild.firstChild.classList.add( 'screen-reader-text' );
+		index++;
+	}
 
-		if ( allTruncated ) {
-			arr[ i ].classList.add( 'hidden' );
-		} else {
-			arr[ i ].firstChild.classList.add( 'is-truncated' );
-			arr[ i ].firstChild.firstChild.classList.add( 'screen-reader-text' );
-		}
+	// Second, hide the items if everything is truncated
+	const allHidden = () => arr.every( ( crumb ) => crumb.classList.contains( 'hidden' ) );
+
+	let index2 = 0;
+	while ( getAvailableSpace( container ) < breakpoint && ! allHidden() ) {
+		arr[ index2 ].classList.add( 'hidden' );
+		index2++;
 	}
 };
 
