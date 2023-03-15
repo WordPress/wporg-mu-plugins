@@ -38,11 +38,11 @@ const collapseCrumbs = ( arr, container, breakpoint ) => {
 	}
 
 	// Second, hide the items if everything is truncated
-	const allHidden = () => arr.every( ( crumb ) => crumb.classList.contains( 'hidden' ) );
+	const allHidden = () => arr.every( ( crumb ) => crumb.classList.contains( 'is-hidden' ) );
 
 	let index2 = 0;
 	while ( getAvailableSpace( container ) < breakpoint && ! allHidden() ) {
-		arr[ index2 ].classList.add( 'hidden' );
+		arr[ index2 ].classList.add( 'is-hidden' );
 		index2++;
 	}
 };
@@ -67,17 +67,18 @@ const expandCrumbs = ( arr, container, breakpoint ) => {
 	const currentSpaceValue = getAvailableSpace( container );
 	let pixelToAllocate = Math.ceil( currentSpaceValue - breakpoint );
 
-	if ( pixelToAllocate < 0 ) {
+	// 20 is roughly the width of the ellipsis.
+	if ( pixelToAllocate < 20 ) {
 		return;
 	}
 
 	/**
 	 * If there are hidden elements, show them first.
 	 */
-	const hiddenEls = arr.filter( ( crumb ) => crumb.classList.contains( 'hidden' ) );
+	const hiddenEls = arr.filter( ( crumb ) => crumb.classList.contains( 'is-hidden' ) );
 
 	if ( hiddenEls.length ) {
-		hiddenEls[ 0 ].classList.remove( 'hidden' );
+		hiddenEls[ 0 ].classList.remove( 'is-hidden' );
 		return;
 	}
 
