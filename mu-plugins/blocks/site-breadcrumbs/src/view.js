@@ -41,12 +41,20 @@ const collapseCrumbs = ( arr, container, breakpoint ) => {
 			arr[ i ].classList.add( 'hidden' );
 		} else {
 			arr[ i ].firstChild.classList.add( 'is-truncated' );
+			arr[ i ].firstChild.firstChild.classList.add( 'screen-reader-text' );
 		}
 	}
 };
 
 /**
  * This function expands the breadcrumbs until the available space is less than the breakpoint.
+ *
+ * The expected html for this to work is:
+ * <span>
+ *     <a href="#" data-title="Breadcrumb Title">
+ *         <span>Text</span>
+ *     </a>
+ * </span>
  *
  * @param {Array<HTMLElement>} arr        List of breadcrumb elements.
  * @param {HTMLElement}        container  Breadcrumb parent container
@@ -85,12 +93,13 @@ const expandCrumbs = ( arr, container, breakpoint ) => {
 
 		const spanWidth = anchorElement.firstChild.getBoundingClientRect().width;
 
-		// If the this item can't fit, wait until it can.
+		// If this item can't fit, wait until it can.
 		if ( spanWidth >= pixelToAllocate ) {
 			return;
 		}
 
 		anchorElement.classList.remove( 'is-truncated' );
+		anchorElement.firstChild.classList.remove( 'screen-reader-text' );
 
 		pixelToAllocate -= spanWidth;
 	}
@@ -125,6 +134,7 @@ const init = () => {
 		prevWindowWidth = window.innerWidth;
 	};
 
+	// Run on init
 	truncate();
 
 	window.addEventListener( 'resize', truncate );

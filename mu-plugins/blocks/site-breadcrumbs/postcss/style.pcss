@@ -19,11 +19,6 @@
 
 		/* Show full crumb on interaction. */
 		&.is-truncated {
-			& span {
-				position: absolute;
-				opacity: 0;
-			}
-
 			&::before {
 				content: "...";
 			}
@@ -42,14 +37,6 @@
 				content: attr(data-title);
 				z-index: 1000;
 			}
-		}
-
-		& span {
-			display: inline-block;
-			overflow-x: hidden;
-			white-space: nowrap;
-			text-overflow: ellipsis;
-			vertical-align: middle;
 		}
 
 		&:focus span,
