@@ -371,17 +371,19 @@ function render_global_header( $attributes = array() ) {
 	 *
 	 * API requests also need `<head>` etc so they can get the styles.
 	 */
+	$head_markup = '';
 	if ( ! wp_is_block_theme() || $is_rest_request ) {
 		ob_start();
 		require_once __DIR__ . '/classic-header.php';
-		$markup = ob_get_clean() . $markup;
+		$head_markup = ob_get_clean();
 	}
 
 	$wrapper_attributes = get_block_wrapper_attributes(
 		array( 'class' => 'global-header wp-block-group' )
 	);
 	return sprintf(
-		'<header %1$s>%2$s</header>%3$s',
+		'%1$s<header %2$s>%3$s</header>%4$s',
+		$head_markup,
 		$wrapper_attributes,
 		$markup,
 		wp_kses_post( render_header_alert_banner() )
@@ -819,10 +821,11 @@ function render_global_footer( $attributes, $content, $block ) {
 	$is_rest_request = defined( 'REST_REQUEST' ) && REST_REQUEST;
 
 	// Render the classic markup second, so the `wp_footer()` call will execute callbacks that blocks added.
+	$footer_markup = '';
 	if ( ! wp_is_block_theme() || $is_rest_request ) {
 		ob_start();
 		require_once __DIR__ . '/classic-footer.php';
-		$markup .= ob_get_clean();
+		$footer_markup = ob_get_clean();
 	}
 
 	remove_filter( 'render_block_data', __NAMESPACE__ . '\localize_nav_links' );
@@ -831,9 +834,10 @@ function render_global_footer( $attributes, $content, $block ) {
 		array( 'class' => 'global-footer wp-block-group' )
 	);
 	return sprintf(
-		'<footer %1$s>%2$s</footer>',
+		'<footer %1$s>%2$s</footer>%3$s',
 		$wrapper_attributes,
 		$markup,
+		$footer_markup,
 	);
 }
 
