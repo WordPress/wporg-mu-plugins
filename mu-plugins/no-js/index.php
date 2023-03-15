@@ -4,7 +4,7 @@
  * Description: This adds a 'no-js' class and removes it with JS for styling.
  */
 
-namespace WordPressdotorg\MU_Plugins\NO_JS;
+namespace WordPressdotorg\MU_Plugins\No_JS;
 
 // Actions & Filters
 add_filter( 'language_attributes', __NAMESPACE__ . '\add_no_js_tag', 10, 2 );
