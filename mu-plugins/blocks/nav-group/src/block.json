@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "wporg/nav-group",
+	"version": "0.1.0",
+	"title": "Nav Group",
+	"category": "design",
+	"icon": "",
+	"description": "Groups children components for a sub nav.",
+	"textdomain": "wporg",
+	"supports": {
+		"align": true,
+		"color": {
+			"background": true,
+			"text": true,
+			"link": true
+		},
+		"html": false
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style.css"
+}
