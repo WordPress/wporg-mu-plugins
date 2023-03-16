@@ -17,6 +17,28 @@ const getAvailableSpace = ( parent ) => {
 };
 
 /**
+ * Return whether every item in the array has the class 'is-truncated'
+ *
+ * Example HTML:
+ * <span>
+ *    <a href="#" class="is-truncated" />
+ * </span>
+ *
+ * @param {Array<HTMLElement>} arr
+ * @return {boolean}
+ */
+const allTruncated = ( arr ) =>
+	arr.every( ( { firstChild: anchorElement } ) => anchorElement.classList.contains( 'is-truncated' ) );
+
+/**
+ * Return whether every item in the array has the class 'is-hidden'
+ *
+ * @param {Array<HTMLElement>} arr
+ * @return {boolean}
+ */
+const allHidden = ( arr ) => arr.every( ( crumb ) => crumb.classList.contains( 'is-hidden' ) );
+
+/**
  * This function collapses the breadcrumbs until the available space is greater than the breakpoint.
  *
  * @param {Array<HTMLElement>} arr        List of breadcrumb elements.
@@ -26,24 +48,29 @@ const getAvailableSpace = ( parent ) => {
  * @return {void}
  */
 const collapseCrumbs = ( arr, container, breakpoint ) => {
-	// First, try to truncate the text
-	const allTruncated = () =>
-		arr.every( ( { firstChild: anchorElement } ) => anchorElement.classList.contains( 'is-truncated' ) );
+	const middleCrumbs = arr.slice( 1, arr.length - 1 );
 
+	// First, try to truncate the text
 	let index = 0;
-	while ( getAvailableSpace( container ) < breakpoint && ! allTruncated() ) {
-		arr[ index ].firstChild.classList.add( 'is-truncated' );
-		arr[ index ].firstChild.firstChild.classList.add( 'screen-reader-text' );
+	while ( getAvailableSpace( container ) < breakpoint && ! allTruncated( middleCrumbs ) ) {
+		middleCrumbs[ index ].firstChild.classList.add( 'is-truncated' );
+		middleCrumbs[ index ].firstChild.firstChild.classList.add( 'screen-reader-text' );
 		index++;
 	}
 
 	// Second, hide the items if everything is truncated
-	const allHidden = () => arr.every( ( crumb ) => crumb.classList.contains( 'is-hidden' ) );
-
 	let index2 = 0;
-	while ( getAvailableSpace( container ) < breakpoint && ! allHidden() ) {
-		arr[ index2 ].classList.add( 'is-hidden' );
+	while ( getAvailableSpace( container ) < breakpoint && ! allHidden( middleCrumbs ) ) {
+		middleCrumbs[ index2 ].classList.add( 'is-hidden' );
 		index2++;
+	}
+
+	const remainingSpace = getAvailableSpace( container );
+	// if we truncated and hid all the items, truncate the last part
+	if ( remainingSpace < breakpoint ) {
+		const lastPart = arr[ arr.length - 1 ];
+		const width = Math.max( 75, lastPart.getBoundingClientRect().width - breakpoint );
+		lastPart.style.width = `${ width }px`;
 	}
 };
 
@@ -57,13 +84,15 @@ const collapseCrumbs = ( arr, container, breakpoint ) => {
  *     </a>
  * </span>
  *
- * @param {Array<HTMLElement>} arr        List of breadcrumb elements.
- * @param {HTMLElement}        container  Breadcrumb parent container
- * @param {number}             breakpoint The breakpoint in pixels.
+ * @param {Array<HTMLElement>} arr                     List of breadcrumb elements.
+ * @param {HTMLElement}        container               Breadcrumb parent container
+ * @param {number}             breakpoint              The breakpoint in pixels.
+ * @param {number}             finalPartOriginalLength The original width of the last crumb.
  *
  * @return {void}
  */
-const expandCrumbs = ( arr, container, breakpoint ) => {
+const expandCrumbs = ( arr, container, breakpoint, finalPartOriginalLength ) => {
+	const middleCrumbs = arr.slice( 1, arr.length - 1 );
 	const currentSpaceValue = getAvailableSpace( container );
 	let pixelToAllocate = Math.ceil( currentSpaceValue - breakpoint );
 
@@ -72,10 +101,18 @@ const expandCrumbs = ( arr, container, breakpoint ) => {
 		return;
 	}
 
+	// If the last part has ellipses, expand it.
+	const lastPart = arr[ arr.length - 1 ];
+	if ( lastPart.style.width < finalPartOriginalLength ) {
+		lastPart.style.width += pixelToAllocate;
+	}
+
+	lastPart.style.width = 'auto';
+
 	/**
 	 * If there are hidden elements, show them first.
 	 */
-	const hiddenEls = arr.filter( ( crumb ) => crumb.classList.contains( 'is-hidden' ) );
+	const hiddenEls = middleCrumbs.filter( ( crumb ) => crumb.classList.contains( 'is-hidden' ) );
 
 	if ( hiddenEls.length ) {
 		hiddenEls[ 0 ].classList.remove( 'is-hidden' );
@@ -85,8 +122,8 @@ const expandCrumbs = ( arr, container, breakpoint ) => {
 	/**
 	 * Loop through right to left, expand
 	 */
-	for ( let i = arr.length - 1; i >= 0; i-- ) {
-		const anchorElement = arr[ i ].firstChild;
+	for ( let i = middleCrumbs.length - 1; i >= 0; i-- ) {
+		const anchorElement = middleCrumbs[ i ].firstChild;
 
 		// We don't need to do anything if the element is already expanded.
 		if ( ! anchorElement.classList.contains( 'is-truncated' ) ) {
@@ -121,25 +158,32 @@ const init = () => {
 		return;
 	}
 
-	const breakpoint = 50; // The menu and the breadcrumbs should never come closer than this.
-	const middleCrumbs = crumbs.slice( 1, crumbs.length - 1 );
-	let prevWindowWidth = window.innerWidth; // Track window expansion
+	// The menu and the breadcrumbs should never come closer than this.
+	const breakpoint = 50;
 
+	// Save the original width of the last crumb so we can restore it when the window is resized.
+	const finalPartOriginalLength = crumbs[ crumbs.length - 1 ].getBoundingClientRect().width;
+
+	/**
+	 * Truncates or expands the breadcrumbs based on the available space.
+	 */
 	const truncate = () => {
-		// Window is shrinking
-		if ( prevWindowWidth >= window.innerWidth ) {
-			collapseCrumbs( middleCrumbs, crumbContainer.parentElement, breakpoint );
+		if ( getAvailableSpace( crumbContainer.parentElement ) < breakpoint ) {
+			collapseCrumbs( crumbs, crumbContainer.parentElement, breakpoint );
 		} else {
-			expandCrumbs( middleCrumbs, crumbContainer.parentElement, breakpoint );
+			expandCrumbs( crumbs, crumbContainer.parentElement, breakpoint, finalPartOriginalLength );
 		}
-
-		prevWindowWidth = window.innerWidth;
 	};
 
 	// Run on init
 	truncate();
 
-	window.addEventListener( 'resize', truncate );
+	let timeout = null;
+	window.addEventListener( 'resize', () => {
+		clearTimeout( timeout );
+
+		timeout = setTimeout( truncate, 200 );
+	} );
 };
 
 document.addEventListener( 'DOMContentLoaded', init );
