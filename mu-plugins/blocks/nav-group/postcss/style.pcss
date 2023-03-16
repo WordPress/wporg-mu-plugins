@@ -1,5 +1,21 @@
 .wp-block-wporg-nav-group {
 	display: flex;
-	flex-wrap: wrap;
 	justify-content: space-between;
+	flex-wrap: wrap;
+	align-items: center;
+	overflow-x: hidden;
+	gap: 20px;
+	padding: 2rem;
+
+	@media ( min-width: 600px ) {
+		flex-wrap: nowrap;
+
+		& .wp-block-navigation__container {
+			flex-wrap: nowrap;
+
+			& li {
+				white-space: nowrap;
+			}
+		}
+	}
 }
