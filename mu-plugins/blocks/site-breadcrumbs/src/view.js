@@ -103,8 +103,9 @@ const expandCrumbs = ( arr, container, breakpoint, finalPartOriginalLength ) => 
 
 	// If the last part has ellipses, expand it.
 	const lastPart = arr[ arr.length - 1 ];
-	if ( lastPart.style.width < finalPartOriginalLength ) {
-		lastPart.style.width += pixelToAllocate;
+	const currWidth = lastPart.style.width;
+	if ( currWidth < finalPartOriginalLength ) {
+		lastPart.style.width += Math.min( currWidth + pixelToAllocate, finalPartOriginalLength );
 	}
 
 	lastPart.style.width = 'auto';
