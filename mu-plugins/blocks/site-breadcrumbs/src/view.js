@@ -96,16 +96,19 @@ const expandCrumbs = ( arr, container, breakpoint, finalPartOriginalLength ) => 
 	const currentSpaceValue = getAvailableSpace( container );
 	let pixelToAllocate = Math.ceil( currentSpaceValue - breakpoint );
 
+	// If the last part has ellipses, expand it.
+	const lastPart = arr[ arr.length - 1 ];
+	const currWidth = parseInt( lastPart.style.width );
+
+	if ( currWidth < finalPartOriginalLength ) {
+		const newWidth = Math.min( currWidth + pixelToAllocate, finalPartOriginalLength );
+		lastPart.style.width = `${ newWidth }px`;
+		pixelToAllocate -= newWidth - currWidth;
+	}
+
 	// 20 is roughly the width of the ellipsis.
 	if ( pixelToAllocate < 20 ) {
 		return;
-	}
-
-	// If the last part has ellipses, expand it.
-	const lastPart = arr[ arr.length - 1 ];
-	const currWidth = lastPart.style.width;
-	if ( currWidth < finalPartOriginalLength ) {
-		lastPart.style.width += Math.min( currWidth + pixelToAllocate, finalPartOriginalLength );
 	}
 
 	/**
