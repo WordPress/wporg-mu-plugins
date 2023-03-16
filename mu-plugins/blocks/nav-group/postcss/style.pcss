@@ -7,8 +7,17 @@
 	gap: 20px;
 	padding: 2rem;
 
+	/* The icon has this but it's positions absolute so it collapses to 0 */
+	& > nav {
+		width: 24px;
+	}
+
 	@media ( min-width: 600px ) {
 		flex-wrap: nowrap;
+
+		& > nav {
+			width: unset;
+		}
 
 		& .wp-block-navigation__container {
 			flex-wrap: nowrap;
