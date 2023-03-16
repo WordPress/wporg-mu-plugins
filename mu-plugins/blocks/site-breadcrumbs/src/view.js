@@ -108,8 +108,6 @@ const expandCrumbs = ( arr, container, breakpoint, finalPartOriginalLength ) => 
 		lastPart.style.width += Math.min( currWidth + pixelToAllocate, finalPartOriginalLength );
 	}
 
-	lastPart.style.width = 'auto';
-
 	/**
 	 * If there are hidden elements, show them first.
 	 */
