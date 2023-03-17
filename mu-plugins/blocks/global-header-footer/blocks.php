@@ -17,6 +17,7 @@ add_action( 'wp_head', __NAMESPACE__ . '\preload_google_fonts' );
 add_filter( 'style_loader_src', __NAMESPACE__ . '\update_google_fonts_url', 10, 2 );
 add_filter( 'render_block_core/navigation-link', __NAMESPACE__ . '\swap_submenu_arrow_svg' );
 add_filter( 'render_block_core/search', __NAMESPACE__ . '\swap_header_search_action', 10, 2 );
+add_filter( 'render_block_data', __NAMESPACE__ . '\update_block_style_colors' );
 
 /**
  * Register block types
@@ -370,13 +371,23 @@ function render_global_header( $attributes = array() ) {
 	 *
 	 * API requests also need `<head>` etc so they can get the styles.
 	 */
+	$head_markup = '';
 	if ( ! wp_is_block_theme() || $is_rest_request ) {
 		ob_start();
 		require_once __DIR__ . '/classic-header.php';
-		$markup = ob_get_clean() . $markup;
+		$head_markup = ob_get_clean();
 	}
 
-	return $markup;
+	$wrapper_attributes = get_block_wrapper_attributes(
+		array( 'class' => 'global-header wp-block-group' )
+	);
+	return sprintf(
+		'%1$s<header %2$s>%3$s</header>%4$s',
+		$head_markup,
+		$wrapper_attributes,
+		$markup,
+		wp_kses_post( render_header_alert_banner() )
+	);
 }
 
 /**
@@ -784,11 +795,13 @@ function rest_render_global_footer( $request ) {
 /**
  * Render the global footer in a block context.
  *
- * @param array $attributes The block attributes.
+ * @param array    $attributes Block attributes.
+ * @param string   $content    Block default content.
+ * @param WP_Block $block      Block instance.
  *
- * @return string
+ * @return string Returns the block markup.
  */
-function render_global_footer( $attributes = array() ) {
+function render_global_footer( $attributes, $content, $block ) {
 	remove_inner_group_container();
 
 	if ( is_rosetta_site() ) {
@@ -808,16 +821,51 @@ function render_global_footer( $attributes = array() ) {
 	$is_rest_request = defined( 'REST_REQUEST' ) && REST_REQUEST;
 
 	// Render the classic markup second, so the `wp_footer()` call will execute callbacks that blocks added.
+	$footer_markup = '';
 	if ( ! wp_is_block_theme() || $is_rest_request ) {
 		ob_start();
 		require_once __DIR__ . '/classic-footer.php';
-		$markup .= ob_get_clean();
+		$footer_markup = ob_get_clean();
 	}
 
 	remove_filter( 'render_block_data', __NAMESPACE__ . '\localize_nav_links' );
 
-	return $markup;
+	$wrapper_attributes = get_block_wrapper_attributes(
+		array( 'class' => 'global-footer wp-block-group' )
+	);
+	return sprintf(
+		'<footer %1$s>%2$s</footer>%3$s',
+		$wrapper_attributes,
+		$markup,
+		$footer_markup,
+	);
 }
+
+/**
+ * Convert the `style` attribute on the footer block to use color settings.
+ *
+ * @param array $block The parsed block data.
+ *
+ * @return array
+ */
+function update_block_style_colors( $block ) {
+	if (
+		! empty( $block['blockName'] ) &&
+		in_array( $block['blockName'], [ 'wporg/global-footer', 'wporg/global-header' ], true ) &&
+		! empty( $block['attrs']['style'] )
+	) {
+		if ( 'black-on-white' === $block['attrs']['style'] ) {
+			$block['attrs']['textColor']       = 'charcoal-2';
+			$block['attrs']['backgroundColor'] = 'white';
+		} elseif ( 'white-on-blue' === $block['attrs']['style'] ) {
+			$block['attrs']['textColor']       = 'white';
+			$block['attrs']['backgroundColor'] = 'blueberry-1';
+		}
+	}
+
+	return $block;
+}
+
 
 /**
  * Localise a `core/navigation-link` block link to point to the Rosetta site resource.
@@ -1025,7 +1073,7 @@ function swap_header_search_action( $block_content, $block ) {
 	return $block_content;
 }
 
-/*
+/**
  * Translate the tagline with the necessary text domain.
  */
 function get_cip_text() {
@@ -1037,29 +1085,4 @@ function get_cip_text() {
 	}
 
 	return $translated;
-}
-
-/**
- * Generate the classes based on the selected color scheme.
- *
- * This applies the expected color class using the format of Gutenberg's text
- * and background styles, though the actual colors are applied via CSS custom
- * properties in `_common.scss`.
- */
-function get_container_classes( $color_scheme ) {
-	$classes = ' has-text-color has-background';
-	switch ( $color_scheme ) {
-		case 'white-on-blue':
-			$classes .= ' has-white-color has-blueberry-1-background-color';
-			break;
-		case 'black-on-white':
-			$classes .= ' has-charcoal-2-color has-white-background-color';
-			break;
-		case 'white-on-black':
-		default:
-			$classes .= ' has-white-color has-charcoal-2-background-color';
-			break;
-	}
-
-	return $classes;
 }

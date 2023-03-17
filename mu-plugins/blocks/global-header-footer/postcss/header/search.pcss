@@ -146,10 +146,14 @@
 	}
 }
 
-.wp-block-group.global-header.has-white-background-color .global-header__search .wp-block-search__inside-wrapper {
-	border: 2px solid var(--wp-global-header--text-color);
-}
+.wp-block-group.global-header.has-charcoal-0-color,
+.wp-block-group.global-header.has-charcoal-1-color,
+.wp-block-group.global-header.has-charcoal-2-color {
+	& .global-header__search .wp-block-search__inside-wrapper {
+		border: 2px solid var(--wp-global-header--text-color);
+	}
 
-.wp-block-group.global-header.has-white-background-color .global-header__search .wp-block-navigation__responsive-container-open {
-	background-image: url(../images/search-for-light-bg.svg);
+	& .global-header__search .wp-block-navigation__responsive-container-open {
+		background-image: url(../images/search-for-light-bg.svg);
+	}
 }
