@@ -148,16 +148,25 @@ class HelpScout {
 			$url = add_query_arg( $args, $url );
 		}
 
+		$body    = null;
+		$headers = [
+			'Accept'        => 'application/json',
+			'Authorization' => $this->get_auth_string(),
+		];
+
+		// Always send POST/PUT/PATCH requests as JSON.
+		if ( in_array( $method, [ 'POST', 'PUT', 'PATCH' ], true ) && $args ) {
+			$headers['Content-Type'] = 'application/json';
+			$body                    = wp_json_encode( $args );
+		}
+
 		$request = wp_remote_request(
 			$url,
 			array(
 				'method'  => $method,
-				'headers' => [
-					'Accept'        => 'application/json',
-					'Authorization' => $this->get_auth_string(),
-				],
+				'headers' => $headers,
 				'timeout' => $this->timeout,
-				'body'    => ( 'POST' === $method && $args ) ? $args : null,
+				'body'    => $body,
 			)
 		);
 
