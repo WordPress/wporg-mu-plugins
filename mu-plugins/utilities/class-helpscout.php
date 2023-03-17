@@ -17,41 +17,59 @@ class HelpScout {
 	 */
 	public $timeout = 15;
 
-	protected $app_id     = '';
-	protected $app_secret = '';
+	public    $name           = '';
+	protected $app_id         = '';
+	protected $app_secret     = '';
+	protected $webhook_secret = '';
 
 	/**
 	 * Fetch an instance of the HelpScout API.
 	 */
-	public static function instance( $app_id = false, $secret = false ) {
+	public static function instance( $app_id = false, $secret = false, $webhook_secret = false ) {
 		static $instances = [];
 
-		if ( ! $app_id && ! $secret ) {
+		if ( ! $app_id && ! $secret && ! $webhook_secret ) {
 			$app_id = 'wordpress';
 		}
 
-		if ( $app_id && ! $secret ) {
-			if ( 'wordpress' === $app_id && defined( 'HELPSCOUT_APP_ID' ) ) {
-				$app_id = HELPSCOUT_APP_ID;
-				$secret = HELPSCOUT_APP_SECRET;
-			} elseif ( 'foundation' === $app_id && defined( 'HELPSCOUT_FOUNDATION_APP_ID' ) ) {
-				$app_id = HELPSCOUT_FOUNDATION_APP_ID;
-				$secret = HELPSCOUT_FOUNDATION_APP_SECRET;
-			} else {
-				$app_id = false;
-			}
+		return $instances[ $app_id ] ?? ( $instances[ $app_id ] = new self( $app_id, $secret, $webhook_secret ) );
+	}
+
+	protected function __construct( $app_id, $secret = false, $webhook_secret = false ) {
+		$name = '';
+		if ( 'wordpress' === $app_id && defined( 'HELPSCOUT_APP_ID' ) ) {
+			$name           = 'wordpress';
+			$app_id         = HELPSCOUT_APP_ID;
+			$secret         = HELPSCOUT_APP_SECRET;
+			$webhook_secret = HELPSCOUT_WEBHOOK_SECRET_KEY;
+		} elseif ( 'foundation' === $app_id && defined( 'HELPSCOUT_FOUNDATION_APP_ID' ) ) {
+			$name           = 'foundation';
+			$app_id         = HELPSCOUT_FOUNDATION_APP_ID;
+			$secret         = HELPSCOUT_FOUNDATION_APP_SECRET;
+			$webhook_secret = HELPSCOUT_FOUNDATION_WEBHOOK_SECRET_KEY;
 		}
 
-		if ( ! $app_id || ! $secret ) {
+		$this->name           = $name;
+		$this->app_id         = $app_id;
+		$this->app_secret     = $secret;
+		$this->webhook_secret = $webhook_secret;
+	}
+
+	/**
+	 * Validate whether the webhook payload provided came from Helpscout.
+	 *
+	 * @param $data      string The raw JSON payload.
+	 * @param $signature string The signature provided by Helpscout.
+	 * @return bool
+	 */
+	public function validate_webhook_signature( $data, $signature ) {
+		if ( ! $this->webhook_secret || ! $signature ) {
 			return false;
 		}
 
-		return $instances[ $app_id ] ?? ( $instances[ $app_id ] = new self( $app_id, $secret ) );
-	}
+		$calculated = base64_encode( hash_hmac( 'sha1', $data, $this->webhook_secret, true ) );
 
-	protected function __construct( $app_id, $secret ) {
-		$this->app_id     = $app_id;
-		$this->app_secret = $secret;
+		return hash_equals( $signature, $calculated );
 	}
 
 	/**
