@@ -81,16 +81,16 @@
 
 		@media (--tablet) {
 			padding-bottom: 0;
+
+			& > .wp-block-navigation-item {
+				border-bottom: var(--active-menu-item-border-height) solid transparent;
+			}
 		}
 
 		& .wp-block-navigation-item {
 			&:hover,
 			&:focus-within {
 				background-color: var(--wp-global-header--background-color--hover);
-			}
-
-			@media (--tablet) {
-				border-bottom: var(--active-menu-item-border-height) solid transparent;
 			}
 
 			&.current-menu-item:not(.global-header__get-wordpress) {
@@ -186,7 +186,7 @@
 			font-size: inherit;
 			gap: inherit;
 			padding-top: 0;
-			padding-bottom: 0;
+			left: 0;
 
 			& a:hover,
 			& a:focus {
