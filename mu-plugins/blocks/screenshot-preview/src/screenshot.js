@@ -91,11 +91,13 @@ function ScreenShotImg( { alt = '', queryString, src, isReady = false } ) {
 				await convertResponseToBase64( res );
 
 				setHasLoaded( true );
+				setShouldRetry( false );
 			} else {
 				setAttempts( attempts + 1 );
 			}
 		} catch ( error ) {
 			setHasError( true );
+			setShouldRetry( false );
 		}
 	};
 
