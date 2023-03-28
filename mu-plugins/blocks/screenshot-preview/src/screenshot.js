@@ -50,9 +50,7 @@ function useInterval( callback, delay ) {
  * @return {Object} React component
  */
 function ScreenShotImg( { alt = '', queryString, src, isReady = false } ) {
-	const fullUrl = `https://s0.wp.com/mshots/v1/${ encodeURIComponent(
-		src
-	) }${ queryString }`;
+	const fullUrl = `https://s0.wp.com/mshots/v1/${ encodeURIComponent( src ) }${ queryString }`;
 
 	const [ attempts, setAttempts ] = useState( 0 );
 	const [ hasLoaded, setHasLoaded ] = useState( false );
@@ -126,9 +124,7 @@ function ScreenShotImg( { alt = '', queryString, src, isReady = false } ) {
 
 	if ( hasError || hasAborted ) {
 		return (
-			<div className="wporg-screenshot wporg-screenshot__has-error">
-				{ __( 'error', 'wporg' ) }
-			</div>
+			<div className="wporg-screenshot wporg-screenshot__has-error">{ __( 'error', 'wporg' ) }</div>
 		);
 	}
 
