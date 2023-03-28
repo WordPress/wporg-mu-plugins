@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from '@wordpress/element';
  * Module constants
  */
 const MAX_ATTEMPTS = 10;
-const RETRY_DELAY = 1000;
+const RETRY_DELAY = 2000;
 
 /**
  * Thanks! https://overreacted.io/making-setinterval-declarative-with-react-hooks/.
@@ -50,12 +50,15 @@ function useInterval( callback, delay ) {
  * @return {Object} React component
  */
 function ScreenShotImg( { alt = '', queryString, src, isReady = false } ) {
-	const fullUrl = `https://s0.wp.com/mshots/v1/${ encodeURIComponent( src ) }${ queryString }`;
+	const fullUrl = `https://s0.wp.com/mshots/v1/${ encodeURIComponent(
+		src
+	) }${ queryString }`;
 
 	const [ attempts, setAttempts ] = useState( 0 );
 	const [ hasLoaded, setHasLoaded ] = useState( false );
 	const [ hasError, setHasError ] = useState( false );
 	const [ base64Img, setBase64Img ] = useState( '' );
+	const [ shouldRetry, setShouldRetry ] = useState( false );
 
 	// We don't want to keep trying infinitely.
 	const hasAborted = attempts > MAX_ATTEMPTS;
@@ -78,27 +81,37 @@ function ScreenShotImg( { alt = '', queryString, src, isReady = false } ) {
 		reader.readAsDataURL( blob );
 	};
 
+	const fetchImage = async () => {
+		try {
+			const res = await fetch( fullUrl );
+
+			if ( res.redirected ) {
+				setShouldRetry( true );
+			} else if ( res.status === 200 && ! res.redirected ) {
+				await convertResponseToBase64( res );
+
+				setHasLoaded( true );
+			} else {
+				setAttempts( attempts + 1 );
+			}
+		} catch ( error ) {
+			setHasError( true );
+		}
+	};
+
+	useEffect( async () => {
+		await fetchImage();
+	}, [] );
+
 	/**
 	 * The Snapshot service will redirect when its generating an image.
 	 * We want to continue requesting the image until it doesn't redirect.
 	 */
 	useInterval(
 		async () => {
-			try {
-				const res = await fetch( fullUrl );
-
-				if ( res.status === 200 && ! res.redirected ) {
-					await convertResponseToBase64( res );
-
-					setHasLoaded( true );
-				} else {
-					setAttempts( attempts + 1 );
-				}
-			} catch ( error ) {
-				setHasError( true );
-			}
+			await fetchImage();
 		},
-		isLoading ? RETRY_DELAY : null
+		shouldRetry ? RETRY_DELAY : null
 	);
 
 	if ( ! isReady ) {
@@ -110,7 +123,11 @@ function ScreenShotImg( { alt = '', queryString, src, isReady = false } ) {
 	}
 
 	if ( hasError || hasAborted ) {
-		return <div className="wporg-screenshot wporg-screenshot__has-error">{ __( 'error', 'wporg' ) }</div>;
+		return (
+			<div className="wporg-screenshot wporg-screenshot__has-error">
+				{ __( 'error', 'wporg' ) }
+			</div>
+		);
 	}
 
 	return <img src={ base64Img } alt={ alt } />;
