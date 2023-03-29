@@ -3,14 +3,14 @@
  */
 
 .wp-block-group.global-header {
-
-	/* This is the `a` on desktop, and the containing `li` on mobile. */
-	& .global-header__get-wordpress {
+	& .global-header__desktop-get-wordpress,
+	& .global-header__mobile-get-wordpress a {
 		background-color: var(--wp--preset--color--blueberry-1) !important; /* Override Gutenberg's !important */
 		color: var(--wp--preset--color--white) !important; /* Override the header color scheme */
 		padding: 10px 19px;
 		border-radius: 2px;
 		font-weight: 700;
+		font-size: var(--wp--preset--font-size--small);
 
 		&:hover {
 			cursor: pointer;
@@ -25,8 +25,9 @@
 		&:focus,
 		&:focus-visible,
 		&:focus-within {
-			outline: 1px dashed currentcolor;
-			outline-offset: -2px;
+			outline: none;
+			border-radius: 2px;
+			box-shadow: 0 0 0 1.5px var(--wp-global-header--link-color--active);
 		}
 	}
 
@@ -53,27 +54,15 @@
 
 	/* Mobile - `li` containing `a` */
 	& .wp-block-navigation__container .wp-block-navigation-item.global-header__mobile-get-wordpress {
-		padding: var(--wp--style--block-gap) 65px;
-		margin: 57px var(--wp--style--block-gap) 0 var(--wp--style--block-gap);
-		width: calc(100% - var(--wp--style--block-gap) - var(--wp--style--block-gap));
-		text-align: center;
+		margin-top: calc(var(--wp--style--block-gap) / 2);
+		margin-left: calc(var(--wp--style--block-gap) / 2);
+
+		& a {
+			padding: 10px 19px;
+		}
 
 		@media (--tablet) {
 			display: none;
-		}
-
-		& a {
-			margin: 0 auto;
-			padding: 0;
-			color: inherit;
-
-			&:hover,
-			&:focus,
-			&:focus-visible {
-				background-color: unset;
-				text-decoration: none;
-				outline: none;
-			}
 		}
 	}
 }
