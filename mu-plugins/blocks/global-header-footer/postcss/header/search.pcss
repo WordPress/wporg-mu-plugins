@@ -64,27 +64,25 @@
 	}
 
 	& .wp-block-search {
-		margin-top: 0;
-		width: 100%;
 
-		@media (--tablet) {
-			padding: 20px;
-		}
+		/* Set local custom properties so child themes can set these in one place. */
+		--local--border-color: var(--wp--custom--form--border--color);
+		--local--focus--border-color: var(--wp--preset--color--blueberry-2);
+		--wp--custom--form--border--width: 0;
+		--wp--custom--margin--horizontal: 20px;
+		--wp--custom--margin--vertical: 20px;
 
-		& .wp-block-search__inside-wrapper {
-			padding: 0;
-			border: none;
-			border-radius: 2px;
-			background-color: var(--wp--preset--color--white);
-			color: var(--wp--preset--color--charcoal-1);
-			font-size: inherit;
-			overflow: hidden;
-		}
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		margin-top: var(--wp--custom--margin--vertical);
+		max-width: 100%;
 
-		& .wp-block-search__label {
-			display: block;
-			margin-bottom: 20px;
-			font-size: 21px;
+		& > label {
+			width: 100%;
+			margin-bottom: calc(var(--wp--custom--form--padding) / 2);
+			font-size: var(--wp--custom--form--typography--font-size);
+			color: var(--wp--custom--form--color--label);
 
 			@media (--tablet) {
 
@@ -102,43 +100,120 @@
 			}
 		}
 
+		& .wp-block-search__inside-wrapper {
+			flex: auto;
+			padding: 0;
+			border: var(--wp--custom--form--border--width) var(--wp--custom--form--border--style) var(--local--border-color);
+			border-radius: var(--wp--custom--form--border--radius);
+			background-color: var(--wp--custom--form--color--background);
+		}
+
 		& .wp-block-search__input {
-			-webkit-appearance: none; /* Remove duplicate magnifying glass icon on Safari-mobile. */
 			margin: 0;
 			padding: var(--wp--custom--form--padding);
-			box-shadow: none;
 			border: none;
-			font-size: var(--wp--preset--font-size--normal);
-			line-height: 1.5;
-
-			@media (--tablet) {
-				padding: calc(var(--wp--custom--form--padding) * 0.5) var(--wp--custom--form--padding);
-				font-size: var(--wp--preset--font-size--small);
-			}
+			box-shadow: none;
+			background-color: var(--wp--custom--form--color--background);
+			border-radius: var(--wp--custom--form--border--radius) 0 0 var(--wp--custom--form--border--radius);
+			font-size: var(--wp--custom--form--typography--font-size);
+			line-height: 1;
 
 			&::placeholder {
-				color: #6a6a6a;
 				opacity: 1;
+				color: var(--wp--custom--form--color--placeholder);
 			}
 		}
 
 		& .wp-block-search__button {
-			padding: 8px 12px;
-			background-color: transparent;
-			color: var(--wp--preset--color--charcoal-1);
+			--wp--custom--button--color--background: transparent;
+			--wp--custom--button--color--text: var(--wp--preset--color--charcoal-1);
+			--wp--custom--button--hover--color--background: var(--wp--preset--color--light-grey-2);
+			--wp--custom--button--hover--color--text: var(--wp--preset--color--charcoal-1);
+			--wp--custom--button--active--color--background: var(--wp--preset--color--light-grey-2);
+			--wp--custom--button--active--color--text: var(--wp--preset--color--charcoal-1);
+
+			margin-left: 0;
+			padding: calc(var(--wp--custom--form--padding) / 2);
+			font-family: inherit;
+			font-size: var(--wp--custom--form--typography--font-size);
+			line-height: 1;
+			text-decoration: none;
+			opacity: 1;
+			color: var(--wp--custom--button--color--text);
+			background-color: var(--wp--custom--button--color--background);
+			border: none;
+			border-radius: 0 var(--wp--custom--form--border--radius) var(--wp--custom--form--border--radius) 0;
 
 			& svg {
-				fill: currentcolor;
-				height: 32px;
-				width: 32px;
+				fill: var(--wp--custom--button--color--text);
+			}
 
-				@media (--tablet) {
-					min-height: 20px;
-					height: 20px;
-					min-width: 20px;
-					width: 20px;
+			&:hover,
+			&:focus {
+				color: var(--wp--custom--button--hover--color--text);
+				background-color: var(--wp--custom--button--hover--color--background);
+
+				& svg {
+					fill: var(--wp--custom--button--hover--color--text);
 				}
 			}
+
+			&:focus {
+				outline: 1px dashed var(--wp--custom--button--hover--color--background);
+				outline-offset: 1px;
+			}
+
+			&:active {
+				color: var(--wp--custom--button--active--color--text);
+				background-color: var(--wp--custom--button--active--color--background);
+
+				& svg {
+					fill: var(--wp--custom--button--active--color--text);
+				}
+			}
+
+			border-radius: var(--wp--custom--form--border--radius);
+
+			&.has-icon {
+				line-height: 0;
+
+				/**
+				 *The user needs some kind of indication that the search icon is a button that can be clicked to
+				 * submit the form, because these buttons don't have the normal indicators. For background, see:
+				 * https://ux.stackexchange.com/questions/105024/why-dont-button-html-elements-have-a-css-cursor-pointer-by-default
+				 */
+
+				&:hover {
+					cursor: pointer;
+				}
+			}
+		}
+
+		& .wp-block-search__input,
+		& .wp-block-search__button {
+			&:focus {
+				outline: none;
+				outline-offset: unset;
+			}
+
+			&:focus-visible {
+				outline: 1px solid #fff;
+				border-radius: 2px;
+				box-shadow: inset 0 0 0 1.5px var(--local--focus--border-color);
+			}
+		}
+
+		&.wp-block-search__text-button .wp-block-search__button {
+			font-size: var(--wp--custom--form--typography--font-size);
+			padding: var(--wp--custom--form--padding);
+		}
+
+		@media (--tablet) {
+			padding: 0 var(--wp--custom--margin--horizontal) var(--wp--custom--margin--vertical);
+		}
+
+		@media (max-width: 599px) {
+			--wp--custom--form--typography--font-size: 16px;
 		}
 	}
 }
@@ -146,8 +221,19 @@
 .wp-block-group.global-header.has-charcoal-0-color,
 .wp-block-group.global-header.has-charcoal-1-color,
 .wp-block-group.global-header.has-charcoal-2-color {
-	& .global-header__search .wp-block-search__inside-wrapper {
-		border: 2px solid var(--wp-global-header--text-color);
+	& .global-header__search .wp-block-search {
+		--local--border-color: var(--wp--preset--color--charcoal-1);
+		--local--focus--border-color: var(--wp--preset--color--blueberry-1);
+		--wp--custom--form--color--label: var(--wp--preset--color--charcoal-1);
+		--wp--custom--form--border--width: 1px;
+
+		& .wp-block-search__input,
+		& .wp-block-search__button {
+			&:focus-visible {
+				outline: none;
+				box-shadow: 0 0 0 1.5px var(--local--focus--border-color);
+			}
+		}
 	}
 
 	& .global-header__search .wp-block-navigation__responsive-container-open {
