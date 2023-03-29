@@ -99,8 +99,8 @@ function ScreenShotImg( { alt = '', queryString, src, isReady = false } ) {
 		}
 	};
 
-	useEffect( async () => {
-		await fetchImage();
+	useEffect( () => {
+		( async () => await fetchImage() )();
 	}, [] );
 
 	/**
