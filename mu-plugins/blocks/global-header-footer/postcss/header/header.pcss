@@ -152,6 +152,10 @@ html {
 html.has-modal-open {
 	position: fixed;
 
+	@media (--desktop) {
+		position: static;
+	}
+
 	& body:not(.admin-bar) {
 		background: var(--wp--preset--color--charcoal-5);
 	}
