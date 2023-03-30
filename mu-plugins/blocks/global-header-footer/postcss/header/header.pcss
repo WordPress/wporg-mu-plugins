@@ -1,3 +1,15 @@
+html.has-modal-open {
+	/*
+	 * Hotfix for https://github.com/WordPress/gutenberg/pull/49369/.
+	 * Remove this line when that is in stable release.
+	 */
+	position: fixed;
+
+	& body:not(.admin-bar) {
+		background: var(--wp--preset--color--charcoal-5);
+	}
+}
+
 html {
 	--wp-global-header-height: 60px;
 
@@ -7,6 +19,13 @@ html {
 
 	@media (--short-screen) {
 		--wp-global-header-height: 60px;
+	}
+
+	&.has-modal-open {
+		@media (--desktop) {
+			/* It's not styled like a modal at this breakpoint, and `fixed` distorts the layout. */
+			position: static;
+		}
 	}
 }
 
@@ -145,18 +164,5 @@ html {
 		& > nav {
 			padding-bottom: 0;
 		}
-	}
-}
-
-/* Hotfix for https://github.com/WordPress/gutenberg/pull/49369/. Remove this when that is released. */
-html.has-modal-open {
-	position: fixed;
-
-	@media (--desktop) {
-		position: static;
-	}
-
-	& body:not(.admin-bar) {
-		background: var(--wp--preset--color--charcoal-5);
 	}
 }
