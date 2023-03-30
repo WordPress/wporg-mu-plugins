@@ -67,8 +67,13 @@ class Test_BlockParser extends WP_UnitTestCase {
 				[ 'Visit our Facebook page', 'Visit our Twitter account' ],
 			],
 			[
+				// List with links
+				"<!-- wp:list -->\n<ul>\n<!-- wp:list-item -->\n<li><a href=\"#\">Fonts API</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li>Interactivity <a href=\"#\">Link</a> API</li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"\">Block API</a></li>\n<!-- /wp:list-item --></ul>\n<!-- /wp:list -->",
+				[ 'Fonts API', 'Interactivity <a href="#">Link</a> API', 'Block API' ],
+			],
+			[
 				// List of lists
-				"<!-- wp:list -->\n<ul><!-- wp:list-item -->\n<li>APIs:<!-- wp:list -->\n<ul>\n<!-- wp:list-item -->\n<li>Fonts API</li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li>Interactivity API</li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li>Block API</li>\n<!-- /wp:list-item --></ul>\n<!-- /wp:list --></li>\n<!-- /wp:list-item -->\n</ul>\n<!-- /wp:list -->\n",
+				"<!-- wp:list -->\n<ul><!-- wp:list-item -->\n<li>APIs:<!-- wp:list -->\n<ul>\n<!-- wp:list-item -->\n<li>Fonts API</li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li>Interactivity API</li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li>Block API</li>\n<!-- /wp:list-item --></ul>\n<!-- /wp:list --></li>\n<!-- /wp:list-item -->\n</ul>\n<!-- /wp:list -->",
 				[ 'APIs:', 'Fonts API', 'Interactivity API', 'Block API' ],
 			],
 		];
@@ -106,6 +111,11 @@ class Test_BlockParser extends WP_UnitTestCase {
 				// Navigation with custom navigation links.
 				"<!-- wp:navigation {\"textColor\":\"blueberry-1\",\"overlayMenu\":\"never\",\"className\":\"is-style-dots\",\"style\":{\"spacing\":{\"blockGap\":\"0px\"}},\"fontSize\":\"small\"} -->\n<!-- wp:navigation-link {\"label\":\"Releases\",\"url\":\"#\",\"kind\":\"custom\",\"isTopLevelLink\":true} /-->\n<!-- /wp:navigation -->",
 				"<!-- wp:navigation {\"textColor\":\"blueberry-1\",\"overlayMenu\":\"never\",\"className\":\"is-style-dots\",\"style\":{\"spacing\":{\"blockGap\":\"0px\"}},\"fontSize\":\"small\"} -->\n<!-- wp:navigation-link {\"label\":\"<?php _e( 'Releases', 'wporg' ); ?>\",\"url\":\"<?php _e( '#', 'wporg' ); ?>\",\"kind\":\"custom\",\"isTopLevelLink\":true} /-->\n<!-- /wp:navigation -->",
+			],
+			[
+				// List with links
+				"<!-- wp:list -->\n<ul>\n<!-- wp:list-item -->\n<li><a href=\"#\">Fonts API</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li>Interactivity <a href=\"#\">Link</a> API</li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"\">Block API</a></li>\n<!-- /wp:list-item --></ul>\n<!-- /wp:list -->",
+				"<!-- wp:list -->\n<ul>\n<!-- wp:list-item -->\n<li><a href=\"#\"><?php _e( 'Fonts API', 'wporg' ); ?></a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><?php _e( 'Interactivity <a href=\"#\">Link</a> API', 'wporg' ); ?></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"\"><?php _e( 'Block API', 'wporg' ); ?></a></li>\n<!-- /wp:list-item --></ul>\n<!-- /wp:list -->",
 			],
 			[
 				// List of lists

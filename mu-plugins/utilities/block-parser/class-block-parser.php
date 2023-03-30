@@ -10,6 +10,7 @@ require_once __DIR__ . '/parsers/Button.php';
 require_once __DIR__ . '/parsers/Noop.php';
 require_once __DIR__ . '/parsers/ShortcodeBlock.php';
 require_once __DIR__ . '/parsers/TextNode.php';
+require_once __DIR__ . '/parsers/ListItemParser.php';
 
 class BlockParser {
 	public $content;
@@ -23,10 +24,10 @@ class BlockParser {
 			// Blocks that have custom parsers.
 			'core/paragraph'   => new Parsers\HTMLParser( 'p' ),
 			'core/image'       => new Parsers\HTMLParser( 'figcaption', [ 'alt', 'title' ] ),
-			'core/list'        => new Parsers\HTMLParser( 'li' ),
 			'core/quote'       => new Parsers\HTMLParser( [ 'p', 'cite' ] ),
 			'core/heading'     => new Parsers\HTMLRegexParser( '/h[1-6]/' ),
 
+			'core/list-item'   => new Parsers\ListItem(),
 			//'core/button'      => new Parsers\Button(),
 			//'core/buttons'     => new Parsers\BasicText(),
 			'core/button'      => new Parsers\HTMLParser( 'a', [ 'href', 'title' ] ),
@@ -84,7 +85,6 @@ class BlockParser {
 		$translated   = false;
 		$strings      = $self->to_strings();
 
-		// var_dump( $strings );
 		foreach ( $strings as $string ) {
 			$translations[ $string ] = $callback_translate( $string );
 
@@ -145,7 +145,7 @@ class BlockParser {
 		$strings = [];
 
 		$blocks = parse_blocks( $this->content );
-		//var_Dump( $blocks, $this->content ); die();
+
 		foreach ( $blocks as $block ) {
 			$strings = array_merge( $strings, $this->block_parser_to_strings( $block ) );
 		}
