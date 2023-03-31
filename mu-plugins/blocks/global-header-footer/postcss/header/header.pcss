@@ -17,6 +17,15 @@ html.has-modal-open {
 			background: inherit;
 		}
 	}
+
+	& #wpadminbar {
+		top: -46px; /* use var */
+
+		@media (--tablet) {
+			/* needs to be at 600px */
+			top: 0;
+		}
+	}
 }
 
 html {
