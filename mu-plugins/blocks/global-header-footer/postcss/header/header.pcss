@@ -10,6 +10,25 @@ html {
 	}
 }
 
+html.has-modal-open {
+	position: fixed; /* hotfix for https://github.com/WordPress/gutenberg/pull/49369/ */
+
+
+	height: 100vh;
+	overflow: hidden;
+
+	& body,
+	& .wp-site-blocks {
+		position: fixed;
+		height: 100vh;
+		overflow: hidden;
+	}
+
+	& #wpadminbar {
+		position: fixed;
+	}
+}
+
 .wp-block-group.global-header {
 	display: flex;
 	align-items: flex-start;
