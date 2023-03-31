@@ -7,6 +7,10 @@ html.has-modal-open {
 
 	& body:not(.admin-bar) {
 		background: var(--wp--preset--color--charcoal-5);
+
+		@media (--tablet) {
+			background: inherit;
+		}
 	}
 }
 
