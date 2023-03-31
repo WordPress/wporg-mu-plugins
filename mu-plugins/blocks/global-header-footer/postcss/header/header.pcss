@@ -5,6 +5,11 @@ html.has-modal-open {
 	 */
 	position: fixed;
 
+	@media (--desktop) {
+		/* Search isn't styled like a modal at this breakpoint, and `fixed` distorts the layout. */
+		position: static;
+	}
+
 	& body:not(.admin-bar) {
 		background: var(--wp--preset--color--charcoal-5);
 
@@ -23,13 +28,6 @@ html {
 
 	@media (--short-screen) {
 		--wp-global-header-height: 60px;
-	}
-
-	&.has-modal-open {
-		@media (--desktop) {
-			/* It's not styled like a modal at this breakpoint, and `fixed` distorts the layout. */
-			position: static;
-		}
 	}
 }
 
