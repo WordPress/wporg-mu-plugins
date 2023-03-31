@@ -10,22 +10,67 @@ html {
 	}
 }
 
+/*
+ * Fix iOS Safari scrolling bug. These styles have no other purpose.
+ * @link https://github.com/WordPress/wporg-mu-plugins/issues/371.
+ */
 html.has-modal-open {
-	position: fixed; /* hotfix for https://github.com/WordPress/gutenberg/pull/49369/ */
+	/* Override https://github.com/WordPress/gutenberg/pull/49369/ on other non-mobile breakpoints to avoid gap on right side of search modal. */
+	position: static;
 
+	@media (--mobile-only) {
+		/*position: fixed;*/ /* hotfix for https://github.com/WordPress/gutenberg/pull/49369/. remove when in stable release. */
+		/* if leave ^ enabled, then there's a gap at the bottom of the page where <main> shows through
+		if disable, then safari scroll a little, but it's not visible above the fold
+		 */
 
-	height: 100vh;
-	overflow: hidden;
+		height: 100lvh;
 
-	& body,
-	& .wp-site-blocks {
-		position: fixed;
-		height: 100vh;
 		overflow: hidden;
-	}
+		/* todo
+		     maybe set bg color grey to override
+		     try dvh height
+		     try setting height less than 100vh
 
-	& #wpadminbar {
-		position: fixed;
+		     add fixed to header in case that helps
+		    */
+
+		& body{
+			/*
+			none necessary
+			position: fixed;
+			height: 100vh;
+			overflow: hidden;*/
+
+			background: var(--wp--preset--color--charcoal-1);
+		}
+
+		& body:not(.admin-bar) {
+			background: var(--wp--preset--color--charcoal-5);
+		}
+
+
+		& .wp-site-blocks {
+			/* all of this necessary */
+			position: fixed;
+			height: 100vh;
+			overflow: hidden;
+		}
+
+		& .wp-block-navigation__responsive-container {
+			/* need to disable overflow vis from search.pcss? */
+
+			height: 100vh;
+
+			/*
+			these not necessary
+			position: fixed;
+			overflow: hidden;*/
+		}
+
+		& #wpadminbar {
+			position: fixed;
+		}
 	}
 }
 
