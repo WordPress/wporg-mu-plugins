@@ -24,7 +24,6 @@ class BlockParser {
 			// Blocks that have custom parsers.
 			'core/paragraph'   => new Parsers\HTMLParser( 'p' ),
 			'core/image'       => new Parsers\HTMLParser( 'figcaption', [ 'alt', 'title' ] ),
-			'core/quote'       => new Parsers\HTMLParser( [ 'p', 'cite' ] ),
 			'core/heading'     => new Parsers\HTMLRegexParser( '/h[1-6]/' ),
 
 			'core/list-item'   => new Parsers\ListItem(),
@@ -44,6 +43,7 @@ class BlockParser {
 			'core/column'      => new Parsers\Noop(),
 			'core/columns'     => new Parsers\Noop(),
 			'core/group'       => new Parsers\Noop(),
+			'core/quote'       => new Parsers\Noop(),
 
 			// Common core blocks that use the default parser.
 			'core/media-text'  => new Parsers\BasicText(),

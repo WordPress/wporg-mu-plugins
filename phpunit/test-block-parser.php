@@ -120,8 +120,12 @@ class Test_BlockParser extends WP_UnitTestCase {
 			[
 				// List of lists
 				"<!-- wp:list -->\n<ul><!-- wp:list-item -->\n<li>APIs:<!-- wp:list -->\n<ul>\n<!-- wp:list-item -->\n<li>Fonts API</li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li>Interactivity API</li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li>Block API</li>\n<!-- /wp:list-item --></ul>\n<!-- /wp:list --></li>\n<!-- /wp:list-item -->\n</ul>\n<!-- /wp:list -->\n",
-				"<!-- wp:list -->\n<ul><!-- wp:list-item -->\n<li><?php _e( 'APIs:', 'wporg' ); ?><!-- wp:list -->\n<ul>\n<!-- wp:list-item -->\n<li><?php _e( 'Fonts API', 'wporg' ); ?></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><?php _e( 'Interactivity API', 'wporg' ); ?></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><?php _e( 'Block API', 'wporg' ); ?></li>\n<!-- /wp:list-item --></ul>\n<!-- /wp:list --></li>\n<!-- /wp:list-item -->\n</ul>\n<!-- /wp:list -->\n"
-			]
+				"<!-- wp:list -->\n<ul><!-- wp:list-item -->\n<li><?php _e( 'APIs:', 'wporg' ); ?><!-- wp:list -->\n<ul>\n<!-- wp:list-item -->\n<li><?php _e( 'Fonts API', 'wporg' ); ?></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><?php _e( 'Interactivity API', 'wporg' ); ?></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><?php _e( 'Block API', 'wporg' ); ?></li>\n<!-- /wp:list-item --></ul>\n<!-- /wp:list --></li>\n<!-- /wp:list-item -->\n</ul>\n<!-- /wp:list -->\n",
+			],
+			[
+				"<!-- wp:quote -->\n<blockquote class=\"wp-block-quote\"><!-- wp:paragraph -->\m<p>I'm interested in running the open-source WordPress &lt;https://wordpress.org/&gt; web software and I was wondering if my account supported the following:</p>\n<!-- /wp:paragraph --></blockquote>\n<!-- /wp:quote -->",
+				"<!-- wp:quote -->\n<blockquote class=\"wp-block-quote\"><!-- wp:paragraph -->\m<p><?php _e( 'I&#039;m interested in running the open-source WordPress &lt;https://wordpress.org/&gt; web software and I was wondering if my account supported the following:', 'wporg' ); ?></p>\n<!-- /wp:paragraph --></blockquote>\n<!-- /wp:quote -->",
+			],
 		];
 	}
 
