@@ -30,10 +30,10 @@ class BlockParser {
 			'core/list-item'   => new Parsers\ListItem(),
 			//'core/button'      => new Parsers\Button(),
 			//'core/buttons'     => new Parsers\BasicText(),
-			'core/button'      => new Parsers\HTMLParser( 'a', [ 'href', 'title' ] ),
+			'core/button'      => new Parsers\HTMLParser( 'a', [ 'title' ] ),
 
 			// Attributes handler.
-			'core/navigation-link' => new Parsers\AttributeParser( [ 'label', 'url' ] ),
+			'core/navigation-link' => new Parsers\AttributeParser( [ 'label' ] ),
 			'core/social-link'     => new Parsers\AttributeParser( [ 'label' ] ),
 
 			// Generic shortcode handler.

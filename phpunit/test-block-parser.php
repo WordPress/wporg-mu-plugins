@@ -39,7 +39,7 @@ class Test_BlockParser extends WP_UnitTestCase {
 			[
 				// Buttons.
 				"<!-- wp:buttons -->\n<div class=\"wp-block-buttons\"><!-- wp:button -->\n<div class=\"wp-block-button\"><a class=\"wp-block-button__link wp-element-button\" href=\"#\">Button 1</a></div>\n<!-- /wp:button -->\n\n<!-- wp:button -->\n<div class=\"wp-block-button\"><a class=\"wp-block-button__link wp-element-button\" href=\"#\">Button 2</a></div>\n<!-- /wp:button --></div>\n<!-- /wp:buttons -->",
-				[ 'Button 1', '#', 'Button 2' ],
+				[ 'Button 1', 'Button 2' ],
 			],
 			[
 				// Column with a list, list-items.
@@ -54,7 +54,7 @@ class Test_BlockParser extends WP_UnitTestCase {
 			[
 				// Navigation with custom navigation links.
 				"<!-- wp:navigation {\"textColor\":\"blueberry-1\",\"overlayMenu\":\"never\",\"className\":\"is-style-dots\",\"style\":{\"spacing\":{\"blockGap\":\"0px\"}},\"fontSize\":\"small\"} -->\n<!-- wp:navigation-link {\"label\":\"Releases\",\"url\":\"https://wordpress.org/download/releases/\",\"kind\":\"custom\",\"isTopLevelLink\":true} /-->\n\n<!-- wp:navigation-link {\"label\":\"Nightly\",\"url\":\"https://wordpress.org/download/beta-nightly/\",\"kind\":\"custom\",\"isTopLevelLink\":true} /-->\n\n<!-- wp:navigation-link {\"label\":\"Counter\",\"url\":\"https://wordpress.org/download/counter/\",\"kind\":\"custom\",\"isTopLevelLink\":true} /-->\n\n<!-- wp:navigation-link {\"label\":\"Source\",\"url\":\"https://wordpress.org/download/source/\",\"kind\":\"custom\",\"isTopLevelLink\":true} /-->\n<!-- /wp:navigation -->",
-				[ 'Releases', 'https://wordpress.org/download/releases/', 'Nightly', 'https://wordpress.org/download/beta-nightly/', 'Counter', 'https://wordpress.org/download/counter/', 'Source', 'https://wordpress.org/download/source/' ],
+				[ 'Releases', 'Nightly', 'Counter', 'Source' ],
 			],
 			[
 				// Cover with background image (with alt), and nested paragraph.
@@ -110,7 +110,7 @@ class Test_BlockParser extends WP_UnitTestCase {
 			[
 				// Navigation with custom navigation links.
 				"<!-- wp:navigation {\"textColor\":\"blueberry-1\",\"overlayMenu\":\"never\",\"className\":\"is-style-dots\",\"style\":{\"spacing\":{\"blockGap\":\"0px\"}},\"fontSize\":\"small\"} -->\n<!-- wp:navigation-link {\"label\":\"Releases\",\"url\":\"#\",\"kind\":\"custom\",\"isTopLevelLink\":true} /-->\n<!-- /wp:navigation -->",
-				"<!-- wp:navigation {\"textColor\":\"blueberry-1\",\"overlayMenu\":\"never\",\"className\":\"is-style-dots\",\"style\":{\"spacing\":{\"blockGap\":\"0px\"}},\"fontSize\":\"small\"} -->\n<!-- wp:navigation-link {\"label\":\"<?php _e( 'Releases', 'wporg' ); ?>\",\"url\":\"<?php _e( '#', 'wporg' ); ?>\",\"kind\":\"custom\",\"isTopLevelLink\":true} /-->\n<!-- /wp:navigation -->",
+				"<!-- wp:navigation {\"textColor\":\"blueberry-1\",\"overlayMenu\":\"never\",\"className\":\"is-style-dots\",\"style\":{\"spacing\":{\"blockGap\":\"0px\"}},\"fontSize\":\"small\"} -->\n<!-- wp:navigation-link {\"label\":\"<?php _e( 'Releases', 'wporg' ); ?>\",\"url\":\"#\",\"kind\":\"custom\",\"isTopLevelLink\":true} /-->\n<!-- /wp:navigation -->",
 			],
 			[
 				// List with links
