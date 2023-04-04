@@ -11,39 +11,16 @@ add_action( 'admin_bar_menu', __NAMESPACE__ . '\filter_admin_bar_links', 500 ); 
 add_filter( 'show_admin_bar', __NAMESPACE__ . '\should_show_admin_bar' );
 
 /**
- * Show the admin bar most of the time.
+ * Hide the admin bar for logged out users.
+ *
+ * The admin bar can be shown to logged out users by activating the Logged Out Admin Bar plugin.
  *
  * @param bool $show_admin_bar Whether the admin bar should be shown.
  * @return bool
  */
 function should_show_admin_bar( $show_admin_bar ) {
-	$can_access_admin = is_super_admin() || current_user_can( 'read' );
-
 	// Folks who can access wp-admin should always see the bar, for convenience.
-	if ( $can_access_admin ) {
-		return true;
-	}
-
-	// w.org/showcase visitors are unlikely to have/want an account.
-	// w.org/showcase/submit-a-wordpress-site/ has a login link for that edge case.
-	if ( 718 === get_current_blog_id() ) {
-		return false;
-	}
-
-	$is_download_page = get_permalink() === get_download_url();
-
-	/*
-	 * Visitors are confused by the admin bar on w.org/home and w.org/download, and it generates a large
-	 * number of support requests. Folks mistakenly assume they have to register for a w.org account in
-	 * order to download WP or set up a site.
-	 */
-	if ( 1 === get_current_blog_id() || is_rosetta_site() ) { // 1 is wordpress.org/.
-		if ( is_front_page() || $is_download_page ) {
-			return false;
-		}
-	}
-
-	return true;
+	return is_super_admin() || current_user_can( 'read' );
 }
 
 /**
