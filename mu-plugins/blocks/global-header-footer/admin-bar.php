@@ -19,7 +19,6 @@ add_filter( 'show_admin_bar', __NAMESPACE__ . '\should_show_admin_bar' );
  * @return bool
  */
 function should_show_admin_bar( $show_admin_bar ) {
-	// Folks who can access wp-admin should always see the bar, for convenience.
 	return is_super_admin() || current_user_can( 'read' );
 }
 
