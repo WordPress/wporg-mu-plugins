@@ -943,100 +943,26 @@ function is_wporg_network() {
  * @return array The altered menu items.
  */
 function set_current_item_class( $menu_items ) {
-	$current_url = get_menu_url_for_current_page( $menu_items );
+	$host        = strtolower( $_SERVER['HTTP_HOST'] ); // phpcs:ignore
+	$uri         = strtolower( $_SERVER['REQUEST_URI'] ); // phpcs:ignore
+	$current_url = "https://{$host}{$uri}";
 
 	foreach ( $menu_items as & $item ) {
-		$sub = false;
 		if ( ! empty( $item['submenu'] ) ) {
 			foreach ( $item['submenu'] as & $subitem ) {
 				if ( $current_url === $subitem['url'] ) {
 					$subitem['classes'] = trim( ( $subitem['classes'] ?? '' ) . ' current-menu-item' );
-					$sub                = true;
 					break;
 				}
 			}
 		}
 
-		if ( $sub || $current_url === $item['url'] ) {
+		if ( $current_url === $item['url'] ) {
 			$item['classes'] = trim( ( $item['classes'] ?? '' ) . ' current-menu-item' );
 		}
 	}
 
 	return $menu_items;
-}
-
-/**
- * Determine the menu item which best describes the current request.
- *
- * @param array $menu_items The menu menu items.
- *
- * @return string
- */
-function get_menu_url_for_current_page( $menu_items ) {
-	$host    = strtolower( $_SERVER['HTTP_HOST'] ); // phpcs:ignore
-	$uri     = strtolower( $_SERVER['REQUEST_URI'] ); // phpcs:ignore
-	$compare = "https://{$host}{$uri}";
-
-	if ( 'translate.wordpress.org' === $host ) {
-		return 'https://make.wordpress.org/';
-	}
-
-	// Is it the Global Search?
-	if ( str_starts_with( $compare, 'https://wordpress.org/search/' ) ) {
-		if ( isset( $_GET['in'] ) ) {
-			if ( 'support_docs' === $_GET['in'] ) {
-				return 'https://wordpress.org/support/';
-			} elseif ( 'developer_documentation' === $_GET['in'] ) {
-				return 'https://developer.wordpress.org/';
-			}
-		}
-
-		return 'https://wordpress.org/support/forums/';
-	}
-
-	// Select the correct Support menu item.
-	if ( str_starts_with( $uri, '/support/' ) ) {
-		// Documentation => /$, /article/*, /wordpress-version/*
-		// Forums => Everything else.
-
-		if (
-			'/support/' === $uri ||
-			str_starts_with( $uri, '/support/article/' ) ||
-			str_starts_with( $uri, '/support/wordpress-version/' ) ||
-			str_starts_with( $uri, '/support/category/' )
-		) {
-			$compare = "https://{$host}/support/";
-		} else {
-			$compare = "https://{$host}/support/forums/";
-		}
-	}
-
-	// Extract all URLs, toplevel and child.
-	$urls = [];
-	array_walk_recursive(
-		$menu_items,
-		function( $val, $key ) use ( &$urls ) {
-			if ( 'url' === $key ) {
-				$urls[] = $val;
-			}
-		}
-	);
-
-	// Sort long to short, we need the deepest path to match.
-	usort(
-		$urls,
-		function( $a, $b ) {
-			return strlen( $b ) - strlen( $a );
-		}
-	);
-
-	foreach ( $urls as $url ) {
-		if ( str_starts_with( $compare, $url ) ) {
-			return $url;
-		}
-	}
-
-	return home_url( '/' );
 }
 
 /**
