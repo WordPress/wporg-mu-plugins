@@ -443,11 +443,6 @@ function get_global_menu_items() {
 					'type'  => 'custom',
 				),
 				array(
-					'title' => esc_html_x( 'Openverse', 'Menu item title', 'wporg' ),
-					'url'   => 'https://openverse.org/',
-					'type'  => 'custom',
-				),
-				array(
 					'title' => esc_html_x( 'Mobile', 'Menu item title', 'wporg' ),
 					'url'   => 'https://wordpress.org/mobile/',
 					'type'  => 'custom',
@@ -455,6 +450,11 @@ function get_global_menu_items() {
 				array(
 					'title' => esc_html_x( 'Hosting', 'Menu item title', 'wporg' ),
 					'url'   => 'https://wordpress.org/hosting/',
+					'type'  => 'custom',
+				),
+				array(
+					'title' => esc_html_x( 'Openverse ↗︎', 'Menu item title', 'wporg' ),
+					'url'   => 'https://openverse.org/',
 					'type'  => 'custom',
 				),
 			),
@@ -480,13 +480,13 @@ function get_global_menu_items() {
 					'type'  => 'custom',
 				),
 				array(
-					'title' => esc_html_x( 'WordPress.tv', 'Menu item title', 'wporg' ),
-					'url'   => 'https://wordpress.tv/',
+					'title' => esc_html_x( 'Developers', 'Menu item title', 'wporg' ),
+					'url'   => 'https://developer.wordpress.org/',
 					'type'  => 'custom',
 				),
 				array(
-					'title' => esc_html_x( 'Developers', 'Menu item title', 'wporg' ),
-					'url'   => 'https://developer.wordpress.org/',
+					'title' => esc_html_x( 'WordPress.tv ↗︎', 'Menu item title', 'wporg' ),
+					'url'   => 'https://wordpress.tv/',
 					'type'  => 'custom',
 				),
 			),
@@ -502,28 +502,28 @@ function get_global_menu_items() {
 					'type'  => 'custom',
 				),
 				array(
-					'title' => esc_html_x( 'WordCamp', 'Menu item title', 'wporg' ),
-					'url'   => 'https://central.wordcamp.org/',
-					'type'  => 'custom',
-				),
-				array(
-					'title' => esc_html_x( 'Meetups', 'Menu item title', 'wporg' ),
-					'url'   => 'https://www.meetup.com/pro/wordpress/',
-					'type'  => 'custom',
-				),
-				array(
 					'title' => esc_html_x( 'Photo Directory', 'Menu item title', 'wporg' ),
 					'url'   => 'https://wordpress.org/photos/',
 					'type'  => 'custom',
 				),
 				array(
-					'title' => esc_html_x( 'Job Board', 'Menu item title', 'wporg' ),
-					'url'   => 'https://jobs.wordpress.net/',
+					'title' => esc_html_x( 'Five for the Future', 'Menu item title', 'wporg' ),
+					'url'   => 'https://wordpress.org/five-for-the-future/',
 					'type'  => 'custom',
 				),
 				array(
-					'title' => esc_html_x( 'Five for the Future', 'Menu item title', 'wporg' ),
-					'url'   => 'https://wordpress.org/five-for-the-future/',
+					'title' => esc_html_x( 'WordCamp ↗︎', 'Menu item title', 'wporg' ),
+					'url'   => 'https://central.wordcamp.org/',
+					'type'  => 'custom',
+				),
+				array(
+					'title' => esc_html_x( 'Meetups ↗︎', 'Menu item title', 'wporg' ),
+					'url'   => 'https://www.meetup.com/pro/wordpress/',
+					'type'  => 'custom',
+				),
+				array(
+					'title' => esc_html_x( 'Job Board ↗︎', 'Menu item title', 'wporg' ),
+					'url'   => 'https://jobs.wordpress.net/',
 					'type'  => 'custom',
 				),
 			),
@@ -544,17 +544,17 @@ function get_global_menu_items() {
 					'type'  => 'custom',
 				),
 				array(
-					'title' => esc_html_x( 'Gutenberg', 'Menu item title', 'wporg' ),
-					'url'   => 'https://wordpress.org/gutenberg/',
-					'type'  => 'custom',
-				),
-				array(
 					'title' => esc_html_x( 'Enterprise', 'Menu item title', 'wporg' ),
 					'url'   => 'https://wordpress.org/enterprise/',
 					'type'  => 'custom',
 				),
 				array(
-					'title' => esc_html_x( 'WordPress Swag Store', 'Menu item title', 'wporg' ),
+					'title' => esc_html_x( 'Gutenberg ↗︎', 'Menu item title', 'wporg' ),
+					'url'   => 'https://wordpress.org/gutenberg/',
+					'type'  => 'custom',
+				),
+				array(
+					'title' => esc_html_x( 'WordPress Swag Store ↗︎', 'Menu item title', 'wporg' ),
 					'url'   => 'https://mercantile.wordpress.org/',
 					'type'  => 'custom',
 				),
