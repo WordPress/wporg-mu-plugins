@@ -16,8 +16,8 @@ defined( 'WPINC' ) || die();
  */
 
 $search_args = array(
-	'label' => _x( 'Search in WordPress', 'button label', 'wporg' ),
-	'placeholder' => _x( 'Search WP.org...', 'input field placeholder', 'wporg' ),
+	'label' => _x( 'Search in WordPress.org', 'button label', 'wporg' ),
+	'placeholder' => _x( 'Type to search…', 'input field placeholder', 'wporg' ),
 	'buttonPosition' => 'button-inside',
 	'buttonUseIcon' => true,
 	'formAction' => 'https://wordpress.org/search/do-search.php',
