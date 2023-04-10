@@ -321,3 +321,22 @@
 		overflow: scroll;
 	}
 }
+
+/*
+ * On small screens, when the nav modal is open, position the header to overlay
+ * the page content.
+ *
+ * Technically, this should not scroll - GB sets `overflow: hidden` - but when
+ * the keyboard is open, iOS overrides the scroll behavior. This solution
+ * prevents visible page scroll without affecting layout of the page itself.
+ *
+ * See https://github.com/WordPress/wporg-mu-plugins/issues/371/.
+ */
+@media (--mobile-only) {
+	html.has-modal-open .global-header {
+		position: fixed;
+		z-index: 9999; /* Arbitrary z-index to be above any possible element on a page. */
+		left: 0;
+		right: 0;
+	}
+}
