@@ -59,7 +59,8 @@ function render( $attributes, $content, $block ) {
 	$content .= '<h2>' . esc_html( $title ) . '</h2>';
 	$content .= '</div>';
 
-	$content .= '<ul class="wporg-table-of-contents__list">';
+	$content .= '<button type="button" class="wporg-table-of-contents-toggle" aria-expanded="false">' . esc_html__( 'Table of Contents', 'wporg' ) . '</button>';
+	$content .= '<ul style="display:none;" class="wporg-table-of-contents-toggle-section">';
 
 	$last_item = false;
 
