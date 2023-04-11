@@ -83,6 +83,19 @@ function init() {
 			onScroll(); // Run once to avoid footer collisions on load (ex, when linked to #reply-title).
 			window.addEventListener( 'scroll', onScroll );
 		}
+
+		// Expand/collapse functionality.
+		const triggerButton = container.querySelector( '.wporg-table-of-contents-toggle' );
+		const triggerSection = container.querySelector( '.wporg-table-of-contents-toggle-section' );
+		triggerButton.addEventListener( 'click', function () {
+			if ( triggerButton.getAttribute( 'aria-expanded' ) === 'true' ) {
+				triggerButton.setAttribute( 'aria-expanded', false );
+				triggerSection.setAttribute( 'style', 'display:none;' );
+			} else {
+				triggerButton.setAttribute( 'aria-expanded', true );
+				triggerSection.removeAttribute( 'style' );
+			}
+		} );
 	}
 
 	// If there is no table of contents, hide the heading.
