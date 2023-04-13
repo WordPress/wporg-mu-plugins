@@ -38,7 +38,7 @@ function wporg_encrypt( string $value, string $key = '' ) {
  * @param string $key   The key to use for encryption. Optional.
  * @return string|false The encrypted value, or false on error.
  */
-function wporg_authenticated_encrypt( string $value, string $additional_data = '',string $key = '' ) {
+function wporg_authenticated_encrypt( string $value, string $additional_data = '', string $key = '' ) {
 	try {
 		$value = \WordPressdotorg\MU_Plugins\Encryption\encrypt( $value, $additional_data, $key );
 
