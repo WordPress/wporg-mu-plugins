@@ -23,13 +23,19 @@ const PREFIX = '$t1$';
  * @var int
  */
 const KEY_LENGTH   = SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_KEYBYTES;
+
+/**
+ * The length of the per-encrypted-item nonce.
+ *
+ * @var int
+ */
 const NONCE_LENGTH = SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_NPUBBYTES;
 
 /**
  * Encrypt a value.
  *
  * @param string $value           Value to encrypt.
- * @param string $additional_data Additional data to include in the encryption. Optional.
+ * @param string $additional_data Additional, authenticated data. This is used in the verification of the authentication tag appended to the ciphertext, but it is not encrypted or stored in the ciphertext. Optional.
  * @param string $key             Key to use for encryption. Optional.
  * @return string Encrypted value, exceptions thrown on error.
  */
@@ -55,7 +61,7 @@ function encrypt( $value, string $additional_data = '', string $key = '' ) {
  * Decrypt a value.
  *
  * @param string $value           Value to decrypt.
- * @param string $additional_data Additional data to include in the encryption. Optional.
+ * @param string $additional_data Additional, authenticated data. This is used in the verification of the authentication tag appended to the ciphertext, but it is not encrypted or stored in the ciphertext. Optional.
  * @param string $key             Key to use for decryption. Optional.
  * @return string Decrypted value.
  */
@@ -136,7 +142,7 @@ function is_encrypted( $value, string $key = '' ) {
  * @param string $key The key to use for decryption.
  * @return string The encryption key.
  */
-function get_encryption_key( $key = '' ) {
+function get_encryption_key( string $key = '' ) {
 	$constant = 'WPORG_ENCRYPTION_KEY';
 
 	if ( $key ) {
