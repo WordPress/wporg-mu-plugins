@@ -117,7 +117,7 @@ function is_encrypted( $value ) {
 		return false;
 	}
 
-	if ( mb_strlen( $value, '8bit' ) < NONCE_LENGTH + strlen( PREFIX ) ) {
+	if ( mb_strlen( $value, '8bit' ) < NONCE_LENGTH + mb_strlen( PREFIX, '8bit' ) ) {
 		return false;
 	}
 
