@@ -93,9 +93,8 @@ function wporg_authenticated_decrypt( string $value, string $additional_data = '
  * Determine if a value is encrypted.
  *
  * @param string $value The value to check.
- * @param string $key   Check if it uses this key. Optional. If not specified, it only validates that it's encrypted.
  * @return bool True if the value is encrypted, false otherwise.
  */
-function wporg_is_encrypted( string $value, string $key = '' ) : bool {
-	return \WordPressdotorg\MU_Plugins\Encryption\is_encrypted( $value, $key );
+function wporg_is_encrypted( string $value ) : bool {
+	return \WordPressdotorg\MU_Plugins\Encryption\is_encrypted( $value );
 }

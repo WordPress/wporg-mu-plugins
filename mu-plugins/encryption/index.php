@@ -106,10 +106,9 @@ function decrypt( $value, string $additional_data = '', string $key = '' ) : Hid
  * Check if a value is encrypted.
  *
  * @param string $value Value to check.
- * @param string $key   Key to use for decryption. Optional.
  * @return bool True if the value is encrypted, false otherwise.
  */
-function is_encrypted( $value, string $key = '' ) {
+function is_encrypted( $value ) {
 	if ( $value instanceOf HiddenString ) {
 		$value = $value->getString();
 	}
@@ -120,17 +119,6 @@ function is_encrypted( $value, string $key = '' ) {
 
 	if ( mb_strlen( $value, '8bit' ) < NONCE_LENGTH + strlen( PREFIX ) ) {
 		return false;
-	}
-
-	// Check if that's the key.
-	if ( $key ) {
-		try {
-			if ( ! decrypt( $value, $key ) ) {
-				return false;
-			}
-		} catch ( Exception $e ) {
-			return false;
-		}
 	}
 
 	return true;
