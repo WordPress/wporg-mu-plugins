@@ -85,7 +85,7 @@ function decrypt( $value, string $additional_data = '', string $key = '' ) : Hid
 	$value = sodium_hex2bin( $value );
 
 	if ( mb_strlen( $value, '8bit' ) < NONCE_LENGTH ) {
-		throw new Exception( 'Invalid cipher text' );
+		throw new Exception( 'Invalid cipher text.' );
 	}
 
 	$nonce     = mb_substr( $value, 0, NONCE_LENGTH, '8bit' );
@@ -96,7 +96,7 @@ function decrypt( $value, string $additional_data = '', string $key = '' ) : Hid
 	sodium_memzero( $value );
 
 	if ( false === $plaintext ) {
-		throw new Exception( 'Invalid cipher text' );
+		throw new Exception( 'Invalid cipher text.' );
 	}
 
 	return new HiddenString( $plaintext );
