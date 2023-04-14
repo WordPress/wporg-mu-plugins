@@ -22,7 +22,7 @@ const PREFIX = '$t1$';
  *
  * @var int
  */
-const KEY_LENGTH   = SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_KEYBYTES;
+const KEY_LENGTH = SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_KEYBYTES;
 
 /**
  * The length of the per-encrypted-item nonce.
@@ -40,8 +40,8 @@ const NONCE_LENGTH = SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_NPUBBYTES;
  * @return string Encrypted value, exceptions thrown on error.
  */
 function encrypt( $value, string $additional_data = '', string $key = '' ) {
-	$key       = get_encryption_key( $key );
-	$nonce     = random_bytes( NONCE_LENGTH );
+	$key   = get_encryption_key( $key );
+	$nonce = random_bytes( NONCE_LENGTH );
 	if ( ! $key || ! $nonce ) {
 		throw new Exception( 'Unable to create a nonce.' );
 	}
@@ -120,6 +120,8 @@ function is_encrypted( $value ) {
 	if ( mb_strlen( $value, '8bit' ) < NONCE_LENGTH + mb_strlen( PREFIX, '8bit' ) ) {
 		return false;
 	}
+
+	sodium_memzero( $value );
 
 	return true;
 }
