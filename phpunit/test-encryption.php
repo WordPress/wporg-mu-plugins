@@ -39,14 +39,45 @@ class Test_WPORG_Encryption extends WP_UnitTestCase {
 		$this->assertNotEquals( $input, $encrypted );
 		$this->assertStringNotContainsString( $additional_data, $encrypted );
 
-		$this->expectException( Exception::class );
-		$decrypt_without_data = decrypt( $encrypted );
+		// Decrypt without $additional_data.
+		try {
+			decrypt( $encrypted );
+		} catch( Exception $e ) {
+			$this->assertEquals( 'Invalid cipher text.', $e->getMessage() );
+		} finally {
+			$this->assertNotEmpty( $e, 'No Exception thrown?' );
+			unset( $e );
+		}
 
-		$this->expectException( Exception::class );
-		$decrypt_with_wrong_data = decrypt( $encrypted, 'USER2' );
+		// Decrypt with incorrect $additional_data.
+		try {
+			decrypt( $encrypted, 'USER2' );
+		} catch( Exception $e ) {
+			$this->assertEquals( 'Invalid cipher text.', $e->getMessage() );
+		} finally {
+			$this->assertNotEmpty( $e, 'No Exception thrown?' );
+			unset( $e );
+		}
 
-		$this->expectException( Exception::class );
-		$decrypt_with_wrong_key = decrypt( $encrypted, $additional_data, 'secondary' );
+		// Decrypt with incorrect key specified.
+		try {
+			decrypt( $encrypted, $additional_data, 'secondary' );
+		} catch( Exception $e ) {
+			$this->assertEquals( 'Invalid cipher text.', $e->getMessage() );
+		} finally {
+			$this->assertNotEmpty( $e, 'No Exception thrown?' );
+			unset( $e );
+		}
+
+		// Decrypt with unknown key specified.
+		try {
+			decrypt( $encrypted, $additional_data, 'unknown-key' );
+		} catch( Exception $e ) {
+			$this->assertEquals( 'Encryption key "WPORG_UNKNOWN_KEY_ENCRYPTION_KEY" not defined.', $e->getMessage() );
+		} finally {
+			$this->assertNotEmpty( $e, 'No Exception thrown?' );
+			unset( $e );
+		}
 
 		$decrypted = decrypt( $encrypted, $additional_data );
 
@@ -91,8 +122,15 @@ class Test_WPORG_Encryption extends WP_UnitTestCase {
 
 		$this->assertSame( sodium_hex2bin( WPORG_SECONDARY_ENCRYPTION_KEY ), get_encryption_key( 'secondary' )->getString() );
 
-		$this->expectException( Exception::class );
-		get_encryption_key( '404-key' );
+		// Get an unknown key.
+		try {
+			get_encryption_key( 'unknown-key' );
+		} catch( Exception $e ) {
+			$this->assertEquals( 'Encryption key "WPORG_UNKNOWN_KEY_ENCRYPTION_KEY" not defined.', $e->getMessage() );
+		} finally {
+			$this->assertNotEmpty( $e, 'No Exception thrown?' );
+			unset( $e );
+		}
 	}
 
 	public function test_can_encrypt_hiddenstring() {
@@ -106,14 +144,57 @@ class Test_WPORG_Encryption extends WP_UnitTestCase {
 	}
 
 	public function test_encrypt_decrypt_invalid_inputs() {
-		$this->expectException( Exception::class );
-		encrypt( "TEST STRING", '', '404-key' );
+		// Invalid key specified.
+		try {
+			encrypt( 'TEST STRING', '', 'unknown-key' );
+		} catch( Exception $e ) {
+			$this->assertEquals( 'Encryption key "WPORG_UNKNOWN_KEY_ENCRYPTION_KEY" not defined.', $e->getMessage() );
+		} finally {
+			$this->assertNotEmpty( $e, 'No Exception thrown?' );
+			unset( $e );
+		}
 
-		$this->expectException( Exception::class );
-		decrypt( "TEST STRING", '', '404-key' );
+		// Not-encrypted Invalid data that.
+		try {
+			decrypt( PREFIX . 'TESTSTRINGTESTSTRINGTESTSTRINGTESTSTRINGTESTSTRINGTESTSTRING' );
+		} catch( Exception $e ) {
+			// This is thrown by sodium_hex2bin().
+			$this->assertEquals( 'invalid hex string', $e->getMessage() );
+		} finally {
+			$this->assertNotEmpty( $e, 'No Exception thrown?' );
+			unset( $e );
+		}
 
-		$this->expectException( Exception::class );
-		decrypt( "TEST STRING" );
+		// Not-encrypted Possibly-valid data.
+		try {
+			decrypt( PREFIX . '012345678901234567890123456789012345678901234567890123456789' );
+		} catch( Exception $e ) {
+			$this->assertEquals( 'Invalid cipher text.', $e->getMessage() );
+		} finally {
+			$this->assertNotEmpty( $e, 'No Exception thrown?' );
+			unset( $e );
+		}
+
+		// Invalid key specified, not-encrypted data that's not long enough.
+		try {
+			decrypt( 'TEST STRING', '', 'unknown-key' );
+		} catch( Exception $e ) {
+			$this->assertEquals( 'Value is not encrypted.', $e->getMessage() );
+		} finally {
+			$this->assertNotEmpty( $e, 'No Exception thrown?' );
+			unset( $e );
+		}
+
+		// Not-encrypted data that's not long enough.
+		try {
+			decrypt( 'TEST STRING' );
+		} catch( Exception $e ) {
+			$this->assertEquals( 'Value is not encrypted.', $e->getMessage() );
+		} finally {
+			$this->assertNotEmpty( $e, 'No Exception thrown?' );
+			unset( $e );
+		}
+
 	}
 
 	public function test_exported_functions() {
@@ -133,8 +214,8 @@ class Test_WPORG_Encryption extends WP_UnitTestCase {
 		$this->assertEquals( $input, $decrypted->getString() );
 		$this->assertEquals( $input, (string) $decrypted );
 
-		$this->assertFalse( wporg_encrypt( '', '404-key' ) );
-		$this->assertFalse( wporg_decrypt( '', '404-key' ) );
+		$this->assertFalse( wporg_encrypt( '', 'unknown-key' ) );
+		$this->assertFalse( wporg_decrypt( '', 'unknown-key' ) );
 		$this->assertFalse( wporg_decrypt( 'TEST STRING' ) );
 	}
 
@@ -156,8 +237,8 @@ class Test_WPORG_Encryption extends WP_UnitTestCase {
 		$this->assertEquals( $input, $decrypted->getString() );
 		$this->assertEquals( $input, (string) $decrypted );
 
-		$this->assertFalse( wporg_authenticated_encrypt( '', '', '404-key' ) );
-		$this->assertFalse( wporg_authenticated_decrypt( '', '', '404-key' ) );
+		$this->assertFalse( wporg_authenticated_encrypt( '', '', 'unknown-key' ) );
+		$this->assertFalse( wporg_authenticated_decrypt( '', '', 'unknown-key' ) );
 		$this->assertFalse( wporg_authenticated_decrypt( 'TEST STRING' ) );
 	}
 }
