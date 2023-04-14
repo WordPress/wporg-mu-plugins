@@ -40,9 +40,8 @@ const NONCE_LENGTH = SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_NPUBBYTES;
  * @return string Encrypted value, exceptions thrown on error.
  */
 function encrypt( $value, string $additional_data = '', string $key = '' ) {
-	$key   = get_encryption_key( $key );
 	$nonce = random_bytes( NONCE_LENGTH );
-	if ( ! $key || ! $nonce ) {
+	if ( ! $nonce ) {
 		throw new Exception( 'Unable to create a nonce.' );
 	}
 
@@ -50,6 +49,7 @@ function encrypt( $value, string $additional_data = '', string $key = '' ) {
 		$value = $value->getString();
 	}
 
+	$key       = get_encryption_key( $key );
 	$encrypted = sodium_crypto_aead_xchacha20poly1305_ietf_encrypt( $value, $additional_data, $nonce, $key->getString() );
 
 	sodium_memzero( $value );
@@ -66,12 +66,6 @@ function encrypt( $value, string $additional_data = '', string $key = '' ) {
  * @return string Decrypted value.
  */
 function decrypt( $value, string $additional_data = '', string $key = '' ) : HiddenString {
-	// Fetch the encryption key.
-	$key = get_encryption_key( $key );
-	if ( ! $key ) {
-		throw new Exception( 'Unable to get the encryption key.' );
-	}
-
 	if ( $value instanceOf HiddenString ) {
 		$value = $value->getString();
 	}
@@ -88,6 +82,7 @@ function decrypt( $value, string $additional_data = '', string $key = '' ) : Hid
 		throw new Exception( 'Invalid cipher text.' );
 	}
 
+	$key       = get_encryption_key( $key );
 	$nonce     = mb_substr( $value, 0, NONCE_LENGTH, '8bit' );
 	$value     = mb_substr( $value, NONCE_LENGTH, null, '8bit' );
 	$plaintext = sodium_crypto_aead_xchacha20poly1305_ietf_decrypt( $value, $additional_data, $nonce, $key->getString() );
