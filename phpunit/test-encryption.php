@@ -6,11 +6,25 @@ use function WordPressdotorg\MU_Plugins\Encryption\{encrypt, decrypt, is_encrypt
 class Test_WPORG_Encryption extends WP_UnitTestCase {
 
 	public function wpSetUpBeforeClass() {
-		if ( ! defined( 'WPORG_ENCRYPTION_KEY' ) ) {
-			define( 'WPORG_ENCRYPTION_KEY', generate_encryption_key() );
+		self::_wporg_encryption_keys();
+	}
+
+	public static function _wporg_encryption_keys() {
+		if ( function_exists( 'wporg_encryption_keys' ) ) {
+			return;
 		}
-		if ( ! defined( 'WPORG_SECONDARY_ENCRYPTION_KEY' ) ) {
-			define( 'WPORG_SECONDARY_ENCRYPTION_KEY', generate_encryption_key() );
+
+		function wporg_encryption_keys() {
+			static $keys = false;
+
+			if ( ! $keys ) {
+				$keys = [
+					'default'   => generate_encryption_key(),
+					'secondary' => generate_encryption_key(),
+				];
+			}
+
+			return $keys;
 		}
 	}
 
@@ -73,7 +87,7 @@ class Test_WPORG_Encryption extends WP_UnitTestCase {
 		try {
 			decrypt( $encrypted, $additional_data, 'unknown-key' );
 		} catch( Exception $e ) {
-			$this->assertEquals( 'Encryption key "WPORG_UNKNOWN_KEY_ENCRYPTION_KEY" not defined.', $e->getMessage() );
+			$this->assertEquals( 'Encryption key "unknown-key" not defined.', $e->getMessage() );
 		} finally {
 			$this->assertNotEmpty( $e, 'No Exception thrown?' );
 			unset( $e );
@@ -108,25 +122,25 @@ class Test_WPORG_Encryption extends WP_UnitTestCase {
 	public function test_generate_key_different() {
 		$one_key = generate_encryption_key();
 
-		$length = mb_strlen( sodium_hex2bin( $one_key ), '8bit' );
+		$length = mb_strlen( $one_key->getString(), '8bit' );
 		$this->assertEquals( KEY_LENGTH, $length );
 
 		$two_key = generate_encryption_key();
-		$this->assertNotEquals( $one_key, $two_key );
+		$this->assertNotEquals( $one_key->getString(), $two_key->getString() );
 	}
 
 	public function test_get_encryption_key() {
-		$this->assertSame( sodium_hex2bin( WPORG_ENCRYPTION_KEY ), get_encryption_key()->getString() );
-		$this->assertSame( sodium_hex2bin( WPORG_ENCRYPTION_KEY ), get_encryption_key( '' )->getString() );
-		$this->assertSame( sodium_hex2bin( WPORG_ENCRYPTION_KEY ), get_encryption_key( false )->getString() );
+		$this->assertSame( wporg_encryption_keys()['default']->getString(), get_encryption_key()->getString() );
+		$this->assertSame( wporg_encryption_keys()['default']->getString(), get_encryption_key( '' )->getString() );
+		$this->assertSame( wporg_encryption_keys()['default']->getString(), get_encryption_key( false )->getString() );
 
-		$this->assertSame( sodium_hex2bin( WPORG_SECONDARY_ENCRYPTION_KEY ), get_encryption_key( 'secondary' )->getString() );
+		$this->assertSame( wporg_encryption_keys()['secondary']->getString(), get_encryption_key( 'secondary' )->getString() );
 
 		// Get an unknown key.
 		try {
 			get_encryption_key( 'unknown-key' );
 		} catch( Exception $e ) {
-			$this->assertEquals( 'Encryption key "WPORG_UNKNOWN_KEY_ENCRYPTION_KEY" not defined.', $e->getMessage() );
+			$this->assertEquals( 'Encryption key "unknown-key" not defined.', $e->getMessage() );
 		} finally {
 			$this->assertNotEmpty( $e, 'No Exception thrown?' );
 			unset( $e );
@@ -148,7 +162,7 @@ class Test_WPORG_Encryption extends WP_UnitTestCase {
 		try {
 			encrypt( 'TEST STRING', '', 'unknown-key' );
 		} catch( Exception $e ) {
-			$this->assertEquals( 'Encryption key "WPORG_UNKNOWN_KEY_ENCRYPTION_KEY" not defined.', $e->getMessage() );
+			$this->assertEquals( 'Encryption key "unknown-key" not defined.', $e->getMessage() );
 		} finally {
 			$this->assertNotEmpty( $e, 'No Exception thrown?' );
 			unset( $e );
@@ -241,4 +255,5 @@ class Test_WPORG_Encryption extends WP_UnitTestCase {
 		$this->assertFalse( wporg_authenticated_decrypt( '', '', 'unknown-key' ) );
 		$this->assertFalse( wporg_authenticated_decrypt( 'TEST STRING' ) );
 	}
+
 }

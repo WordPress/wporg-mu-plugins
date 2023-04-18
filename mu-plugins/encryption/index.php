@@ -128,17 +128,21 @@ function is_encrypted( $value ) {
  * @return string The encryption key.
  */
 function get_encryption_key( string $key = '' ) {
-	$constant = 'WPORG_ENCRYPTION_KEY';
 
-	if ( $key ) {
-		$constant = 'WPORG_' . str_replace( '-', '_', strtoupper( $key ) ) . '_ENCRYPTION_KEY';
+	$keys = [];
+	if ( function_exists( 'wporg_encryption_keys' ) ) {
+		$keys = wporg_encryption_keys();
 	}
 
-	if ( ! defined( $constant ) ) {
-		throw new Exception( sprintf( 'Encryption key "%s" not defined.', $constant ) );
+	if ( ! $key ) {
+		$key = 'default';
 	}
 
-	return new HiddenString( sodium_hex2bin( constant( $constant ) ) );
+	if ( ! isset( $keys[ $key ] ) ) {
+		throw new Exception( sprintf( 'Encryption key "%s" not defined.', $key ) );
+	}
+
+	return $keys[ $key ];
 }
 
 /**
@@ -147,5 +151,5 @@ function get_encryption_key( string $key = '' ) {
  * @return string The encryption key.
  */
 function generate_encryption_key() {
-	return sodium_bin2hex( random_bytes( KEY_LENGTH ) );
+	return new HiddenString( random_bytes( KEY_LENGTH ) );
 }
