@@ -15,14 +15,14 @@ use WordPressdotorg\MU_Plugins\Encryption\HiddenString;
  *
  * Unlike the Encryption plugin, this function simply returns false for any errors.
  *
- * @param string $value   The plaintext value.
- * @param string $context Additional, authenticated data. This is used in the verification of the authentication tag appended to the ciphertext, but it is not encrypted or stored in the ciphertext.
- * @param string $key     The key to use for encryption. Optional.
+ * @param string $value    The plaintext value.
+ * @param string $context  Additional, authenticated data. This is used in the verification of the authentication tag appended to the ciphertext, but it is not encrypted or stored in the ciphertext.
+ * @param string $key_name The name of the key to use for encryption. Optional.
  * @return string|false The encrypted value, or false on error.
  */
-function wporg_encrypt( $value, string $context, string $key = '' ) {
+function wporg_encrypt( $value, string $context, string $key_name = '' ) {
 	try {
-		return \WordPressdotorg\MU_Plugins\Encryption\encrypt( $value, $context, $key );
+		return \WordPressdotorg\MU_Plugins\Encryption\encrypt( $value, $context, $key_name );
 	} catch ( Exception $e ) {
 		return false;
 	}
@@ -34,14 +34,14 @@ function wporg_encrypt( $value, string $context, string $key = '' ) {
  * Unlike the Encryption plugin, this function simply returns false for any errors, and
  * HiddenStrings that can be cast to string as needed.
  *
- * @param string $value   The encrypted value.
- * @param string $context Additional, authenticated data. This is used in the verification of the authentication tag appended to the ciphertext, but it is not encrypted or stored in the ciphertext.
- * @param string $key     The key to use for decryption. Optional.
+ * @param string $value    The encrypted value.
+ * @param string $context  Additional, authenticated data. This is used in the verification of the authentication tag appended to the ciphertext, but it is not encrypted or stored in the ciphertext.
+ * @param string $key_name The name of the key to use for decryption. Optional.
  * @return string|false The decrypted value, or false on error.
  */
-function wporg_decrypt( string $value, string $context, string $key = '' ) {
+function wporg_decrypt( string $value, string $context, string $key_name = '' ) {
 	try {
-		$value = \WordPressdotorg\MU_Plugins\Encryption\decrypt( $value, $context, $key );
+		$value = \WordPressdotorg\MU_Plugins\Encryption\decrypt( $value, $context, $key_name );
 
 		return new HiddenString( $value->getString(), false );
 	} catch ( Exception $e ) {

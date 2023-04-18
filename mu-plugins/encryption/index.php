@@ -34,12 +34,12 @@ const NONCE_LENGTH = SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_NPUBBYTES;
 /**
  * Encrypt a value.
  *
- * @param string $value   Value to encrypt.
- * @param string $context Additional, authenticated data. This is used in the verification of the authentication tag appended to the ciphertext, but it is not encrypted or stored in the ciphertext.
- * @param string $key     Key to use for encryption. Optional.
+ * @param string $value    Value to encrypt.
+ * @param string $context  Additional, authenticated data. This is used in the verification of the authentication tag appended to the ciphertext, but it is not encrypted or stored in the ciphertext.
+ * @param string $key_name The name of the key to use for encryption. Optional.
  * @return string Encrypted value, exceptions thrown on error.
  */
-function encrypt( $value, string $context, string $key = '' ) {
+function encrypt( $value, string $context, string $key_name = '' ) {
 	$nonce = random_bytes( NONCE_LENGTH );
 	if ( ! $nonce ) {
 		throw new Exception( 'Unable to create a nonce.' );
@@ -53,7 +53,7 @@ function encrypt( $value, string $context, string $key = '' ) {
 		$value = $value->getString();
 	}
 
-	$key       = get_encryption_key( $key );
+	$key       = get_encryption_key( $key_name );
 	$encrypted = sodium_crypto_aead_xchacha20poly1305_ietf_encrypt( $value, $context, $nonce, $key->getString() );
 
 	sodium_memzero( $value );
@@ -64,12 +64,12 @@ function encrypt( $value, string $context, string $key = '' ) {
 /**
  * Decrypt a value.
  *
- * @param string $value   Value to decrypt.
- * @param string $context Additional, authenticated data. This is used in the verification of the authentication tag appended to the ciphertext, but it is not encrypted or stored in the ciphertext.
- * @param string $key     Key to use for decryption. Optional.
+ * @param string $value    Value to decrypt.
+ * @param string $context  Additional, authenticated data. This is used in the verification of the authentication tag appended to the ciphertext, but it is not encrypted or stored in the ciphertext.
+ * @param string $key_name The name of the key to use for decryption. Optional.
  * @return HiddenString Decrypted value.
  */
-function decrypt( $value, string $context, string $key = '' ) : HiddenString {
+function decrypt( $value, string $context, string $key_name = '' ) : HiddenString {
 	if ( $value instanceOf HiddenString ) {
 		$value = $value->getString();
 	}
@@ -86,7 +86,7 @@ function decrypt( $value, string $context, string $key = '' ) : HiddenString {
 		throw new Exception( 'Invalid cipher text.' );
 	}
 
-	$key       = get_encryption_key( $key );
+	$key       = get_encryption_key( $key_name );
 	$nonce     = mb_substr( $value, 0, NONCE_LENGTH, '8bit' );
 	$value     = mb_substr( $value, NONCE_LENGTH, null, '8bit' );
 	$plaintext = sodium_crypto_aead_xchacha20poly1305_ietf_decrypt( $value, $context, $nonce, $key->getString() );
@@ -128,25 +128,25 @@ function is_encrypted( $value ) {
 /**
  * Get the encryption key.
  *
- * @param string $key The key to use for decryption.
+ * @param string $key_name The name of the key to use for decryption.
  * @return string The encryption key.
  */
-function get_encryption_key( string $key = '' ) {
+function get_encryption_key( string $key_name = '' ) {
 
 	$keys = [];
 	if ( function_exists( 'wporg_encryption_keys' ) ) {
 		$keys = wporg_encryption_keys();
 	}
 
-	if ( ! $key ) {
-		$key = 'default';
+	if ( ! $key_name ) {
+		$key_name = 'default';
 	}
 
-	if ( ! isset( $keys[ $key ] ) ) {
-		throw new Exception( sprintf( 'Encryption key "%s" not defined.', $key ) );
+	if ( ! isset( $keys[ $key_name ] ) ) {
+		throw new Exception( sprintf( 'Encryption key "%s" not defined.', $key_name ) );
 	}
 
-	return $keys[ $key ];
+	return $keys[ $key_name ];
 }
 
 /**
