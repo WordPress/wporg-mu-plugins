@@ -34,19 +34,19 @@ const NONCE_LENGTH = SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_NPUBBYTES;
 /**
  * Encrypt a value.
  *
- * @param string $value           Value to encrypt.
- * @param string $additional_data Additional, authenticated data. This is used in the verification of the authentication tag appended to the ciphertext, but it is not encrypted or stored in the ciphertext. Optional.
- * @param string $key             Key to use for encryption. Optional.
+ * @param string $value   Value to encrypt.
+ * @param string $context Additional, authenticated data. This is used in the verification of the authentication tag appended to the ciphertext, but it is not encrypted or stored in the ciphertext.
+ * @param string $key     Key to use for encryption. Optional.
  * @return string Encrypted value, exceptions thrown on error.
  */
-function encrypt( $value, string $additional_data, string $key = '' ) {
+function encrypt( $value, string $context, string $key = '' ) {
 	$nonce = random_bytes( NONCE_LENGTH );
 	if ( ! $nonce ) {
 		throw new Exception( 'Unable to create a nonce.' );
 	}
 
-	if ( empty( $additional_data ) ) {
-		throw new Exception( '$additional_data cannot be empty.' );
+	if ( empty( $context ) ) {
+		throw new Exception( '$context cannot be empty.' );
 	}
 
 	if ( $value instanceOf HiddenString ) {
@@ -54,7 +54,7 @@ function encrypt( $value, string $additional_data, string $key = '' ) {
 	}
 
 	$key       = get_encryption_key( $key );
-	$encrypted = sodium_crypto_aead_xchacha20poly1305_ietf_encrypt( $value, $additional_data, $nonce, $key->getString() );
+	$encrypted = sodium_crypto_aead_xchacha20poly1305_ietf_encrypt( $value, $context, $nonce, $key->getString() );
 
 	sodium_memzero( $value );
 
@@ -64,12 +64,12 @@ function encrypt( $value, string $additional_data, string $key = '' ) {
 /**
  * Decrypt a value.
  *
- * @param string $value           Value to decrypt.
- * @param string $additional_data Additional, authenticated data. This is used in the verification of the authentication tag appended to the ciphertext, but it is not encrypted or stored in the ciphertext. Optional.
- * @param string $key             Key to use for decryption. Optional.
+ * @param string $value   Value to decrypt.
+ * @param string $context Additional, authenticated data. This is used in the verification of the authentication tag appended to the ciphertext, but it is not encrypted or stored in the ciphertext.
+ * @param string $key     Key to use for decryption. Optional.
  * @return HiddenString Decrypted value.
  */
-function decrypt( $value, string $additional_data, string $key = '' ) : HiddenString {
+function decrypt( $value, string $context, string $key = '' ) : HiddenString {
 	if ( $value instanceOf HiddenString ) {
 		$value = $value->getString();
 	}
@@ -89,7 +89,7 @@ function decrypt( $value, string $additional_data, string $key = '' ) : HiddenSt
 	$key       = get_encryption_key( $key );
 	$nonce     = mb_substr( $value, 0, NONCE_LENGTH, '8bit' );
 	$value     = mb_substr( $value, NONCE_LENGTH, null, '8bit' );
-	$plaintext = sodium_crypto_aead_xchacha20poly1305_ietf_decrypt( $value, $additional_data, $nonce, $key->getString() );
+	$plaintext = sodium_crypto_aead_xchacha20poly1305_ietf_decrypt( $value, $context, $nonce, $key->getString() );
 
 	sodium_memzero( $nonce );
 	sodium_memzero( $value );
