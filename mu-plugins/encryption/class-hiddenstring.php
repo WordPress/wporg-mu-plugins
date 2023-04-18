@@ -45,6 +45,7 @@ final class HiddenString
 	 * @throws \TypeError
 	 */
 	public function __construct(
+		#[\SensitiveParameter]
 		string $value,
 		bool $disallowInline = true,
 		bool $disallowSerialization = true
