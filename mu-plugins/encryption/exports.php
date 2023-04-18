@@ -8,23 +8,6 @@ use WordPressdotorg\MU_Plugins\Encryption\HiddenString;
  */
 
 /**
- * Encrypt a value.
- *
- * Unlike the Encryption plugin, this function simply returns false for any errors.
- *
- * @param string $value The plaintext value.
- * @param string $key   The key to use for encryption. Optional.
- * @return string|false The encrypted value, or false on error.
- */
-function wporg_encrypt( string $value, string $key = '' ) {
-	try {
-		return \WordPressdotorg\MU_Plugins\Encryption\encrypt( $value, '', $key );
-	} catch ( Exception $e ) {
-		return false;
-	}
-}
-
-/**
  * Encrypt a value, with authentication.
  *
  * Unlike the Encryption plugin, this function simply returns false for any errors.
@@ -34,29 +17,9 @@ function wporg_encrypt( string $value, string $key = '' ) {
  * @param string $key   The key to use for encryption. Optional.
  * @return string|false The encrypted value, or false on error.
  */
-function wporg_authenticated_encrypt( string $value, string $additional_data = '', string $key = '' ) {
+function wporg_encrypt( $value, string $additional_data, string $key = '' ) {
 	try {
 		return \WordPressdotorg\MU_Plugins\Encryption\encrypt( $value, $additional_data, $key );
-	} catch ( Exception $e ) {
-		return false;
-	}
-}
-
-/**
- * Decrypt a value.
- *
- * Unlike the Encryption plugin, this function simply returns false for any errors, and
- * HiddenStrings that can be cast to string as needed.
- *
- * @param string $value The encrypted value.
- * @param string $key   The key to use for decryption. Optional.
- * @return string|false The decrypted value, or false on error.
- */
-function wporg_decrypt( string $value, string $key = '' ) {
-	try {
-		$value = \WordPressdotorg\MU_Plugins\Encryption\decrypt( $value, '', $key );
-
-		return new HiddenString( $value->getString(), false );
 	} catch ( Exception $e ) {
 		return false;
 	}
@@ -73,7 +36,7 @@ function wporg_decrypt( string $value, string $key = '' ) {
  * @param string $key   The key to use for decryption. Optional.
  * @return string|false The decrypted value, or false on error.
  */
-function wporg_authenticated_decrypt( string $value, string $additional_data = '', string $key = '' ) {
+function wporg_decrypt( string $value, string $additional_data, string $key = '' ) {
 	try {
 		$value = \WordPressdotorg\MU_Plugins\Encryption\decrypt( $value, $additional_data, $key );
 

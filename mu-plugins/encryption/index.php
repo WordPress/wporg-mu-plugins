@@ -39,10 +39,14 @@ const NONCE_LENGTH = SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_NPUBBYTES;
  * @param string $key             Key to use for encryption. Optional.
  * @return string Encrypted value, exceptions thrown on error.
  */
-function encrypt( $value, string $additional_data = '', string $key = '' ) {
+function encrypt( $value, string $additional_data, string $key = '' ) {
 	$nonce = random_bytes( NONCE_LENGTH );
 	if ( ! $nonce ) {
 		throw new Exception( 'Unable to create a nonce.' );
+	}
+
+	if ( empty( $additional_data ) ) {
+		throw new Exception( '$additional_data cannot be empty.' );
 	}
 
 	if ( $value instanceOf HiddenString ) {
@@ -63,9 +67,9 @@ function encrypt( $value, string $additional_data = '', string $key = '' ) {
  * @param string $value           Value to decrypt.
  * @param string $additional_data Additional, authenticated data. This is used in the verification of the authentication tag appended to the ciphertext, but it is not encrypted or stored in the ciphertext. Optional.
  * @param string $key             Key to use for decryption. Optional.
- * @return string Decrypted value.
+ * @return HiddenString Decrypted value.
  */
-function decrypt( $value, string $additional_data = '', string $key = '' ) : HiddenString {
+function decrypt( $value, string $additional_data, string $key = '' ) : HiddenString {
 	if ( $value instanceOf HiddenString ) {
 		$value = $value->getString();
 	}
