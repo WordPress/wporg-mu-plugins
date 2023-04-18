@@ -54,7 +54,7 @@ function encrypt( $value, string $additional_data = '', string $key = '' ) {
 
 	sodium_memzero( $value );
 
-	return new HiddenString( PREFIX . sodium_bin2hex( $nonce . $encrypted ) );
+	return PREFIX . sodium_bin2hex( $nonce . $encrypted );
 }
 
 /**
