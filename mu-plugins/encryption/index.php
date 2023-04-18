@@ -125,7 +125,7 @@ function is_encrypted( $value ) {
  * Get the encryption key.
  *
  * @param string $key_name The name of the key to use for decryption.
- * @return string The encryption key.
+ * @return HiddenString The encryption key.
  */
 function get_encryption_key( string $key_name = '' ) {
 
@@ -148,7 +148,7 @@ function get_encryption_key( string $key_name = '' ) {
 /**
  * Generate a random encryption key.
  *
- * @return string The encryption key.
+ * @return HiddenString The encryption key.
  */
 function generate_encryption_key() {
 	return new HiddenString( random_bytes( KEY_LENGTH ) );
