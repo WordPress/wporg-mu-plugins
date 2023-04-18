@@ -69,11 +69,7 @@ function encrypt( $value, string $context, string $key_name = '' ) {
  * @param string $key_name The name of the key to use for decryption. Optional.
  * @return HiddenString Decrypted value.
  */
-function decrypt( $value, string $context, string $key_name = '' ) : HiddenString {
-	if ( $value instanceOf HiddenString ) {
-		$value = $value->getString();
-	}
-
+function decrypt( string $value, string $context, string $key_name = '' ) : HiddenString {
 	if ( ! is_encrypted( $value ) ) {
 		throw new Exception( 'Value is not encrypted.' );
 	}
