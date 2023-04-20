@@ -37,7 +37,7 @@ function wporg_encrypt( $value, string $context, string $key_name = '' ) {
  * @param string $value    The encrypted value.
  * @param string $context  Additional, authenticated data. This is used in the verification of the authentication tag appended to the ciphertext, but it is not encrypted or stored in the ciphertext.
  * @param string $key_name The name of the key to use for decryption. Optional.
- * @return string|false The decrypted value, or false on error.
+ * @return HiddenString|false The decrypted value stored within a HiddenString instance, or false on error.
  */
 function wporg_decrypt( string $value, string $context, string $key_name = '' ) {
 	try {
@@ -52,7 +52,7 @@ function wporg_decrypt( string $value, string $context, string $key_name = '' ) 
 /**
  * Determine if a value is encrypted.
  *
- * @param string $value The value to check.
+ * @param HiddenString|string $value The value to check.
  * @return bool True if the value is encrypted, false otherwise.
  */
 function wporg_is_encrypted( string $value ) : bool {

@@ -100,7 +100,7 @@ function decrypt( string $value, string $context, string $key_name = '' ) : Hidd
 /**
  * Check if a value is encrypted.
  *
- * @param string $value Value to check.
+ * @param HiddenString|string $value Value to check.
  * @return bool True if the value is encrypted, false otherwise.
  */
 function is_encrypted( $value ) {
