@@ -29,3 +29,4 @@ require_once __DIR__ . '/plugin-tweaks/index.php';
 require_once __DIR__ . '/rest-api/index.php';
 require_once __DIR__ . '/skip-to/skip-to.php';
 require_once __DIR__ . '/db-user-sessions/index.php';
+require_once __DIR__ . '/encryption/index.php';
