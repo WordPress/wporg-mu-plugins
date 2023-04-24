@@ -2,7 +2,7 @@
 
 namespace WordPressdotorg\MU_Plugins\Global_Header_Footer\Footer;
 
-use function WordPressdotorg\MU_Plugins\Global_Header_Footer\{ get_cip_text, get_home_url, get_container_classes };
+use function WordPressdotorg\MU_Plugins\Global_Header_Footer\{ get_cip_text, get_home_url, get_container_classes, is_rosetta_site };
 
 defined( 'WPINC' ) || die();
 
@@ -32,7 +32,11 @@ $code_is_poetry_src = isset( $attributes['textColor'] ) && str_contains( $attrib
 	<!-- /wp:navigation -->
 
 	<!-- wp:navigation {"orientation":"vertical","className":"global-footer__navigation-information","overlayMenu":"never"} -->
+		<?php if ( is_rosetta_site() ) { ?>
+		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Support', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/support/","kind":"custom","isTopLevelLink":true} /-->
+		<?php } else { ?>
 		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Documentation', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/documentation/","kind":"custom","isTopLevelLink":true} /-->
+		<?php } ?>
 		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Developers', 'Menu item title', 'wporg' ); ?>","url":"https://developer.wordpress.org/","kind":"custom","isTopLevelLink":true} /-->
 		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Get Involved', 'Menu item title', 'wporg' ); ?>","url":"https://make.wordpress.org/","kind":"custom","isTopLevelLink":true} /-->
 		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Learn', 'Menu item title', 'wporg' ); ?>","url":"https://learn.wordpress.org/","kind":"custom","isTopLevelLink":true} /-->
