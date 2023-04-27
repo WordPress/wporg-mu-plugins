@@ -47,10 +47,19 @@ function render( $attributes, $content, $block ) {
 		return '';
 	}
 
-	$content  = '<h2 class="has-charcoal-1-color has-text-color has-inter-font-family has-large-font-size" style="margin-top:0px">';
-	$content .= __( 'In this article', 'wporg' );
-	$content .= '</h2>';
-	$content .= '<ul>';
+	/**
+	 * Filters the title for the Table of Contents.
+	 *
+	 * @param string $title   The title to display.
+	 * @param int    $post_id The current post ID.
+	 */
+	$title = apply_filters( 'wporg_table_of_contents_heading', __( 'In this article', 'wporg' ), $post->ID );
+
+	$content = '<div class="wporg-table-of-contents__header">';
+	$content .= '<h2>' . esc_html( $title ) . '</h2>';
+	$content .= '</div>';
+
+	$content .= '<ul class="wporg-table-of-contents__list">';
 
 	$last_item = false;
 
