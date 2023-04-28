@@ -1,0 +1,43 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "wporg/modal",
+	"title": "Modal",
+	"icon": "button",
+	"category": "layout",
+	"description": "A container hidden behind a button, which pops up on click.",
+	"textdomain": "wporg",
+	"attributes": {
+		"label": {
+			"type": "string"
+		},
+		"type": {
+			"type": "string",
+			"default": "modal",
+			"enum": [ "inline", "modal", "popover" ]
+		}
+	},
+	"supports": {
+		"align": true,
+		"color": {
+			"text": true,
+			"background": true,
+			"link": true
+		},
+		"spacing": {
+			"margin": true,
+			"padding": true
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true
+		}
+	},
+	"providesContext": {
+		"wporg/modal/type": "type"
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:../editor-style.css",
+	"style": "file:../style.css",
+	"viewScript": "file:./view.js"
+}

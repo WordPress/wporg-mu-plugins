@@ -1,0 +1,93 @@
+.wporg-modal__modal {
+	display: none;
+}
+
+.wporg-modal__modal.is-open {
+	display: block;
+}
+
+.wporg-modal__overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 99999; /* Needs to be at leas this to overlay admin bar. */
+	background: rgba(0,0,0,0.6);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.wporg-modal__container {
+	background-color: var(--wp--preset--color--white);
+	width: 100%;
+	max-width: var(--wp--style--global--content-size);
+	max-height: 100vh;
+	overflow-y: auto;
+	box-sizing: border-box;
+
+	/* This extra div is needed to prevent clicks inside the container padding from closing the modal. */
+	& > div {
+		position: relative;
+		padding: var(--wp--preset--spacing--40);
+
+		& > button + * {
+			margin-top: 0;
+		}
+
+		& > *:last-child {
+			margin-bottom: 0;
+		}
+	}
+}
+
+.wporg-modal__button[data-micromodal-close] {
+	position: absolute;
+	top: var(--wp--preset--spacing--10);
+	right: var(--wp--preset--spacing--10);
+	width: calc(24px + var(--wp--preset--spacing--10));
+	height: calc(24px + var(--wp--preset--spacing--10));
+	line-height: 1;
+	padding: 0;
+	box-shadow: none;
+	text-decoration: none;
+	border: none;
+	color: currentColor;
+	background-color: transparent;
+	background-image: none;
+	cursor: pointer;
+	z-index: 10; /* Just enough to raise it above the other modal content. */
+
+	& svg {
+		vertical-align: middle;
+		fill: currentColor;
+	}
+}
+
+.wp-block-wporg-modal.is-type-popover {
+	position: relative;
+
+	& .wporg-modal__modal {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		z-index: 2;
+
+		opacity: 0;
+		overflow: hidden;
+		visibility: hidden;
+		height: 0;
+		width: 0;
+
+		&.is-open {
+			opacity: 1;
+			overflow: visible;
+			visibility: visible;
+	
+			height: auto;
+			min-width: 200px;
+			width: 100%;
+		}	
+	}
+}
