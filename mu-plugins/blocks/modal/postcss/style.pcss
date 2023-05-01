@@ -13,14 +13,13 @@
 	right: 0;
 	bottom: 0;
 	z-index: 99999; /* Needs to be at leas this to overlay admin bar. */
-	background: rgba(0,0,0,0.6);
+	background: rgba(0, 0, 0, 0.6);
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
 
 .wporg-modal__container {
-	background-color: var(--wp--preset--color--white);
 	width: 100%;
 	max-width: var(--wp--style--global--content-size);
 	max-height: 100vh;
@@ -31,6 +30,7 @@
 	& > div {
 		position: relative;
 		padding: var(--wp--preset--spacing--40);
+		background-color: var(--wp--preset--color--white);
 
 		& > button + * {
 			margin-top: 0;
@@ -84,10 +84,10 @@
 			opacity: 1;
 			overflow: visible;
 			visibility: visible;
-	
+
 			height: auto;
 			min-width: 200px;
 			width: 100%;
-		}	
+		}
 	}
 }
