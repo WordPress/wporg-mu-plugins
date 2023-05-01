@@ -13,22 +13,7 @@ import metadata from './block.json';
 function Edit() {
 	return (
 		<div { ...useBlockProps() }>
-			<InnerBlocks
-				template={ [
-					[ 'core/button' ],
-					[
-						'wporg/modal-inner-content',
-						{},
-						[
-							[
-								'core/navigation',
-								{ overlayMenu: 'never', layout: { type: 'flex', orientation: 'vertical' } },
-							],
-						],
-					],
-				] }
-				templateLock="all"
-			/>
+			<InnerBlocks template={ [ [ 'core/button' ], [ 'wporg/modal-inner-content' ] ] } templateLock="all" />
 		</div>
 	);
 }

@@ -13,7 +13,15 @@ function Edit() {
 	return (
 		<div className="wporg-modal__modal">
 			<div { ...useBlockProps() }>
-				<InnerBlocks templateLock={ false } />
+				<InnerBlocks
+					templateLock={ false }
+					template={ [
+						[
+							'core/navigation',
+							{ overlayMenu: 'never', layout: { type: 'flex', orientation: 'vertical' } },
+						],
+					] }
+				/>
 			</div>
 		</div>
 	);
