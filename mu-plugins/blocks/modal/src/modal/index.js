@@ -3,46 +3,32 @@
  */
 import { __ } from '@wordpress/i18n';
 import { registerBlockType } from '@wordpress/blocks';
-import { useSelect } from '@wordpress/data';
-import { InnerBlocks, RichText, useBlockProps, store as blockEditorStore } from '@wordpress/block-editor';
+import { InnerBlocks, useBlockProps } from '@wordpress/block-editor';
 
 /**
  * Internal dependencies
  */
 import metadata from './block.json';
 
-function Edit( { attributes, setAttributes, isSelected, clientId } ) {
-	const { label } = attributes;
-	const isInnerBlockSelected = useSelect(
-		( select ) => select( blockEditorStore ).hasSelectedInnerBlock( clientId, true ),
-		[ clientId ]
-	);
-
-	const onChangeContent = ( newValue ) => {
-		setAttributes( { label: newValue } );
-	};
-	const modalClass = isSelected || isInnerBlockSelected ? ' is-open' : '';
-
+function Edit() {
 	return (
 		<div { ...useBlockProps() }>
-			<RichText tagName="p" className="wp-block-button__link" onChange={ onChangeContent } value={ label } />
-			<div className={ `wporg-modal__modal ${ modalClass }` }>
-				<InnerBlocks
-					template={ [
+			<InnerBlocks
+				template={ [
+					[ 'core/button' ],
+					[
+						'wporg/modal-inner-content',
+						{},
 						[
-							'wporg/modal-inner-content',
-							{},
 							[
-								[
-									'core/navigation',
-									{ overlayMenu: 'never', layout: { type: 'flex', orientation: 'vertical' } },
-								],
+								'core/navigation',
+								{ overlayMenu: 'never', layout: { type: 'flex', orientation: 'vertical' } },
 							],
 						],
-					] }
-					templateLock="all"
-				/>
-			</div>
+					],
+				] }
+				templateLock="all"
+			/>
 		</div>
 	);
 }

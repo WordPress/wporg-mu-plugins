@@ -16,16 +16,20 @@ function getModalId( prefix = 'modal-' ) {
  */
 function intializeModal( container ) {
 	const modalId = getModalId( 'wporg-modal-' );
-	container.querySelector( 'button' ).setAttribute( 'data-micromodal-trigger', modalId );
+	container.querySelector( '.wporg-modal__button' ).setAttribute( 'data-micromodal-trigger', modalId );
 	container.querySelector( '.wporg-modal__modal' ).id = modalId;
 
 	MicroModal.init( {
 		onShow: ( modal ) => {
-			const button = container.querySelector( `button[data-micromodal-trigger=${ modal.id }]` );
+			const button = container.querySelector(
+				`.wporg-modal__button[data-micromodal-trigger=${ modal.id }]`
+			);
 			button.setAttribute( 'aria-expanded', true );
 		},
 		onClose: ( modal ) => {
-			const button = container.querySelector( `button[data-micromodal-trigger=${ modal.id }]` );
+			const button = container.querySelector(
+				`.wporg-modal__button[data-micromodal-trigger=${ modal.id }]`
+			);
 			button.setAttribute( 'aria-expanded', false );
 		},
 	} );

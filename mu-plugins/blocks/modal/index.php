@@ -69,7 +69,7 @@ function render_icon( $icon ) {
  */
 function render_inner_content( $attributes, $content, $block ) {
 	// Fetch the type from the parent block.
-	$type = $block->context['wporg/modal/type'];
+	$type = $block->context['wporg/modal/type'] ?? '';
 	if ( ! $type ) {
 		return;
 	}
@@ -112,22 +112,26 @@ HTML;
  */
 function render( $attributes, $content, $block ) {
 	$type = $attributes['type'];
-	$label = $attributes['label'];
 	$class = 'is-type-' . $type;
 
-	// Add the chevron if this is not a modal.
-	if ( 'inline' === $type || 'popover' === $type ) {
-		$icon = render_icon( 'chevron' );
-		$label .= ' ' . $icon;
+	// Replace the button block's link with an HTML button, retain all block styles.
+	// This only replaces the first link, so the modal can still contain links/buttons.
+	if ( preg_match( '/(<a([^>]*)>)(.*?)(<\/a>)/i', $content, $matches ) ) {
+		$link = $matches[0]; // full match.
+		// Add in the modal button class, used by the view script.
+		$attributes = str_replace( 'class="', 'class="wporg-modal__button ', $matches[2] );
+		$button = sprintf(
+			'<button aria-expanded="false" %1$s>%2$s</button>',
+			$attributes,
+			$matches[3] // innerText.
+		);
+		$content = str_replace( $link, $button, $content );
 	}
-
-	$toggle_button = '<button class="wporg-modal__button wp-block-button__link" aria-expanded="false">' . $label . '</button>';
 
 	$wrapper_attributes = get_block_wrapper_attributes( array( 'class' => $class ) );
 	return sprintf(
-		'<div %1$s>%2$s%3$s</div>',
+		'<div %1$s>%2$s</div>',
 		$wrapper_attributes,
-		$toggle_button,
 		$content
 	);
 }

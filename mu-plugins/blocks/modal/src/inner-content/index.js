@@ -11,8 +11,10 @@ import metadata from './block.json';
 
 function Edit() {
 	return (
-		<div { ...useBlockProps() }>
-			<InnerBlocks templateLock={ false } />
+		<div className="wporg-modal__modal">
+			<div { ...useBlockProps() }>
+				<InnerBlocks templateLock={ false } />
+			</div>
 		</div>
 	);
 }
