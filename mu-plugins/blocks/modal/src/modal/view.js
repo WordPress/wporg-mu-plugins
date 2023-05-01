@@ -37,46 +37,25 @@ function intializeModal( container ) {
 
 /**
  * Set up the handlers for opening/closing the popover drawer.
- * Uses the click handler from `intializeInline`, then adds handlers for
- * closing when click or focus moves out of the popover.
- * See the navigation block submenu behavior.
  *
  * @param {HTMLElement} container
  */
 function intializePopover( container ) {
-	const button = container.querySelector( '* > .wporg-modal__button' );
-	const content = container.querySelector( '.wporg-modal__modal' );
-
-	if ( ! button || ! content ) {
-		return;
-	}
-
-	intializeInline( container );
-
-	// Close on click outside.
-	document.addEventListener( 'click', function ( event ) {
-		if ( ! container.contains( event.target ) ) {
-			button.setAttribute( 'aria-expanded', false );
-			content.classList.remove( 'is-open' );
-		}
-	} );
-
-	// Close on focus outside or escape key.
-	document.addEventListener( 'keyup', function ( event ) {
-		if ( event.key === 'Escape' || ! container.contains( event.target ) ) {
-			button.setAttribute( 'aria-expanded', false );
-			content.classList.remove( 'is-open' );
-		}
-	} );
+	intializeInline( container, true );
 }
 
 /**
  * Set up the click handler for opening/closing the inline drawer.
- * This is also used by the "popover" style.
+ *
+ * If `shouldAutoClose` is true (for the "popover" style), it adds handlers
+ * for closing when click or focus moves out of the popover.
+ *
+ * See the navigation block submenu behavior.
  *
  * @param {HTMLElement} container
+ * @param {boolean}     shouldAutoClose
  */
-function intializeInline( container ) {
+function intializeInline( container, shouldAutoClose = false ) {
 	const button = container.querySelector( '* > .wporg-modal__button' );
 	const content = container.querySelector( '.wporg-modal__modal' );
 
@@ -93,6 +72,24 @@ function intializeInline( container ) {
 			content.classList.add( 'is-open' );
 		}
 	} );
+
+	if ( shouldAutoClose ) {
+		// Close on click outside.
+		document.addEventListener( 'click', function ( event ) {
+			if ( ! container.contains( event.target ) ) {
+				button.setAttribute( 'aria-expanded', false );
+				content.classList.remove( 'is-open' );
+			}
+		} );
+
+		// Close on focus outside or escape key.
+		document.addEventListener( 'keyup', function ( event ) {
+			if ( event.key === 'Escape' || ! container.contains( event.target ) ) {
+				button.setAttribute( 'aria-expanded', false );
+				content.classList.remove( 'is-open' );
+			}
+		} );
+	}
 }
 
 function init() {
