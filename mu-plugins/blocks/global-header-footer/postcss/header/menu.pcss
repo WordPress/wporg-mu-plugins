@@ -340,4 +340,9 @@
 		left: 0;
 		right: 0;
 	}
+
+	/* Hide the global header when other menus are open. */
+	html.has-modal-open:not(.has-global-modal-open) .global-header {
+		display: none;
+	}
 }
