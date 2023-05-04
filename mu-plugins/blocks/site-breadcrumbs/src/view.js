@@ -47,7 +47,7 @@ const allHidden = ( arr ) => arr.every( ( crumb ) => crumb.classList.contains( '
  *
  * @return {void}
  */
-const collapseCrumbs = ( arr, container, breakpoint ) => {
+const collapseCrumbs = ( breadcrumbs, container, breakpoint ) => {
 	const middleCrumbs = arr.slice( 1, arr.length - 1 );
 
 	// First, try to truncate the text
