@@ -48,7 +48,7 @@ const allHidden = ( arr ) => arr.every( ( crumb ) => crumb.classList.contains( '
  * @return {void}
  */
 const collapseCrumbs = ( breadcrumbs, container, breakpoint ) => {
-	const middleCrumbs = arr.slice( 1, arr.length - 1 );
+	const middleCrumbs = breadcrumbs.slice( 1, breadcrumbs.length - 1 );
 
 	// First, try to truncate the text
 	let index = 0;
@@ -68,7 +68,7 @@ const collapseCrumbs = ( breadcrumbs, container, breakpoint ) => {
 	const remainingSpace = getAvailableSpace( container );
 	// if we truncated and hid all the items, truncate the last part
 	if ( remainingSpace < breakpoint ) {
-		const lastPart = arr[ arr.length - 1 ];
+		const lastPart = breadcrumbs[ breadcrumbs.length - 1 ];
 		const width = Math.max( 75, lastPart.getBoundingClientRect().width - breakpoint );
 		lastPart.style.width = `${ width }px`;
 	}
