@@ -41,9 +41,9 @@ const allHidden = ( arr ) => arr.every( ( crumb ) => crumb.classList.contains( '
 /**
  * This function collapses the breadcrumbs until the available space is greater than the breakpoint.
  *
- * @param {Array<HTMLElement>} arr        List of breadcrumb elements.
- * @param {HTMLElement}        container  Breadcrumb parent container
- * @param {number}             breakpoint The breakpoint in pixels.
+ * @param {Array<HTMLElement>} breadcrumbs List of breadcrumb elements.
+ * @param {HTMLElement}        container   Breadcrumb parent container
+ * @param {number}             breakpoint  The breakpoint in pixels.
  *
  * @return {void}
  */
