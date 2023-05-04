@@ -184,7 +184,7 @@ const init = () => {
 	window.addEventListener( 'resize', () => {
 		clearTimeout( timeout );
 
-		timeout = setTimeout( truncate, 200 );
+		timeout = setTimeout( truncate, 50 );
 	} );
 };
 
