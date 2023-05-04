@@ -180,6 +180,9 @@ const init = () => {
 	// Run on init
 	truncate();
 
+	// Help reduce visible jank on load
+	crumbContainer.classList.add( 'has-rendered' );
+
 	let timeout = null;
 	window.addEventListener( 'resize', () => {
 		clearTimeout( timeout );

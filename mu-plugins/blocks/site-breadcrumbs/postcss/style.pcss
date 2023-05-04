@@ -4,9 +4,19 @@
 	& span {
 		display: inline-block;
 
+		/* Prevent visual flash on load */
+		&:not(:first-child) {
+			visibility: hidden;
+		}
+
 		&.is-hidden {
 			display: none;
 		}
+	}
+
+	/* After initial page load, show everything */
+	&.has-rendered span {
+		visibility: visible;
 	}
 
 	& a {
