@@ -83,17 +83,19 @@ function init() {
 			onScroll(); // Run once to avoid footer collisions on load (ex, when linked to #reply-title).
 			window.addEventListener( 'scroll', onScroll );
 		}
+	}
 
-		// Expand/collapse functionality.
-		const triggerButton = container.querySelector( '.wporg-table-of-contents-toggle' );
-		const triggerSection = container.querySelector( '.wporg-table-of-contents-toggle-section' );
-		triggerButton.addEventListener( 'click', function () {
-			if ( triggerButton.getAttribute( 'aria-expanded' ) === 'true' ) {
-				triggerButton.setAttribute( 'aria-expanded', false );
-				triggerSection.setAttribute( 'style', 'display:none;' );
+	const toggleButton = container?.querySelector( '.wporg-table-of-contents__toggle' );
+	const list = container?.querySelector( '.wporg-table-of-contents__list' );
+
+	if ( toggleButton && list ) {
+		toggleButton.addEventListener( 'click', function () {
+			if ( toggleButton.getAttribute( 'aria-expanded' ) === 'true' ) {
+				toggleButton.setAttribute( 'aria-expanded', false );
+				list.setAttribute( 'style', 'display:none;' );
 			} else {
-				triggerButton.setAttribute( 'aria-expanded', true );
-				triggerSection.removeAttribute( 'style' );
+				toggleButton.setAttribute( 'aria-expanded', true );
+				list.removeAttribute( 'style' );
 			}
 		} );
 	}
