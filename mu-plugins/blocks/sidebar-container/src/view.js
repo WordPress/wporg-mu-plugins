@@ -97,6 +97,19 @@ function init() {
 				toggleButton.setAttribute( 'aria-expanded', true );
 				list.removeAttribute( 'style' );
 			}
+
+			// After toggle, see if we need to update the sidebar classes.
+			if ( isSidebarWithinViewport( container ) ) {
+				container.classList.add( 'is-fixed-sidebar' );
+			} else {
+				container.classList.remove( 'is-fixed-sidebar' );
+				window.scrollTo( { top: 0, left: 0, behavior: 'instant' } );
+			}
+			container.classList.remove( 'is-bottom-sidebar' );
+			const isBottom = onScroll();
+			if ( isBottom ) {
+				container.scrollIntoView( { behavior: 'instant' } );
+			}
 		} );
 	}
 
