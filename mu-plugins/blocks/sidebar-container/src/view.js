@@ -108,7 +108,14 @@ function init() {
 			container.classList.remove( 'is-bottom-sidebar' );
 			const isBottom = onScroll();
 			if ( isBottom ) {
-				container.scrollIntoView( { behavior: 'instant' } );
+				window.scrollTo( {
+					top:
+						container.offsetTop -
+						FIXED_HEADER_HEIGHT -
+						getCustomPropValue( '--wp--preset--spacing--20' ),
+					left: 0,
+					behavior: 'instant',
+				} );
 			}
 		} );
 	}
