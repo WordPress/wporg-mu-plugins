@@ -19,6 +19,13 @@ function getCustomPropValue( name, element = document.body ) {
 	return value;
 }
 
+/**
+ * Check the position of the sidebar vs the height of the viewport & page
+ * container, and toggle the "bottom" class to position the sidebar without
+ * overlapping the footer.
+ *
+ * @return {boolean} True if the sidebar is at the bottom of the page.
+ */
 function onScroll() {
 	// Only run the scroll code if the sidebar is fixed.
 	const sidebarContainer = document.querySelector( '.wp-block-wporg-sidebar-container' );
@@ -52,12 +59,14 @@ function onScroll() {
 				// the viewport offset. This ensures the sidebar doesn't jump when the class is switched.
 				`${ footerStart - sidebarContainer.clientHeight - gap * 2 + viewportYOffset * 1 }px`
 			);
+			return true;
 		}
 	} else if ( footerStart - sidebarContainer.offsetHeight - FIXED_HEADER_HEIGHT - gap * 2 > scrollPosition ) {
 		// If the scroll position is higher than the top of the sidebar, switch back to just a fixed sidebar.
 		sidebarContainer.classList.remove( 'is-bottom-sidebar' );
 		sidebarContainer.style.removeProperty( 'top' );
 	}
+	return false;
 }
 
 function isSidebarWithinViewport( container ) {
@@ -105,8 +114,13 @@ function init() {
 				container.classList.remove( 'is-fixed-sidebar' );
 				window.scrollTo( { top: 0, left: 0, behavior: 'instant' } );
 			}
+			// Remove the bottom sidebar class and re-run the check to re-add
+			// it if the newly-expanded sidebar crashes into the footer.
 			container.classList.remove( 'is-bottom-sidebar' );
 			const isBottom = onScroll();
+			// If the sidebar is at the bottom, opening it might push it
+			// upwards off the screen, so scroll to it (take into account
+			// the fixed headers, plus a little extra space).
 			if ( isBottom ) {
 				window.scrollTo( {
 					top:
