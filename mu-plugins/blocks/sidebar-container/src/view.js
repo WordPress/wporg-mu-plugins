@@ -20,13 +20,8 @@ function getCustomPropValue( name, element = document.body ) {
 }
 
 function onScroll() {
-	const container = document.querySelector( '.wp-block-wporg-table-of-contents' );
-	if ( ! container ) {
-		return;
-	}
-
 	// Only run the scroll code if the sidebar is fixed.
-	const sidebarContainer = container.parentNode;
+	const sidebarContainer = document.querySelector( '.wp-block-wporg-sidebar-container' );
 	if ( ! sidebarContainer || ! sidebarContainer.classList.contains( 'is-fixed-sidebar' ) ) {
 		return;
 	}
@@ -65,25 +60,35 @@ function onScroll() {
 	}
 }
 
-function init() {
-	const container = document.querySelector( '.wp-block-wporg-table-of-contents' );
+function isSidebarWithinViewport( container ) {
 	// Margin offset from the top of the sidebar.
 	const gap = getCustomPropValue( '--wp--preset--spacing--edge-space' );
+	// Usable viewport height.
+	const viewHeight = window.innerHeight - FIXED_HEADER_HEIGHT;
+	// Get the height of the sidebar, plus the top margin and 50px for the
+	// "Back to top" link, which isn't visible until `is-fixed-sidebar` is
+	// added, therefore not included in the offsetHeight value.
+	const sidebarHeight = container.offsetHeight + gap + 50;
+	// If the sidebar is shorter than the view area, apply the class so
+	// that it's fixed and scrolls with the page content.
+	return sidebarHeight < viewHeight;
+}
+
+function init() {
+	const container = document.querySelector( '.wp-block-wporg-sidebar-container' );
 
 	if ( container ) {
-		// Usable viewport height.
-		const viewHeight = window.innerHeight - FIXED_HEADER_HEIGHT;
-		// Get the height of the sidebar, plus the top margin and 50px for the
-		// "Back to top" link, which isn't visible until `is-fixed-sidebar` is
-		// added, therefore not included in the parentNode.offsetHeight value.
-		const sidebarHeight = container.parentNode?.offsetHeight + gap + 50;
-		// If the table of contents sidebar is shorter than the view area, apply the
-		// class so that it's fixed and scrolls with the page content.
-		if ( sidebarHeight < viewHeight ) {
-			container.parentNode.classList.add( 'is-fixed-sidebar' );
+		if ( isSidebarWithinViewport( container ) ) {
+			container.classList.add( 'is-fixed-sidebar' );
 			onScroll(); // Run once to avoid footer collisions on load (ex, when linked to #reply-title).
 			window.addEventListener( 'scroll', onScroll );
 		}
+	}
+
+	// If there is no table of contents, hide the heading.
+	if ( ! document.querySelector( '.wp-block-wporg-table-of-contents' ) ) {
+		const heading = document.querySelector( '.wp-block-wporg-sidebar-container h2' );
+		heading?.style.setProperty( 'display', 'none' );
 	}
 }
 
