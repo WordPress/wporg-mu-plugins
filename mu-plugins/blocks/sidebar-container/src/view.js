@@ -107,6 +107,12 @@ function init() {
 				list.removeAttribute( 'style' );
 			}
 
+			// Use the same media query that determines whether it's 2 columns,
+			// because we don't need to manage scroll when one column.
+			if ( ! window.matchMedia( '(min-width: 1200px)' ).matches ) {
+				return;
+			}
+
 			// After toggle, see if we need to update the sidebar classes.
 			if ( isSidebarWithinViewport( container ) ) {
 				container.classList.add( 'is-fixed-sidebar' );
