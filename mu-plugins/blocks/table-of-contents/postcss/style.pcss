@@ -1,3 +1,13 @@
+:where(.wp-block-wporg-table-of-contents) {
+	padding-top: 15px;
+	padding-right: var(--wp--preset--spacing--20);
+	padding-bottom: 15px;
+	padding-left: var(--wp--preset--spacing--20);
+	background: var(--wp--preset--color--blueberry-4);
+	color: var(--wp--preset--color--blueberry-1);
+	font-size: var(--wp--preset--font-size--small);
+}
+
 .wporg-table-of-contents__header {
 	display: grid;
 	grid-template-columns: 1fr auto;
@@ -39,6 +49,8 @@
 
 		& ul {
 			margin-top: 3px;
+			padding-left: 1.5em;
+			list-style-type: disc;
 		}
 
 		&:last-child {
