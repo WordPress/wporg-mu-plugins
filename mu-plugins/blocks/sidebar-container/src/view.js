@@ -98,6 +98,12 @@ function init() {
 	const list = container?.querySelector( '.wporg-table-of-contents__list' );
 
 	if ( toggleButton && list ) {
+		// If the page is at least two columns, expand the toggle by default.
+		if ( window.matchMedia( '(min-width: 1200px)' ).matches ) {
+			toggleButton.setAttribute( 'aria-expanded', true );
+			list.removeAttribute( 'style' );
+		}
+
 		toggleButton.addEventListener( 'click', function () {
 			if ( toggleButton.getAttribute( 'aria-expanded' ) === 'true' ) {
 				toggleButton.setAttribute( 'aria-expanded', false );
