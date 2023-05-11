@@ -19,6 +19,13 @@ function getCustomPropValue( name, element = document.body ) {
 	return value;
 }
 
+/**
+ * Check the position of the sidebar vs the height of the viewport & page
+ * container, and toggle the "bottom" class to position the sidebar without
+ * overlapping the footer.
+ *
+ * @return {boolean} True if the sidebar is at the bottom of the page.
+ */
 function onScroll() {
 	// Only run the scroll code if the sidebar is fixed.
 	const sidebarContainer = document.querySelector( '.wp-block-wporg-sidebar-container' );
@@ -52,12 +59,14 @@ function onScroll() {
 				// the viewport offset. This ensures the sidebar doesn't jump when the class is switched.
 				`${ footerStart - sidebarContainer.clientHeight - gap * 2 + viewportYOffset * 1 }px`
 			);
+			return true;
 		}
 	} else if ( footerStart - sidebarContainer.offsetHeight - FIXED_HEADER_HEIGHT - gap * 2 > scrollPosition ) {
 		// If the scroll position is higher than the top of the sidebar, switch back to just a fixed sidebar.
 		sidebarContainer.classList.remove( 'is-bottom-sidebar' );
 		sidebarContainer.style.removeProperty( 'top' );
 	}
+	return false;
 }
 
 function isSidebarWithinViewport( container ) {
@@ -83,6 +92,58 @@ function init() {
 			onScroll(); // Run once to avoid footer collisions on load (ex, when linked to #reply-title).
 			window.addEventListener( 'scroll', onScroll );
 		}
+	}
+
+	const toggleButton = container?.querySelector( '.wporg-table-of-contents__toggle' );
+	const list = container?.querySelector( '.wporg-table-of-contents__list' );
+
+	if ( toggleButton && list ) {
+		// If the page is at least two columns, expand the toggle by default.
+		if ( window.matchMedia( '(min-width: 1200px)' ).matches ) {
+			toggleButton.setAttribute( 'aria-expanded', true );
+			list.removeAttribute( 'style' );
+		}
+
+		toggleButton.addEventListener( 'click', function () {
+			if ( toggleButton.getAttribute( 'aria-expanded' ) === 'true' ) {
+				toggleButton.setAttribute( 'aria-expanded', false );
+				list.setAttribute( 'style', 'display:none;' );
+			} else {
+				toggleButton.setAttribute( 'aria-expanded', true );
+				list.removeAttribute( 'style' );
+			}
+
+			// Use the same media query that determines whether it's 2 columns,
+			// because we don't need to manage scroll when one column.
+			if ( ! window.matchMedia( '(min-width: 1200px)' ).matches ) {
+				return;
+			}
+
+			// After toggle, see if we need to update the sidebar classes.
+			if ( isSidebarWithinViewport( container ) ) {
+				container.classList.add( 'is-fixed-sidebar' );
+			} else {
+				container.classList.remove( 'is-fixed-sidebar' );
+				window.scrollTo( { top: 0, left: 0, behavior: 'instant' } );
+			}
+			// Remove the bottom sidebar class and re-run the check to re-add
+			// it if the newly-expanded sidebar crashes into the footer.
+			container.classList.remove( 'is-bottom-sidebar' );
+			const isBottom = onScroll();
+			// If the sidebar is at the bottom, opening it might push it
+			// upwards off the screen, so scroll to it (take into account
+			// the fixed headers, plus a little extra space).
+			if ( isBottom ) {
+				window.scrollTo( {
+					top:
+						container.offsetTop -
+						FIXED_HEADER_HEIGHT -
+						getCustomPropValue( '--wp--preset--spacing--20' ),
+					left: 0,
+					behavior: 'instant',
+				} );
+			}
+		} );
 	}
 
 	// If there is no table of contents, hide the heading.

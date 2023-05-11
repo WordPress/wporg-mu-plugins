@@ -1,3 +1,13 @@
+:where(.wp-block-wporg-table-of-contents) {
+	padding-top: 15px;
+	padding-right: var(--wp--preset--spacing--20);
+	padding-bottom: 15px;
+	padding-left: var(--wp--preset--spacing--20);
+	background: var(--wp--preset--color--blueberry-4);
+	color: var(--wp--preset--color--blueberry-1);
+	font-size: var(--wp--preset--font-size--small);
+}
+
 .wporg-table-of-contents__header {
 	display: grid;
 	grid-template-columns: 1fr auto;
@@ -6,18 +16,55 @@
 	& h2 {
 		margin: 0 !important;
 		color: var(--wp--preset--color--charcoal-1);
-		line-height: var(--wp--custom--body--large--typography--line-height);
 		font-family: var(--wp--preset--font-family--inter);
-		font-size: var(--wp--preset--font-size--large);
+		font-size: var(--wp--preset--font-size--small);
+		line-height: 1.6;
+	}
+
+	& button {
+		padding: 0;
+		width: 2rem;
+		height: 2rem;
+		background: transparent;
+		border: none;
+		color: var(--wp--preset--color--blueberry-1);
+
+		&:focus-visible {
+			outline: 1.5px solid var(--wp--preset--color--blueberry-1);
+			outline-offset: -0.5px;
+			box-shadow: none;
+			border-radius: 2px;
+		}
 	}
 }
 
-.wporg-table-of-contents__list a {
-	&:focus-visible {
-		outline: 1.5px solid var(--wp--preset--color--blueberry-1);
-		outline-offset: 2px;
-		box-shadow: none;
-		border-radius: 2px;
+.wporg-table-of-contents__list {
+	margin-bottom: 0;
+	padding-left: 1em;
+	font-size: var(--wp--preset--font-size--small);
+	line-height: 1.6;
+
+	& li {
+		margin-bottom: 3px;
+
+		& ul {
+			margin-top: 3px;
+			padding-left: 1.5em;
+			list-style-type: disc;
+		}
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	& a {
+		&:focus-visible {
+			outline: 1.5px solid var(--wp--preset--color--blueberry-1);
+			outline-offset: 2px;
+			box-shadow: none;
+			border-radius: 2px;
+		}
 	}
 }
 

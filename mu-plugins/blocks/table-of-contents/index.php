@@ -57,9 +57,13 @@ function render( $attributes, $content, $block ) {
 
 	$content = '<div class="wporg-table-of-contents__header">';
 	$content .= '<h2>' . esc_html( $title ) . '</h2>';
+	$content .= '<button type="button" class="wporg-table-of-contents__toggle" aria-expanded="false">';
+	$content .= '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path fill-rule="evenodd" clip-rule="evenodd" d="M18.005 10.555 12 16.014l-6.004-5.459 1.009-1.11L12 13.986l4.996-4.541 1.009 1.11Z" fill="#3858E9"/></svg>';
+	$content .= '<span class="screen-reader-text">' . esc_html__( 'Table of Contents', 'wporg' ) . '</span>';
+	$content .= '</button>';
 	$content .= '</div>';
 
-	$content .= '<ul class="wporg-table-of-contents__list">';
+	$content .= '<ul style="display:none;" class="wporg-table-of-contents__list">';
 
 	$last_item = false;
 
