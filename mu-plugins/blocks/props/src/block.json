@@ -1,0 +1,60 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "wporg/props",
+	"version": "0.1.0",
+	"title": "Props Block",
+	"category": "design",
+	"icon": "awards",
+	"description": "Tag wp.org users so they receive props for helping.",
+	"supports": {
+		"anchor": true,
+		"className": false,
+		"color": {
+			"gradients": true,
+			"link": true,
+			"__experimentalDefaultControls": {
+				"background": true,
+				"text": true
+			}
+		},
+		"spacing": {
+			"margin": true,
+			"padding": true
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true,
+			"__experimentalFontFamily": true,
+			"__experimentalTextDecoration": true,
+			"__experimentalFontStyle": true,
+			"__experimentalFontWeight": true,
+			"__experimentalLetterSpacing": true,
+			"__experimentalTextTransform": true,
+			"__experimentalDefaultControls": {
+				"fontSize": true
+			}
+		},
+		"__experimentalSelector": "p",
+		"__unstablePasteTextInline": true
+	},
+	"attributes": {
+		"align": {
+			"type": "string"
+		},
+		"content": {
+			"type": "string",
+			"source": "html",
+			"selector": "p",
+			"default": "",
+			"__experimentalRole": "content"
+		}
+	},
+	"example": {
+		"attributes": {
+			"content": "<p>Props to @exampleuser</p>"
+		}
+	},
+	"textdomain": "wporg",
+	"editorScript": "file:./index.js"
+}
