@@ -185,6 +185,22 @@
 			closeSearchButton.setAttribute( 'aria-label', labels.closeSearchLabel || 'Close Search' );
 		}
 
+		// Watch for the `has-modal-open` class to be removed, and remove the global class too.
+		// This works as a callback to be fired when the global header modals are closed, as
+		// they're attached when each modal opens.
+		const modalCloseObserver = new window.MutationObserver( ( mutationList, observer ) => {
+			for ( const mutation of mutationList ) {
+				const { attributeName, type, target } = mutation;
+				if ( type === 'attributes' && attributeName === 'class' ) {
+					if ( ! target.classList.contains( 'has-modal-open' ) ) {
+						target.classList.remove( 'has-global-modal-open' );
+					}
+				}
+			}
+			// Remove the observer to prevent recursion. This will be re-attached when the modal is opened.
+			observer.disconnect();
+		} );
+
 		const openButtons = document.querySelectorAll( '[data-micromodal-trigger]' );
 		openButtons.forEach( function ( button ) {
 			// When any open menu button is clicked, find any existing close buttons and click them.
@@ -198,6 +214,15 @@
 				);
 
 				closeButtons.forEach( ( _button ) => _button.click() );
+
+				// If this button opened the global search, add a class and trigger the close observer.
+				if (
+					button.parentNode.classList.contains( 'global-header__navigation' ) ||
+					button.parentNode.classList.contains( 'global-header__search' )
+				) {
+					document.documentElement.classList.add( 'has-global-modal-open' );
+					modalCloseObserver.observe( document.documentElement, { attributes: true } );
+				}
 			} );
 		} );
 	} );

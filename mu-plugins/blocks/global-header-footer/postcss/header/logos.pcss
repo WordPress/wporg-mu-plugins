@@ -95,3 +95,11 @@
 		}
 	}
 }
+
+/* When on the main (non-rosetta) sites, the logo should take over 100% space. */
+html[lang="en-US"] .wp-block-group.global-header .wp-block-image.global-header__wporg-logo-mark {
+
+	@media (--mobile-only) {
+		flex-basis: 100%;
+	}
+}
