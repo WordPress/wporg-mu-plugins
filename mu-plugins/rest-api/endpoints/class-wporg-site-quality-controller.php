@@ -95,7 +95,13 @@ class Site_Quality_Controller extends WP_REST_Controller {
 			'created'   => current_time( 'mysql' ),
 		);
 
-		return $wpdb->insert( $table_name, $data );
+		$result = $wpdb->insert( $table_name, $data );
+
+		if ( false === $result ) {
+			trigger_error( __NAMESPACE__ . $wpdb->last_error, E_USER_WARNING );
+		}
+
+		return $result;
 	}
 
 	/**
@@ -122,8 +128,6 @@ class Site_Quality_Controller extends WP_REST_Controller {
 				$result = $this->save_stat( $item['url'], $key, (int) ( $value * 100 ) );
 
 				if ( false === $result ) {
-					trigger_error( E_USER_WARNING, __NAMESPACE__ . $wpdb->last_error );
-
 					return new \WP_Error(
 						'rest_error_site_quality_save',
 						__( 'An error occurred.', 'wporg' ),
