@@ -121,15 +121,15 @@ class Site_Quality_Controller extends WP_REST_Controller {
 			foreach ( $item['summary'] as $key => $value ) {
 				$result = $this->save_stat( $item['url'], $key, (int) ( $value * 100 ) );
 
-                if ( false === $result ) {
-                    trigger_error( E_USER_WARNING, __NAMESPACE__ . $wpdb->last_error );
+				if ( false === $result ) {
+					trigger_error( E_USER_WARNING, __NAMESPACE__ . $wpdb->last_error );
 
-                    return new \WP_Error(
-                        'rest_error_site_quality_save',
-                        __( 'An error occurred.', 'wporg' ),
-                        array( 'status' => \WP_Http::INTERNAL_SERVER_ERROR )
-                    );
-                }
+					return new \WP_Error(
+						'rest_error_site_quality_save',
+						__( 'An error occurred.', 'wporg' ),
+						array( 'status' => \WP_Http::INTERNAL_SERVER_ERROR )
+					);
+				}
 			}
 		}
 
