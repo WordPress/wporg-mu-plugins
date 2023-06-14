@@ -1,5 +1,13 @@
 .wp-block-wporg-sidebar-container .is-link-to-top {
 	display: none;
+
+	& a {
+		text-decoration-line: none;
+
+		&:hover {
+			text-decoration-line: underline;
+		}
+	}
 }
 
 /* Slot the search & table of contents into a floating sidebar on large screens. */
