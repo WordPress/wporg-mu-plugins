@@ -176,8 +176,12 @@
 		new navMenu( '.global-header .global-header__navigation' );
 		const labels = window.wporgGlobalHeaderI18n || {};
 
-		const openSearchButton = document.querySelector( '.global-header__search [data-micromodal-trigger]' );
-		const closeSearchButton = document.querySelector( '.global-header__search button[data-micromodal-close]' );
+		const openSearchButton = document.querySelector(
+			'.global-header__search .wp-block-navigation__responsive-container-open'
+		);
+		const closeSearchButton = document.querySelector(
+			'.global-header__search button.wp-block-navigation__responsive-container-close'
+		);
 		if ( openSearchButton ) {
 			openSearchButton.setAttribute( 'aria-label', labels.openSearchLabel || 'Open Search' );
 		}

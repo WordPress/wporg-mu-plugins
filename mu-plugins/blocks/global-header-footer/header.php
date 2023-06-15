@@ -16,6 +16,7 @@ defined( 'WPINC' ) || die();
  */
 
 $search_args = array(
+	'className' => 'wp-block-navigation-item',
 	'label' => _x( 'Search in WordPress.org', 'button label', 'wporg' ),
 	'placeholder' => _x( 'Type to search…', 'input field placeholder', 'wporg' ),
 	'buttonPosition' => 'button-inside',
