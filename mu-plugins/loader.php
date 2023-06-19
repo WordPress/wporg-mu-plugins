@@ -15,6 +15,15 @@ if ( ! class_exists( '\WordPressdotorg\Autoload\Autoloader', false ) ) {
 
 Autoload\register_class_path( __NAMESPACE__, __DIR__ );
 
+// Composer loader.
+if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+	// Production.
+	require_once __DIR__ . '/vendor/autoload.php';
+} elseif ( file_exists( dirname( __DIR__ ) . '/vendor/autoload.php' ) ) {
+	// Development.
+	require_once dirname( __DIR__ ) . '/vendor/autoload.php';
+}
+
 require_once __DIR__ . '/helpers/helpers.php';
 require_once __DIR__ . '/blocks/global-header-footer/blocks.php';
 require_once __DIR__ . '/blocks/horizontal-slider/horizontal-slider.php';
