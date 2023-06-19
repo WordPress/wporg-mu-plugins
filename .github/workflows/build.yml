@@ -19,7 +19,7 @@ jobs:
 
             - name: Install all dependencies
               run: |
-                  composer install
+                  composer install --no-dev
                   npm install
 
             - name: Build
@@ -28,6 +28,7 @@ jobs:
             - name: Ignore .gitignore
               run: |
                   git add mu-plugins/blocks/*/build/* --force
+                  git add vendor --force
 
             - name: Commit and push
               # Using a specific hash here instead of a tagged version, for risk mitigation, since this action modifies our repo.
