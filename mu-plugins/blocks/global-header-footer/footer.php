@@ -101,6 +101,7 @@ $code_is_poetry_src = isset( $attributes['textColor'] ) && str_contains( $attrib
 		<!-- wp:social-link {"url":"https://twitter.com/WordPress","service":"twitter","label":"<?php echo esc_html_x( 'Visit our Twitter account', 'Menu item title', 'wporg' ); ?>"} /-->
 		<!-- wp:social-link {"url":"https://www.instagram.com/wordpress/","service":"instagram","label":"<?php echo esc_html_x( 'Visit our Instagram account', 'Menu item title', 'wporg' ); ?>"} /-->
 		<!-- wp:social-link {"url":"https://www.linkedin.com/company/wordpress","service":"linkedin","label":"<?php echo esc_html_x( 'Visit our LinkedIn account', 'Menu item title', 'wporg' ); ?>"} /-->
+		<!-- wp:social-link {"url":"https://www.youtube.com/wordpress","service":"youtube","label":"<?php echo esc_html_x( 'Visit our YouTube account', 'Menu item title', 'wporg' ); ?>"} /-->
 	</ul> <!-- /wp:social-links -->
 
 	<?php if ( str_starts_with( get_locale(), 'en_' ) ) : ?>
