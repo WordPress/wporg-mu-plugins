@@ -1,0 +1,45 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "wporg/modal-inner-content",
+	"title": "Modal Content",
+	"icon": "text-page",
+	"category": "layout",
+	"description": "Hidden content which appears when a button is clicked.",
+	"textdomain": "wporg",
+	"attributes": {},
+	"usesContext": [ "wporg/modal/type" ],
+	"parent": [ "wporg/modal" ],
+	"supports": {
+		"color": {
+			"text": true,
+			"background": true,
+			"link": true
+		},
+		"spacing": {
+			"margin": true,
+			"padding": true,
+			"__experimentalDefaultControls": {
+				"margin": true,
+				"padding": true
+			}
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true
+		},
+		"__experimentalBorder": {
+			"color": true,
+			"radius": true,
+			"style": true,
+			"width": true,
+			"__experimentalDefaultControls": {
+				"color": true,
+				"radius": true,
+				"style": true,
+				"width": true
+			}
+		}
+	},
+	"editorScript": "file:./index.js"
+}

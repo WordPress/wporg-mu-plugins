@@ -64,5 +64,7 @@
 			"selector-class-pattern": null
 		}
 	},
-	"dependencies": {}
+	"dependencies": {
+		"micromodal": "0.4.10"
+	}
 }
