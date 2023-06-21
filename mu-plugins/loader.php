@@ -1,5 +1,7 @@
 <?php
+
 namespace WordPressdotorg\MU_Plugins;
+
 use WordPressdotorg\Autoload;
 
 /**
@@ -28,6 +30,7 @@ require_once __DIR__ . '/helpers/helpers.php';
 require_once __DIR__ . '/blocks/global-header-footer/blocks.php';
 require_once __DIR__ . '/blocks/horizontal-slider/horizontal-slider.php';
 require_once __DIR__ . '/blocks/language-suggest/language-suggest.php';
+require_once __DIR__ . '/blocks/local-navigation-bar/index.php';
 require_once __DIR__ . '/blocks/latest-news/latest-news.php';
 require_once __DIR__ . '/blocks/link-wrapper/index.php';
 require_once __DIR__ . '/blocks/notice/index.php';
