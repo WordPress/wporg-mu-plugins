@@ -85,15 +85,6 @@ function isSidebarWithinViewport( container ) {
 
 function init() {
 	const container = document.querySelector( '.wp-block-wporg-sidebar-container' );
-
-	if ( container ) {
-		if ( isSidebarWithinViewport( container ) ) {
-			container.classList.add( 'is-fixed-sidebar' );
-			onScroll(); // Run once to avoid footer collisions on load (ex, when linked to #reply-title).
-			window.addEventListener( 'scroll', onScroll );
-		}
-	}
-
 	const toggleButton = container?.querySelector( '.wporg-table-of-contents__toggle' );
 	const list = container?.querySelector( '.wporg-table-of-contents__list' );
 
@@ -144,6 +135,14 @@ function init() {
 				} );
 			}
 		} );
+	}
+
+	if ( container ) {
+		if ( isSidebarWithinViewport( container ) ) {
+			container.classList.add( 'is-fixed-sidebar' );
+			onScroll(); // Run once to avoid footer collisions on load (ex, when linked to #reply-title).
+			window.addEventListener( 'scroll', onScroll );
+		}
 	}
 
 	// If there is no table of contents, hide the heading.
