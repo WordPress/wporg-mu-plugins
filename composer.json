@@ -34,7 +34,8 @@
 		"allow-plugins": {
 			"composer/installers": true,
 			"dealerdirect/phpcodesniffer-composer-installer": true
-		}
+		},
+		"autoloader-suffix": "_wporg_mu_plugins"
 	},
 	"scripts": {
 		"format": "phpcbf -p",
