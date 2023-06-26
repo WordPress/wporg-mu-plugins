@@ -19,7 +19,7 @@ function manage_users_sortable_columns( $columns ) {
 }
 
 function pre_get_posts( $query ) {
-	if ( ! is_admin() || 'last-logged-in' !== $query->get( 'orderby' ) ) {
+	if ( ! is_admin() || 'last-logged-in' !== $query->get( 'orderby' ) || ! current_user_can( 'list_users' ) ) {
 		return;
 	}
 
@@ -41,7 +41,7 @@ function pre_get_posts( $query ) {
 }
 
 function manage_users_custom_column( $value, $column, $user_id ) {
-	if ( 'last-logged-in' !== $column ) {
+	if ( 'last-logged-in' !== $column || ! current_user_can( 'list_users' ) ) {
 		return $value;
 	}
 
