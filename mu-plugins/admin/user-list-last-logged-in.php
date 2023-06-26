@@ -3,7 +3,7 @@ namespace WordPressdotorg\MU_Plugins\Admin\Users\Last_Logged_In;
 
 add_filter( 'manage_users_columns',          __NAMESPACE__ . '\manage_users_columns'              );
 add_filter( 'manage_users_sortable_columns', __NAMESPACE__ . '\manage_users_sortable_columns'     );
-add_action( 'pre_get_users',                 __NAMESPACE__ . '\pre_get_posts'                     );
+add_action( 'pre_get_users',                 __NAMESPACE__ . '\pre_get_users'                     );
 add_filter( 'manage_users_custom_column',    __NAMESPACE__ . '\manage_users_custom_column', 10, 3 );
 
 function manage_users_columns( $columns ) {
@@ -18,7 +18,7 @@ function manage_users_sortable_columns( $columns ) {
 	return $columns;
 }
 
-function pre_get_posts( $query ) {
+function pre_get_users( $query ) {
 	if ( ! is_admin() || 'last-logged-in' !== $query->get( 'orderby' ) || ! current_user_can( 'list_users' ) ) {
 		return;
 	}
