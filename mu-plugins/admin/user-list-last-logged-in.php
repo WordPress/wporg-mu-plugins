@@ -1,5 +1,5 @@
 <?php
-namespace WordPressdotorg\MU_Plugins\Admin\Users;
+namespace WordPressdotorg\MU_Plugins\Admin\Users\Last_Logged_In;
 
 add_filter( 'manage_users_columns',          __NAMESPACE__ . '\manage_users_columns'              );
 add_filter( 'manage_users_sortable_columns', __NAMESPACE__ . '\manage_users_sortable_columns'     );
