@@ -38,6 +38,7 @@ require_once __DIR__ . '/blocks/sidebar-container/index.php';
 require_once __DIR__ . '/blocks/screenshot-preview/block.php';
 require_once __DIR__ . '/blocks/site-breadcrumbs/index.php';
 require_once __DIR__ . '/blocks/table-of-contents/index.php';
+require_once __DIR__ . '/blocks/time/index.php';
 require_once __DIR__ . '/global-fonts/index.php';
 require_once __DIR__ . '/plugin-tweaks/index.php';
 require_once __DIR__ . '/rest-api/index.php';

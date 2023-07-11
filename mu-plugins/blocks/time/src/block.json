@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "wporg/time",
+	"title": "Time",
+	"icon": "calendar",
+	"category": "common",
+	"description": "Attempts to parse a time string like <code>[time]any-valid-time-string-here[/time]</code> and creates a format that shows it in the viewers local time zone.",
+	"textdomain": "wporg",
+	"editorScript": "file:./index.js"
+}
