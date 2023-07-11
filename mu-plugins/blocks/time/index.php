@@ -33,6 +33,10 @@ function init() {
  * @return string Content with display times reformatted.
  */
 function transform_time_blocks( $content) {
+	if ( empty( $content ) ) {
+		return $content;
+	}
+
 	// Find the time block elements by the classname "wporg-time"
 	$dom = new \DOMDocument();
 	$dom->loadHTML( $content );
@@ -169,5 +173,5 @@ function time_converter_script() {
 			} );
 		} )();
 	</script>
-<?php
+	<?php
 }
