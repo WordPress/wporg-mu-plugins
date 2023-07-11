@@ -153,7 +153,6 @@ function time_converter_script() {
 
 					if ( date ) {
 						if ( ! toLocaleTimeStringSupportsLocales ) {
-							console.log("🚀 ~ file: index.php:143 ~ document.querySelectorAll ~ toLocaleTimeStringSupportsLocales:", toLocaleTimeStringSupportsLocales)
 							localTime += formatDate( date );
 							localTime += ' ';
 						}
