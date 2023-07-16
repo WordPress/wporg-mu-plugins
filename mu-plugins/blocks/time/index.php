@@ -55,10 +55,10 @@ function transform_time_blocks( $content ) {
 	$time_elements = $xpath->query( "//*[contains(concat(' ', normalize-space(@class), ' '), ' wporg-time ')]" );
 
 	foreach ( $time_elements as $time_element ) {
-		$time_content = $time_element->nodeValue;
+		$time_content = $time_element->nodeValue; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		$parsed_time = parse_time( $time_content );
 
-		if ( $parsed_time === null ) {
+		if ( null === $parsed_time ) {
 			continue;
 		}
 
@@ -70,7 +70,7 @@ function transform_time_blocks( $content ) {
 		$new_time_content->setAttribute( 'title', gmdate( 'c', $parsed_time ) );
 
 		// Replace the raw time with the formatted time
-		$time_element->nodeValue = null;
+		$time_element->nodeValue = null; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		$time_element->appendChild( $new_time_content );
 	}
 
@@ -82,7 +82,7 @@ function transform_time_blocks( $content ) {
 /**
  * Parse the datetime description string and return a timestamp.
  *
- * @param string $content Datetime description, eg. `Monday, April 6 at 19:00 UTC`
+ * @param string $content Datetime description, eg. `Monday, April 6 at 19:00 UTC`.
  * @return string Unix timestamp or null if the time string could not be parsed.
  */
 function parse_time( $content ) {
