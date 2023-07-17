@@ -26,7 +26,7 @@ const Edit = ( { isActive, onChange, value } ) => (
 
 registerFormatType( metadata.name, {
 	title: metadata.title,
-	tagName: 'a',
+	tagName: 'time',
 	className: 'wporg-time',
 	edit: Edit,
 } );

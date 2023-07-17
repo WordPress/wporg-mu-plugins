@@ -30,7 +30,7 @@ function init() {
 		}
 	);
 
-	add_filter( 'the_content', __NAMESPACE__ . '\transform_time_blocks', 99, 1 );
+	add_filter( 'the_content', __NAMESPACE__ . '\transform_times', 99, 1 );
 }
 
 /**
@@ -52,14 +52,16 @@ function get_metadata() {
  * @param string $content Post content.
  * @return string Content with display times reformatted.
  */
-function transform_time_blocks( $content ) {
+function transform_times( $content ) {
 	if ( empty( $content || is_admin() ) ) {
 		return $content;
 	}
 
 	// Find the time block elements by the classname "wporg-time"
 	$dom = new \DOMDocument();
-	$dom->loadHTML( $content );
+
+	// Ignore warnings about htlm5 tags.
+	$dom->loadHTML( $content, LIBXML_NOERROR );
 	$xpath = new \DOMXPath( $dom );
 	$time_elements = $xpath->query( "//*[contains(concat(' ', normalize-space(@class), ' '), ' wporg-time ')]" );
 
@@ -79,16 +81,14 @@ function transform_time_blocks( $content ) {
 			continue;
 		}
 
-		// Build the link and abbr microformat.
-		$time_element->setAttribute( 'href', 'https://www.timeanddate.com/worldclock/fixedtime.html?iso=' . gmdate( 'Ymd\THi', $parsed_time ) );
+		$time_element->setAttribute( 'datetime', gmdate( 'c', $parsed_time ) );
 
-		$new_time_content = $dom->createElement( 'abbr', $time_content );
-		$new_time_content->setAttribute( 'class', 'wporg-time-date' );
-		$new_time_content->setAttribute( 'title', gmdate( 'c', $parsed_time ) );
-
-		// Replace the raw time with the formatted time
-		$time_element->nodeValue = null; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-		$time_element->appendChild( $new_time_content );
+		// Create a new link with the time as the href, clone the time element inside the link,
+		// and replace the original time element with the link.
+		$link_element = $dom->createElement( 'a' );
+		$link_element->setAttribute( 'href', 'https://www.timeanddate.com/worldclock/fixedtime.html?iso=' . gmdate( 'Ymd\THi', $parsed_time ) );
+		$link_element->appendChild( $time_element->cloneNode( true ) );
+		$time_element->parentNode->replaceChild( $link_element, $time_element ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 	}
 
 	$content = $dom->saveHTML();
