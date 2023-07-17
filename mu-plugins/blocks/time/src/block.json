@@ -7,5 +7,6 @@
 	"category": "common",
 	"description": "Attempts to parse a time string like <code>[time]any-valid-time-string-here[/time]</code> and creates a format that shows it in the viewers local time zone.",
 	"textdomain": "wporg",
-	"editorScript": "file:./index.js"
+	"editorScript": "file:./index.js",
+	"viewScript": "file:./convert_times.js"
 }
