@@ -8,8 +8,6 @@
 
 namespace WordPressdotorg\MU_Plugins\Time;
 
-use function WordPressdotorg\MU_Plugins\Helpers\register_assets_from_metadata;
-
 add_action( 'init', __NAMESPACE__ . '\init' );
 
 /**
