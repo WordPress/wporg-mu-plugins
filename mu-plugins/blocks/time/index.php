@@ -53,7 +53,7 @@ function get_metadata() {
  * @return string Content with display times reformatted.
  */
 function transform_times( $content ) {
-	if ( empty( $content || is_admin() ) ) {
+	if ( empty( $content ) || is_admin() ) {
 		return $content;
 	}
 
