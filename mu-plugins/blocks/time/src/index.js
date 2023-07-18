@@ -20,7 +20,7 @@ const Edit = ( { isActive, onChange, value } ) => (
 		onClick={ () => {
 			const dateDescription = getTextContent( slice( value ) );
 
-			if ( ! dateDescription ) {
+			if ( ! dateDescription || isActive ) {
 				onChange(
 					toggleFormat( value, {
 						type: name,
