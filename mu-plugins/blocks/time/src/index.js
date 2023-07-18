@@ -18,7 +18,7 @@ const Edit = ( { isActive, onChange, value } ) => (
 		icon={ icon }
 		title={ title }
 		onClick={ () => {
-			const dateDescription = getTextContent( slice( value ) ); // eg. Tuesday, April 5th, at 15:00 UTC
+			const dateDescription = getTextContent( slice( value ) ); // eg. Tuesday, April 5th 2022, at 15:00 UTC
 
 			if ( ! dateDescription ) {
 				onChange(
@@ -33,15 +33,17 @@ const Edit = ( { isActive, onChange, value } ) => (
 			const cleanString = dateDescription.replace( 'at ', '' );
 
 			// Parse the cleaned string into a Moment object in UTC
-			const momentDate = moment.utc( cleanString, 'dddd, MMMM Do, HH:mm z' );
-
-			// Format the Moment object in the desired output format
-			const formatted = momentDate.isValid() ? momentDate.format( 'YYYY-MM-DDTHH:mm:ssZ' ) : null;
+			const momentDate = moment.utc( cleanString, 'dddd, MMMM Do YYYY, HH:mm z' );
 
 			onChange(
 				toggleFormat( value, {
 					type: name,
-					attributes: formatted ? { datetime: formatted } : {},
+					attributes: momentDate.isValid()
+						? {
+								datetime: momentDate.format( 'YYYY-MM-DDTHH:mm:ssZ' ),
+								'data-iso': momentDate.format( 'YYYYMMDDTHHmm' ),
+						  }
+						: {},
 				} )
 			);
 		} }

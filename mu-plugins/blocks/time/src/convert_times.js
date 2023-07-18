@@ -46,9 +46,10 @@ function convertTimes() {
 	document.querySelectorAll( '.wporg-time' ).forEach( ( dateElement ) => {
 		let localTime = '';
 		const datetime = dateElement.getAttribute( 'datetime' );
+		const datetimeISO = dateElement.getAttribute( 'data-iso' );
 		const date = datetime && parseDate( datetime );
 
-		if ( date ) {
+		if ( date && !! datetimeISO ) {
 			if ( ! toLocaleTimeStringSupportsLocales ) {
 				localTime += formatDate( date );
 				localTime += ' ';
@@ -56,7 +57,14 @@ function convertTimes() {
 
 			localTime += formatTime( date );
 
-			dateElement.innerText = localTime;
+			const linkElement = document.createElement( 'a' );
+			linkElement.innerText = localTime;
+			linkElement.setAttribute(
+				'href',
+				`https://www.timeanddate.com/worldclock/fixedtime.html?iso=${ datetimeISO }`
+			);
+
+			dateElement.parentNode.replaceChild( linkElement, dateElement );
 		}
 	} );
 }
