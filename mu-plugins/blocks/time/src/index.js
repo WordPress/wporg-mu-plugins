@@ -18,7 +18,7 @@ const Edit = ( { isActive, onChange, value } ) => (
 		icon={ icon }
 		title={ title }
 		onClick={ () => {
-			const dateDescription = getTextContent( slice( value ) ); // eg. Tuesday, April 5th 2022, at 15:00 UTC
+			const dateDescription = getTextContent( slice( value ) );
 
 			if ( ! dateDescription ) {
 				onChange(
