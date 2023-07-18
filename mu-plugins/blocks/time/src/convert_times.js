@@ -2,9 +2,12 @@ function convertTimes() {
 	const parseDate = function ( text ) {
 		const match = /^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})\+00:00$/.exec( text );
 
-		return new Date(
-			// Date.UTC(year, monthIndex (0..11), day, hour, minute, second)
-			Date.UTC( +match[ 1 ], +match[ 2 ] - 1, +match[ 3 ], +match[ 4 ], +match[ 5 ], +match[ 6 ] )
+		return (
+			match &&
+			new Date(
+				// Date.UTC(year, monthIndex (0..11), day, hour, minute, second)
+				Date.UTC( +match[ 1 ], +match[ 2 ] - 1, +match[ 3 ], +match[ 4 ], +match[ 5 ], +match[ 6 ] )
+			)
 		);
 	};
 
