@@ -66,7 +66,7 @@ function transform_times( $content ) {
 	$xpath = new \DOMXPath( $dom );
 	$time_elements = $xpath->query( "//*[contains(concat(' ', normalize-space(@class), ' '), ' wporg-time ')]" );
 
-	if ( empty( $time_elements ) ) {
+	if ( 0 === $time_elements->length ) {
 		return $content;
 	}
 
