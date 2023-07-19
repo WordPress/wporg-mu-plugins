@@ -18,6 +18,11 @@
 	/* Reset the sticky position on small screens. */
 	@media (max-width: 889px) {
 		position: static !important;
+
+		/* Adjust the modal container so it's not hidden by the global header. */
+		& .wp-block-navigation__responsive-container {
+			top: var(--wp-global-header-height);
+		}
 	}
 
 	&.is-style-brush-stroke {
