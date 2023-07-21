@@ -60,13 +60,16 @@ function convertTimes() {
 
 			localTime += formatTime( date );
 
+			dateElement.innerText = localTime;
+			dateElement.removeAttribute( 'data-iso' );
+
 			const linkElement = document.createElement( 'a' );
-			linkElement.innerText = localTime;
 			linkElement.setAttribute(
 				'href',
 				`https://www.timeanddate.com/worldclock/fixedtime.html?iso=${ datetimeISO }`
 			);
 
+			linkElement.appendChild( dateElement.cloneNode( true ) );
 			dateElement.parentNode.replaceChild( linkElement, dateElement );
 		}
 	} );
