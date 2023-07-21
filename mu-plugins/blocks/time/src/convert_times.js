@@ -1,6 +1,9 @@
 function convertTimes() {
 	const parseDate = function ( text ) {
-		const match = /^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})\+00:00$/.exec( text );
+		const match =
+			/^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})\+([0-2]{1})([0-9]{1}):00$/.exec(
+				text
+			);
 
 		return (
 			match &&
