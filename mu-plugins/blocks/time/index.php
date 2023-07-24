@@ -35,7 +35,8 @@ function init() {
 		'wp_enqueue_scripts',
 		function() use ( $view_script_handle ) {
 			if ( ! is_admin() ) {
-				wp_enqueue_script( $view_script_handle, null, null, filemtime( __DIR__ . '/build/convert_times.js' ), true );
+				wp_enqueue_script( $view_script_handle );
+				wp_script_add_data( $view_script_handle, 'group', 1 );
 			}
 		}
 	);
