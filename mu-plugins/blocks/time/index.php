@@ -1,7 +1,8 @@
 <?php
 /**
  * Format Name: Time
- * Description: Attempts to parse a time string like <code>Tuesday, April 5th 2022, at 15:00 UTC</code> and creates a format that shows it in the viewers local time zone.
+ * Description: Attempts to parse a time string like 'Tuesday, April 5th, at 15:00 UTC' relative to the post date,
+ * and creates a format that shows it in the viewer's local time zone.
  *
  * @package wporg
  */
