@@ -75,6 +75,6 @@ function convertTimes() {
 	} );
 }
 
-document.addEventListener( 'DOMContentLoaded', () => {
+window.onload = () => {
 	convertTimes();
-} );
+};
