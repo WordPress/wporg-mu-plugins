@@ -40,4 +40,25 @@ function init() {
 			}
 		}
 	);
+
+	add_filter( 'wp_kses_allowed_html', __NAMESPACE__ . '\add_time_to_allowed_html', 10, 2 );
+}
+
+/**
+ * Adds the `time` tag to the allowed HTML tags for the block editor.
+ *
+ * @param array  $allowed_tags Allowed tags, attributes, and/or entities.
+ * @param string $context      Context to judge allowed tags by.
+ * @return array Allowed tags, attributes, and/or entities.
+ */
+function add_time_to_allowed_html( $allowed_tags, $context ) {
+	if ( 'post' === $context ) {
+		$allowed_tags['time'] = array(
+			'class'    => true,
+			'data-iso' => true,
+			'datetime' => true,
+		);
+	}
+
+	return $allowed_tags;
 }
