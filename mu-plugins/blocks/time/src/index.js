@@ -60,12 +60,15 @@ const Edit = ( { isActive, onChange, value } ) => {
 					return;
 				}
 
+				const datetime = gmdate( 'c', time );
+				const datetimeISO = gmdate( 'Ymd\\THi', time );
+
 				onChange(
 					toggleFormat( value, {
 						type: name,
 						attributes: {
-							datetime: gmdate( 'c', time ),
-							'data-iso': gmdate( 'Ymd\\THi', time ),
+							datetime: datetime,
+							'data-iso': datetimeISO,
 						},
 					} )
 				);
