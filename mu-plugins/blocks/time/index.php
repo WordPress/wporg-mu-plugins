@@ -21,17 +21,19 @@ function init() {
 	$metadata = wp_json_file_decode( $metadata_file, array( 'associative' => true ) );
 	$metadata['file'] = $metadata_file;
 
-	$editor_script_handle = register_block_script_handle( $metadata, 'editorScript', 0 );
+	$editor_script_handle = register_block_script_handle( $metadata, 'editorScript' );
+	$style_handle = register_block_style_handle( $metadata, 'style' );
 	add_action(
 		'enqueue_block_assets',
-		function() use ( $editor_script_handle ) {
+		function() use ( $editor_script_handle, $style_handle ) {
 			if ( wp_should_load_block_editor_scripts_and_styles() && is_admin() ) {
 				wp_enqueue_script( $editor_script_handle );
+				wp_enqueue_style( $style_handle );
 			}
 		}
 	);
 
-	$view_script_handle = register_block_script_handle( $metadata, 'viewScript', 0 );
+	$view_script_handle = register_block_script_handle( $metadata, 'viewScript' );
 	add_action(
 		'wp_enqueue_scripts',
 		function() use ( $view_script_handle ) {
