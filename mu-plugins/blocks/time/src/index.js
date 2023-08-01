@@ -3,7 +3,7 @@
  */
 import { useSelect } from '@wordpress/data';
 import { RichTextToolbarButton } from '@wordpress/block-editor';
-import { useCallback } from '@wordpress/element';
+import { useCallback, useEffect, useRef } from '@wordpress/element';
 import { getTextContent, registerFormatType, slice, toggleFormat } from '@wordpress/rich-text';
 
 /**
@@ -18,8 +18,25 @@ import metadata from './block.json';
 
 const { name, icon, title } = metadata;
 
+// Return the first time description from the content, if present.
+const getTimeFromContent = ( content ) => {
+	const tempElement = document.createElement( 'div' );
+	tempElement.innerHTML = content;
+
+	const wporgTimeElement = tempElement.querySelector( '.wporg-time' );
+
+	return wporgTimeElement ? wporgTimeElement.textContent : null;
+};
+
 const Edit = ( { isActive, onChange, value } ) => {
 	const { date_gmt } = useSelect( ( select ) => select( 'core/editor' ).getCurrentPost() );
+	const {
+		attributes: { content },
+	} = useSelect( ( select ) => {
+		return select( 'core/block-editor' ).getSelectedBlock();
+	}, [] );
+	const nextTime = getTimeFromContent( content );
+	const timeRef = useRef( nextTime );
 
 	const toggleWithoutEnhancing = useCallback( () => {
 		onChange(
@@ -28,6 +45,15 @@ const Edit = ( { isActive, onChange, value } ) => {
 			} )
 		);
 	} );
+
+	// If the timeRef description changes, toggle the format off.
+	useEffect( () => {
+		if ( timeRef.current && nextTime && timeRef.current !== nextTime ) {
+			toggleWithoutEnhancing();
+		}
+
+		timeRef.current = nextTime;
+	}, [ nextTime, timeRef ] );
 
 	return (
 		<RichTextToolbarButton
