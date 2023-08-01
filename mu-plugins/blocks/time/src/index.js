@@ -4,7 +4,7 @@
 import { useSelect } from '@wordpress/data';
 import { RichTextToolbarButton } from '@wordpress/block-editor';
 import { useCallback, useEffect, useRef } from '@wordpress/element';
-import { getTextContent, registerFormatType, slice, toggleFormat } from '@wordpress/rich-text';
+import { getTextContent, registerFormatType, removeFormat, slice, toggleFormat } from '@wordpress/rich-text';
 
 /**
  * External dependencies
@@ -18,25 +18,23 @@ import metadata from './block.json';
 
 const { name, icon, title } = metadata;
 
-// Return the first time description from the content, if present.
-const getTimeFromContent = ( content ) => {
+// Find all the time elements in the block content, and return their text content as an array.
+const getTimesFromContent = ( content ) => {
 	const tempElement = document.createElement( 'div' );
 	tempElement.innerHTML = content;
 
-	const wporgTimeElement = tempElement.querySelector( '.wporg-time' );
+	const timeElements = tempElement.querySelectorAll( '.wporg-time' );
 
-	return wporgTimeElement ? wporgTimeElement.textContent : null;
+	return timeElements.length ? Array.from( timeElements ).map( ( timeElement ) => timeElement.textContent ) : [];
 };
 
 const Edit = ( { isActive, onChange, value } ) => {
 	const { date_gmt } = useSelect( ( select ) => select( 'core/editor' ).getCurrentPost() );
 	const {
 		attributes: { content },
-	} = useSelect( ( select ) => {
-		return select( 'core/block-editor' ).getSelectedBlock();
-	}, [] );
-	const nextTime = getTimeFromContent( content );
-	const timeRef = useRef( nextTime );
+	} = useSelect( ( select ) => select( 'core/block-editor' ).getSelectedBlock() );
+
+	const timesRef = useRef( [] );
 
 	const toggleWithoutEnhancing = useCallback( () => {
 		onChange(
@@ -46,14 +44,37 @@ const Edit = ( { isActive, onChange, value } ) => {
 		);
 	} );
 
-	// If the timeRef description changes, toggle the format off.
+	// If any of the times change, toggle the format off for that time.
 	useEffect( () => {
-		if ( timeRef.current && nextTime && timeRef.current !== nextTime ) {
-			toggleWithoutEnhancing();
+		const nextTimes = getTimesFromContent( content );
+
+		// If next and previous times are not the same length,
+		// then a format has been added or removed and we can skip comparison.
+		if ( nextTimes.length !== timesRef.current.length ) {
+			timesRef.current = nextTimes;
+			return;
 		}
 
-		timeRef.current = nextTime;
-	}, [ nextTime, timeRef ] );
+		let index = 0;
+		while ( index < nextTimes.length ) {
+			const nextTime = nextTimes[ index ];
+
+			if ( timesRef.current[ index ] !== nextTime ) {
+				// find the start and end point of nextTime in the text
+				const start = value.text.indexOf( nextTime );
+				const end = start + nextTime.length;
+
+				onChange( removeFormat( value, name, start, end ) );
+
+				// exit to rerun this effect with the new times
+				break;
+			}
+
+			index++;
+		}
+
+		timesRef.current = nextTimes;
+	}, [ content, timesRef ] );
 
 	return (
 		<RichTextToolbarButton
