@@ -116,7 +116,7 @@ class Site_Quality_Controller extends WP_REST_Controller {
 		if ( empty( $body ) ) {
 			return new \WP_Error(
 				'rest_error_site_quality',
-				__( 'Content was empty.', 'wporg' ),
+				'Content was empty.',
 				array( 'status' => \WP_Http::INTERNAL_SERVER_ERROR )
 			);
 		}
@@ -130,7 +130,7 @@ class Site_Quality_Controller extends WP_REST_Controller {
 				if ( false === $result ) {
 					return new \WP_Error(
 						'rest_error_site_quality_save',
-						__( 'An error occurred.', 'wporg' ),
+						'An error occurred.',
 						array( 'status' => \WP_Http::INTERNAL_SERVER_ERROR )
 					);
 				}
