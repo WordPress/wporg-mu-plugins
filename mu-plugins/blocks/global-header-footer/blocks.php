@@ -443,6 +443,11 @@ function get_global_menu_items() {
 					'type'  => 'custom',
 				),
 				array(
+					'title' => esc_html_x( 'Blocks', 'Menu item title', 'wporg' ),
+					'url'   => 'https://wordpress.org/blocks/',
+					'type'  => 'custom',
+				),
+				array(
 					'title' => esc_html_x( 'Mobile', 'Menu item title', 'wporg' ),
 					'url'   => 'https://wordpress.org/mobile/',
 					'type'  => 'custom',
