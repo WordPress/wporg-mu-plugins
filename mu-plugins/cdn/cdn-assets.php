@@ -27,21 +27,26 @@ function with_filemtime_cachebuster( $link, $handle = '' ) {
 		return $link;
 	}
 
-	// Profiles is hosted on BuddyPress, which is not available via the CDN.
-	if ( 'profiles.wordpress.org' === $hostname ) {
+	// Several sites are hosted on other Multisites, which are not available via this CDN.
+	$other_networks = [
+		'profiles.wordpress.org',
+		'events.wordpress.org',
+	];
+	if ( in_array( $hostname, $other_networks, true ) {
 		return $link;
 	}
 
 	$url_args     = [];
 	// Trim the scheme & hostname off.
 	$relative_url = preg_replace( '!^(\w+:)?//[^/]+/!', '', $link );
-	// Trim any sub-site path off.
+
+	// Trim any sub-site path off - We only use single-depth on WordPress.org at present.
 	$relative_url = preg_replace( '!^[^/]+/(wp-(?:content|includes|admin)/)!', '$1', $relative_url );
 
 	if ( str_contains( $relative_url, '?' ) ) {
 		list( $filepath, $url_part_args ) = explode( '?', $relative_url, 2 );
 
-		parse_str( $url_part_args, $url_args );
+		wp_parse_str( $url_part_args, $url_args );
 	} else {
 		$filepath = $relative_url;
 		// No `$url_args` here.
@@ -62,7 +67,7 @@ function with_filemtime_cachebuster( $link, $handle = '' ) {
 
 	// Set the version to the file modification time, for consistency.
 	$version = false;
-	if ( ! is_timestamp( $url_args['ver'] ) ) {
+	if ( ! is_timestamp( $url_args['ver'] ) && file_exists( ABSPATH . $filepath ) ) {
 		$version = filemtime( ABSPATH . $filepath );
 	}
 	if ( ! $version ) {
