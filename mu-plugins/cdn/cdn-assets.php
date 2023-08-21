@@ -6,7 +6,7 @@ namespace WordPressdotorg\MU_Plugins\CDN;
  *
  * This only applies to assets which are:
  *  - Is a *wordpress.org domain. This ensures that Local environments and other W.org hosted domains are not affected.
- *  - Is NOT profiles.wordpress.org. This site does not use the same docroot as the rest of wordpress.org.
+ *  - Is NOT profiles.wordpress.org, or events.wordpress.org. These sites are not hoted in the same docroot as the rest of wordpress.org.
  *  - Only applies to URLs which already include ?ver= cache-busters, and do NOT contain other parameters.
  *
  * In CDN'ing, there's a few specific changes made:
