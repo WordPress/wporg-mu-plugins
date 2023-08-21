@@ -74,17 +74,8 @@ function with_filemtime_cachebuster( $link, $handle = '' ) {
 		$version = $url_args['ver'];
 	}
 
-	$is_production = ( 'production' === wp_get_environment_type() );
-
-	// Chunk the cache buster on a ~2 minute rolling window.
-	// This allows for the production deploy process taking a few minutes, setting different modification times on different servers.
-	if ( $is_production && is_timestamp( $version ) ) {
-		$window  = 2 * MINUTE_IN_SECONDS;
-		$version = floor( $version / $window ) * $window;
-	}
-
 	// CDN is used in production by default.
-	$use_cdn = $is_production;
+	$use_cdn = ( 'production' === wp_get_environment_type() );
 
 	// Allow other environments to opt-in via constant.
 	if ( defined( 'USE_WPORG_CDN' ) && USE_WPORG_CDN ) {
