@@ -11,9 +11,11 @@ namespace WordPressdotorg\MU_Plugins\CDN;
  *
  * In CDN'ing, there's a few specific changes made:
  *  - ver= is always changed to the filemtime of the asset (if not already), for consistent and easy cache-busting.
- *  - Caches are chunked into two-minute windows, to avoid slight time differences between servers using different cache keys.
  *  - assets are shared between sites, all use s.w.org/* instead of wordpress.org/wp-includes/* or wordpress.org/plugins/wp-includes/*.
  *  - non-production wp_get_envionment_type() skips CDN'isation.
+ *  - During a deploy, any file that has recently been modified temporarily uses a different cache buster until the deploy is finished.
+ *    This avoids scenario's where a web-node references a newer version of the file, but the subsequent request is served by a node
+ *    which hasn't yet got that new version of the file, which would then otherwise be cached by the CDN with the new version identifier.
  *
  * @param string $link   The non-CDNised URL.
  * @param string $handle The asset handle, used to skip certain assets.
@@ -72,6 +74,19 @@ function with_filemtime_cachebuster( $link, $handle = '' ) {
 	}
 	if ( ! $version ) {
 		$version = $url_args['ver'];
+	}
+
+	// While a deploy is occuring, use a mid-deploy version for recently modified files.
+	wp_cache_add_global_groups( 'wporg_deploy' );
+	$is_mid_deploy = wp_cache_get( 'is_mid_deploy', 'wporg_deploy', false, $found );
+	if (
+		$found &&
+		$is_mid_deploy &&
+		is_timestamp( $version ) &&
+		// .. and cache buster version is a recent timestamp, older assets can re-use existing caches
+		$version > ( time() - HOUR_IN_SECONDS )
+	) {
+		$version .= '-mid';
 	}
 
 	// CDN is used in production by default.
