@@ -22,13 +22,11 @@ function init() {
 	$metadata['file'] = $metadata_file;
 
 	$editor_script_handle = register_block_script_handle( $metadata, 'editorScript' );
-	$style_handle = register_block_style_handle( $metadata, 'style' );
 	add_action(
 		'enqueue_block_assets',
-		function() use ( $editor_script_handle, $style_handle ) {
+		function() use ( $editor_script_handle ) {
 			if ( wp_should_load_block_editor_scripts_and_styles() && is_admin() ) {
 				wp_enqueue_script( $editor_script_handle );
-				wp_enqueue_style( $style_handle );
 			}
 		}
 	);

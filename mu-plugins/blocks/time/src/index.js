@@ -96,8 +96,10 @@ const Edit = ( { isActive, onChange, value } ) => {
 				// strtotime understands "GMT" better than "UTC" for timezones.
 				dateCleaned.replace( 'UTC', 'GMT' );
 
-				// Try to parse the time, relative to the post time.
-				const postTimestamp = strtotime( date_gmt );
+				// Try to parse the time, relative to the post time, if available
+				// In the Site Editor the post time is not available, so we'll just use the current time.
+				// TODO: https://github.com/WordPress/wporg-mu-plugins/issues/422
+				const postTimestamp = !! date_gmt ? strtotime( date_gmt ) : undefined;
 				const time = strtotime( dateCleaned, postTimestamp );
 
 				// If that didn't work, give up.
@@ -116,6 +118,7 @@ const Edit = ( { isActive, onChange, value } ) => {
 						attributes: {
 							datetime: datetime,
 							'data-iso': datetimeISO,
+							style: 'text-decoration: underline dotted',
 						},
 					} )
 				);

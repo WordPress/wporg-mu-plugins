@@ -8,7 +8,6 @@
 	"description": "Attempts to parse a time string like 'Tuesday, April 5th, at 15:00 UTC' relative to the post date, and creates a format that shows it in the viewer's local time zone.",
 	"textdomain": "wporg",
 	"editorScript": "file:./index.js",
-	"style": "file:./style.css",
 	"viewScript": "file:./view.js",
 	"attributes": {
 		"datetime": {
@@ -16,6 +15,10 @@
 			"default": ""
 		},
 		"data-iso": {
+			"type": "string",
+			"default": ""
+		},
+		"style": {
 			"type": "string",
 			"default": ""
 		}
