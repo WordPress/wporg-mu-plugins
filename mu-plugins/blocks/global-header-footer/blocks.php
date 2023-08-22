@@ -181,6 +181,10 @@ function enqueue_compat_wp4_styles() {
 		return;
 	}
 
+	if ( defined( 'IS_WORDCAMP_NETWORK' ) ) {
+		return;
+	}
+
 	if (
 		( ! wp_is_block_theme() && ! current_theme_supports( 'wp4-styles' ) ) ||
 		( defined( 'REST_REQUEST' ) && REST_REQUEST )
