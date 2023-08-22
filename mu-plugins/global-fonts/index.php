@@ -41,9 +41,19 @@ function relative_to_absolute_urls( $editor_settings ) {
 	}
 
 	foreach ( $editor_settings['styles'] as $i => $style ) {
-		if ( str_contains( $style['css'], './Inter' ) || str_contains( $style['css'], './EB-Garamond' ) ) {
-			$url = plugins_url( '', __FILE__ );
-			$style['css'] = str_replace( 'url(./', "url($url/", $style['css'] );
+		if (
+			str_contains( $style['css'], './Inter' ) ||
+			str_contains( $style['css'], './EB-Garamond' ) ||
+			str_contains( $style['css'], './CourierPrime' ) ||
+			str_contains( $style['css'], './IBMPlexMono' )
+		) {
+			$style['css'] = preg_replace_callback(
+				'!url\(./(?P<path>[^)]+)\)!i',
+				function( $m ) {
+					return "url(" . plugins_url( $m['path'], __FILE__ ) . ")";
+				}
+			);
+
 			$editor_settings['styles'][ $i ] = $style;
 		}
 	}
