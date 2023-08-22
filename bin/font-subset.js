@@ -10,12 +10,23 @@
  * 4. Change the fontFileName, fontWeight and fontFamily etc. accroding to the font you use in this script.
  * 5. npm run font-subset.
  * 6. Copy subsetting files and css styles to where they should be placed.
- * 7. remove output and fonts.
- * 8. Remove {"type": "module"} from package.json or the linter would prompt an error.
+ * 7. Copy php versions from CLI output to global-fonts/index.php:get_font_url()
+ * 8. remove output and fonts.
+ * 9. Remove {"type": "module"} from package.json or the linter would prompt an error.
  */
 import { spawn } from 'child_process';
 import path from 'path';
-import { renameSync, writeFile } from 'fs';
+import { existsSync, renameSync, readFileSync, writeFile } from 'fs';
+import { createHash } from 'crypto';
+
+function generateHash( filename ) {
+	filename = path.join( __dirname, `output/${ filename }` )
+	/*
+	 * Magic Number 12, See get_file_hash()
+	 * https://github.com/WordPress/wporg-mu-plugins/blob/trunk/mu-plugins/cdn/assets.php
+	 */
+	return createHash('sha1').update( readFileSync( filename ), 'binary').digest('hex').substring( 0, 12 );
+}
 
 const alphabets = [
 	{
@@ -84,22 +95,33 @@ for ( const alphabet of alphabets ) {
 	} );
 }
 
-let cssCode = '';
+let cssCode = '',
+	phpVersions = [];
 
 // Create our font face rules
 // This would need to be modified for other weights and styles
 alphabets.forEach( ( alphabet ) => {
+	let filename = `${ fontFileName }-${ alphabet.name }.woff2`;
+
+	if ( ! existsSync( filename ) ) {
+		return;
+	}
+
+	let hash = generateHash( filename );
+
+	phpVersions.push( `'${ alphabet.name }' => '${ hash }'` );
+
 	cssCode += `
 	/* ${ alphabet.name } */
-    @font-face {
+	@font-face {
 		font-family: ${ fontFamily };
 		font-weight: ${ fontWeight };
 		font-style: ${ fontStyle };
-      	font-display: swap;
-      	src: url(./${ fontFinalDir }/${ fontFileName }-${ alphabet.name }.woff2) format("woff2");
-      	unicode-range: ${ alphabet.unicodeRange };
-    }
-  `;
+		font-display: swap;
+		src: url(./${ fontFinalDir }/${ filename }?ver=${ hash }) format("woff2");
+		unicode-range: ${ alphabet.unicodeRange };
+	}
+	`;
 } );
 
 // Determine where to save our file
@@ -115,5 +137,6 @@ ${ cssCode }
 	{},
 	() => {
 		console.log( 'CSS file written to:', cssPath );
+		console.log( 'Font versions for global-fonts/index.php: [ ', phpVersions.join(', '), ' ]' );
 	}
 );
