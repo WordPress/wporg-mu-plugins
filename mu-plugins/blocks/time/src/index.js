@@ -118,7 +118,7 @@ const Edit = ( { isActive, onChange, value } ) => {
 						attributes: {
 							datetime: datetime,
 							'data-iso': datetimeISO,
-							style: 'text-decoration: underline dotted',
+							style: 'text-decoration: underline; text-decoration-style: dotted',
 						},
 					} )
 				);

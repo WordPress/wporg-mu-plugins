@@ -64,6 +64,7 @@ function convertTimes() {
 			dateElement.removeAttribute( 'data-iso' );
 			// Remove the dotted underline style applied for the editor only
 			dateElement.style.textDecoration = '';
+			dateElement.style.textDecorationStyle = '';
 
 			const linkElement = document.createElement( 'a' );
 			linkElement.setAttribute(
