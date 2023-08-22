@@ -10,9 +10,8 @@
  * 4. Change the fontFileName, fontWeight and fontFamily etc. accroding to the font you use in this script.
  * 5. npm run font-subset.
  * 6. Copy subsetting files and css styles to where they should be placed.
- * 7. Copy php versions from CLI output to global-fonts/index.php:get_font_url()
- * 8. remove output and fonts.
- * 9. Remove {"type": "module"} from package.json or the linter would prompt an error.
+ * 7. remove output and fonts.
+ * 8. Remove {"type": "module"} from package.json or the linter would prompt an error.
  */
 import { spawn } from 'child_process';
 import path from 'path';
@@ -95,8 +94,7 @@ for ( const alphabet of alphabets ) {
 	} );
 }
 
-let cssCode = '',
-	phpVersions = [];
+let cssCode = '';
 
 // Create our font face rules
 // This would need to be modified for other weights and styles
@@ -108,8 +106,6 @@ alphabets.forEach( ( alphabet ) => {
 	}
 
 	let hash = generateHash( filename );
-
-	phpVersions.push( `'${ alphabet.name }' => '${ hash }'` );
 
 	cssCode += `
 	/* ${ alphabet.name } */
@@ -137,6 +133,5 @@ ${ cssCode }
 	{},
 	() => {
 		console.log( 'CSS file written to:', cssPath );
-		console.log( 'Font versions for global-fonts/index.php: [ ', phpVersions.join(', '), ' ]' );
 	}
 );
