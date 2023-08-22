@@ -16,16 +16,6 @@ defined( 'WPINC' ) || die();
 		<meta charset="<?php bloginfo( 'charset' ); ?>" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-		<!--
-		  Output the FSE styles that the header/footer relies on.
-
-		  Some of them may conflict with rules that the Classic theme applies to the content area. These are
-		  output first, so they can be overridden if needed.
-		-->
-		<style id="global-styles-for-classic-themes">
-			<?php echo get_global_styles(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-		</style>
-
 		<?php
 
 		wp_head();
@@ -45,5 +35,5 @@ defined( 'WPINC' ) || die();
 		?>
 	</head>
 
-	<body <?php body_class(); ?>>
+	<body <?php body_class( 'is-classic-theme' ); ?>>
 		<?php wp_body_open();

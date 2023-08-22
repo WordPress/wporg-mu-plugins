@@ -3,26 +3,31 @@
  */
 
 .wp-block-group.global-header {
-	/* This is the `a` on desktop, and the containing `li` on mobile. */
-	& .global-header__get-wordpress {
-		background-color: var(--wp--preset--color--blue-1) !important; /* Override Gutenberg's !important */
-		color: var(--wp--preset--color--white);
+	& .global-header__desktop-get-wordpress,
+	& .global-header__mobile-get-wordpress a {
+		background-color: var(--wp--preset--color--blueberry-1) !important; /* Override Gutenberg's !important */
+		color: var(--wp--preset--color--white) !important; /* Override the header color scheme */
 		padding: 10px 19px;
 		border-radius: 2px;
 		font-weight: 700;
+		font-size: var(--wp--preset--font-size--small);
 
 		&:hover {
 			cursor: pointer;
-			background-color: var(--wp--preset--color--blue-2) !important; /* Override Gutenberg's !important */
+			background-color: var(--wp--preset--color--deep-blueberry) !important; /* Override Gutenberg's !important */
 		}
 
 		&:active {
-			background-color: var(--wp--preset--color--black) !important; /* Override Gutenberg's !important */
-			border: 1px dashed var(--wp--preset--color--white);
+			background-color: var(--wp--preset--color--charcoal-1) !important; /* Override Gutenberg's !important */
+			border-color: var(--wp--preset--color--white);
 		}
 
-		&:focus {
-			border: 1px dashed var(--wp--preset--color--white);
+		&:focus,
+		&:focus-visible,
+		&:focus-within {
+			outline: none;
+			border-radius: 2px;
+			box-shadow: 0 0 0 1.5px var(--wp-global-header--link-color--active);
 		}
 	}
 
@@ -49,22 +54,15 @@
 
 	/* Mobile - `li` containing `a` */
 	& .wp-block-navigation__container .wp-block-navigation-item.global-header__mobile-get-wordpress {
-		padding: var(--wp--style--block-gap) 65px;
-		margin: 57px var(--wp--style--block-gap) 0 var(--wp--style--block-gap);
-		width: calc(100% - var(--wp--style--block-gap) - var(--wp--style--block-gap));
-		text-align: center;
+		margin-top: calc(var(--wp--style--block-gap) / 2);
+		margin-left: calc(var(--wp--style--block-gap) / 2);
+
+		& a {
+			padding: 10px 19px;
+		}
 
 		@media (--tablet) {
 			display: none;
-		}
-
-		& a {
-			margin: 0 auto;
-			padding: 0;
-
-			&:hover {
-				background-color: unset;
-			}
 		}
 	}
 }

@@ -1,4 +1,4 @@
-.wp-block-group.global-footer [class*="wp-container-"].global-footer__logos-container {
+.wp-block-group.global-footer .global-footer__logos-container {
 	position: relative;
 	display: flex;
 	flex-wrap: wrap;
@@ -12,7 +12,7 @@
 	& .global-footer__wporg-logo-full,
 	& .global-footer__wporg-logo-mark {
 		& a {
-			color: var(--wp--preset--color--white);
+			color: var(--wp-global-header--text-color);
 		}
 
 		& svg {
@@ -48,6 +48,8 @@
 
 		@media (--tablet) {
 			display: inline;
+			position: relative;
+			top: -2px; /* Align baseline of "wordpress.org" with baseline of "code is poetry". */
 			margin-bottom: 0;
 		}
 	}
@@ -96,14 +98,7 @@
 				width: 188px;
 				height: 13px;
 				left: calc(50% - (188px / 2)); /* Align horizontally. Width must match width of the image. */
-
-				/*
-				 * Align vertically with W logo and social links.
-				 * This is intentionally not the exact center, since that wouldn't appear perfectly aligned to
-				 * the human eye. It needs to be a little off-center to appear centered.
-				 * Must match the height of the image.
-				 */
-				top: calc(13px / 1.5);
+				top: 6px; /* Align baseline of "code is poetry" with "wordpress.org" logo. */
 			}
 		}
 	}
@@ -115,7 +110,7 @@
 		margin-bottom: 0;
 		font-family: serif; /* MrsEaves doesn't support non-latin characters well. */
 		font-size: 20px;
-		color: #4f5357;
+		color: rgba(255, 255, 255, 0.25);
 		text-transform: uppercase;
 		letter-spacing: 0.1em;
 
@@ -123,5 +118,11 @@
 			margin-top: 0;
 			text-align: center;
 		}
+	}
+}
+
+.wp-block-group.global-footer {
+	&.has-white-background-color span.global-footer__code_is_poetry {
+		color: #8f8f8f;
 	}
 }

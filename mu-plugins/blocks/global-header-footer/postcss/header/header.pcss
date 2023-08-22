@@ -15,6 +15,8 @@ html {
 	align-items: flex-start;
 	font-size: 21px;
 	height: var(--wp-global-header-height);
+	padding: 0;
+	box-sizing: content-box; /* Don't include border in header height. */
 
 	/*
 	 * Some themes set a `z-index` on content elements that follow the header, like `#masthead` in
@@ -52,7 +54,7 @@ html {
 		& .wp-block-navigation__responsive-container-open {
 
 			/* Magic numbers to center the 24px icon in 60px height. */
-			padding: 18px var(--wp--style--block-gap) 18px;
+			padding: 18px 16px 18px;
 
 			@media (--tablet) {
 				padding-top: 37px;
@@ -80,13 +82,57 @@ html {
 	& .wp-block-navigation__responsive-container-close {
 		position: fixed;
 		right: 0;
-		top: var(--wp-admin--admin-bar--height, 0);
+		top: calc(-1 * var(--wp-global-header-height));
 		padding-top: 18px; /* Magic numbers to center the 24px icon in 60px height. */
-		padding-right: calc(var(--wp--style--block-gap) + var(--wp--custom--alignment--scroll-bar-width));
-		padding-bottom: 28px; /* Magic numbers to center the 24px icon in 60px height. */
-		padding-left: var(--wp--style--block-gap);
-		background-color: var(--wp--preset--color--darker-grey);
+		padding-right: calc(16px + var(--wp--custom--alignment--scroll-bar-width));
+		padding-bottom: 18px; /* Magic numbers to center the 24px icon in 60px height. */
+		padding-left: 16px;
+		background-color: var(--wp-global-header--background-color--hover);
 	}
+}
+
+.global-header__alert-banner {
+	--wp-global-header--link-color: var(--wp--preset--color--blueberry-1);
+
+	background-color: var(--wp--preset--color--blueberry-4);
+	color: var(--wp--preset--color--charcoal-1);
+	font-size: 12px;
+	line-height: 1.2;
+	text-align: center;
+	margin: 0;
+	padding: 10px 20px;
+
+	& p {
+		color: inherit; /* Override some Classic themes. */
+
+		&:first-child {
+			margin-top: 0;
+		}
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	& a:hover,
+	& a:focus {
+
+		/* !important is needed because the build process wraps some of the selectors in `_common.pcss` in an
+		 * `:is()` pseudo-class, which increases their specificity.
+		 */
+		color: var(--wp-global-header--link-color) !important;
+	}
+}
+
+/*
+ * Gutenberg Patches
+ *
+ * See: https://github.com/WordPress/wporg-mu-plugins/issues/216
+ */
+
+.has-modal-open .admin-bar .wp-block-navigation__responsive-dialog,
+.wp-block-group.global-header .has-modal-open .wp-block-navigation__responsive-dialog {
+	margin-top: 0;
 }
 
 @media (--short-screen) {
