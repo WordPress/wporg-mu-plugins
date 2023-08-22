@@ -64,5 +64,7 @@
 			"selector-class-pattern": null
 		}
 	},
-	"dependencies": {}
+	"dependencies": {
+		"locutus": "^2.0.16"
+	}
 }
