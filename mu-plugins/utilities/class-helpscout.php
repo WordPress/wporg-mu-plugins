@@ -123,12 +123,8 @@ class HelpScout {
 		while ( ! empty( $api->_links->next->href ) ) {
 			$api = $this->get( $api->_links->next->href );
 
-			if ( is_array( $api->_embedded ) ) {
-				
-			} else {
-				foreach ( $api->_embedded as $field => $value ) {
-					$response->_embedded->$field = array_merge( $response->_embedded->$field, $value );
-				}
+			foreach ( $api->_embedded as $field => $value ) {
+				$response->_embedded->$field = array_merge( $response->_embedded->$field, $value );
 			}
 		}
 
