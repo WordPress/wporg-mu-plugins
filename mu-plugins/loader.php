@@ -45,4 +45,4 @@ require_once __DIR__ . '/skip-to/skip-to.php';
 require_once __DIR__ . '/db-user-sessions/index.php';
 require_once __DIR__ . '/encryption/index.php';
 require_once __DIR__ . '/admin/index.php';
-require_once __DIR__ . '/cdn/cdn-assets.php';
+require_once __DIR__ . '/cdn/assets.php';
