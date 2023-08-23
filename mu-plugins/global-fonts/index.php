@@ -51,7 +51,8 @@ function relative_to_absolute_urls( $editor_settings ) {
 				'!url\(./(?P<path>[^)]+)\)!i',
 				function( $m ) {
 					return "url(" . plugins_url( $m['path'], __FILE__ ) . ")";
-				}
+				},
+				$style['css']
 			);
 
 			$editor_settings['styles'][ $i ] = $style;
