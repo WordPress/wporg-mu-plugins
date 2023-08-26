@@ -65,6 +65,8 @@
 		}
 	},
 	"dependencies": {
+		"@googlemaps/markerclusterer": "^2.4.0",
+		"google-map-react": "^2.2.1",
 		"locutus": "^2.0.16"
 	}
 }
