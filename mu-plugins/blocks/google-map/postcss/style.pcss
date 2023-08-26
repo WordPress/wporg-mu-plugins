@@ -1,0 +1,23 @@
+/*
+ * These are foundational styles that provide a reasonable default for any theme.
+ */
+
+.wp-block-wporg-google-map {
+	position: relative;
+	width: 100%;
+	max-width: 100%;
+	background-color: #aadaff;
+
+	/*
+	 * This is a bit too opinionated, but it's required to prevent the map from collapsing. The theme can override it when needed.
+	 * @link https://developers.google.com/maps/documentation/javascript/overview#Map_DOM_Elements
+	 */
+	height: clamp(200px, 50vh, 90vh);
+
+	@media screen and ( max-width: 385px ) {
+		width: 100vw;
+
+		/* Make sure there's enough room to scroll past it using mobile gestures. */
+		max-height: 90vh;
+	}
+}
