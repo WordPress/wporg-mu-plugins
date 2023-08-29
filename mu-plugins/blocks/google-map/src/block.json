@@ -19,6 +19,15 @@
 		"markers": {
 			"type": "array",
 			"default": []
+		},
+		"showMap": {
+			"type": "boolean",
+			"default": true
+		},
+		"showList": {
+			"type": "boolean",
+			"default": true
+		},
 		}
 	},
 	"supports": {
