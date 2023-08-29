@@ -2,6 +2,7 @@
  * Internal dependencies
  */
 import { getEventDateTime } from '../utilities/date-time';
+import { formatLocation } from '../utilities/content';
 
 /**
  * Render the content for a map marker.
@@ -80,19 +81,4 @@ function MeetupMarker( { id, title, url, meetup, timestamp, location } ) {
 			<p className="wporg-map-marker__date-time">{ getEventDateTime( timestamp ) }</p>
 		</div>
 	);
-}
-
-/**
- * Format the `online` location type for display.
- *
- * @param {string} location
- *
- * @return {string}
- */
-function formatLocation( location ) {
-	if ( 'online' === location ) {
-		location = 'Online';
-	}
-
-	return location;
 }

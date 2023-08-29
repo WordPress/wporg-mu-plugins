@@ -1,6 +1,6 @@
 # Google Map
 
-Displays a Google Map with markers for each event. Markers will be clustered for performance and UX.
+Displays a Google Map with markers for each event. Markers will be clustered for performance and UX. Optionally, show a list of the same events, and a search feature.
 
 Currently only supports programmatic usage in block theme templates etc. There's no UI available for adding markers.
 

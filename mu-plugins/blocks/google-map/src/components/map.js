@@ -44,7 +44,7 @@ export default function Map( { apiKey, markers, icon } ) {
 
 	return (
 		// Container height must be set explicitly.
-		<>
+		<div className="wporg-google-map__container">
 			{ ! loaded && <Spinner /> }
 
 			<GoogleMapReact
@@ -58,6 +58,6 @@ export default function Map( { apiKey, markers, icon } ) {
 				onGoogleApiLoaded={ mapLoaded }
 				options={ options }
 			/>
-		</>
+		</div>
 	);
 }
