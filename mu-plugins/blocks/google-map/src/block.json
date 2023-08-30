@@ -28,6 +28,13 @@
 			"type": "boolean",
 			"default": true
 		},
+		"showSearch": {
+			"type": "boolean",
+			"default": true
+		},
+		"searchFields": {
+			"type": "array",
+			"default": [ "title", "location", "meetup" ]
 		}
 	},
 	"supports": {
