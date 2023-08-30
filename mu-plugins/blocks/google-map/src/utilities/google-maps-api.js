@@ -16,10 +16,10 @@ import getElementHTML from '../utilities/dom';
  *
  * Callback for `GoogleMapReact.onGoogleApiLoaded`.
  *
- * @param {Object} map
- * @param {Object} maps
- * @param {Array}  wpEvents
- * @param {Object} rawIcon
+ * @param {google.maps.Map} map
+ * @param {google.maps}     maps
+ * @param {Array}           wpEvents
+ * @param {Object}          rawIcon
  */
 export function createClusteredMarkers( map, maps, wpEvents, rawIcon ) {
 	if ( 'undefined' === typeof google || ! google.hasOwnProperty( 'maps' ) ) {
@@ -34,9 +34,9 @@ export function createClusteredMarkers( map, maps, wpEvents, rawIcon ) {
 
 	const icon = {
 		url: rawIcon.markerUrl,
-		size: new google.maps.Size( rawIcon.markerHeight, rawIcon.markerWidth ),
-		anchor: new google.maps.Point( 34, rawIcon.markerWidth / 2 ),
-		scaledSize: new google.maps.Size( rawIcon.markerHeight / 2, rawIcon.markerWidth / 2 ),
+		size: new maps.Size( rawIcon.markerHeight, rawIcon.markerWidth ),
+		anchor: new maps.Point( 34, rawIcon.markerWidth / 2 ),
+		scaledSize: new maps.Size( rawIcon.markerHeight / 2, rawIcon.markerWidth / 2 ),
 	};
 
 	wpEvents.forEach( ( wpEvent ) => {
@@ -62,10 +62,10 @@ export function createClusteredMarkers( map, maps, wpEvents, rawIcon ) {
  *
  * A single infoWindow is used for all markers, so that only one is open at a time.
  *
- * @param {Object} infoWindow
- * @param {Object} map
- * @param {Object} markerObject
- * @param {Object} rawMarker
+ * @param {google.maps.InfoWindow} infoWindow
+ * @param {google.maps.Map}        map
+ * @param {google.maps.Marker}     markerObject
+ * @param {Array}                  rawMarker
  */
 function openInfoWindow( infoWindow, map, markerObject, rawMarker ) {
 	infoWindow.setContent( getElementHTML( <MarkerContent { ...rawMarker } /> ) );
@@ -84,26 +84,27 @@ function openInfoWindow( infoWindow, map, markerObject, rawMarker ) {
 /**
  * Cluster the markers into groups for improved performance and UX.
  *
- * @param {Object} map
- * @param {Object} markers
- * @param {Object} rawIcon
+ * @param {google.maps.Map}      map
+ * @param {google.maps}          maps
+ * @param {google.maps.Marker[]} markers
+ * @param {Object}               rawIcon
  *
  * @return {MarkerClusterer}
  */
 function clusterMarkers( map, markers, rawIcon ) {
 	const clusterIcon = {
 		url: rawIcon.clusterUrl,
-		size: new google.maps.Size( rawIcon.clusterHeight, rawIcon.clusterWidth ),
-		anchor: new google.maps.Point( rawIcon.clusterHeight, rawIcon.clusterWidth ),
-		scaledSize: new google.maps.Size( rawIcon.clusterHeight, rawIcon.clusterWidth ),
+		size: new maps.Size( rawIcon.clusterHeight, rawIcon.clusterWidth ),
+		anchor: new maps.Point( rawIcon.clusterHeight, rawIcon.clusterWidth ),
+		scaledSize: new maps.Size( rawIcon.clusterHeight, rawIcon.clusterWidth ),
 	};
 
 	const renderer = {
 		render: ( { count, position } ) => {
-			return new google.maps.Marker( {
+			return new maps.Marker( {
 				label: { text: String( count ), color: 'white', fontSize: '10px' },
 				position: position,
-				zIndex: Number( google.maps.Marker.MAX_ZINDEX ) + count, // Show above normal markers.
+				zIndex: Number( maps.Marker.MAX_ZINDEX ) + count, // Show above normal markers.
 				icon: clusterIcon,
 			} );
 		},

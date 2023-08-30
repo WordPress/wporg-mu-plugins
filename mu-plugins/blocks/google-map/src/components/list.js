@@ -19,7 +19,7 @@ import { formatLocation } from '../utilities/content';
  */
 export default function List( { markers } ) {
 	if ( markers.length === 0 ) {
-		return <p className="wporg-marker-list__container">{ __( 'No items available', 'wporg' ) }</p>;
+		return <p className="wporg-marker-list__container">{ __( 'No events available', 'wporg' ) }</p>;
 	}
 
 	return (
