@@ -1,11 +1,6 @@
 /* global wporgGoogleMap */
 
 /**
- * External dependencies
- */
-import { pick } from 'lodash';
-
-/**
  * WordPress dependencies
  */
 import { createRoot } from '@wordpress/element';
@@ -13,8 +8,7 @@ import { createRoot } from '@wordpress/element';
 /**
  * Internal dependencies
  */
-import Map from './components/map';
-import List from './components/list';
+import Main from './components/main';
 
 const init = () => {
 	const wrapper = document.getElementById( wporgGoogleMap.id );
@@ -24,16 +18,8 @@ const init = () => {
 	}
 
 	const root = createRoot( wrapper );
-	const mapArgs = pick( wporgGoogleMap, [ 'apiKey', 'markers', 'icon' ] );
-	const listArgs = pick( wporgGoogleMap, [ 'markers' ] );
 
-	root.render(
-		<>
-			{ wporgGoogleMap.showMap && <Map { ...mapArgs } /> }
-
-			{ wporgGoogleMap.showList && <List { ...listArgs } /> }
-		</>
-	);
+	root.render( <Main { ...wporgGoogleMap } /> );
 };
 
 document.addEventListener( 'DOMContentLoaded', init );

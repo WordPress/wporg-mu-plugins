@@ -12,32 +12,26 @@ import MarkerContent from '../components/marker-content';
 import getElementHTML from '../utilities/dom';
 
 /**
- * Add markers and their info windows to the map.
+ * Create Marker objects and save to references to them on the corresponding event.
  *
- * Callback for `GoogleMapReact.onGoogleApiLoaded`.
+ * Creating the markers implicitly adds them to the map. The shared InfoWindow is assigned during creation.
  *
  * @param {google.maps.Map} map
  * @param {google.maps}     maps
  * @param {Array}           wpEvents
  * @param {Object}          rawIcon
  */
-export function createClusteredMarkers( map, maps, wpEvents, rawIcon ) {
-	if ( 'undefined' === typeof google || ! google.hasOwnProperty( 'maps' ) ) {
-		throw 'Google Maps library is not loaded';
-	}
-
-	const markers = [];
-
-	const infoWindow = new google.maps.InfoWindow( {
-		pixelOffset: new google.maps.Size( -rawIcon.markerIconAnchorXOffset, 0 ),
-	} );
-
+export function assignMarkerReferences( map, maps, wpEvents, rawIcon ) {
 	const icon = {
 		url: rawIcon.markerUrl,
 		size: new maps.Size( rawIcon.markerHeight, rawIcon.markerWidth ),
 		anchor: new maps.Point( 34, rawIcon.markerWidth / 2 ),
 		scaledSize: new maps.Size( rawIcon.markerHeight / 2, rawIcon.markerWidth / 2 ),
 	};
+
+	const infoWindow = new maps.InfoWindow( {
+		pixelOffset: new maps.Size( -rawIcon.markerIconAnchorXOffset, 0 ),
+	} );
 
 	wpEvents.forEach( ( wpEvent ) => {
 		const marker = new maps.Marker( {
@@ -49,12 +43,15 @@ export function createClusteredMarkers( map, maps, wpEvents, rawIcon ) {
 			icon: icon,
 		} );
 
-		marker.addListener( 'click', () => openInfoWindow( infoWindow, map, marker, wpEvent ) );
+		marker.addListener( 'click', () => {
+			openInfoWindow( infoWindow, map, marker, wpEvent );
+			panToCenter( [ marker ], map );
+		} );
 
-		markers.push( marker );
+		wpEvent.markerRef = marker;
 	} );
 
-	clusterMarkers( map, markers, rawIcon );
+	return wpEvents;
 }
 
 /**
@@ -70,15 +67,6 @@ export function createClusteredMarkers( map, maps, wpEvents, rawIcon ) {
 function openInfoWindow( infoWindow, map, markerObject, rawMarker ) {
 	infoWindow.setContent( getElementHTML( <MarkerContent { ...rawMarker } /> ) );
 	infoWindow.open( map, markerObject );
-
-	map.panTo(
-		{
-			lat: markerObject.position.lat(),
-			lng: markerObject.position.lng(),
-		},
-		1000,
-		google.maps.Animation.easeInOut
-	);
 }
 
 /**
@@ -91,7 +79,7 @@ function openInfoWindow( infoWindow, map, markerObject, rawMarker ) {
  *
  * @return {MarkerClusterer}
  */
-function clusterMarkers( map, markers, rawIcon ) {
+export function clusterMarkers( map, maps, markers, rawIcon ) {
 	const clusterIcon = {
 		url: rawIcon.clusterUrl,
 		size: new maps.Size( rawIcon.clusterHeight, rawIcon.clusterWidth ),
@@ -111,4 +99,47 @@ function clusterMarkers( map, markers, rawIcon ) {
 	};
 
 	return new MarkerClusterer( { map, markers, renderer } );
+}
+
+/**
+ * Filter the markers on a map to the given ones.
+ *
+ * @param {MarkerClusterer}      clusterer
+ * @param {google.maps.Marker[]} markers
+ */
+export function setVisibleMarkers( clusterer, markers ) {
+	clusterer.clearMarkers();
+	clusterer.addMarkers( markers );
+}
+
+/**
+ * Pan the map to the center of the given markers.
+ *
+ * @param {google.maps.Marker[]} markers
+ * @param {google.maps.Map}      map
+ * @param {google.maps}          maps
+ */
+export function panToCenter( markers, map, maps ) {
+	if ( markers.length === 0 ) {
+		return;
+	}
+
+	if ( markers.length === 1 ) {
+		map.panTo(
+			{
+				lat: markers[ 0 ].position.lat(),
+				lng: markers[ 0 ].position.lng(),
+			},
+			1000,
+			google.maps.Animation.easeInOut
+		);
+
+		return;
+	}
+
+	const bounds = new maps.LatLngBounds();
+
+	markers.map( ( marker ) => bounds.extend( marker.position ) );
+
+	map.fitBounds( bounds );
 }

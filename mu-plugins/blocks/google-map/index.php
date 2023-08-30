@@ -42,7 +42,9 @@ function render( $attributes, $content, $block ) {
 		}
 	}
 
-	$attributes['icon'] = array(
+	$attributes['searchIcon'] = plugins_url( 'images/search.svg', __FILE__ );
+
+	$attributes['markerIcon'] = array(
 		'markerUrl'           => plugins_url( 'images/map-marker.svg', __FILE__ ),
 		'markerAnchorXOffset' => 34,
 		'markerHeight'        => 68,
