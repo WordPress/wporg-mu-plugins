@@ -37,13 +37,17 @@ export default function Map( { apiKey, markers, icon } ) {
 		styles: mapStyles,
 	};
 
+	/**
+	 * Add markers to the map and cluster them.
+	 *
+	 * Callback for `onGoogleApiLoaded`.
+	 */
 	const mapLoaded = useCallback( ( { map, maps } ) => {
 		createClusteredMarkers( map, maps, markers, icon );
 		setLoaded( true );
 	}, [] );
 
 	return (
-		// Container height must be set explicitly.
 		<div className="wporg-google-map__container">
 			{ ! loaded && <Spinner /> }
 
