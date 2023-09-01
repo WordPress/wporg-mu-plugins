@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wporg/query-filters",
+	"title": "Filters",
+	"icon": "editor-kitchensink",
+	"category": "layout",
+	"description": "Display a set of filters to update the current query.",
+	"textdomain": "wporg",
+	"attributes": {},
+	"supports": {
+		"align": false,
+		"color": {
+			"text": true,
+			"background": true,
+			"link": false
+		},
+		"spacing": {
+			"margin": true,
+			"padding": true
+		}
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style.css",
+	"viewScript": "file:./view.js",
+	"render": "file:../render.php"
+}
