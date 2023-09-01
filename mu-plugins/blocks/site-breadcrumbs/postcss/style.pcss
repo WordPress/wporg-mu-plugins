@@ -1,6 +1,6 @@
 .wp-block-wporg-site-breadcrumbs {
 	& a {
-		color: var(--wp--preset--color--charcoal-1);
+		color: var(--wp--preset--color--charcoal-4);
 		text-decoration-line: none;
 
 		&:hover {
@@ -20,12 +20,13 @@
 				content: "/";
 				display: inline-block;
 				font-weight: 400;
-			margin: 0 0.5rem;
+				margin: 0 var(--wp--preset--spacing--10);
+				color: var(--wp--preset--color--light-grey-1);
 			}
 		}
 	}
 
 	& .is-current-page {
-		font-weight: 700;
+		color: var(--wp--preset--color--charcoal-1);
 	}
 }
