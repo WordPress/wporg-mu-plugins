@@ -1,11 +1,11 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "wporg/query-filters",
-	"title": "Filters",
+	"name": "wporg/query-filter",
+	"title": "Filter",
 	"icon": "editor-kitchensink",
 	"category": "layout",
-	"description": "Display a set of filters to update the current query.",
+	"description": "Display a filter dropdown to update the current query.",
 	"textdomain": "wporg",
 	"attributes": {},
 	"supports": {
