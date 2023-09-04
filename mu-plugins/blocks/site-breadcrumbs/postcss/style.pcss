@@ -1,6 +1,9 @@
 .wp-block-wporg-site-breadcrumbs {
+	display: flex;
+	align-items: center;
+
 	& a {
-		color: var(--wp--preset--color--charcoal-4);
+		color: var(--wp--preset--color--charcoal-1);
 		text-decoration-line: none;
 
 		&:hover {
@@ -8,25 +11,22 @@
 		}
 	}
 
-	& > span {
-		display: inline-block;
+	& > span:not(:first-child) {
 
-		&:not(:last-child) {
+		/* This ensures that the square separator is reliably centered. */
+		display: flex;
+		align-items: center;
+		margin-top: 0;
 
-			/* This ensures that the square separator is reliably centered. */
-			margin-top: 0;
-
-			&::after {
-				content: "/";
-				display: inline-block;
-				font-weight: 400;
-				margin: 0 var(--wp--preset--spacing--10);
-				color: var(--wp--preset--color--light-grey-1);
-			}
+		&::before {
+			content: "/";
+			display: inline-block;
+			font-weight: 400;
+			margin: 0 0.5rem;
 		}
 	}
 
 	& .is-current-page {
-		color: var(--wp--preset--color--charcoal-1);
+		font-weight: 700;
 	}
 }
