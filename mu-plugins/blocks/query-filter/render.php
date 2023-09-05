@@ -65,7 +65,10 @@ $html_id = wp_unique_id( "filter-{$settings['key']}-" );
 		data-wp-effect="effects.wporg.queryFilter.focusFirstElement"
 		data-wp-on--keydown="actions.wporg.queryFilter.handleKeydown"
 	>
-		<form action="<?php echo esc_attr( $settings['action'] ); ?>">
+		<form
+			action="<?php echo esc_attr( $settings['action'] ); ?>"
+			data-wp-on--change="actions.wporg.queryFilter.handleFormChange"
+		>
 			<div class="wporg-query-filter__modal-content">
 				<?php foreach ( $settings['options'] as $value => $label ) : ?>
 				<div class="wporg-query-filter__option">

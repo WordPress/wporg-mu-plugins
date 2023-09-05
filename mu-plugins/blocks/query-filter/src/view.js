@@ -14,6 +14,31 @@ const focusableSelectors = [
 	'[tabindex]:not([tabindex^="-"])',
 ];
 
+function closeDropdown( store ) {
+	const { context } = store;
+	context.wporg.queryFilter.isOpen = false;
+	context.wporg.queryFilter.form?.reset();
+
+	const count = context.wporg.queryFilter.form?.querySelectorAll( 'input[type="checkbox"]:checked' ).length;
+	updateToggleLabel( store, count );
+}
+
+function updateToggleLabel( store, count ) {
+	const { context } = store;
+	const toggle = context.wporg.queryFilter.toggleButton;
+	if ( ! toggle ) {
+		return;
+	}
+	toggle.querySelector( 'span' ).innerText = count;
+	if ( count ) {
+		toggle.classList.add( 'has-filter-applied' );
+		toggle.classList.remove( 'has-no-filter-applied' );
+	} else {
+		toggle.classList.add( 'has-no-filter-applied' );
+		toggle.classList.remove( 'has-filter-applied' );
+	}
+}
+
 wpStore( {
 	actions: {
 		wporg: {
@@ -21,19 +46,21 @@ wpStore( {
 				toggle: ( { context } ) => {
 					context.wporg.queryFilter.isOpen = ! context.wporg.queryFilter.isOpen;
 				},
-				handleFocusout: ( { context, event, ref } ) => {
+				handleFocusout: ( store ) => {
+					const { context, event, ref } = store;
 					if (
 						! context.wporg.queryFilter.hasHover &&
 						! ref.contains( event.relatedTarget ) &&
 						event.target !== window.document.activeElement
 					) {
-						context.wporg.queryFilter.isOpen = false;
+						closeDropdown( store );
 					}
 				},
-				handleKeydown: ( { context, event } ) => {
+				handleKeydown: ( store ) => {
+					const { context, event } = store;
 					// If Escape close the dropdown.
 					if ( event.key === 'Escape' ) {
-						context.wporg.queryFilter.isOpen = false;
+						closeDropdown( store );
 						context.wporg.queryFilter.toggleButton.focus();
 						return;
 					}
@@ -62,11 +89,19 @@ wpStore( {
 				handleMouseLeave: ( { context } ) => {
 					context.wporg.queryFilter.hasHover = null;
 				},
-				clearSelection: ( { ref } ) => {
-					const form = ref.closest( 'form' );
-					form.querySelectorAll( 'input[type="checkbox"]' ).forEach(
-						( input ) => ( input.checked = false )
-					);
+				handleFormChange: ( store ) => {
+					const { context } = store;
+					const count = context.wporg.queryFilter.form.querySelectorAll(
+						'input[type="checkbox"]:checked'
+					).length;
+					updateToggleLabel( store, count );
+				},
+				clearSelection: ( store ) => {
+					const { context } = store;
+					context.wporg.queryFilter.form
+						.querySelectorAll( 'input[type="checkbox"]' )
+						.forEach( ( input ) => ( input.checked = false ) );
+					updateToggleLabel( store, 0 );
 				},
 			},
 		},
@@ -75,11 +110,11 @@ wpStore( {
 		wporg: {
 			queryFilter: {
 				init: ( { context, ref } ) => {
+					context.wporg.queryFilter.toggleButton = ref.querySelector( '.wporg-query-filter__toggle' );
+					context.wporg.queryFilter.form = ref.querySelector( 'form' );
+
 					if ( context.wporg.queryFilter.isOpen ) {
 						const focusableElements = ref.querySelectorAll( focusableSelectors );
-						context.wporg.queryFilter.toggleButton = ref.querySelector(
-							'.wporg-query-filter__toggle'
-						);
 						context.wporg.queryFilter.firstFocusableElement = focusableElements[ 0 ];
 						context.wporg.queryFilter.lastFocusableElement =
 							focusableElements[ focusableElements.length - 1 ];
