@@ -15,6 +15,7 @@
  *     @type string $label    The label for this filter (ex, a taxonomy name),
  *                            including a span with selected count if applicable.
  *     @type string $key      The key to use in the URL.
+ *     @type string $action   The URL for the form action (ex, archives page).
  *     @type array  $options  Set of key => label pairs, used to build filter
  *                            options. The array key will be used as the query
  *                            parameter in the URL to apply the filter.
@@ -37,12 +38,6 @@ $init_state = [
 ];
 $encoded_state = wp_json_encode( [ 'wporg' => [ 'queryFilter' => $init_state ] ] );
 
-// Use the current URL, including query parameters, to build up form action.
-$current_path = '';
-if ( isset( $_SERVER['REQUEST_URI'] ) ) {
-	$current_path = esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) );
-}
-$form_url = site_url( $current_path );
 $has_filter_class = count( $filter['selected'] ) ? 'has-filter-applied' : 'has-no-filter-applied';
 
 $html_id = "filter-{$filter['key']}";
@@ -71,7 +66,7 @@ $html_id = "filter-{$filter['key']}";
 		data-wp-effect="effects.wporg.queryFilter.focusFirstElement"
 		data-wp-on--keydown="actions.wporg.queryFilter.handleKeydown"
 	>
-		<form action="<?php echo esc_attr( $form_url ); ?>">
+		<form action="<?php echo esc_attr( $filter['action'] ); ?>">
 			<div class="wporg-query-filter__modal-content">
 				<?php foreach ( $filter['options'] as $value => $label ) : ?>
 				<div class="wporg-query-filter__option">
