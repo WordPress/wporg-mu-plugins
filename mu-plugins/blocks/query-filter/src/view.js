@@ -43,8 +43,13 @@ wpStore( {
 	actions: {
 		wporg: {
 			queryFilter: {
-				toggle: ( { context } ) => {
-					context.wporg.queryFilter.isOpen = ! context.wporg.queryFilter.isOpen;
+				toggle: ( store ) => {
+					const { context } = store;
+					if ( context.wporg.queryFilter.isOpen ) {
+						closeDropdown( store );
+					} else {
+						context.wporg.queryFilter.isOpen = true;
+					}
 				},
 				handleFocusout: ( store ) => {
 					const { context, event, ref } = store;
