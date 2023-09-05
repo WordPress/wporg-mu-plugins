@@ -67,6 +67,16 @@ $html_id = "filter-{$filter['key']}";
 				<?php endforeach; ?>
 			</div>
 
+			<?php
+			/**
+			 * Fires inside the filter form, right before action buttons.
+			 *
+			 * @param string   $key   The key for the current filter.
+			 * @param WP_Block $block The current block being rendered.
+			 */
+			do_action( 'wporg_query_filter_in_form', $filter['key'], $block );
+			?>
+
 			<div class="wporg-query-filter__modal-actions">
 				<input type="reset" value="<?php esc_attr_e( 'Reset', 'wporg' ); ?>" />
 				<input type="submit" value="<?php esc_html_e( 'Apply', 'wporg' ); ?>" />
