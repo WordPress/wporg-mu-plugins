@@ -49,6 +49,7 @@ $html_id = wp_unique_id( "filter-{$settings['key']}-" );
 	data-wp-on--mouseenter="actions.wporg.queryFilter.handleMouseEnter"
 	data-wp-on--mouseleave="actions.wporg.queryFilter.handleMouseLeave"
 	data-wp-effect="effects.wporg.queryFilter.init"
+	data-wp-class--is-modal-open="context.wporg.queryFilter.isOpen"
 >
 	<button
 		class="wporg-query-filter__toggle <?php echo count( $settings['selected'] ) ? 'has-filter-applied' : 'has-no-filter-applied'; ?>"
@@ -57,6 +58,12 @@ $html_id = wp_unique_id( "filter-{$settings['key']}-" );
 		data-wp-bind--aria-expanded="context.wporg.queryFilter.isOpen"
 		aria-controls="<?php echo esc_attr( $html_id ); ?>"
 	><?php echo wp_kses_post( $settings['label'] ); ?></button>
+
+	<div
+		class="wporg-query-filter__modal-backdrop"
+		data-wp-bind--hidden="!context.wporg.queryFilter.isOpen"
+		data-wp-on--click="actions.wporg.queryFilter.toggle"
+	></div>
 
 	<div
 		class="wporg-query-filter__modal"
@@ -69,6 +76,15 @@ $html_id = wp_unique_id( "filter-{$settings['key']}-" );
 			action="<?php echo esc_attr( $settings['action'] ); ?>"
 			data-wp-on--change="actions.wporg.queryFilter.handleFormChange"
 		>
+			<div class="wporg-query-filter__modal-header">
+				<h2><?php echo wp_kses_post( $settings['label'] ); ?></h2>
+				<input
+					type="button"
+					class="wporg-query-filter__modal-close"
+					data-wp-on--click="actions.wporg.queryFilter.toggle"
+					aria-label="<?php esc_attr_e( 'Close', 'wporg' ); ?>"
+				/>
+			</div> <!-- /.wporg-query-filter__modal-header -->
 			<div class="wporg-query-filter__modal-content">
 				<?php foreach ( $settings['options'] as $value => $label ) : ?>
 				<div class="wporg-query-filter__option">
@@ -105,7 +121,7 @@ $html_id = wp_unique_id( "filter-{$settings['key']}-" );
 					type="submit"
 					value="<?php esc_html_e( 'Apply', 'wporg' ); ?>"
 				/>
-			</div> <!-- /.wporg-query-filter__actions -->
+			</div> <!-- /.wporg-query-filter__modal-actions -->
 		</form>
 	</div> <!-- /.wporg-query-filter__modal -->
 </div> <!-- /.wporg-query-filter -->
