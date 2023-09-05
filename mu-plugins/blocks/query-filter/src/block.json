@@ -10,11 +10,6 @@
 	"attributes": {},
 	"supports": {
 		"align": false,
-		"color": {
-			"text": true,
-			"background": true,
-			"link": false
-		},
 		"spacing": {
 			"margin": true,
 			"padding": true
