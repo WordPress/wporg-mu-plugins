@@ -23,6 +23,7 @@ if ( isset( $_SERVER['REQUEST_URI'] ) ) {
 	$current_path = esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) );
 }
 $form_url = site_url( $current_path );
+$has_filter_class = count( $filter['selected'] ) ? 'has-filter-applied' : 'has-no-filter-applied';
 
 $html_id = "filter-{$filter['key']}";
 ?>
@@ -36,7 +37,7 @@ $html_id = "filter-{$filter['key']}";
 	data-wp-effect="effects.wporg.queryFilter.init"
 >
 	<button
-		class="wporg-query-filter__toggle"
+		class="wporg-query-filter__toggle <?php echo esc_attr( $has_filter_class ); ?>"
 		data-wp-class--is-active="context.wporg.queryFilter.isOpen"
 		data-wp-on--click="actions.wporg.queryFilter.toggle"
 		data-wp-bind--aria-expanded="context.wporg.queryFilter.isOpen"
@@ -54,14 +55,20 @@ $html_id = "filter-{$filter['key']}";
 			<div class="wporg-query-filter__modal-content">
 				<?php foreach ( $filter['options'] as $value => $label ) : ?>
 				<div class="wporg-query-filter__option">
-					<input type="checkbox" name="<?php echo esc_attr( $filter['key'] ); ?>[]" value="<?php echo esc_attr( $value ); ?>" id="<?php echo esc_attr( $html_id . '-' . $value ); ?>" />
+					<input
+						type="checkbox"
+						name="<?php echo esc_attr( $filter['key'] ); ?>[]"
+						value="<?php echo esc_attr( $value ); ?>"
+						id="<?php echo esc_attr( $html_id . '-' . $value ); ?>"
+						<?php checked( in_array( $value, $filter['selected'] ) ); ?>
+					/>
 					<label for="<?php echo esc_attr( $html_id . '-' . $value ); ?>"><?php echo esc_html( $label ); ?></label>
 				</div>
 				<?php endforeach; ?>
 			</div>
 
 			<div class="wporg-query-filter__modal-actions">
-				<input type="reset" value="<?php esc_attr_e( 'Clear', 'wporg' ); ?>" />
+				<input type="reset" value="<?php esc_attr_e( 'Reset', 'wporg' ); ?>" />
 				<input type="submit" value="<?php esc_html_e( 'Apply', 'wporg' ); ?>" />
 			</div> <!-- /.wporg-query-filter__actions -->
 		</form>
