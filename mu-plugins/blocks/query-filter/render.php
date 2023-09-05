@@ -92,8 +92,16 @@ $html_id = wp_unique_id( "filter-{$settings['key']}-" );
 			?>
 
 			<div class="wporg-query-filter__modal-actions">
-				<input type="reset" value="<?php esc_attr_e( 'Reset', 'wporg' ); ?>" />
-				<input type="submit" value="<?php esc_html_e( 'Apply', 'wporg' ); ?>" />
+				<input
+					type="button"
+					class="wporg-query-filter__modal-action-clear"
+					value="<?php esc_attr_e( 'Clear', 'wporg' ); ?>"
+					data-wp-on--click="actions.wporg.queryFilter.clearSelection"
+				/>
+				<input
+					type="submit"
+					value="<?php esc_html_e( 'Apply', 'wporg' ); ?>"
+				/>
 			</div> <!-- /.wporg-query-filter__actions -->
 		</form>
 	</div> <!-- /.wporg-query-filter__modal -->

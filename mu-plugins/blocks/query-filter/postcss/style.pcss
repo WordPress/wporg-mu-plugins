@@ -28,6 +28,10 @@
 		background-repeat: no-repeat;
 		background-position: right var(--wp--custom--wporg-query-filters--spacing--padding--inline-end) center;
 		padding-right: calc(var(--wp--custom--wporg-query-filters--spacing--padding--inline-end) + var(--wporg-query-filter--icon-size));
+
+		& span {
+			display: none;
+		}
 	}
 
 	& span {
@@ -153,6 +157,7 @@
 	color: var(--wp--custom--button--color--text);
 	background-color: var(--wp--custom--button--color--background);
 	border: none;
+	border-radius: 2px;
 
 	&:hover,
 	&:focus {
@@ -172,7 +177,7 @@
 		background-color: var(--wp--custom--button--active--color--background);
 	}
 
-	&[type="reset"] {
+	&.wporg-query-filter__modal-action-clear {
 		background-color: transparent;
 		color: #a13f2a; /* pomegrade-1 fails contrast against white. */
 		font-weight: 400;

@@ -62,6 +62,12 @@ wpStore( {
 				handleMouseLeave: ( { context } ) => {
 					context.wporg.queryFilter.hasHover = null;
 				},
+				clearSelection: ( { ref } ) => {
+					const form = ref.closest( 'form' );
+					form.querySelectorAll( 'input[type="checkbox"]' ).forEach(
+						( input ) => ( input.checked = false )
+					);
+				},
 			},
 		},
 	},
