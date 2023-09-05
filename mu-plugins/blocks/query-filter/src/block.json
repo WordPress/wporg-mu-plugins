@@ -7,7 +7,11 @@
 	"category": "layout",
 	"description": "Display a filter dropdown to update the current query.",
 	"textdomain": "wporg",
-	"attributes": {},
+	"attributes": {
+		"key": {
+			"type": "string"
+		}
+	},
 	"supports": {
 		"align": false,
 		"spacing": {
