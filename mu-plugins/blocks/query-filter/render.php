@@ -4,13 +4,33 @@
  */
 
 /**
- * TBD
+ * Get configuration for this filter from a filter, so that child themes can
+ * dynamically configure the output without needing to rebuild the HTML.
  *
- * @param string   $options Array of options in format [tbd].
+ * @param array $options {
+ *     Array of options for this filter.
+ *
+ *     The return value should use the following format.
+ *
+ *     @type string $label    The label for this filter (ex, a taxonomy name),
+ *                            including a span with selected count if applicable.
+ *     @type string $key      The key to use in the URL.
+ *     @type array  $options  Set of key => label pairs, used to build filter
+ *                            options. The array key will be used as the query
+ *                            parameter in the URL to apply the filter.
+ *     @type array  $selected Array of the selected values, this should match
+ *                            the array keys in $options.
+ * }
  * @param WP_Block $block   The current block being rendered.
  */
-$filter = apply_filters( "wporg_query_filter_{$attributes['key']}", array(), $block );
+$filter = apply_filters( "wporg_query_filter_options_{$attributes['key']}", array(), $block );
 
+// If the filter is not configured, don't render anything.
+if ( ! isset( $filter['options'] ) || ! count( $filter['options'] ) ) {
+	return;
+}
+
+// Initial state to pass to Interactivity API.
 $init_state = [
 	'isOpen' => false,
 	'hasHover' => false,
