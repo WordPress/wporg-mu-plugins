@@ -47,6 +47,7 @@ $html_id = wp_unique_id( "filter-{$settings['key']}-" );
 	data-wp-context="<?php echo esc_attr( $encoded_state ); ?>"
 	data-wp-effect="effects.wporg.queryFilter.init"
 	data-wp-class--is-modal-open="context.wporg.queryFilter.isOpen"
+	data-wp-on--keydown="actions.wporg.queryFilter.handleKeydown"
 >
 	<button
 		class="wporg-query-filter__toggle <?php echo count( $settings['selected'] ) ? '' : 'has-no-filter-applied'; ?>"
@@ -67,7 +68,6 @@ $html_id = wp_unique_id( "filter-{$settings['key']}-" );
 		id="<?php echo esc_attr( $html_id ); ?>"
 		data-wp-bind--hidden="!context.wporg.queryFilter.isOpen"
 		data-wp-effect="effects.wporg.queryFilter.focusFirstElement"
-		data-wp-on--keydown="actions.wporg.queryFilter.handleKeydown"
 	>
 		<form
 			action="<?php echo esc_attr( $settings['action'] ); ?>"
