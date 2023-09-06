@@ -31,11 +31,9 @@ function updateToggleLabel( store, count ) {
 	}
 	toggle.querySelector( 'span' ).innerText = count;
 	if ( count ) {
-		toggle.classList.add( 'has-filter-applied' );
 		toggle.classList.remove( 'has-no-filter-applied' );
 	} else {
 		toggle.classList.add( 'has-no-filter-applied' );
-		toggle.classList.remove( 'has-filter-applied' );
 	}
 }
 

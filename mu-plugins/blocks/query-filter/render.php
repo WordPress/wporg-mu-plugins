@@ -49,7 +49,7 @@ $html_id = wp_unique_id( "filter-{$settings['key']}-" );
 	data-wp-class--is-modal-open="context.wporg.queryFilter.isOpen"
 >
 	<button
-		class="wporg-query-filter__toggle <?php echo count( $settings['selected'] ) ? 'has-filter-applied' : 'has-no-filter-applied'; ?>"
+		class="wporg-query-filter__toggle <?php echo count( $settings['selected'] ) ? '' : 'has-no-filter-applied'; ?>"
 		data-wp-class--is-active="context.wporg.queryFilter.isOpen"
 		data-wp-on--click="actions.wporg.queryFilter.toggle"
 		data-wp-bind--aria-expanded="context.wporg.queryFilter.isOpen"
