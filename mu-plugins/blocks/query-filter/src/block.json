@@ -10,6 +10,10 @@
 	"attributes": {
 		"key": {
 			"type": "string"
+		},
+		"multiple": {
+			"type": "boolean",
+			"default": true
 		}
 	},
 	"supports": {

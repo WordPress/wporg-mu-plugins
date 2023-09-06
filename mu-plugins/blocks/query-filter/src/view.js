@@ -19,7 +19,7 @@ function closeDropdown( store ) {
 	context.wporg.queryFilter.isOpen = false;
 	context.wporg.queryFilter.form?.reset();
 
-	const count = context.wporg.queryFilter.form?.querySelectorAll( 'input[type="checkbox"]:checked' ).length;
+	const count = context.wporg.queryFilter.form?.querySelectorAll( 'input:checked' ).length;
 	updateToggleLabel( store, count );
 }
 
@@ -80,15 +80,13 @@ wpStore( {
 				},
 				handleFormChange: ( store ) => {
 					const { context } = store;
-					const count = context.wporg.queryFilter.form.querySelectorAll(
-						'input[type="checkbox"]:checked'
-					).length;
+					const count = context.wporg.queryFilter.form.querySelectorAll( 'input:checked' ).length;
 					updateToggleLabel( store, count );
 				},
 				clearSelection: ( store ) => {
 					const { context } = store;
 					context.wporg.queryFilter.form
-						.querySelectorAll( 'input[type="checkbox"]' )
+						.querySelectorAll( 'input' )
 						.forEach( ( input ) => ( input.checked = false ) );
 					updateToggleLabel( store, 0 );
 				},

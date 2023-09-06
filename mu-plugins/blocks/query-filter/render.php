@@ -40,8 +40,20 @@ $init_state = [
 ];
 $encoded_state = wp_json_encode( [ 'wporg' => [ 'queryFilter' => $init_state ] ] );
 
+$has_multiple = isset( $attributes['multiple'] ) && $attributes['multiple'];
+
 // Set up a unique ID for this filter.
 $html_id = wp_unique_id( "filter-{$settings['key']}-" );
+
+$button_classes = array_keys(
+	array_filter(
+		array(
+			'wporg-query-filter__toggle' => true,
+			'has-no-filter-applied' => ! count( $settings['selected'] ),
+			'is-single-select' => ! $has_multiple,
+		)
+	)
+);
 ?>
 <div
 	<?php echo get_block_wrapper_attributes(); // phpcs:ignore ?>
@@ -52,7 +64,7 @@ $html_id = wp_unique_id( "filter-{$settings['key']}-" );
 	data-wp-on--keydown="actions.wporg.queryFilter.handleKeydown"
 >
 	<button
-		class="wporg-query-filter__toggle <?php echo count( $settings['selected'] ) ? '' : 'has-no-filter-applied'; ?>"
+		class="<?php echo esc_attr( implode( ' ', $button_classes ) ); ?>"
 		data-wp-class--is-active="context.wporg.queryFilter.isOpen"
 		data-wp-on--click="actions.wporg.queryFilter.toggle"
 		data-wp-bind--aria-expanded="context.wporg.queryFilter.isOpen"
@@ -88,6 +100,15 @@ $html_id = wp_unique_id( "filter-{$settings['key']}-" );
 				<legend class="screen-reader-text"><?php echo wp_kses_post( $settings['title'] ); ?></legend>
 				<?php foreach ( $settings['options'] as $value => $label ) : ?>
 				<div class="wporg-query-filter__option">
+					<?php if ( ! $has_multiple ) : ?>
+					<input
+						type="radio"
+						name="<?php echo esc_attr( $settings['key'] ); ?>"
+						value="<?php echo esc_attr( $value ); ?>"
+						id="<?php echo esc_attr( $html_id . '-' . $value ); ?>"
+						<?php checked( in_array( $value, $settings['selected'] ) ); ?>
+					/>
+					<?php else : ?>
 					<input
 						type="checkbox"
 						name="<?php echo esc_attr( $settings['key'] ); ?>[]"
@@ -95,6 +116,7 @@ $html_id = wp_unique_id( "filter-{$settings['key']}-" );
 						id="<?php echo esc_attr( $html_id . '-' . $value ); ?>"
 						<?php checked( in_array( $value, $settings['selected'] ) ); ?>
 					/>
+					<?php endif; ?>
 					<label for="<?php echo esc_attr( $html_id . '-' . $value ); ?>"><?php echo esc_html( $label ); ?></label>
 				</div>
 				<?php endforeach; ?>
