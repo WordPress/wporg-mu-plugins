@@ -1,5 +1,9 @@
 .wp-block-wporg-query-filter {
 	position: relative;
+
+	&.is-modal-open {
+		z-index: 100000; /* admin bar + 1. */
+	}
 }
 
 .wporg-query-filter__toggle {
@@ -80,7 +84,8 @@
 }
 
 .wporg-query-filter__modal-backdrop {
-	display: none;
+	position: fixed;
+	inset: 0;
 }
 
 .wporg-query-filter__modal {
@@ -200,13 +205,7 @@
 
 /* Update layout to floating modal on smaller screens. */
 @media (max-width: 889px) {
-	.wp-block-wporg-query-filter.is-modal-open {
-		z-index: 100000; /* admin bar + 1. */
-	}
-
 	.wporg-query-filter__modal-backdrop {
-		position: fixed;
-		inset: 0;
 		background-color: rgba(0, 0, 0, 0.15);
 	}
 

@@ -51,16 +51,6 @@ wpStore( {
 						context.wporg.queryFilter.isOpen = true;
 					}
 				},
-				handleFocusout: ( store ) => {
-					const { context, event, ref } = store;
-					if (
-						! context.wporg.queryFilter.hasHover &&
-						! ref.contains( event.relatedTarget ) &&
-						event.target !== window.document.activeElement
-					) {
-						closeDropdown( store );
-					}
-				},
 				handleKeydown: ( store ) => {
 					const { context, event } = store;
 					// If Escape close the dropdown.
@@ -87,12 +77,6 @@ wpStore( {
 							context.wporg.queryFilter.firstFocusableElement.focus();
 						}
 					}
-				},
-				handleMouseEnter: ( { context } ) => {
-					context.wporg.queryFilter.hasHover = true;
-				},
-				handleMouseLeave: ( { context } ) => {
-					context.wporg.queryFilter.hasHover = null;
 				},
 				handleFormChange: ( store ) => {
 					const { context } = store;

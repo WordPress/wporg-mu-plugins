@@ -45,9 +45,6 @@ $html_id = wp_unique_id( "filter-{$settings['key']}-" );
 	<?php echo get_block_wrapper_attributes(); // phpcs:ignore ?>
 	data-wp-interactive
 	data-wp-context="<?php echo esc_attr( $encoded_state ); ?>"
-	data-wp-on--focusout="actions.wporg.queryFilter.handleFocusout"
-	data-wp-on--mouseenter="actions.wporg.queryFilter.handleMouseEnter"
-	data-wp-on--mouseleave="actions.wporg.queryFilter.handleMouseLeave"
 	data-wp-effect="effects.wporg.queryFilter.init"
 	data-wp-class--is-modal-open="context.wporg.queryFilter.isOpen"
 >
