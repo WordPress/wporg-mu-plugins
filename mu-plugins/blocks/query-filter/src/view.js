@@ -29,7 +29,9 @@ function updateToggleLabel( store, count ) {
 	if ( ! toggle ) {
 		return;
 	}
-	toggle.querySelector( 'span' ).innerText = count;
+	if ( toggle.querySelector( 'span' ) ) {
+		toggle.querySelector( 'span' ).innerText = count;
+	}
 	if ( count ) {
 		toggle.classList.remove( 'has-no-filter-applied' );
 	} else {
