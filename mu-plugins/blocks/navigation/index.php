@@ -134,7 +134,7 @@ function get_menu_content( $menu_slug ) {
 function get_menu_items( $menu_slug ) {
 	$menus = apply_filters( 'wporg_block_navigation_menus', array() );
 
-	if ( empty( $menus ) ) {
+	if ( ! $menu_slug || empty( $menus ) || ! isset( $menus[ $menu_slug ] ) ) {
 		return false;
 	}
 
