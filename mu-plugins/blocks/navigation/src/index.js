@@ -7,6 +7,7 @@ import { InspectorControls } from '@wordpress/block-editor';
 import { PanelBody, SelectControl } from '@wordpress/components';
 
 const BLOCK_TYPE = 'core/navigation';
+const menus = window.wporgLocalNavigationMenus || [];
 
 /**
  * Add the `menuSlug` attribute to the core/navigation block type.
@@ -36,9 +37,19 @@ addFilter( 'blocks.registerBlockType', 'wporg/navigation-menu-slug', addNavigati
  */
 const withNavigationMenuSlug = ( BlockEdit ) => ( props ) => {
 	const { name, attributes, setAttributes } = props;
+
 	if ( name !== BLOCK_TYPE ) {
 		return <BlockEdit { ...props } />;
 	}
+
+	const options = Object.keys( menus ).map( ( value ) => {
+		// Create label by converting hyphenated value to title case with ` — ` separator
+		const label = value
+			.replace( /-/g, ' — ' )
+			.replace( /\w\S*/g, ( word ) => word.charAt( 0 ).toUpperCase() + word.slice( 1 ).toLowerCase() );
+
+		return { label, value };
+	} );
 
 	return (
 		<>
@@ -47,14 +58,7 @@ const withNavigationMenuSlug = ( BlockEdit ) => ( props ) => {
 					<SelectControl
 						label={ __( 'Dynamic Menu', 'wporg' ) }
 						value={ attributes.menuSlug }
-						options={ [
-							{ label: __( 'Custom menu', 'wporg' ), value: '' },
-							{ label: __( 'About — Details', 'wporg' ), value: 'about-details' },
-							{ label: __( 'About — People', 'wporg' ), value: 'about-people' },
-							{ label: __( 'About — Technology', 'wporg' ), value: 'about-technology' },
-							{ label: __( 'Download', 'wporg' ), value: 'download' },
-							{ label: __( 'Documentation', 'wporg' ), value: 'documentation' },
-						] }
+						options={ [ { label: __( 'Custom menu', 'wporg' ), value: '' }, ...options ] }
 						onChange={ ( newValue ) => setAttributes( { menuSlug: newValue } ) }
 						__nextHasNoMarginBottom
 					/>

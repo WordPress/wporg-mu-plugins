@@ -32,6 +32,11 @@ function init() {
 		'enqueue_block_assets',
 		function() use ( $editor_script_handle ) {
 			if ( is_admin() && wp_should_load_block_editor_scripts_and_styles() ) {
+				wp_localize_script(
+					$editor_script_handle,
+					'wporgLocalNavigationMenus',
+					apply_filters( 'wporg_block_navigation_menus', array() )
+				);
 				wp_enqueue_script( $editor_script_handle );
 			}
 		}
@@ -125,116 +130,11 @@ function get_menu_content( $menu_slug ) {
  *                       slug does not match a navigation list.
  */
 function get_menu_items( $menu_slug ) {
-	switch ( $menu_slug ) {
-		case 'about-details':
-			return array(
-				array(
-					'label' => __( 'Domains', 'wporg' ),
-					'url' => '/about/domains/',
-				),
-				array(
-					'label' => __( 'License', 'wporg' ),
-					'url' => '/about/license/',
-				),
-				array(
-					'label' => __( 'Accessibility', 'wporg' ),
-					'url' => '/about/accessibility/',
-				),
-				array(
-					'label' => __( 'Privacy Policy', 'wporg' ),
-					'url' => '/about/privacy/',
-				),
-				array(
-					'label' => __( 'Statistics', 'wporg' ),
-					'url' => '/about/stats/',
-				),
-			);
-			break;
-		case 'about-technology':
-			return array(
-				array(
-					'label' => __( 'Requirements', 'wporg' ),
-					'url' => '/about/requirements/',
-				),
-				array(
-					'label' => __( 'Features', 'wporg' ),
-					'url' => '/about/features/',
-				),
-				array(
-					'label' => __( 'Security', 'wporg' ),
-					'url' => '/about/security/',
-				),
-				array(
-					'label' => __( 'Roadmap', 'wporg' ),
-					'url' => '/about/roadmap/',
-				),
-				array(
-					'label' => __( 'History', 'wporg' ),
-					'url' => '/about/history/',
-				),
-			);
-		case 'about-people':
-			return array(
-				array(
-					'label' => __( 'Philosophy', 'wporg' ),
-					'url' => '/about/philosophy/',
-				),
-				array(
-					'label' => __( 'Etiquette', 'wporg' ),
-					'url' => '/about/etiquette/',
-				),
-				array(
-					'label' => __( 'Swag', 'wporg' ),
-					'url' => 'https://mercantile.wordpress.org/',
-				),
-				array(
-					'label' => __( 'Logos', 'wporg' ),
-					'url' => '/about/logos/',
-				),
-				array(
-					'label' => __( 'People of WordPress', 'wporg' ),
-					'url' => 'https://wordpress.org/news/category/community/',
-				),
-			);
-		case 'download':
-			return array(
-				array(
-					'label' => __( 'Releases', 'wporg' ),
-					'url' => '/download/releases/',
-				),
-				array(
-					'label' => __( 'Nightly', 'wporg' ),
-					'url' => '/download/beta-nightly/',
-				),
-				array(
-					'label' => __( 'Counter', 'wporg' ),
-					'url' => '/download/counter/',
-				),
-				array(
-					'label' => __( 'Source', 'wporg' ),
-					'url' => '/download/source/',
-				),
-			);
-		// Local navigation for wordpress.org/documentation
-		case 'documentation':
-			return array(
-				array(
-					'label' => __( 'WordPress Overview', 'wporg' ),
-					'url' => '/overview/',
-				),
-				array(
-					'label' => __( 'Technical Guides', 'wporg' ),
-					'url' => '/technical-guides/',
-				),
-				array(
-					'label' => __( 'Support Guides', 'wporg' ),
-					'url' => '/support-guides/',
-				),
-				array(
-					'label' => __( 'Customization', 'wporg' ),
-					'url' => '/customization/',
-				),
-			);
+	$menus = apply_filters( 'wporg_block_navigation_menus', array() );
+
+	if ( empty( $menus ) ) {
+		return false;
 	}
-	return false;
+
+	return $menus[ $menu_slug ];
 }
