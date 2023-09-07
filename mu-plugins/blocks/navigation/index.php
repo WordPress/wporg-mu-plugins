@@ -1,6 +1,6 @@
 <?php
 /**
- * Generates a navigation block with hardcoded menu items, from a defined set of menus provided via a filter.
+ * Extends the core navigation block to use hardcoded menu items, from a defined set of menus provided via a filter.
  * The menu to use is selected via the block inspector controls, and set as the `menuSlug` attribute.
  * Example output: `<!-- wp:navigation {"menuSlug":"main-menu"} -->`
  *
