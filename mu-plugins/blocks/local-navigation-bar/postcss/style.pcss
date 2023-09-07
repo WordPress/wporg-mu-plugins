@@ -17,12 +17,8 @@
 
 	/* Reset the sticky position on small screens. */
 	@media (max-width: 889px) {
-		position: static !important;
-
-		/* Adjust the modal container so it's not hidden by the global header. */
-		& .wp-block-navigation__responsive-container {
-			top: var(--wp-global-header-height);
-		}
+		position: relative !important;
+		top: 0 !important;
 	}
 
 	&.is-style-brush-stroke {
@@ -49,6 +45,22 @@
 	& .wp-block-wporg-site-breadcrumbs {
 		& a {
 			color: inherit;
+		}
+	}
+
+	/* Navigation. */
+
+	/* Remove padding from menu items with background color, which is used to color the modal background. */
+	& .wp-block-navigation:where(.has-background) .wp-block-navigation-item a:not(.wp-element-button),
+	& .wp-block-navigation:where(.has-background) .wp-block-navigation-submenu a:not(.wp-element-button) {
+		padding: 0;
+	}
+
+	& .wp-block-navigation__responsive-container {
+
+		/* Adjust the modal container so the close button is not hidden by the global header when open. */
+		@media (max-width: 599px) {
+			top: var(--wp-global-header-height);
 		}
 	}
 
