@@ -132,6 +132,30 @@ function get_menu_content( $menu_slug ) {
  *                       slug does not match a navigation list.
  */
 function get_menu_items( $menu_slug ) {
+	/**
+	 * Get configuration for this navigation from a filter, so that child themes can
+	 * dynamically configure the output without needing to rebuild the HTML.
+	 *
+	 * @param array $menus {
+	 *     Array of menus available for this navigation.
+	 *
+	 *     The return value should use the following format.
+	 *
+	 *     @var array $menu An associative array that contains the menu items.
+	 *                      Each menu item is represented as an associative array with the following keys:
+	 *                       - label: The label of the menu item.
+	 *                       - url: The URL of the menu item.
+	 *     @example
+	 *     $menu = array(
+	 *         'main-menu' => array(
+	 *             array(
+	 *                 'label' => 'Home',
+	 *                 'url' => '/'
+	 *             )
+	 *         )
+	 *     );
+	 * }
+	 */
 	$menus = apply_filters( 'wporg_block_navigation_menus', array() );
 
 	if ( ! $menu_slug || empty( $menus ) || ! isset( $menus[ $menu_slug ] ) ) {
