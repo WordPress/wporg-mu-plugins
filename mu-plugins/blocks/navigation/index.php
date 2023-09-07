@@ -1,11 +1,13 @@
 <?php
 /**
- * Update the Navigation block to work with a `menuSlug`
+ * Generates a navigation block with hardcoded menu items, from a defined set of menus provided via a filter.
+ * The menu to use is selected via the block inspector controls, and set as the `menuSlug` attribute.
+ * Example output: `<!-- wp:navigation {"menuSlug":"main-menu"} -->`
  *
  * @package wporg
  */
 
- namespace WordPressdotorg\MU_Plugins\Navigation_Block;
+namespace WordPressdotorg\MU_Plugins\Navigation_Block;
 
 use WP_Block_List, WP_Block_Supports;
 
