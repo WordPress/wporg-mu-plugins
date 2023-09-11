@@ -14,6 +14,8 @@
  *
  *     @type string $label    The label for this filter (ex, a taxonomy name),
  *                            including a span with selected count if applicable.
+ *     @type string $title    A collective label for the filter options, likely
+ *                            the same as $label without the selected count.
  *     @type string $key      The key to use in the URL.
  *     @type string $action   The URL for the form action (ex, archives page).
  *     @type array  $options  Set of key => label pairs, used to build filter
@@ -74,7 +76,7 @@ $html_id = wp_unique_id( "filter-{$settings['key']}-" );
 			data-wp-on--change="actions.wporg.queryFilter.handleFormChange"
 		>
 			<div class="wporg-query-filter__modal-header">
-				<h2><?php echo wp_kses_post( $settings['label'] ); ?></h2>
+				<h2><?php echo wp_kses_post( $settings['title'] ); ?></h2>
 				<input
 					type="button"
 					class="wporg-query-filter__modal-close"
@@ -82,7 +84,8 @@ $html_id = wp_unique_id( "filter-{$settings['key']}-" );
 					aria-label="<?php esc_attr_e( 'Close', 'wporg' ); ?>"
 				/>
 			</div> <!-- /.wporg-query-filter__modal-header -->
-			<div class="wporg-query-filter__modal-content">
+			<fieldset class="wporg-query-filter__modal-content">
+				<legend class="screen-reader-text"><?php echo wp_kses_post( $settings['title'] ); ?></legend>
 				<?php foreach ( $settings['options'] as $value => $label ) : ?>
 				<div class="wporg-query-filter__option">
 					<input
@@ -95,7 +98,7 @@ $html_id = wp_unique_id( "filter-{$settings['key']}-" );
 					<label for="<?php echo esc_attr( $html_id . '-' . $value ); ?>"><?php echo esc_html( $label ); ?></label>
 				</div>
 				<?php endforeach; ?>
-			</div>
+			</fieldset>
 
 			<?php
 			/**
