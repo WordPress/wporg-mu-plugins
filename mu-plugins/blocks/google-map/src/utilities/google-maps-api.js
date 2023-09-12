@@ -12,6 +12,30 @@ import MarkerContent from '../components/marker-content';
 import getElementHTML from '../utilities/dom';
 
 /**
+ * Return validated markers.
+ *
+ * Any markers that have invalid data will be removed.
+ *
+ * @param {Array} markers
+ *
+ * @return {Array}
+ */
+export function getValidMarkers( markers ) {
+	markers = markers.map( ( marker ) => {
+		marker.latitude = parseFloat( marker.latitude );
+		marker.longitude = parseFloat( marker.longitude );
+
+		return marker;
+	} );
+
+	markers = markers.filter( ( marker ) => {
+		return ! Number.isNaN( marker.latitude ) && ! Number.isNaN( marker.longitude );
+	} );
+
+	return markers;
+}
+
+/**
  * Create Marker objects and save to references to them on the corresponding event.
  *
  * Creating the markers implicitly adds them to the map. The shared InfoWindow is assigned during creation.
