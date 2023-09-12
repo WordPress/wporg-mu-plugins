@@ -11,6 +11,7 @@ import Search from './search';
 import Map from './map';
 import List from './list';
 import { filterMarkers, speakSearchUpdates } from '../utilities/content';
+import { getValidMarkers } from '../utilities/google-maps-api';
 
 /**
  *
@@ -31,7 +32,7 @@ export default function Main( {
 	showList,
 	showSearch,
 	apiKey,
-	markers,
+	markers: rawMarkers,
 	markerIcon,
 	searchIcon,
 	searchFields,
@@ -43,7 +44,8 @@ export default function Main( {
 	// but it also feels wrong to have the map and list components do the filtering when they could
 	// just receive it as props without having to be aware of the business logic. It has to be state
 	// somewhere for React to trigger a re-render, though.
-	const [ visibleMarkers, setVisibleMarkers ] = useState( markers );
+	const validMarkers = getValidMarkers( rawMarkers );
+	const [ visibleMarkers, setVisibleMarkers ] = useState( validMarkers );
 
 	/**
 	 * Update the search state as the user types, and make sure the map/list are visible.
@@ -65,7 +67,7 @@ export default function Main( {
 	 * Update the map and list when the search query changes.
 	 */
 	useEffect( () => {
-		const filteredMarkers = filterMarkers( markers, searchQuery, searchFields );
+		const filteredMarkers = filterMarkers( validMarkers, searchQuery, searchFields );
 
 		setVisibleMarkers( filteredMarkers );
 
