@@ -81,7 +81,7 @@ export default function Main( {
 	return (
 		<>
 			{ showSearch && (
-				<Search searchQuery={ searchQuery } onQueryChange={ onQueryChange } icon={ searchIcon } />
+				<Search searchQuery={ searchQuery } onQueryChange={ onQueryChange } iconURL={ searchIcon } />
 			) }
 
 			{ showMap && <Map apiKey={ apiKey } markers={ visibleMarkers } icon={ markerIcon } /> }
