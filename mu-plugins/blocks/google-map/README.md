@@ -28,8 +28,8 @@ $map_options = array(
 
 ```php
 array(
-	0 => (object) array( ‘id’ => ‘72190236’, ‘type’ => ‘meetup’, ‘title’ => ‘WordPress For Beginners – WPSyd’, ‘url’ => ‘https://www.meetup.com/wordpress-sydney/events/294365830’, ‘meetup’ => ‘WordPress Sydney’, ‘location’ => ‘Sydney, Australia’, ‘latitude’ => ‘-33.865295’, ‘longitude’ => ‘151.2053’, ‘tz_offset’ => ‘36000’, ‘timestamp’ => 1693209600 ),
-	1 => (object) array( ‘id’ => ‘72190237’, ‘type’ => ‘meetup’, ‘title’ => ‘WordPress Help Desk’, ‘url’ => ‘https://www.meetup.com/wordpress-gwinnett/events/292032515’, ‘meetup’ => ‘WordPress Gwinnett’, ‘location’ => ‘online’, ‘latitude’ => ‘33.94’, ‘longitude’ => ‘-83.96’, ‘tz_offset’ => ‘-14400’, ‘timestamp’ => 1693260000 ),
-	2 => (object) array ( 'id' => '72189909', 'type' => 'wordcamp', 'title' => 'WordCamp Jinja 2023', 'url' => 'https://jinja.wordcamp.org/2023/', 'meetup' => NULL, 'location' => 'Jinja City, Uganda', 'latitude' => '0.5862795', 'longitude' => '33.4589384', 'tz_offset' => '10800', 'timestamp' => 1693803600, ),
+	0 => (object) array( ‘id’ => ‘72190236’, ‘type’ => ‘meetup’, ‘title’ => ‘WordPress For Beginners – WPSyd’, ‘url’ => ‘https://www.meetup.com/wordpress-sydney/events/294365830’, ‘meetup’ => ‘WordPress Sydney’, ‘location’ => ‘Sydney, Australia’, ‘latitude’ => ‘-33.865295’, ‘longitude’ => ‘151.2053’, ‘timestamp’ => 1693209600 ),
+	1 => (object) array( ‘id’ => ‘72190237’, ‘type’ => ‘meetup’, ‘title’ => ‘WordPress Help Desk’, ‘url’ => ‘https://www.meetup.com/wordpress-gwinnett/events/292032515’, ‘meetup’ => ‘WordPress Gwinnett’, ‘location’ => ‘online’, ‘latitude’ => ‘33.94’, ‘longitude’ => ‘-83.96’, ‘timestamp’ => 1693260000 ),
+	2 => (object) array ( 'id' => '72189909', 'type' => 'wordcamp', 'title' => 'WordCamp Jinja 2023', 'url' => 'https://jinja.wordcamp.org/2023/', 'meetup' => NULL, 'location' => 'Jinja City, Uganda', 'latitude' => '0.5862795', 'longitude' => '33.4589384', 'timestamp' => 1693803600, ),
 )
 ```
