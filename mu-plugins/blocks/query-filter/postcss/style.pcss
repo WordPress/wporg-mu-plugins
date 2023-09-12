@@ -26,7 +26,8 @@
 	cursor: pointer;
 	white-space: nowrap;
 
-	&.has-no-filter-applied {
+	&.has-no-filter-applied,
+	&.is-single-select {
 		/* stylelint-disable-next-line function-url-quotes */
 		background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M15.9899 10.8889L12.0018 14.3073L8.01367 10.8889L8.98986 9.75L12.0018 12.3316L15.0137 9.75L15.9899 10.8889Z' fill='%231E1E1E'/%3E%3C/svg%3E%0A");
 		background-size: var(--wporg-query-filter--icon-size);
@@ -70,7 +71,8 @@
 			color: var(--wp--custom--wporg-query-filters--toggle--count--active--color--text);
 		}
 
-		&.has-no-filter-applied {
+		&.has-no-filter-applied,
+		&.is-single-select {
 			/* stylelint-disable-next-line function-url-quotes */
 			background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M15.9899 10.8889L12.0018 14.3073L8.01367 10.8889L8.98986 9.75L12.0018 12.3316L15.0137 9.75L15.9899 10.8889Z' fill='%23fff'/%3E%3C/svg%3E%0A");
 		}
@@ -117,7 +119,7 @@
 	--wporg-query-filter--icon-size: 24px;
 }
 
-.wporg-query-filter__option input[type="checkbox"] {
+.wporg-query-filter__option input[type] {
 	border: 0;
 	clip: rect(1px, 1px, 1px, 1px);
 	clip-path: inset(50%);
@@ -135,6 +137,7 @@
 		padding-block: var(--wp--custom--wporg-query-filters--spacing--padding--block);
 		padding-left: var(--wp--custom--wporg-query-filters--spacing--padding--inline-start);
 		padding-right: calc(var(--wp--custom--wporg-query-filters--spacing--padding--inline-end) * 2 + var(--wporg-query-filter--icon-size));
+		line-height: 1;
 	}
 
 	&:focus + label {
@@ -147,6 +150,10 @@
 		border-radius: 2px;
 		background-color: var(--wp--custom--wporg-query-filters--option--active--color--background);
 		color: var(--wp--custom--wporg-query-filters--option--active--color--text);
+	}
+
+	/* Only checkboxes can be cleared with a second click. */
+	&[type="checkbox"]:checked + label {
 		/* stylelint-disable-next-line function-url-quotes */
 		background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 13.0607L15.7123 16.773L16.773 15.7123L13.0607 12L16.773 8.28772L15.7123 7.22706L12 10.9394L8.28771 7.22705L7.22705 8.28771L10.9394 12L7.22706 15.7123L8.28772 16.773L12 13.0607Z' fill='%231E1E1E'/%3E%3C/svg%3E%0A");
 		background-repeat: no-repeat;
