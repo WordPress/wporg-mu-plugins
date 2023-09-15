@@ -204,12 +204,21 @@
 
 	&.wporg-query-filter__modal-action-clear {
 		background-color: transparent;
-		color: #a13f2a; /* pomegrade-1 fails contrast against white. */
+		color: var(--wp--preset--color--blueberry-1);
 		font-weight: 400;
 
 		&:hover,
 		&:active {
 			background-color: var(--wp--preset--color--light-grey-2);
+		}
+
+		&[aria-disabled="true"] {
+			color: var(--wp--preset--color--charcoal-4);
+
+			&:hover,
+			&:active {
+				background-color: transparent;
+			}
 		}
 	}
 }
