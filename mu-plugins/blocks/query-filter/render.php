@@ -46,7 +46,7 @@ $encoded_state = wp_json_encode( [ 'wporg' => [ 'queryFilter' => $init_state ] ]
 // Set up a unique ID for this filter.
 $html_id = wp_unique_id( "filter-{$settings['key']}-" );
 
-$selected_count = count( $settings['selected'] );
+$selected_count = count( array_filter( $settings['selected'] ) );
 $button_classes = array_keys(
 	array_filter(
 		array(

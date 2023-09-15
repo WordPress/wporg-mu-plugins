@@ -33,14 +33,17 @@ function updateButtons( store, count ) {
 	const applyButton = context.wporg.queryFilter.form.querySelector( 'input[type="submit"]' );
 	const clearButton = context.wporg.queryFilter.form.querySelector( '.wporg-query-filter__modal-action-clear' );
 
-	if ( count && context.wporg.queryFilter.hasMultiple ) {
-		/* translators: %s is count of currently selected filters. */
-		applyButton.value = sprintf( __( 'Apply (%s)', 'wporg' ), count );
-		clearButton.setAttribute( 'aria-disabled', 'false' );
-	} else {
-		applyButton.value = __( 'Apply', 'wporg' );
-		clearButton.setAttribute( 'aria-disabled', 'true' );
+	// Only update the apply button if multiple selections are allowed.
+	if ( context.wporg.queryFilter.hasMultiple ) {
+		if ( count ) {
+			/* translators: %s is count of currently selected filters. */
+			applyButton.value = sprintf( __( 'Apply (%s)', 'wporg' ), count );
+		} else {
+			applyButton.value = __( 'Apply', 'wporg' );
+		}
 	}
+
+	clearButton.setAttribute( 'aria-disabled', count ? 'false' : 'true' );
 }
 
 wpStore( {
