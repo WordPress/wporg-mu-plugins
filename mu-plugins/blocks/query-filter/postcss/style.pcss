@@ -21,8 +21,8 @@
 	border-radius: 2px;
 	color: var(--wp--custom--wporg-query-filters--toggle--color--text);
 	font-family: var(--wp--preset--font-family--inter);
-	font-size: var(--wp--custom--button--typography--font-size);
-	line-height: var(--wp--custom--button--typography--line-height);
+	font-size: var(--wp--preset--font-size--small);
+	line-height: var(--wp--custom--body--small--typography--line-height);
 	cursor: pointer;
 	white-space: nowrap;
 
@@ -92,7 +92,7 @@
 
 .wporg-query-filter__modal {
 	position: absolute;
-	top: 100%;
+	top: calc(100% + var(--wp--preset--spacing--10));
 	right: 0;
 	width: 20rem;
 	border-radius: 2px;
@@ -140,7 +140,8 @@
 		padding-block: var(--wp--custom--wporg-query-filters--spacing--padding--block);
 		padding-left: var(--wp--custom--wporg-query-filters--spacing--padding--inline-start);
 		padding-right: calc(var(--wp--custom--wporg-query-filters--spacing--padding--inline-end) * 2 + var(--wporg-query-filter--icon-size));
-		line-height: 1;
+		font-size: var(--wp--preset--font-size--small);
+		line-height: var(--wp--custom--body--small--typography--line-height);
 	}
 
 	&:focus + label {
@@ -175,10 +176,11 @@
 }
 
 .wporg-query-filter__modal-actions input {
-	padding: 12px;
+	padding-block: var(--wp--custom--wporg-query-filters--spacing--padding--block);
+	padding-inline: 12px;
 	font-weight: var(--wp--custom--button--typography--font-weight);
-	font-size: var(--wp--custom--button--typography--font-size);
-	line-height: var(--wp--custom--button--typography--line-height);
+	font-size: var(--wp--preset--font-size--small);
+	line-height: var(--wp--custom--body--small--typography--line-height);
 	color: var(--wp--custom--button--color--text);
 	background-color: var(--wp--custom--button--color--background);
 	border: none;
@@ -306,7 +308,7 @@
 	--wp--custom--wporg-query-filters--border--color: var(--wp--preset--color--light-grey-1);
 	--wp--custom--wporg-query-filters--border--style: solid;
 	--wp--custom--wporg-query-filters--border--width: 1px;
-	--wp--custom--wporg-query-filters--spacing--padding--block: var(--wp--preset--spacing--10);
+	--wp--custom--wporg-query-filters--spacing--padding--block: calc(var(--wp--preset--spacing--10) * 0.8);
 	--wp--custom--wporg-query-filters--spacing--padding--inline-start: calc(var(--wp--preset--spacing--10) * 1.5);
 	--wp--custom--wporg-query-filters--spacing--padding--inline-end: calc(var(--wp--preset--spacing--10) * 0.8);
 	--wp--custom--wporg-query-filters--toggle--color--background: var(--wp--preset--color--white);
