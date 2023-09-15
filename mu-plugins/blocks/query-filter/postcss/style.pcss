@@ -142,6 +142,14 @@
 		padding-right: calc(var(--wp--custom--wporg-query-filters--spacing--padding--inline-end) * 2 + var(--wporg-query-filter--icon-size));
 		font-size: var(--wp--preset--font-size--small);
 		line-height: var(--wp--custom--body--small--typography--line-height);
+		transition:
+			background-color 0.2s ease-in-out,
+			color 0.2s ease-in-out;
+
+		&:hover {
+			background-color: var(--wp--custom--wporg-query-filters--option--active--color--background);
+			color: var(--wp--custom--wporg-query-filters--option--active--color--text);
+		}
 	}
 
 	&:focus + label {
