@@ -33,7 +33,7 @@ function updateButtons( store, count ) {
 	const applyButton = context.wporg.queryFilter.form.querySelector( 'input[type="submit"]' );
 	const clearButton = context.wporg.queryFilter.form.querySelector( '.wporg-query-filter__modal-action-clear' );
 
-	if ( count ) {
+	if ( count && context.wporg.queryFilter.hasMultiple ) {
 		/* translators: %s is count of currently selected filters. */
 		applyButton.value = sprintf( __( 'Apply (%s)', 'wporg' ), count );
 		clearButton.setAttribute( 'aria-disabled', 'false' );

@@ -33,14 +33,15 @@ if ( ! isset( $settings['options'] ) || ! count( $settings['options'] ) ) {
 	return;
 }
 
+$has_multiple = isset( $attributes['multiple'] ) && $attributes['multiple'];
+
 // Initial state to pass to Interactivity API.
 $init_state = [
 	'isOpen' => false,
 	'hasHover' => false,
+	'hasMultiple' => $has_multiple,
 ];
 $encoded_state = wp_json_encode( [ 'wporg' => [ 'queryFilter' => $init_state ] ] );
-
-$has_multiple = isset( $attributes['multiple'] ) && $attributes['multiple'];
 
 // Set up a unique ID for this filter.
 $html_id = wp_unique_id( "filter-{$settings['key']}-" );
@@ -56,7 +57,7 @@ $button_classes = array_keys(
 	)
 );
 
-if ( $selected_count ) {
+if ( $selected_count && $has_multiple ) {
 	/* translators: %s is count of currently selected filters. */
 	$apply_label = sprintf( __( 'Apply (%s)', 'wporg' ), $selected_count );
 } else {
