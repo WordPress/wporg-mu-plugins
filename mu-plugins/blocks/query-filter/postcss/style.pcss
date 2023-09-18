@@ -235,6 +235,10 @@
 
 /* Update layout to floating modal on smaller screens. */
 @media (max-width: 889px) {
+	html.is-query-filter-open {
+		overflow: hidden;
+	}
+
 	.wporg-query-filter__modal-backdrop {
 		background-color: rgba(0, 0, 0, 0.15);
 	}

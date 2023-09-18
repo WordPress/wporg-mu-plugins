@@ -22,6 +22,7 @@ function closeDropdown( store ) {
 
 	const count = context.wporg.queryFilter.form?.querySelectorAll( 'input:checked' ).length;
 	updateButtons( store, count );
+	document.documentElement.classList.remove( 'is-query-filter-open' );
 }
 
 function updateButtons( store, count ) {
@@ -56,6 +57,7 @@ wpStore( {
 						closeDropdown( store );
 					} else {
 						context.wporg.queryFilter.isOpen = true;
+						document.documentElement.classList.add( 'is-query-filter-open' );
 					}
 				},
 				handleKeydown: ( store ) => {
