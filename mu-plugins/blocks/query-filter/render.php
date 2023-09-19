@@ -33,27 +33,36 @@ if ( ! isset( $settings['options'] ) || ! count( $settings['options'] ) ) {
 	return;
 }
 
+$has_multiple = isset( $attributes['multiple'] ) && $attributes['multiple'];
+
 // Initial state to pass to Interactivity API.
 $init_state = [
 	'isOpen' => false,
 	'hasHover' => false,
+	'hasMultiple' => $has_multiple,
 ];
 $encoded_state = wp_json_encode( [ 'wporg' => [ 'queryFilter' => $init_state ] ] );
-
-$has_multiple = isset( $attributes['multiple'] ) && $attributes['multiple'];
 
 // Set up a unique ID for this filter.
 $html_id = wp_unique_id( "filter-{$settings['key']}-" );
 
+$selected_count = count( array_filter( $settings['selected'] ) );
 $button_classes = array_keys(
 	array_filter(
 		array(
 			'wporg-query-filter__toggle' => true,
-			'has-no-filter-applied' => ! count( $settings['selected'] ),
+			'has-no-filter-applied' => ! $selected_count,
 			'is-single-select' => ! $has_multiple,
 		)
 	)
 );
+
+if ( $selected_count && $has_multiple ) {
+	/* translators: %s is count of currently selected filters. */
+	$apply_label = sprintf( __( 'Apply (%s)', 'wporg' ), $selected_count );
+} else {
+	$apply_label = __( 'Apply', 'wporg' );
+}
 ?>
 <div
 	<?php echo get_block_wrapper_attributes(); // phpcs:ignore ?>
@@ -138,10 +147,11 @@ $button_classes = array_keys(
 					class="wporg-query-filter__modal-action-clear"
 					value="<?php esc_attr_e( 'Clear', 'wporg' ); ?>"
 					data-wp-on--click="actions.wporg.queryFilter.clearSelection"
+					aria-disabled="<?php echo $selected_count ? 'false' : 'true'; ?>"
 				/>
 				<input
 					type="submit"
-					value="<?php esc_html_e( 'Apply', 'wporg' ); ?>"
+					value="<?php echo esc_html( $apply_label ); ?>"
 				/>
 			</div> <!-- /.wporg-query-filter__modal-actions -->
 		</form>

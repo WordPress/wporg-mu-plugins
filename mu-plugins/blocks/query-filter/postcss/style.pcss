@@ -21,8 +21,8 @@
 	border-radius: 2px;
 	color: var(--wp--custom--wporg-query-filters--toggle--color--text);
 	font-family: var(--wp--preset--font-family--inter);
-	font-size: var(--wp--custom--button--typography--font-size);
-	line-height: var(--wp--custom--button--typography--line-height);
+	font-size: var(--wp--preset--font-size--small);
+	line-height: var(--wp--custom--body--small--typography--line-height);
 	cursor: pointer;
 	white-space: nowrap;
 
@@ -92,7 +92,7 @@
 
 .wporg-query-filter__modal {
 	position: absolute;
-	top: 100%;
+	top: calc(100% + var(--wp--preset--spacing--10));
 	right: 0;
 	width: 20rem;
 	border-radius: 2px;
@@ -117,6 +117,7 @@
 
 .wporg-query-filter__option {
 	--wporg-query-filter--icon-size: 24px;
+	position: relative;
 }
 
 .wporg-query-filter__option input[type] {
@@ -128,6 +129,8 @@
 	overflow: hidden;
 	padding: 0;
 	position: absolute;
+	top: 0;
+	left: 0;
 	width: 1px;
 	word-wrap: normal !important;
 
@@ -137,7 +140,17 @@
 		padding-block: var(--wp--custom--wporg-query-filters--spacing--padding--block);
 		padding-left: var(--wp--custom--wporg-query-filters--spacing--padding--inline-start);
 		padding-right: calc(var(--wp--custom--wporg-query-filters--spacing--padding--inline-end) * 2 + var(--wporg-query-filter--icon-size));
-		line-height: 1;
+		font-size: var(--wp--preset--font-size--small);
+		line-height: var(--wp--custom--body--small--typography--line-height);
+		border-radius: 2px;
+		transition:
+			background-color 0.2s ease-in-out,
+			color 0.2s ease-in-out;
+
+		&:hover {
+			background-color: var(--wp--custom--wporg-query-filters--option--active--color--background);
+			color: var(--wp--custom--wporg-query-filters--option--active--color--text);
+		}
 	}
 
 	&:focus + label {
@@ -147,7 +160,6 @@
 	}
 
 	&:checked + label {
-		border-radius: 2px;
 		background-color: var(--wp--custom--wporg-query-filters--option--active--color--background);
 		color: var(--wp--custom--wporg-query-filters--option--active--color--text);
 	}
@@ -172,10 +184,11 @@
 }
 
 .wporg-query-filter__modal-actions input {
-	padding: 12px;
+	padding-block: var(--wp--custom--wporg-query-filters--spacing--padding--block);
+	padding-inline: 12px;
 	font-weight: var(--wp--custom--button--typography--font-weight);
-	font-size: var(--wp--custom--button--typography--font-size);
-	line-height: var(--wp--custom--button--typography--line-height);
+	font-size: var(--wp--preset--font-size--small);
+	line-height: var(--wp--custom--body--small--typography--line-height);
 	color: var(--wp--custom--button--color--text);
 	background-color: var(--wp--custom--button--color--background);
 	border: none;
@@ -201,18 +214,31 @@
 
 	&.wporg-query-filter__modal-action-clear {
 		background-color: transparent;
-		color: #a13f2a; /* pomegrade-1 fails contrast against white. */
+		color: var(--wp--preset--color--blueberry-1);
 		font-weight: 400;
 
 		&:hover,
 		&:active {
 			background-color: var(--wp--preset--color--light-grey-2);
 		}
+
+		&[aria-disabled="true"] {
+			color: var(--wp--preset--color--charcoal-4);
+
+			&:hover,
+			&:active {
+				background-color: transparent;
+			}
+		}
 	}
 }
 
 /* Update layout to floating modal on smaller screens. */
 @media (max-width: 889px) {
+	html.is-query-filter-open {
+		overflow: hidden;
+	}
+
 	.wporg-query-filter__modal-backdrop {
 		background-color: rgba(0, 0, 0, 0.15);
 	}
@@ -294,7 +320,7 @@
 	--wp--custom--wporg-query-filters--border--color: var(--wp--preset--color--light-grey-1);
 	--wp--custom--wporg-query-filters--border--style: solid;
 	--wp--custom--wporg-query-filters--border--width: 1px;
-	--wp--custom--wporg-query-filters--spacing--padding--block: var(--wp--preset--spacing--10);
+	--wp--custom--wporg-query-filters--spacing--padding--block: calc(var(--wp--preset--spacing--10) * 0.8);
 	--wp--custom--wporg-query-filters--spacing--padding--inline-start: calc(var(--wp--preset--spacing--10) * 1.5);
 	--wp--custom--wporg-query-filters--spacing--padding--inline-end: calc(var(--wp--preset--spacing--10) * 0.8);
 	--wp--custom--wporg-query-filters--toggle--color--background: var(--wp--preset--color--white);

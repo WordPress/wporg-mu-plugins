@@ -1,6 +1,7 @@
 /**
  * WordPress dependencies
  */
+import { __, sprintf } from '@wordpress/i18n';
 import { store as wpStore } from '@wordpress/interactivity';
 
 // See https://github.com/WordPress/gutenberg/blob/37f52ae884a40f7cb77ac2484648b4e4ad973b59/packages/block-library/src/navigation/view-interactivity.js
@@ -20,23 +21,30 @@ function closeDropdown( store ) {
 	context.wporg.queryFilter.form?.reset();
 
 	const count = context.wporg.queryFilter.form?.querySelectorAll( 'input:checked' ).length;
-	updateToggleLabel( store, count );
+	updateButtons( store, count );
+	document.documentElement.classList.remove( 'is-query-filter-open' );
 }
 
-function updateToggleLabel( store, count ) {
+function updateButtons( store, count ) {
 	const { context } = store;
-	const toggle = context.wporg.queryFilter.toggleButton;
-	if ( ! toggle ) {
+	if ( ! context.wporg.queryFilter.form ) {
 		return;
 	}
-	if ( toggle.querySelector( 'span' ) ) {
-		toggle.querySelector( 'span' ).innerText = count;
+
+	const applyButton = context.wporg.queryFilter.form.querySelector( 'input[type="submit"]' );
+	const clearButton = context.wporg.queryFilter.form.querySelector( '.wporg-query-filter__modal-action-clear' );
+
+	// Only update the apply button if multiple selections are allowed.
+	if ( context.wporg.queryFilter.hasMultiple ) {
+		if ( count ) {
+			/* translators: %s is count of currently selected filters. */
+			applyButton.value = sprintf( __( 'Apply (%s)', 'wporg' ), count );
+		} else {
+			applyButton.value = __( 'Apply', 'wporg' );
+		}
 	}
-	if ( count ) {
-		toggle.classList.remove( 'has-no-filter-applied' );
-	} else {
-		toggle.classList.add( 'has-no-filter-applied' );
-	}
+
+	clearButton.setAttribute( 'aria-disabled', count ? 'false' : 'true' );
 }
 
 wpStore( {
@@ -49,6 +57,7 @@ wpStore( {
 						closeDropdown( store );
 					} else {
 						context.wporg.queryFilter.isOpen = true;
+						document.documentElement.classList.add( 'is-query-filter-open' );
 					}
 				},
 				handleKeydown: ( store ) => {
@@ -81,14 +90,17 @@ wpStore( {
 				handleFormChange: ( store ) => {
 					const { context } = store;
 					const count = context.wporg.queryFilter.form.querySelectorAll( 'input:checked' ).length;
-					updateToggleLabel( store, count );
+					updateButtons( store, count );
 				},
 				clearSelection: ( store ) => {
-					const { context } = store;
+					const { context, ref } = store;
+					if ( 'true' === ref.getAttribute( 'aria-disabled' ) ) {
+						return;
+					}
 					context.wporg.queryFilter.form
 						.querySelectorAll( 'input' )
 						.forEach( ( input ) => ( input.checked = false ) );
-					updateToggleLabel( store, 0 );
+					updateButtons( store, 0 );
 				},
 			},
 		},
