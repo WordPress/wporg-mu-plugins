@@ -90,7 +90,8 @@ if ( $selected_count && $has_multiple ) {
 		class="wporg-query-filter__modal"
 		id="<?php echo esc_attr( $html_id ); ?>"
 		data-wp-bind--hidden="!context.wporg.queryFilter.isOpen"
-		data-wp-effect="effects.wporg.queryFilter.focusFirstElement"
+		data-wp-effect--focus="effects.wporg.queryFilter.focusFirstElement"
+		data-wp-effect--position="effects.wporg.queryFilter.checkPosition"
 	>
 		<form
 			action="<?php echo esc_attr( $settings['action'] ); ?>"

@@ -119,6 +119,14 @@ wpStore( {
 							focusableElements[ focusableElements.length - 1 ];
 					}
 				},
+				checkPosition: ( { context, ref } ) => {
+					if ( context.wporg.queryFilter.isOpen ) {
+						const position = ref.getBoundingClientRect();
+						if ( position.left < 0 ) {
+							ref.style.left = 0;
+						}
+					}
+				},
 				focusFirstElement: ( { context, ref } ) => {
 					if ( context.wporg.queryFilter.isOpen ) {
 						ref.querySelector( 'form input:first-child' ).focus();
