@@ -17,6 +17,8 @@ add_action( 'wp_head', __NAMESPACE__ . '\preload_google_fonts' );
 add_filter( 'style_loader_src', __NAMESPACE__ . '\update_google_fonts_url', 10, 2 );
 add_filter( 'render_block_core/navigation-link', __NAMESPACE__ . '\swap_submenu_arrow_svg' );
 add_filter( 'render_block_core/search', __NAMESPACE__ . '\swap_header_search_action', 10, 2 );
+add_filter( 'render_block_wporg/global-header', __NAMESPACE__ . '\add_aria_hidden_to_arrows', 19 );
+add_filter( 'render_block_wporg/global-footer', __NAMESPACE__ . '\add_aria_hidden_to_arrows', 19 );
 add_filter( 'render_block_data', __NAMESPACE__ . '\update_block_style_colors' );
 
 /**
@@ -996,6 +998,17 @@ function swap_header_search_action( $block_content, $block ) {
 	}
 
 	return $block_content;
+}
+
+/**
+ * Wrap the arrow emoji in an aria-hidden span tag, to prevent screen readers
+ * from trying to read them.
+ *
+ * @param string $content Content of the block.
+ * @return string The updated content.
+ */
+function add_aria_hidden_to_arrows( $content ) {
+	return preg_replace( '/([←↑→↓↔↕↖↗↘↙])/u', '<span aria-hidden="true">\1</span>', $content );
 }
 
 /**
