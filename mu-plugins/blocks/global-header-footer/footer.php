@@ -22,7 +22,7 @@ $code_is_poetry_src = isset( $attributes['textColor'] ) && str_contains( $attrib
 ?>
 
 <!-- wp:group {"tagName":"nav","align":"full","style":{"spacing":{"blockGap":"var:preset|spacing|20"}},"className":"global-footer__navigation-container","layout":{"type":"grid","minimumColumnWidth":"150px"}} -->
-<nav class="wp-block-group alignfull global-footer__navigation-container">
+<nav class="wp-block-group alignfull global-footer__navigation-container" aria-label="<?php esc_html_e( 'Footer', 'wporg' ); ?>">
 	<!-- wp:list -->
 	<ul>
 		<!-- wp:list-item -->
