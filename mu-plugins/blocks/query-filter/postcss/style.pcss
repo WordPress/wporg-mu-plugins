@@ -2,7 +2,11 @@
 	position: relative;
 
 	&.is-modal-open {
-		z-index: 100000; /* admin bar + 1. */
+		z-index: 9; /* less than global header & local nav. */
+
+		@media (max-width: 889px) {
+			z-index: 100000; /* admin bar + 1. */
+		}
 	}
 }
 
