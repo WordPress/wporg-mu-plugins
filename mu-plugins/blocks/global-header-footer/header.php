@@ -81,7 +81,7 @@ function recursive_menu( $menu_item, $top_level = true ) {
 <!-- /wp:paragraph -->
 <?php endif; ?>
 
-<!-- wp:navigation {"className":"global-header__navigation","layout":{"type":"flex","orientation":"horizontal"}} -->
+<!-- wp:navigation {"openSubmenusOnClick":true,"className":"global-header__navigation","layout":{"type":"flex","orientation":"horizontal"}} -->
 	<?php
 	/*
 	* Loop though menu items and create navigation item blocks. Recurses through any submenu items to output dropdowns.
