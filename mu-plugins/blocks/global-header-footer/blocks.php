@@ -422,23 +422,23 @@ function get_global_menu_items() {
 			'type'    => 'custom',
 		),
 		array(
-			'title'   => esc_html_x( 'Download & Extend', 'Menu item title', 'wporg' ),
-			'url'     => 'https://wordpress.org/download/',
+			'title' => esc_html_x( 'Showcase', 'Menu item title', 'wporg' ),
+			'url'   => 'https://wordpress.org/showcase/',
+			'type'  => 'custom',
+		),
+		array(
+			'title' => esc_html_x( 'Hosting', 'Menu item title', 'wporg' ),
+			'url'   => 'https://wordpress.org/hosting/',
+			'type'  => 'custom',
+		),
+		array(
+			'title'   => esc_html_x( 'Extend', 'Menu item title', 'wporg' ),
+			'url'     => '#',
 			'type'    => 'custom',
 			'submenu' => array(
 				array(
-					'title' => esc_html_x( 'Get WordPress', 'Menu item title', 'wporg' ),
-					'url'   => 'https://wordpress.org/download/',
-					'type'  => 'custom',
-				),
-				array(
 					'title' => esc_html_x( 'Themes', 'Menu item title', 'wporg' ),
 					'url'   => 'https://wordpress.org/themes/',
-					'type'  => 'custom',
-				),
-				array(
-					'title' => esc_html_x( 'Patterns', 'Menu item title', 'wporg' ),
-					'url'   => 'https://wordpress.org/patterns/',
 					'type'  => 'custom',
 				),
 				array(
@@ -447,13 +447,13 @@ function get_global_menu_items() {
 					'type'  => 'custom',
 				),
 				array(
-					'title' => esc_html_x( 'Mobile', 'Menu item title', 'wporg' ),
-					'url'   => 'https://wordpress.org/mobile/',
+					'title' => esc_html_x( 'Patterns', 'Menu item title', 'wporg' ),
+					'url'   => 'https://wordpress.org/patterns/',
 					'type'  => 'custom',
 				),
 				array(
-					'title' => esc_html_x( 'Hosting', 'Menu item title', 'wporg' ),
-					'url'   => 'https://wordpress.org/hosting/',
+					'title' => esc_html_x( 'Blocks', 'Menu item title', 'wporg' ),
+					'url'   => 'https://wordpress.org/blocks/',
 					'type'  => 'custom',
 				),
 				array(
@@ -543,11 +543,6 @@ function get_global_menu_items() {
 					'type'  => 'custom',
 				),
 				array(
-					'title' => esc_html_x( 'Showcase', 'Menu item title', 'wporg' ),
-					'url'   => 'https://wordpress.org/showcase/',
-					'type'  => 'custom',
-				),
-				array(
 					'title' => esc_html_x( 'Enterprise', 'Menu item title', 'wporg' ),
 					'url'   => 'https://wordpress.org/enterprise/',
 					'type'  => 'custom',
@@ -558,7 +553,7 @@ function get_global_menu_items() {
 					'type'  => 'custom',
 				),
 				array(
-					'title' => esc_html_x( 'WordPress Swag Store ↗︎', 'Menu item title', 'wporg' ),
+					'title' => esc_html_x( 'Swag Store ↗︎', 'Menu item title', 'wporg' ),
 					'url'   => 'https://mercantile.wordpress.org/',
 					'type'  => 'custom',
 				),
