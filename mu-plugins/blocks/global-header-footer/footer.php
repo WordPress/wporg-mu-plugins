@@ -98,7 +98,7 @@ $code_is_poetry_src = isset( $attributes['textColor'] ) && str_contains( $attrib
 	<!-- wp:social-links {"className":"is-style-logos-only"} -->
 	<ul class="wp-block-social-links is-style-logos-only">
 		<!-- wp:social-link {"url":"https://www.facebook.com/WordPress/","service":"facebook","label":"<?php echo esc_html_x( 'Visit our Facebook page', 'Menu item title', 'wporg' ); ?>"} /-->
-		<!-- wp:social-link {"url":"https://www.x.com/WordPress","service":"x","label":"<?php echo esc_html_x( 'Visit our X account', 'Menu item title', 'wporg' ); ?>"} /-->
+		<!-- wp:social-link {"url":"https://www.x.com/WordPress","service":"x","label":"<?php echo esc_html_x( 'Visit our X (formerly Twitter) account', 'Menu item title', 'wporg' ); ?>"} /-->
 		<!-- wp:social-link {"url":"https://www.instagram.com/wordpress/","service":"instagram","label":"<?php echo esc_html_x( 'Visit our Instagram account', 'Menu item title', 'wporg' ); ?>"} /-->
 		<!-- wp:social-link {"url":"https://www.linkedin.com/company/wordpress","service":"linkedin","label":"<?php echo esc_html_x( 'Visit our LinkedIn account', 'Menu item title', 'wporg' ); ?>"} /-->
 		<!-- wp:social-link {"url":"https://www.youtube.com/wordpress","service":"youtube","label":"<?php echo esc_html_x( 'Visit our YouTube channel', 'Menu item title', 'wporg' ); ?>"} /-->
