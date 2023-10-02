@@ -4,10 +4,15 @@
 
 	padding-right: var(--wp--preset--spacing--edge-space);
 	padding-left: var(--wp--preset--spacing--edge-space);
-	padding-top: 17px;
+	padding-top: 18px;
 	padding-bottom: 18px;
 
 	top: var(--wp-admin--admin-bar--height, 0);
+
+	/* If a sticky element is next, it needs to account for the nav bar offset. */
+	& + :where(.wp-block-group.is-position-sticky) {
+		top: calc(var(--wp-admin--admin-bar--height, 0) + 60px);
+	}
 }
 
 .wp-block-wporg-local-navigation-bar {
@@ -69,13 +74,6 @@
 			mask-size: cover;
 			mask-position: bottom right;
 			background-color: inherit;
-		}
-	}
-
-	/* Make sure breadcrumbs inherit the set text color */
-	& .wp-block-wporg-site-breadcrumbs {
-		& a {
-			color: inherit;
 		}
 	}
 
