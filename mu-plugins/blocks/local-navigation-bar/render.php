@@ -3,6 +3,8 @@
  * Render the block content.
  */
 
+use function WordPressdotorg\MU_Plugins\Global_Header_Footer\get_home_url;
+
 $wrapper_attributes = get_block_wrapper_attributes();
 ?>
 <div
