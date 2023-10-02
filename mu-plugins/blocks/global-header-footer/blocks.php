@@ -17,6 +17,8 @@ add_action( 'wp_head', __NAMESPACE__ . '\preload_google_fonts' );
 add_filter( 'style_loader_src', __NAMESPACE__ . '\update_google_fonts_url', 10, 2 );
 add_filter( 'render_block_core/navigation-link', __NAMESPACE__ . '\swap_submenu_arrow_svg' );
 add_filter( 'render_block_core/search', __NAMESPACE__ . '\swap_header_search_action', 10, 2 );
+add_filter( 'render_block_wporg/global-header', __NAMESPACE__ . '\add_aria_hidden_to_arrows', 19 );
+add_filter( 'render_block_wporg/global-footer', __NAMESPACE__ . '\add_aria_hidden_to_arrows', 19 );
 add_filter( 'render_block_data', __NAMESPACE__ . '\update_block_style_colors' );
 
 /**
@@ -810,7 +812,6 @@ function render_global_footer( $attributes, $content, $block ) {
 
 	if ( is_rosetta_site() ) {
 		$locale_title = get_rosetta_name();
-		add_filter( 'render_block_data', __NAMESPACE__ . '\localize_nav_links' );
 	} else {
 		$locale_title = '';
 	}
@@ -831,8 +832,6 @@ function render_global_footer( $attributes, $content, $block ) {
 		require_once __DIR__ . '/classic-footer.php';
 		$footer_markup = ob_get_clean();
 	}
-
-	remove_filter( 'render_block_data', __NAMESPACE__ . '\localize_nav_links' );
 
 	$wrapper_attributes = get_block_wrapper_attributes(
 		array( 'class' => 'global-footer wp-block-group' )
@@ -870,29 +869,6 @@ function update_block_style_colors( $block ) {
 	return $block;
 }
 
-
-/**
- * Localise a `core/navigation-link` block link to point to the Rosetta site resource.
- *
- * Unfortunately WordPress doesn't have a block-specific pre- filter, only a block-specific post-filter.
- * That's why we specifically check for the blockName here.
- *
- * @param array $block The parsed block data.
- *
- * @return array
- */
-function localize_nav_links( $block ) {
-	if (
-		! empty( $block['blockName'] ) &&
-		'core/navigation-link' === $block['blockName'] &&
-		! empty( $block['attrs']['url'] )
-	) {
-		$block['attrs']['url'] = get_localized_footer_link( $block['attrs']['url'] );
-	}
-
-	return $block;
-}
-
 /**
  * Get a localized variant of a link included in the global footer.
  *
@@ -900,7 +876,7 @@ function localize_nav_links( $block ) {
  *
  * @return string Replacement URL, which may be localised.
  */
-function get_localized_footer_link( $url ) {
+function get_localized_link( $url ) {
 	global $rosetta;
 	if ( empty( $rosetta->current_site_domain ) ) {
 		return $url;
@@ -996,6 +972,17 @@ function swap_header_search_action( $block_content, $block ) {
 	}
 
 	return $block_content;
+}
+
+/**
+ * Wrap the arrow emoji in an aria-hidden span tag, to prevent screen readers
+ * from trying to read them.
+ *
+ * @param string $content Content of the block.
+ * @return string The updated content.
+ */
+function add_aria_hidden_to_arrows( $content ) {
+	return preg_replace( '/([←↑→↓↔↕↖↗↘↙])/u', '<span aria-hidden="true">\1</span>', $content );
 }
 
 /**
