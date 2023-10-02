@@ -40,7 +40,22 @@ $code_is_poetry_src = isset( $attributes['textColor'] ) && str_contains( $attrib
 	</ul>
 	<!-- /wp:list -->
 
-	
+	<!-- wp:list -->
+	<ul>
+		<!-- wp:list-item -->
+		<li><a href="<?php echo esc_url( get_localized_link( 'https://wordpress.org/showcase/' ) ); ?>"><?php echo esc_html_x( 'Showcase', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
+		<!-- wp:list-item -->
+		<li><a href="<?php echo esc_url( get_localized_link( 'https://wordpress.org/themes/' ) ); ?>"><?php echo esc_html_x( 'Themes', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
+		<!-- wp:list-item -->
+		<li><a href="<?php echo esc_url( get_localized_link( 'https://wordpress.org/plugins/' ) ); ?>"><?php echo esc_html_x( 'Plugins', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
+		<!-- wp:list-item -->
+		<li><a href="<?php echo esc_url( get_localized_link( 'https://wordpress.org/patterns/' ) ); ?>"><?php echo esc_html_x( 'Patterns', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
+	</ul>
+	<!-- /wp:list -->
 
 	<!-- wp:list -->
 	<ul>
