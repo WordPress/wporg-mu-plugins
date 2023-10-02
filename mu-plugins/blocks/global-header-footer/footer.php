@@ -27,42 +27,42 @@ $code_is_poetry_src = isset( $attributes['textColor'] ) && str_contains( $attrib
 		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'About', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/about/","kind":"custom","isTopLevelLink":true} /-->
 		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'News', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/news/","kind":"custom","isTopLevelLink":true} /-->
 		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Hosting', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/hosting/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Donate', 'Menu item title', 'wporg' ); ?>","url":"https://wordpressfoundation.org/donate/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Swag', 'Menu item title', 'wporg' ); ?>","url":"https://mercantile.wordpress.org/","kind":"custom","isTopLevelLink":true} /-->
+		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Privacy', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/about/privacy/","kind":"custom","isTopLevelLink":true} /-->
+	<!-- /wp:navigation -->
+
+	<!-- wp:navigation {"orientation":"vertical","className":"global-footer__navigation-resources","overlayMenu":"never"} -->
+		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Showcase', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/showcase/","kind":"custom","isTopLevelLink":true} /-->
+		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Themes', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/themes/","kind":"custom","isTopLevelLink":true} /-->
+		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Plugins', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/plugins/","kind":"custom","isTopLevelLink":true} /-->
+		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Patterns', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/patterns/","kind":"custom","isTopLevelLink":true} /-->
 	<!-- /wp:navigation -->
 
 	<!-- wp:navigation {"orientation":"vertical","className":"global-footer__navigation-information","overlayMenu":"never"} -->
+		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Learn', 'Menu item title', 'wporg' ); ?>","url":"https://learn.wordpress.org/","kind":"custom","isTopLevelLink":true} /-->
 		<?php if ( is_rosetta_site() ) { ?>
 		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Support', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/support/","kind":"custom","isTopLevelLink":true} /-->
 		<?php } else { ?>
 		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Documentation', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/documentation/","kind":"custom","isTopLevelLink":true} /-->
 		<?php } ?>
 		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Developers', 'Menu item title', 'wporg' ); ?>","url":"https://developer.wordpress.org/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Get Involved', 'Menu item title', 'wporg' ); ?>","url":"https://make.wordpress.org/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Learn', 'Menu item title', 'wporg' ); ?>","url":"https://learn.wordpress.org/","kind":"custom","isTopLevelLink":true} /-->
-	<!-- /wp:navigation -->
-
-	<!-- wp:navigation {"orientation":"vertical","className":"global-footer__navigation-resources","overlayMenu":"never"} -->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Showcase', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/showcase/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Plugins', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/plugins/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Themes', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/themes/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Patterns', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/patterns/","kind":"custom","isTopLevelLink":true} /-->
+		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'WordPress.tv ↗', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.tv/","kind":"custom","isTopLevelLink":true} /-->
 	<!-- /wp:navigation -->
 
 	<!-- wp:navigation {"orientation":"vertical","className":"global-footer__navigation-community","overlayMenu":"never"} -->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'WordCamp', 'Menu item title', 'wporg' ); ?>","url":"https://central.wordcamp.org/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'WordPress.TV', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.tv/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'BuddyPress', 'Menu item title', 'wporg' ); ?>","url":"https://buddypress.org/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'bbPress', 'Menu item title', 'wporg' ); ?>","url":"https://bbpress.org/","kind":"custom","isTopLevelLink":true} /-->
+		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Get Involved', 'Menu item title', 'wporg' ); ?>","url":"https://make.wordpress.org/","kind":"custom","isTopLevelLink":true} /-->
+		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Donate ↗', 'Menu item title', 'wporg' ); ?>","url":"https://wordpressfoundation.org/donate/","kind":"custom","isTopLevelLink":true} /-->
+		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Swag Store ↗', 'Menu item title', 'wporg' ); ?>","url":"https://mercantile.wordpress.org/","kind":"custom","isTopLevelLink":true} /-->
+		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'WordCamp ↗', 'Menu item title', 'wporg' ); ?>","url":"https://central.wordcamp.org/","kind":"custom","isTopLevelLink":true} /-->
 	<!-- /wp:navigation -->
 
 	<!-- wp:navigation {"orientation":"vertical","className":"global-footer__navigation-external","overlayMenu":"never"} -->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'WordPress.com', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.com/?ref=wporg-footer","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Matt', 'Menu item title', 'wporg' ); ?>","url":"https://ma.tt/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Privacy', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/about/privacy/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Public Code', 'Menu item title', 'wporg' ); ?>","url":"https://publiccode.eu/","kind":"custom","isTopLevelLink":true} /-->
+		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'WordPress.com ↗', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.com/?ref=wporg-footer","kind":"custom","isTopLevelLink":true} /-->
+		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Matt ↗', 'Menu item title', 'wporg' ); ?>","url":"https://ma.tt/","kind":"custom","isTopLevelLink":true} /-->
+		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'bbPress ↗', 'Menu item title', 'wporg' ); ?>","url":"https://bbpress.org/","kind":"custom","isTopLevelLink":true} /-->
+		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'BuddyPress ↗', 'Menu item title', 'wporg' ); ?>","url":"https://buddypress.org/","kind":"custom","isTopLevelLink":true} /-->
 	<!-- /wp:navigation -->
-</div> <!-- /wp:group -->
+</div>
+<!-- /wp:group -->
 
 <!-- wp:group {"className":"global-footer__logos-container"} -->
 <div class="wp-block-group global-footer__logos-container">
