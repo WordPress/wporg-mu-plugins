@@ -35,16 +35,18 @@ $code_is_poetry_src = isset( $attributes['textColor'] ) && str_contains( $attrib
 		<li><a href="<?php echo esc_url( get_localized_link( 'https://wordpress.org/hosting/' ) ); ?>"><?php echo esc_html_x( 'Hosting', 'Menu item title', 'wporg' ); ?></a></li>
 		<!-- /wp:list-item -->
 		<!-- wp:list-item -->
-		<li><a href="https://wordpressfoundation.org/donate/"><?php echo esc_html_x( 'Donate', 'Menu item title', 'wporg' ); ?></a></li>
-		<!-- /wp:list-item -->
-		<!-- wp:list-item -->
-		<li><a href="https://mercantile.wordpress.org/"><?php echo esc_html_x( 'Swag', 'Menu item title', 'wporg' ); ?></a></li>
+		<li><a href="<?php echo esc_url( get_localized_link( 'https://wordpress.org/about/privacy/' ) ); ?>"><?php echo esc_html_x( 'Privacy', 'Menu item title', 'wporg' ); ?></a></li>
 		<!-- /wp:list-item -->
 	</ul>
 	<!-- /wp:list -->
 
+	
+
 	<!-- wp:list -->
 	<ul>
+		<!-- wp:list-item -->
+		<li><a href="<?php echo esc_url( get_localized_link( 'https://learn.wordpress.org/' ) ); ?>"><?php echo esc_html_x( 'Learn', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
 		<?php if ( is_rosetta_site() ) { ?>
 			<!-- wp:list-item -->
 			<li><a href="<?php echo esc_url( get_localized_link( 'https://wordpress.org/support/' ) ); ?>"><?php echo esc_html_x( 'Support', 'Menu item title', 'wporg' ); ?></a></li>
@@ -58,10 +60,24 @@ $code_is_poetry_src = isset( $attributes['textColor'] ) && str_contains( $attrib
 		<li><a href="<?php echo esc_url( get_localized_link( 'https://developer.wordpress.org/' ) ); ?>"><?php echo esc_html_x( 'Developers', 'Menu item title', 'wporg' ); ?></a></li>
 		<!-- /wp:list-item -->
 		<!-- wp:list-item -->
+		<li><a href="https://wordpress.tv/"><?php echo esc_html_x( 'WordPress.tv ↗', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
+	</ul>
+	<!-- /wp:list -->
+
+	<!-- wp:list -->
+	<ul>
+		<!-- wp:list-item -->
 		<li><a href="https://make.wordpress.org/"><?php echo esc_html_x( 'Get Involved', 'Menu item title', 'wporg' ); ?></a></li>
 		<!-- /wp:list-item -->
 		<!-- wp:list-item -->
-		<li><a href="<?php echo esc_url( get_localized_link( 'https://learn.wordpress.org/' ) ); ?>"><?php echo esc_html_x( 'Learn', 'Menu item title', 'wporg' ); ?></a></li>
+		<li><a href="https://wordpressfoundation.org/donate/"><?php echo esc_html_x( 'Donate ↗', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
+		<!-- wp:list-item -->
+		<li><a href="https://mercantile.wordpress.org/"><?php echo esc_html_x( 'Swag Store ↗', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
+		<!-- wp:list-item -->
+		<li><a href="https://central.wordcamp.org/"><?php echo esc_html_x( 'WordCamp ↗', 'Menu item title', 'wporg' ); ?></a></li>
 		<!-- /wp:list-item -->
 	</ul>
 	<!-- /wp:list -->
@@ -69,50 +85,16 @@ $code_is_poetry_src = isset( $attributes['textColor'] ) && str_contains( $attrib
 	<!-- wp:list -->
 	<ul>
 		<!-- wp:list-item -->
-		<li><a href="<?php echo esc_url( get_localized_link( 'https://wordpress.org/showcase/' ) ); ?>"><?php echo esc_html_x( 'Showcase', 'Menu item title', 'wporg' ); ?></a></li>
+		<li><a href="https://wordpress.com/?ref=wporg-footer"><?php echo esc_html_x( 'WordPress.com ↗', 'Menu item title', 'wporg' ); ?></a></li>
 		<!-- /wp:list-item -->
 		<!-- wp:list-item -->
-		<li><a href="<?php echo esc_url( get_localized_link( 'https://wordpress.org/plugins/' ) ); ?>"><?php echo esc_html_x( 'Plugins', 'Menu item title', 'wporg' ); ?></a></li>
+		<li><a href="https://ma.tt/"><?php echo esc_html_x( 'Matt ↗', 'Menu item title', 'wporg' ); ?></a></li>
 		<!-- /wp:list-item -->
 		<!-- wp:list-item -->
-		<li><a href="<?php echo esc_url( get_localized_link( 'https://wordpress.org/themes/' ) ); ?>"><?php echo esc_html_x( 'Themes', 'Menu item title', 'wporg' ); ?></a></li>
+		<li><a href="https://bbpress.org/"><?php echo esc_html_x( 'bbPress ↗', 'Menu item title', 'wporg' ); ?></a></li>
 		<!-- /wp:list-item -->
 		<!-- wp:list-item -->
-		<li><a href="<?php echo esc_url( get_localized_link( 'https://wordpress.org/patterns/' ) ); ?>"><?php echo esc_html_x( 'Patterns', 'Menu item title', 'wporg' ); ?></a></li>
-		<!-- /wp:list-item -->
-	</ul>
-	<!-- /wp:list -->
-
-	<!-- wp:list -->
-	<ul>
-		<!-- wp:list-item -->
-		<li><a href="https://central.wordcamp.org/"><?php echo esc_html_x( 'WordCamp', 'Menu item title', 'wporg' ); ?></a></li>
-		<!-- /wp:list-item -->
-		<!-- wp:list-item -->
-		<li><a href="https://wordpress.tv/"><?php echo esc_html_x( 'WordPress.TV', 'Menu item title', 'wporg' ); ?></a></li>
-		<!-- /wp:list-item -->
-		<!-- wp:list-item -->
-		<li><a href="https://buddypress.org/"><?php echo esc_html_x( 'BuddyPress', 'Menu item title', 'wporg' ); ?></a></li>
-		<!-- /wp:list-item -->
-		<!-- wp:list-item -->
-		<li><a href="https://bbpress.org/"><?php echo esc_html_x( 'bbPress', 'Menu item title', 'wporg' ); ?></a></li>
-		<!-- /wp:list-item -->
-	</ul>
-	<!-- /wp:list -->
-
-	<!-- wp:list -->
-	<ul>
-		<!-- wp:list-item -->
-		<li><a href="https://wordpress.com/?ref=wporg-footer"><?php echo esc_html_x( 'WordPress.com', 'Menu item title', 'wporg' ); ?></a></li>
-		<!-- /wp:list-item -->
-		<!-- wp:list-item -->
-		<li><a href="https://ma.tt/"><?php echo esc_html_x( 'Matt', 'Menu item title', 'wporg' ); ?></a></li>
-		<!-- /wp:list-item -->
-		<!-- wp:list-item -->
-		<li><a href="<?php echo esc_url( get_localized_link( 'https://wordpress.org/about/privacy/' ) ); ?>"><?php echo esc_html_x( 'Privacy', 'Menu item title', 'wporg' ); ?></a></li>
-		<!-- /wp:list-item -->
-		<!-- wp:list-item -->
-		<li><a href="https://publiccode.eu/"><?php echo esc_html_x( 'Public Code', 'Menu item title', 'wporg' ); ?></a></li>
+		<li><a href="https://buddypress.org/"><?php echo esc_html_x( 'BuddyPress ↗', 'Menu item title', 'wporg' ); ?></a></li>
 		<!-- /wp:list-item -->
 	</ul>
 	<!-- /wp:list -->
