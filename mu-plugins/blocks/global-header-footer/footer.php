@@ -2,7 +2,7 @@
 
 namespace WordPressdotorg\MU_Plugins\Global_Header_Footer\Footer;
 
-use function WordPressdotorg\MU_Plugins\Global_Header_Footer\{ get_cip_text, get_home_url, get_container_classes, is_rosetta_site };
+use function WordPressdotorg\MU_Plugins\Global_Header_Footer\{ get_cip_text, get_home_url, get_container_classes, is_rosetta_site, get_localized_link };
 
 defined( 'WPINC' ) || die();
 
@@ -21,48 +21,103 @@ $code_is_poetry_src = isset( $attributes['textColor'] ) && str_contains( $attrib
 
 ?>
 
-<!-- wp:group {"className":"global-footer__navigation-container"} -->
-<div class="wp-block-group global-footer__navigation-container">
-	<!-- wp:navigation {"orientation":"vertical","className":"global-footer__navigation-important","overlayMenu":"never"} -->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'About', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/about/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'News', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/news/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Hosting', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/hosting/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Donate', 'Menu item title', 'wporg' ); ?>","url":"https://wordpressfoundation.org/donate/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Swag', 'Menu item title', 'wporg' ); ?>","url":"https://mercantile.wordpress.org/","kind":"custom","isTopLevelLink":true} /-->
-	<!-- /wp:navigation -->
+<!-- wp:group {"tagName":"nav","align":"full","style":{"spacing":{"blockGap":"var:preset|spacing|20"}},"className":"global-footer__navigation-container","layout":{"type":"grid","minimumColumnWidth":"150px"}} -->
+<nav class="wp-block-group alignfull global-footer__navigation-container" aria-label="<?php esc_html_e( 'Footer', 'wporg' ); ?>">
+	<!-- wp:list -->
+	<ul>
+		<!-- wp:list-item -->
+		<li><a href="<?php echo esc_url( get_localized_link( 'https://wordpress.org/about/' ) ); ?>"><?php echo esc_html_x( 'About', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
+		<!-- wp:list-item -->
+		<li><a href="<?php echo esc_url( get_localized_link( 'https://wordpress.org/news/' ) ); ?>"><?php echo esc_html_x( 'News', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
+		<!-- wp:list-item -->
+		<li><a href="<?php echo esc_url( get_localized_link( 'https://wordpress.org/hosting/' ) ); ?>"><?php echo esc_html_x( 'Hosting', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
+		<!-- wp:list-item -->
+		<li><a href="https://wordpressfoundation.org/donate/"><?php echo esc_html_x( 'Donate', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
+		<!-- wp:list-item -->
+		<li><a href="https://mercantile.wordpress.org/"><?php echo esc_html_x( 'Swag', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
+	</ul>
+	<!-- /wp:list -->
 
-	<!-- wp:navigation {"orientation":"vertical","className":"global-footer__navigation-information","overlayMenu":"never"} -->
+	<!-- wp:list -->
+	<ul>
 		<?php if ( is_rosetta_site() ) { ?>
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Support', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/support/","kind":"custom","isTopLevelLink":true} /-->
+			<!-- wp:list-item -->
+			<li><a href="<?php echo esc_url( get_localized_link( 'https://wordpress.org/support/' ) ); ?>"><?php echo esc_html_x( 'Support', 'Menu item title', 'wporg' ); ?></a></li>
+			<!-- /wp:list-item -->
 		<?php } else { ?>
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Documentation', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/documentation/","kind":"custom","isTopLevelLink":true} /-->
+			<!-- wp:list-item -->
+			<li><a href="https://wordpress.org/documentation/"><?php echo esc_html_x( 'Documentation', 'Menu item title', 'wporg' ); ?></a></li>
+			<!-- /wp:list-item -->
 		<?php } ?>
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Developers', 'Menu item title', 'wporg' ); ?>","url":"https://developer.wordpress.org/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Get Involved', 'Menu item title', 'wporg' ); ?>","url":"https://make.wordpress.org/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Learn', 'Menu item title', 'wporg' ); ?>","url":"https://learn.wordpress.org/","kind":"custom","isTopLevelLink":true} /-->
-	<!-- /wp:navigation -->
+		<!-- wp:list-item -->
+		<li><a href="<?php echo esc_url( get_localized_link( 'https://developer.wordpress.org/' ) ); ?>"><?php echo esc_html_x( 'Developers', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
+		<!-- wp:list-item -->
+		<li><a href="https://make.wordpress.org/"><?php echo esc_html_x( 'Get Involved', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
+		<!-- wp:list-item -->
+		<li><a href="<?php echo esc_url( get_localized_link( 'https://learn.wordpress.org/' ) ); ?>"><?php echo esc_html_x( 'Learn', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
+	</ul>
+	<!-- /wp:list -->
 
-	<!-- wp:navigation {"orientation":"vertical","className":"global-footer__navigation-resources","overlayMenu":"never"} -->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Showcase', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/showcase/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Plugins', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/plugins/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Themes', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/themes/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Patterns', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/patterns/","kind":"custom","isTopLevelLink":true} /-->
-	<!-- /wp:navigation -->
+	<!-- wp:list -->
+	<ul>
+		<!-- wp:list-item -->
+		<li><a href="<?php echo esc_url( get_localized_link( 'https://wordpress.org/showcase/' ) ); ?>"><?php echo esc_html_x( 'Showcase', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
+		<!-- wp:list-item -->
+		<li><a href="<?php echo esc_url( get_localized_link( 'https://wordpress.org/plugins/' ) ); ?>"><?php echo esc_html_x( 'Plugins', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
+		<!-- wp:list-item -->
+		<li><a href="<?php echo esc_url( get_localized_link( 'https://wordpress.org/themes/' ) ); ?>"><?php echo esc_html_x( 'Themes', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
+		<!-- wp:list-item -->
+		<li><a href="<?php echo esc_url( get_localized_link( 'https://wordpress.org/patterns/' ) ); ?>"><?php echo esc_html_x( 'Patterns', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
+	</ul>
+	<!-- /wp:list -->
 
-	<!-- wp:navigation {"orientation":"vertical","className":"global-footer__navigation-community","overlayMenu":"never"} -->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'WordCamp', 'Menu item title', 'wporg' ); ?>","url":"https://central.wordcamp.org/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'WordPress.TV', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.tv/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'BuddyPress', 'Menu item title', 'wporg' ); ?>","url":"https://buddypress.org/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'bbPress', 'Menu item title', 'wporg' ); ?>","url":"https://bbpress.org/","kind":"custom","isTopLevelLink":true} /-->
-	<!-- /wp:navigation -->
+	<!-- wp:list -->
+	<ul>
+		<!-- wp:list-item -->
+		<li><a href="https://central.wordcamp.org/"><?php echo esc_html_x( 'WordCamp', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
+		<!-- wp:list-item -->
+		<li><a href="https://wordpress.tv/"><?php echo esc_html_x( 'WordPress.TV', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
+		<!-- wp:list-item -->
+		<li><a href="https://buddypress.org/"><?php echo esc_html_x( 'BuddyPress', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
+		<!-- wp:list-item -->
+		<li><a href="https://bbpress.org/"><?php echo esc_html_x( 'bbPress', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
+	</ul>
+	<!-- /wp:list -->
 
-	<!-- wp:navigation {"orientation":"vertical","className":"global-footer__navigation-external","overlayMenu":"never"} -->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'WordPress.com', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.com/?ref=wporg-footer","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Matt', 'Menu item title', 'wporg' ); ?>","url":"https://ma.tt/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Privacy', 'Menu item title', 'wporg' ); ?>","url":"https://wordpress.org/about/privacy/","kind":"custom","isTopLevelLink":true} /-->
-		<!-- wp:navigation-link {"label":"<?php echo esc_html_x( 'Public Code', 'Menu item title', 'wporg' ); ?>","url":"https://publiccode.eu/","kind":"custom","isTopLevelLink":true} /-->
-	<!-- /wp:navigation -->
-</div> <!-- /wp:group -->
+	<!-- wp:list -->
+	<ul>
+		<!-- wp:list-item -->
+		<li><a href="https://wordpress.com/?ref=wporg-footer"><?php echo esc_html_x( 'WordPress.com', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
+		<!-- wp:list-item -->
+		<li><a href="https://ma.tt/"><?php echo esc_html_x( 'Matt', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
+		<!-- wp:list-item -->
+		<li><a href="<?php echo esc_url( get_localized_link( 'https://wordpress.org/about/privacy/' ) ); ?>"><?php echo esc_html_x( 'Privacy', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
+		<!-- wp:list-item -->
+		<li><a href="https://publiccode.eu/"><?php echo esc_html_x( 'Public Code', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
+	</ul>
+	<!-- /wp:list -->
+</nav>
+<!-- /wp:group -->
 
 <!-- wp:group {"className":"global-footer__logos-container"} -->
 <div class="wp-block-group global-footer__logos-container">

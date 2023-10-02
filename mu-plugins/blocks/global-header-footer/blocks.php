@@ -810,7 +810,6 @@ function render_global_footer( $attributes, $content, $block ) {
 
 	if ( is_rosetta_site() ) {
 		$locale_title = get_rosetta_name();
-		add_filter( 'render_block_data', __NAMESPACE__ . '\localize_nav_links' );
 	} else {
 		$locale_title = '';
 	}
@@ -831,8 +830,6 @@ function render_global_footer( $attributes, $content, $block ) {
 		require_once __DIR__ . '/classic-footer.php';
 		$footer_markup = ob_get_clean();
 	}
-
-	remove_filter( 'render_block_data', __NAMESPACE__ . '\localize_nav_links' );
 
 	$wrapper_attributes = get_block_wrapper_attributes(
 		array( 'class' => 'global-footer wp-block-group' )
@@ -870,29 +867,6 @@ function update_block_style_colors( $block ) {
 	return $block;
 }
 
-
-/**
- * Localise a `core/navigation-link` block link to point to the Rosetta site resource.
- *
- * Unfortunately WordPress doesn't have a block-specific pre- filter, only a block-specific post-filter.
- * That's why we specifically check for the blockName here.
- *
- * @param array $block The parsed block data.
- *
- * @return array
- */
-function localize_nav_links( $block ) {
-	if (
-		! empty( $block['blockName'] ) &&
-		'core/navigation-link' === $block['blockName'] &&
-		! empty( $block['attrs']['url'] )
-	) {
-		$block['attrs']['url'] = get_localized_footer_link( $block['attrs']['url'] );
-	}
-
-	return $block;
-}
-
 /**
  * Get a localized variant of a link included in the global footer.
  *
@@ -900,7 +874,7 @@ function localize_nav_links( $block ) {
  *
  * @return string Replacement URL, which may be localised.
  */
-function get_localized_footer_link( $url ) {
+function get_localized_link( $url ) {
 	global $rosetta;
 	if ( empty( $rosetta->current_site_domain ) ) {
 		return $url;

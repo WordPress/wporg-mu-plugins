@@ -10,23 +10,28 @@
 	}
 
 	& > .global-footer__navigation-container {
-		max-width: 100%;
-		display: grid;
 		align-items: start;
-		column-gap: 20px;
 		row-gap: 35px;
 
 		/* Create columns automatically, make them equal widths, wrap when needed. */
 		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-	}
-
-	& .wp-block-navigation__container {
-		flex-direction: column;
-		gap: 5px;
-		align-items: self-start;
 
 		@media (--tablet) {
 			font-size: var(--wp--preset--font-size--small);
 		}
+
+		& ul {
+			list-style: none;
+			padding: 0;
+
+			& li + li {
+				margin-top: 5px;
+			}
+		}
+	}
+
+	& .wp-block-navigation__container {
+		flex-direction: column;
+		align-items: self-start;
 	}
 }
