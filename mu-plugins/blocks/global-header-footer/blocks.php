@@ -251,7 +251,10 @@ function rest_render_global_header( $request ) {
 		function() {
 			remove_theme_support( 'wp4-styles' );
 
-			wp_dequeue_style( 'wporg-style' );
+			wp_dequeue_style( 'wporg-parent-2021-style' );
+			wp_dequeue_style( 'wporg-parent-block-styles' );
+			wp_dequeue_style( 'wporg-main-2022-style' );
+
 			wp_enqueue_style( 'dashicons' );
 			wp_enqueue_style( 'open-sans' );
 		},
