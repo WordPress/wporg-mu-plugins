@@ -19,10 +19,15 @@ function debounce( callback ) {
 
 function init() {
 	const container = document.querySelector( '.wp-block-wporg-local-navigation-bar' );
+	// The div will hit the "sticky" position when the top offset is 0, or if
+	// the admin bar exists, 32px (height of admin bar). The bar unstickies
+	// on smaller screens, so the admin bar height change does not affect this.
+	const topOffset = document.body.classList.contains( 'admin-bar' ) ? 32 : 0;
 	if ( container ) {
 		const onScroll = () => {
 			const { top } = container.getBoundingClientRect();
-			if ( top <= 32 ) {
+
+			if ( top <= topOffset ) {
 				container.classList.add( 'is-sticking' );
 			} else {
 				container.classList.remove( 'is-sticking' );
