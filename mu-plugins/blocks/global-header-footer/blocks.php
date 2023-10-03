@@ -246,23 +246,47 @@ function restore_inner_group_container() {
 function rest_render_global_header( $request ) {
 
 	// Remove the theme stylesheet from rest requests.
-	add_filter( 'wp_enqueue_scripts', function() {
-		remove_theme_support( 'wp4-styles' );
+	add_filter(
+		'wp_enqueue_scripts',
+		function() {
+			remove_theme_support( 'wp4-styles' );
 
-		wp_dequeue_style( 'wporg-style' );
-		wp_enqueue_style( 'dashicons' );
-		wp_enqueue_style( 'open-sans' );
-	}, 20 );
+			wp_dequeue_style( 'wporg-style' );
+			wp_enqueue_style( 'dashicons' );
+			wp_enqueue_style( 'open-sans' );
+		},
+		20
+	);
 
 	// Serve the request as HTML.
-	add_filter( 'rest_pre_serve_request', function( $served, $result ) {
-		header( 'Content-Type: text/html' );
-		header( 'X-Robots-Tag: noindex, follow' );
+	add_filter(
+		'rest_pre_serve_request',
+		function( $served, $result ) {
+			header( 'Content-Type: text/html' );
+			header( 'X-Robots-Tag: noindex, follow' );
 
-		echo $result->get_data();
+			echo $result->get_data();
 
-		return true;
-	}, 10, 2 );
+			return true;
+		},
+		10,
+		2
+	);
+
+	// Filter out element-level styles (h1, etc) to prevent clashes in sites
+	// using this header.
+	add_filter(
+		'wp_theme_json_get_style_nodes',
+		function( $nodes ) {
+			return array_filter(
+				$nodes,
+				function( $node ) {
+					return ! in_array( 'elements', $node['path'], true );
+				},
+				ARRAY_FILTER_USE_BOTH
+			);
+		}
+	);
 
 	return do_blocks( '<!-- wp:wporg/global-header /-->' );
 }
