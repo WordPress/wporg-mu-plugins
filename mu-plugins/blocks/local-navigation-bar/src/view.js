@@ -1,4 +1,4 @@
-function debounce( fn ) {
+function debounce( callback ) {
 	// This holds the requestAnimationFrame reference, so we can cancel it if we wish
 	let frame;
 
@@ -6,13 +6,13 @@ function debounce( fn ) {
 	return ( ...params ) => {
 		// If the frame variable has been defined, clear it now, and queue for next frame
 		if ( frame ) {
-			cancelAnimationFrame( frame );
+			window.cancelAnimationFrame( frame );
 		}
 
 		// Queue our function call for the next frame
-		frame = requestAnimationFrame( () => {
+		frame = window.requestAnimationFrame( () => {
 			// Call our function and pass any params we received
-			fn( ...params );
+			callback( ...params );
 		} );
 	};
 }
