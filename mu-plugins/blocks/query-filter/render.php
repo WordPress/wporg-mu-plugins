@@ -58,8 +58,12 @@ $button_classes = array_keys(
 );
 
 if ( $selected_count && $has_multiple ) {
-	/* translators: %s is count of currently selected filters. */
-	$apply_label = sprintf( __( 'Apply (%s)', 'wporg' ), $selected_count );
+	$apply_label = sprintf(
+		/* translators: 1: the count of currently selected filters. 2: post taxonomy */
+		__( 'Apply (%1$s) %2$s', 'wporg' ),
+		$selected_count,
+		strtolower( explode( ' ', wp_kses_post( $settings['label'] ) )[0] )
+	);
 } else {
 	$apply_label = __( 'Apply', 'wporg' );
 }

@@ -33,12 +33,13 @@ function updateButtons( store, count ) {
 
 	const applyButton = context.wporg.queryFilter.form.querySelector( 'input[type="submit"]' );
 	const clearButton = context.wporg.queryFilter.form.querySelector( '.wporg-query-filter__modal-action-clear' );
+	const taxonomy = context.wporg.queryFilter.toggleButton.textContent.split( ' ' )[ 0 ].toLowerCase();
 
 	// Only update the apply button if multiple selections are allowed.
 	if ( context.wporg.queryFilter.hasMultiple ) {
 		if ( count ) {
-			/* translators: %s is count of currently selected filters. */
-			applyButton.value = sprintf( __( 'Apply (%s)', 'wporg' ), count );
+			/* translators: 1: the count of currently selected filters. 2: post taxonomy */
+			applyButton.value = sprintf( __( 'Apply (%1$s) %2$s', 'wporg' ), count, taxonomy );
 		} else {
 			applyButton.value = __( 'Apply', 'wporg' );
 		}
