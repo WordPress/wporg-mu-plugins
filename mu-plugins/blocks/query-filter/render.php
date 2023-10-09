@@ -58,11 +58,24 @@ $button_classes = array_keys(
 );
 
 if ( $selected_count && $has_multiple ) {
+	$special_singular_mappings = array(
+		'categories' => 'category',
+	);
+
+	// Possible Input: 'popular tags <span>1</span>'
+	// Expected Output: 'popular tags'
+	$label = strtolower( preg_replace( '/\s\d+$/', '', strip_tags( $settings['label'] ) ) );
+	$label_form = 1 === $selected_count
+		? ( isset( $special_singular_mappings[ $label ] )
+			? $special_singular_mappings[ $label ]
+			: substr( $label, 0, -1 ) )
+		: $label;
+
 	$apply_label = sprintf(
 		/* translators: 1: the count of currently selected filters. 2: taxonomy being filtered */
 		__( 'Apply %1$s %2$s', 'wporg' ),
 		$selected_count,
-		strtolower( preg_replace( '/\s\d+$/', '', strip_tags( wp_kses_post( $settings['label'] ) ) ) )
+		$label_form
 	);
 } else {
 	$apply_label = __( 'Apply', 'wporg' );

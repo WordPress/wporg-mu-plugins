@@ -25,6 +25,15 @@ function closeDropdown( store ) {
 	document.documentElement.classList.remove( 'is-query-filter-open' );
 }
 
+function getTaxonomyForm( count, pluralTaxonomy ) {
+	const specialSingularMappings = {
+		categories: 'category',
+	};
+	return count === 1
+		? specialSingularMappings[ pluralTaxonomy ] || pluralTaxonomy.slice( 0, -1 )
+		: pluralTaxonomy;
+}
+
 function updateButtons( store, count ) {
 	const { context } = store;
 	if ( ! context.wporg.queryFilter.form ) {
@@ -38,8 +47,12 @@ function updateButtons( store, count ) {
 	// Only update the apply button if multiple selections are allowed.
 	if ( context.wporg.queryFilter.hasMultiple ) {
 		if ( count ) {
-			/* translators: 1: the count of currently selected filters. 2: taxonomy being filtered */
-			applyButton.value = sprintf( __( 'Apply %1$s %2$s', 'wporg' ), count, taxonomy );
+			applyButton.value = sprintf(
+				/* translators: 1: the count of currently selected filters. 2: taxonomy being filtered */
+				__( 'Apply %1$s %2$s', 'wporg' ),
+				count,
+				getTaxonomyForm( count, taxonomy )
+			);
 		} else {
 			applyButton.value = __( 'Apply', 'wporg' );
 		}
