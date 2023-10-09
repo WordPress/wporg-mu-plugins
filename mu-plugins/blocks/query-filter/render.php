@@ -62,7 +62,7 @@ if ( $selected_count && $has_multiple ) {
 		/* translators: 1: the count of currently selected filters. 2: taxonomy being filtered */
 		__( 'Apply (%1$s) %2$s', 'wporg' ),
 		$selected_count,
-		strtolower( explode( ' ', wp_kses_post( $settings['label'] ) )[0] )
+		strtolower( preg_replace( '/\s\d+$/', '', strip_tags( wp_kses_post( $settings['label'] ) ) ) )
 	);
 } else {
 	$apply_label = __( 'Apply', 'wporg' );

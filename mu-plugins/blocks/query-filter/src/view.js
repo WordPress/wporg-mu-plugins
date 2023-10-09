@@ -33,7 +33,7 @@ function updateButtons( store, count ) {
 
 	const applyButton = context.wporg.queryFilter.form.querySelector( 'input[type="submit"]' );
 	const clearButton = context.wporg.queryFilter.form.querySelector( '.wporg-query-filter__modal-action-clear' );
-	const taxonomy = context.wporg.queryFilter.toggleButton.textContent.split( ' ' )[ 0 ].toLowerCase();
+	const taxonomy = context.wporg.queryFilter.toggleButton.textContent.replace( /\s\d+$/, '' ).toLowerCase();
 
 	// Only update the apply button if multiple selections are allowed.
 	if ( context.wporg.queryFilter.hasMultiple ) {
