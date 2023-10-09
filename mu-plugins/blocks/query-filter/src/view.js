@@ -38,7 +38,7 @@ function updateButtons( store, count ) {
 	// Only update the apply button if multiple selections are allowed.
 	if ( context.wporg.queryFilter.hasMultiple ) {
 		if ( count ) {
-			/* translators: 1: the count of currently selected filters. 2: post taxonomy */
+			/* translators: 1: the count of currently selected filters. 2: taxonomy being filtered */
 			applyButton.value = sprintf( __( 'Apply (%1$s) %2$s', 'wporg' ), count, taxonomy );
 		} else {
 			applyButton.value = __( 'Apply', 'wporg' );

@@ -59,7 +59,7 @@ $button_classes = array_keys(
 
 if ( $selected_count && $has_multiple ) {
 	$apply_label = sprintf(
-		/* translators: 1: the count of currently selected filters. 2: post taxonomy */
+		/* translators: 1: the count of currently selected filters. 2: taxonomy being filtered */
 		__( 'Apply (%1$s) %2$s', 'wporg' ),
 		$selected_count,
 		strtolower( explode( ' ', wp_kses_post( $settings['label'] ) )[0] )
