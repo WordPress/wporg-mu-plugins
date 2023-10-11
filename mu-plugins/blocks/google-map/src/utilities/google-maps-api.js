@@ -132,7 +132,8 @@ export function clusterMarkers( map, maps, markers, rawIcon ) {
  * @param {google.maps.Marker[]} markers
  */
 export function setVisibleMarkers( clusterer, markers ) {
-	clusterer.clearMarkers();
+	// Prevent re-drawing the map when clearing, because we'll redraw it when adding markers.
+	clusterer.clearMarkers( true );
 	clusterer.addMarkers( markers );
 }
 
