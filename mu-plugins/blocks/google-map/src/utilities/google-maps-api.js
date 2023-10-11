@@ -90,7 +90,11 @@ export function assignMarkerReferences( map, maps, wpEvents, rawIcon ) {
  */
 function openInfoWindow( infoWindow, map, markerObject, rawMarker ) {
 	infoWindow.setContent( getElementHTML( <MarkerContent { ...rawMarker } /> ) );
-	infoWindow.open( map, markerObject );
+	infoWindow.open( {
+		anchor: markerObject,
+		map: map,
+		shouldFocus: false, // Don't steal focus from the search <input>.
+	} );
 }
 
 /**
