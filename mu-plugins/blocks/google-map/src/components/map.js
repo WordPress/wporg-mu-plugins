@@ -17,7 +17,7 @@ import {
 	assignMarkerReferences,
 	clusterMarkers,
 	panToCenter,
-	setVisibleMarkers,
+	updateMapMarkers,
 } from '../utilities/google-maps-api';
 
 /**
@@ -82,7 +82,7 @@ export default function Map( { apiKey, markers, icon } ) {
 
 		const markerObjects = markers.map( ( marker ) => marker.markerRef );
 
-		setVisibleMarkers( clusterer, markerObjects, googleMap );
+		updateMapMarkers( clusterer, markerObjects, googleMap );
 		panToCenter( markerObjects, googleMap, googleMapsApi );
 	}, [ clusterer, markers ] );
 

@@ -9,7 +9,7 @@ This doesn't currently utilize all the abilities of the `google-map-react` lib, 
 
 ## Usage
 
-Place something like this in a pattern:
+Place something like the following in a block or pattern. If you're pulling events from a database, a block is better because Gutenberg loads all patterns at `init` on all pages, regardless of whether or not they're used on that page.
 
 ```php
 <?php
