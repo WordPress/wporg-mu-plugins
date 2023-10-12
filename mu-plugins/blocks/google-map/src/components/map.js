@@ -35,9 +35,9 @@ import {
  */
 export default function Map( { apiKey, markers: rawMarkers, icon } ) {
 	const [ loaded, setLoaded ] = useState( false );
-	const [ clusterer, setClusterer ] = useState( null );
-	const [ googleMap, setGoogleMap ] = useState( null );
-	const [ googleMapsApi, setGoogleMapsApi ] = useState( null );
+	const clusterer = useRef( null );
+	const googleMap = useRef( null );
+	const googleMapsApi = useRef( null );
 	const infoWindow = useRef( null );
 	let combinedMarkers = [];
 
@@ -58,8 +58,8 @@ export default function Map( { apiKey, markers: rawMarkers, icon } ) {
 			throw 'Google Maps API is not loaded.';
 		}
 
-		setGoogleMap( map );
-		setGoogleMapsApi( maps );
+		googleMap.current = map;
+		googleMapsApi.current = maps;
 
 		infoWindow.current = new maps.InfoWindow( {
 			pixelOffset: new maps.Size( -icon.markerIconAnchorXOffset, 0 ),
@@ -68,13 +68,11 @@ export default function Map( { apiKey, markers: rawMarkers, icon } ) {
 		combinedMarkers = combineDuplicateLocations( rawMarkers );
 		combinedMarkers = assignMarkerReferences( map, maps, infoWindow.current, combinedMarkers, icon );
 
-		setClusterer(
-			clusterMarkers(
-				map,
-				maps,
-				combinedMarkers.map( ( marker ) => marker.markerRef ),
-				icon
-			)
+		clusterer.current = clusterMarkers(
+			map,
+			maps,
+			combinedMarkers.map( ( marker ) => marker.markerRef ),
+			icon
 		);
 
 		setLoaded( true );
@@ -84,7 +82,7 @@ export default function Map( { apiKey, markers: rawMarkers, icon } ) {
 	 * Update the map whenever the supplied markers change.
 	 */
 	useEffect( () => {
-		if ( ! clusterer ) {
+		if ( ! clusterer.current ) {
 			return;
 		}
 
@@ -92,8 +90,8 @@ export default function Map( { apiKey, markers: rawMarkers, icon } ) {
 
 		combinedMarkers = combineDuplicateLocations( rawMarkers );
 		combinedMarkers = assignMarkerReferences(
-			googleMap,
-			googleMapsApi,
+			googleMap.current,
+			googleMapsApi.current,
 			infoWindow.current,
 			combinedMarkers,
 			icon
@@ -101,9 +99,9 @@ export default function Map( { apiKey, markers: rawMarkers, icon } ) {
 
 		const markerObjects = combinedMarkers.map( ( marker ) => marker.markerRef );
 
-		updateMapMarkers( clusterer, markerObjects, googleMap );
-		panToCenter( markerObjects, googleMap, googleMapsApi );
-	}, [ clusterer, rawMarkers ] );
+		updateMapMarkers( clusterer.current, markerObjects, googleMap.current );
+		panToCenter( markerObjects, googleMap.current, googleMapsApi.current );
+	}, [ rawMarkers ] );
 
 	return (
 		<div className="wporg-google-map__container">
