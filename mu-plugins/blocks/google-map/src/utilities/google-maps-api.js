@@ -36,16 +36,51 @@ export function getValidMarkers( markers ) {
 }
 
 /**
+ * Combine markers that share the exact same location into a single marker.
+ *
+ * @param {Array} rawMarkers
+ *
+ * @return {Array}
+ */
+export function combineDuplicateLocations( rawMarkers ) {
+	const combinedMarkers = {};
+
+	rawMarkers.forEach( ( rawMarker ) => {
+		const index = rawMarker.latitude + '|' + rawMarker.longitude;
+
+		if ( combinedMarkers[ index ] ) {
+			const alreadyConvertedIntoContainer = combinedMarkers[ index ].hasOwnProperty( 'events' );
+
+			if ( ! alreadyConvertedIntoContainer ) {
+				combinedMarkers[ index ] = {
+					type: 'combined',
+					events: [ combinedMarkers[ index ] ],
+					latitude: rawMarker.latitude,
+					longitude: rawMarker.longitude,
+				};
+			}
+
+			combinedMarkers[ index ].events.push( rawMarker );
+		} else {
+			combinedMarkers[ index ] = rawMarker;
+		}
+	} );
+
+	return Object.values( combinedMarkers );
+}
+
+/**
  * Create Marker objects and save to references to them on the corresponding event.
  *
  * Creating the markers implicitly adds them to the map. The shared InfoWindow is assigned during creation.
  *
- * @param {google.maps.Map} map
- * @param {google.maps}     maps
- * @param {Array}           wpEvents
- * @param {Object}          rawIcon
+ * @param {google.maps.Map}        map
+ * @param {google.maps}            maps
+ * @param {google.maps.InfoWindow} infoWindow
+ * @param {Array}                  wpEvents
+ * @param {Object}                 rawIcon
  */
-export function assignMarkerReferences( map, maps, wpEvents, rawIcon ) {
+export function assignMarkerReferences( map, maps, infoWindow, wpEvents, rawIcon ) {
 	const icon = {
 		url: rawIcon.markerUrl,
 		size: new maps.Size( rawIcon.markerHeight, rawIcon.markerWidth ),
@@ -53,11 +88,13 @@ export function assignMarkerReferences( map, maps, wpEvents, rawIcon ) {
 		scaledSize: new maps.Size( rawIcon.markerHeight / 2, rawIcon.markerWidth / 2 ),
 	};
 
-	const infoWindow = new maps.InfoWindow( {
-		pixelOffset: new maps.Size( -rawIcon.markerIconAnchorXOffset, 0 ),
-	} );
-
 	wpEvents.forEach( ( wpEvent ) => {
+		// Only the combined markers will need new marker refs, the regular ones will still have the ones they got
+		// when the map was first loaded.
+		if ( wpEvent.markerRef ) {
+			return;
+		}
+
 		const marker = new maps.Marker( {
 			position: {
 				lat: parseFloat( wpEvent.latitude ),

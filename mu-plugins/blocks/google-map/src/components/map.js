@@ -6,7 +6,7 @@ import GoogleMapReact from 'google-map-react';
 /**
  * WordPress dependencies
  */
-import { useCallback, useEffect, useState } from '@wordpress/element';
+import { useCallback, useEffect, useRef, useState } from '@wordpress/element';
 import { Spinner } from '@wordpress/components';
 
 /**
@@ -16,6 +16,7 @@ import { mapStyles } from '../utilities/map-styles';
 import {
 	assignMarkerReferences,
 	clusterMarkers,
+	combineDuplicateLocations,
 	panToCenter,
 	updateMapMarkers,
 } from '../utilities/google-maps-api';
@@ -32,11 +33,13 @@ import {
  *
  * @return {JSX.Element}
  */
-export default function Map( { apiKey, markers, icon } ) {
+export default function Map( { apiKey, markers: rawMarkers, icon } ) {
 	const [ loaded, setLoaded ] = useState( false );
 	const [ clusterer, setClusterer ] = useState( null );
 	const [ googleMap, setGoogleMap ] = useState( null );
 	const [ googleMapsApi, setGoogleMapsApi ] = useState( null );
+	const infoWindow = useRef( null );
+	let combinedMarkers = [];
 
 	const options = {
 		zoomControl: true,
@@ -58,13 +61,18 @@ export default function Map( { apiKey, markers, icon } ) {
 		setGoogleMap( map );
 		setGoogleMapsApi( maps );
 
-		markers = assignMarkerReferences( map, maps, markers, icon );
+		infoWindow.current = new maps.InfoWindow( {
+			pixelOffset: new maps.Size( -icon.markerIconAnchorXOffset, 0 ),
+		} );
+
+		combinedMarkers = combineDuplicateLocations( rawMarkers );
+		combinedMarkers = assignMarkerReferences( map, maps, infoWindow.current, combinedMarkers, icon );
 
 		setClusterer(
 			clusterMarkers(
 				map,
 				maps,
-				markers.map( ( marker ) => marker.markerRef ),
+				combinedMarkers.map( ( marker ) => marker.markerRef ),
 				icon
 			)
 		);
@@ -80,11 +88,22 @@ export default function Map( { apiKey, markers, icon } ) {
 			return;
 		}
 
-		const markerObjects = markers.map( ( marker ) => marker.markerRef );
+		infoWindow.current.close();
+
+		combinedMarkers = combineDuplicateLocations( rawMarkers );
+		combinedMarkers = assignMarkerReferences(
+			googleMap,
+			googleMapsApi,
+			infoWindow.current,
+			combinedMarkers,
+			icon
+		);
+
+		const markerObjects = combinedMarkers.map( ( marker ) => marker.markerRef );
 
 		updateMapMarkers( clusterer, markerObjects, googleMap );
 		panToCenter( markerObjects, googleMap, googleMapsApi );
-	}, [ clusterer, markers ] );
+	}, [ clusterer, rawMarkers ] );
 
 	return (
 		<div className="wporg-google-map__container">
