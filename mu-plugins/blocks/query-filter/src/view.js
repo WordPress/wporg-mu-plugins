@@ -15,6 +15,30 @@ const focusableSelectors = [
 	'[tabindex]:not([tabindex^="-"])',
 ];
 
+/**
+ * Toggles the overflow-x style of the query filter between 'hidden' and 'scroll'.
+ *
+ * In certain themes (e.g., showcase), an 'overflow-x: scroll' is added on mobile screens to always display
+ * the horizontal scrollbar, indicating to users that there's more content to the right.
+ * However, this persistent display feature causes the dropdown menu to be overlaid by the scrollbar
+ * when opened (See issue https://github.com/WordPress/wporg-mu-plugins/issues/467#issuecomment-1754349676).
+ * This function serves to address that issue.
+ *
+ */
+function toggleOverflowX() {
+	const filtersElement = document.querySelector( '.wporg-query-filters' );
+
+	if ( filtersElement ) {
+		const currentOverflowX = window.getComputedStyle( filtersElement ).overflowX;
+
+		if ( currentOverflowX === 'hidden' ) {
+			filtersElement.style.overflowX = 'scroll';
+		} else if ( currentOverflowX === 'scroll' ) {
+			filtersElement.style.overflowX = 'hidden';
+		}
+	}
+}
+
 function closeDropdown( store ) {
 	const { context } = store;
 	context.wporg.queryFilter.isOpen = false;
@@ -23,6 +47,8 @@ function closeDropdown( store ) {
 	const count = context.wporg.queryFilter.form?.querySelectorAll( 'input:checked' ).length;
 	updateButtons( store, count );
 	document.documentElement.classList.remove( 'is-query-filter-open' );
+
+	toggleOverflowX();
 }
 
 function updateButtons( store, count ) {
@@ -58,6 +84,7 @@ wpStore( {
 					} else {
 						context.wporg.queryFilter.isOpen = true;
 						document.documentElement.classList.add( 'is-query-filter-open' );
+						toggleOverflowX();
 					}
 				},
 				handleKeydown: ( store ) => {
