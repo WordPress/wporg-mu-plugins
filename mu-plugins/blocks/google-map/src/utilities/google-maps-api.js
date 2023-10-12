@@ -130,12 +130,12 @@ export function clusterMarkers( map, maps, markers, rawIcon ) {
 }
 
 /**
- * Filter the markers on a map to the given ones.
+ * Clear the map and add the given markers.
  *
  * @param {MarkerClusterer}      clusterer
  * @param {google.maps.Marker[]} markers
  */
-export function setVisibleMarkers( clusterer, markers ) {
+export function updateMapMarkers( clusterer, markers ) {
 	// Prevent re-drawing the map when clearing, because we'll redraw it when adding markers.
 	clusterer.clearMarkers( true );
 	clusterer.addMarkers( markers );
