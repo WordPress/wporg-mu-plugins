@@ -46,13 +46,15 @@ function render( $attributes, $content, $block ) {
 
 	$attributes['markerIcon'] = array(
 		'markerUrl'           => plugins_url( 'images/map-marker.svg', __FILE__ ),
-		'markerAnchorXOffset' => 34,
 		'markerHeight'        => 68,
 		'markerWidth'         => 68,
+		'markerAnchorYOffset' => -5,
 		'clusterUrl'          => plugins_url( 'images/cluster-background.svg', __FILE__ ),
 		'clusterWidth'        => 38,
 		'clusterHeight'       => 38,
 	);
+
+	$attributes['markerIcon']['markerAnchorXOffset'] = $attributes['markerIcon']['markerWidth'] / -4;
 
 	wp_add_inline_script(
 		$block->block_type->view_script_handles[0],

@@ -60,9 +60,8 @@ export default function Map( { apiKey, markers: rawMarkers, icon } ) {
 
 		googleMap.current = map;
 		googleMapsApi.current = maps;
-
 		infoWindow.current = new maps.InfoWindow( {
-			pixelOffset: new maps.Size( -icon.markerIconAnchorXOffset, 0 ),
+			pixelOffset: new maps.Size( icon.markerAnchorXOffset, icon.markerAnchorYOffset ),
 		} );
 
 		combinedMarkers = combineDuplicateLocations( rawMarkers );
