@@ -1,7 +1,12 @@
 /**
+ * External dependencies
+ */
+import { throttle } from 'lodash';
+
+/**
  * WordPress dependencies
  */
-import { useCallback, useEffect, useRef, useState } from '@wordpress/element';
+import { useCallback, useMemo, useRef, useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 
 /**
@@ -61,24 +66,42 @@ export default function Main( {
 			inline: 'start',
 			behavior: 'smooth',
 		} );
+
+		// This is passing the value directly, instead of using, state because the throttled function only has
+		// access to the versionof state that existed at the time the function was created. Updating the
+		// function with something like `useCallback` is more complicated than you'd think.
+		throttledRedrawMap( event.target.value );
 	}, [] );
 
 	/**
-	 * Update the map and list when the search query changes.
+	 * Redraw the map and list based on the user's search query.
 	 */
-	useEffect( () => {
-		const filteredMarkers = filterMarkers( validMarkers, searchQuery, searchFields );
+	const redrawMap = useCallback(
+		( newSearchQuery ) => {
+			const filteredMarkers = filterMarkers( validMarkers, newSearchQuery, searchFields );
 
-		setVisibleMarkers( filteredMarkers );
+			setVisibleMarkers( filteredMarkers );
 
-		// Avoid speaking on the initial page load.
-		if ( ! searchQueryInitialized.current ) {
-			searchQueryInitialized.current = true;
-			return;
-		}
+			// Avoid speaking on the initial page load.
+			if ( ! searchQueryInitialized.current ) {
+				searchQueryInitialized.current = true;
+				return;
+			}
 
-		speakSearchUpdates( searchQuery, filteredMarkers.length );
-	}, [ searchQuery ] );
+			speakSearchUpdates( newSearchQuery, filteredMarkers.length );
+		},
+		[ validMarkers, searchFields ]
+	);
+
+	/**
+	 * Throttle the redraw function so it doesn't do expensive operations that the user won't notice.
+	 */
+	const throttledRedrawMap = useMemo( () => {
+		return throttle( redrawMap, 200, {
+			leading: false,
+			trailing: true,
+		} );
+	}, [ redrawMap ] );
 
 	return (
 		<>
