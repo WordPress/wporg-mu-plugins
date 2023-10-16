@@ -31,9 +31,9 @@ function toggleOverflowX() {
 	if ( filtersElement ) {
 		const currentOverflowX = window.getComputedStyle( filtersElement ).overflowX;
 
-		if ( currentOverflowX === 'hidden' ) {
+		if ( 'hidden' === currentOverflowX ) {
 			filtersElement.style.overflowX = 'scroll';
-		} else if ( currentOverflowX === 'scroll' ) {
+		} else if ( 'scroll' === currentOverflowX || 'auto' === currentOverflowX ) {
 			filtersElement.style.overflowX = 'hidden';
 		}
 	}
