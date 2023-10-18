@@ -19,6 +19,9 @@
 	@media (max-width: 889px) {
 		position: relative !important;
 		top: 0 !important;
+
+		/* Matches the padding of the global header button. */
+		padding-right: calc(16px + var(--wp--custom--alignment--scroll-bar-width)) !important;
 	}
 
 	&.is-style-brush-stroke {
@@ -61,7 +64,9 @@
 		/* Adjust the modal container so the close button is not hidden by the global header when open. */
 		@media (max-width: 599px) {
 			top: var(--wp-global-header-height);
-			padding-right: var(--wp--preset--spacing--edge-space) !important;
+
+			/* Matches the padding of the global header button. */
+			padding-right: calc(16px + var(--wp--custom--alignment--scroll-bar-width)) !important;
 			padding-left: var(--wp--preset--spacing--edge-space) !important;
 			padding-top: 21px !important;
 			padding-bottom: 18px !important;
