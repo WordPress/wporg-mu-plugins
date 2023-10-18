@@ -34,12 +34,9 @@ function init() {
 function render( $attributes, $content, $block ) {
 	$attributes['id'] = 'wp-block-wporg-google-map-' . $attributes['id'];
 
-	if ( empty( $attributes['apiKey'] ) ) {
-		$default_key = 'production' === wp_get_environment_type() ? 'WORDCAMP_PROD_GOOGLE_MAPS_API_KEY' : 'WORDCAMP_DEV_GOOGLE_MAPS_API_KEY';
-
-		if ( defined( $default_key ) ) {
-			$attributes['apiKey'] = constant( $default_key );
-		}
+	if ( ! empty( $attributes['apiKey'] ) ) {
+		// See README for why this has to be a constant.
+		$attributes['apiKey'] = constant( $attributes['apiKey'] );
 	}
 
 	$attributes['searchIcon'] = plugins_url( 'images/search.svg', __FILE__ );
