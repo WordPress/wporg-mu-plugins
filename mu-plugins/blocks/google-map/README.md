@@ -16,6 +16,7 @@ Place something like the following in a block or pattern. If you're pulling even
 
 $map_options = array(
 	'id'      => 'all-upcoming-events',
+	'apiKey'  => 'MY_API_KEY_CONSTANT',
 	'markers' => get_all_upcoming_events(),
 );
 
@@ -23,6 +24,8 @@ $map_options = array(
 
 <!-- wp:wporg/google-map <?php echo wp_json_encode( $map_options ); ?> /-->
 ```
+
+`apiKey` should be the _name_ of a constant, not the value. It's not private because it'll be exposed in the HTTP request to Google Maps, but it should still be stored in a constant in a config file instead of `post_content`. That allows for centralization, documentation, and tracking changes over time. It should be restricted in Google Cloud Console to only the sites where it will be used, to prevent abuse.
 
 `markers` should be an array of objects with the fields in the example below. The `timestamp` field should be a true Unix timestamp, meaning it assumes UTC. The `wporg_events` database table is one potential source for the events, but you can pass anything.
 
