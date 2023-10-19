@@ -63,7 +63,7 @@ function register_block_assets() {
 		'wporg-global-header-footer',
 		plugins_url( "/build/style$suffix.css", __FILE__ ),
 		$style_dependencies,
-		filemtime( __DIR__ . "/build/style$suffix.css" )
+		filemtime( __DIR__ . "/build/style$suffix.css" ) + 1,
 	);
 
 	wp_register_script(
