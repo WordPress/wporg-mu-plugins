@@ -36,7 +36,7 @@ function onScroll() {
 	const mainEl = document.getElementById( 'wp--skip-link--target' );
 	const footerStart = mainEl.offsetTop + mainEl.offsetHeight;
 
-	const gap = parseInt( window.getComputedStyle( sidebarContainer ).marginTop, 10 );
+	const gap = getCustomPropValue( '--wp--custom--wporg-sidebar-container--spacing--margin--top' );
 	const viewportYOffset = window
 		.getComputedStyle( document.documentElement )
 		.getPropertyValue( 'margin-top' )
@@ -71,7 +71,7 @@ function onScroll() {
 
 function isSidebarWithinViewport( container ) {
 	// Margin offset from the top of the sidebar.
-	const gap = parseInt( window.getComputedStyle( container ).marginTop, 10 );
+	const gap = getCustomPropValue( '--wp--custom--wporg-sidebar-container--spacing--margin--top' );
 	// Usable viewport height.
 	const viewHeight = window.innerHeight - FIXED_HEADER_HEIGHT;
 	// Get the height of the sidebar, plus the top margin and 50px for the
