@@ -103,21 +103,25 @@
 					'wp-block-navigation-item',
 					'wp-block-navigation-submenu',
 					'has-child',
-					'open-on-hover-click',
+					'open-on-click',
 					'global-header__overflow-menu'
 				);
 
 				const newButton = document.createElement( 'button' );
-				newButton.classList.add(
-					'wp-block-navigation__submenu-icon',
-					'wp-block-navigation-submenu__toggle'
-				);
-				newButton.appendChild( document.createTextNode( '...' ) );
+				newButton.classList.add( 'wp-block-navigation-submenu__toggle' );
+				newButton.appendChild( document.createTextNode( '…' ) );
 				newButton.setAttribute( 'aria-label', labels.overflowMenuLabel );
 				newButton.setAttribute( 'aria-expanded', 'false' );
 				newButton.addEventListener( 'click', function ( event ) {
 					const isOpen = event.target.getAttribute( 'aria-expanded' ) === 'true';
 					event.target.setAttribute( 'aria-expanded', isOpen ? 'false' : 'true' );
+				} );
+				newItem.addEventListener( 'focusout', function ( event ) {
+					if ( ! newItem.contains( event.relatedTarget ) ) {
+						itemsContainer
+							.querySelector( '.global-header__overflow-menu button' )
+							.setAttribute( 'aria-expanded', 'false' );
+					}
 				} );
 				newItem.appendChild( newButton );
 

@@ -15,7 +15,6 @@ add_filter( 'wp_enqueue_scripts', __NAMESPACE__ . '\register_block_assets', 200 
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_compat_wp4_styles', 5 ); // Before any theme CSS.
 add_action( 'wp_head', __NAMESPACE__ . '\preload_google_fonts' );
 add_filter( 'style_loader_src', __NAMESPACE__ . '\update_google_fonts_url', 10, 2 );
-add_filter( 'render_block_core/navigation-link', __NAMESPACE__ . '\swap_submenu_arrow_svg' );
 add_filter( 'render_block_core/search', __NAMESPACE__ . '\swap_header_search_action', 10, 2 );
 add_filter( 'render_block_wporg/global-header', __NAMESPACE__ . '\add_aria_hidden_to_arrows', 19 );
 add_filter( 'render_block_wporg/global-footer', __NAMESPACE__ . '\add_aria_hidden_to_arrows', 19 );
@@ -451,23 +450,23 @@ function get_global_menu_items() {
 			'type'    => 'custom',
 		),
 		array(
-			'title'   => esc_html_x( 'Download & Extend', 'Menu item title', 'wporg' ),
-			'url'     => 'https://wordpress.org/download/',
+			'title' => esc_html_x( 'Showcase', 'Menu item title', 'wporg' ),
+			'url'   => 'https://wordpress.org/showcase/',
+			'type'  => 'custom',
+		),
+		array(
+			'title' => esc_html_x( 'Hosting', 'Menu item title', 'wporg' ),
+			'url'   => 'https://wordpress.org/hosting/',
+			'type'  => 'custom',
+		),
+		array(
+			'title'   => esc_html_x( 'Extend', 'Menu item title', 'wporg' ),
+			'url'     => '#',
 			'type'    => 'custom',
 			'submenu' => array(
 				array(
-					'title' => esc_html_x( 'Get WordPress', 'Menu item title', 'wporg' ),
-					'url'   => 'https://wordpress.org/download/',
-					'type'  => 'custom',
-				),
-				array(
 					'title' => esc_html_x( 'Themes', 'Menu item title', 'wporg' ),
 					'url'   => 'https://wordpress.org/themes/',
-					'type'  => 'custom',
-				),
-				array(
-					'title' => esc_html_x( 'Patterns', 'Menu item title', 'wporg' ),
-					'url'   => 'https://wordpress.org/patterns/',
 					'type'  => 'custom',
 				),
 				array(
@@ -476,13 +475,13 @@ function get_global_menu_items() {
 					'type'  => 'custom',
 				),
 				array(
-					'title' => esc_html_x( 'Mobile', 'Menu item title', 'wporg' ),
-					'url'   => 'https://wordpress.org/mobile/',
+					'title' => esc_html_x( 'Patterns', 'Menu item title', 'wporg' ),
+					'url'   => 'https://wordpress.org/patterns/',
 					'type'  => 'custom',
 				),
 				array(
-					'title' => esc_html_x( 'Hosting', 'Menu item title', 'wporg' ),
-					'url'   => 'https://wordpress.org/hosting/',
+					'title' => esc_html_x( 'Blocks', 'Menu item title', 'wporg' ),
+					'url'   => 'https://wordpress.org/blocks/',
 					'type'  => 'custom',
 				),
 				array(
@@ -494,7 +493,7 @@ function get_global_menu_items() {
 		),
 		array(
 			'title'   => esc_html_x( 'Learn', 'Menu item title', 'wporg' ),
-			'url'     => 'https://learn.wordpress.org/',
+			'url'     => '#',
 			'type'    => 'custom',
 			'submenu' => array(
 				array(
@@ -526,7 +525,7 @@ function get_global_menu_items() {
 		),
 		array(
 			'title'   => esc_html_x( 'Community', 'Menu item title', 'wporg' ),
-			'url'     => 'https://make.wordpress.org/',
+			'url'     => '#',
 			'type'    => 'custom',
 			'submenu' => array(
 				array(
@@ -563,17 +562,12 @@ function get_global_menu_items() {
 		),
 		array(
 			'title'   => esc_html_x( 'About', 'Menu item title', 'wporg' ),
-			'url'     => 'https://wordpress.org/about/',
+			'url'     => '#',
 			'type'    => 'custom',
 			'submenu' => array(
 				array(
 					'title' => esc_html_x( 'About WordPress', 'Menu item title', 'wporg' ),
 					'url'   => 'https://wordpress.org/about/',
-					'type'  => 'custom',
-				),
-				array(
-					'title' => esc_html_x( 'Showcase', 'Menu item title', 'wporg' ),
-					'url'   => 'https://wordpress.org/showcase/',
 					'type'  => 'custom',
 				),
 				array(
@@ -587,7 +581,7 @@ function get_global_menu_items() {
 					'type'  => 'custom',
 				),
 				array(
-					'title' => esc_html_x( 'WordPress Swag Store ↗︎', 'Menu item title', 'wporg' ),
+					'title' => esc_html_x( 'Swag Store ↗︎', 'Menu item title', 'wporg' ),
 					'url'   => 'https://mercantile.wordpress.org/',
 					'type'  => 'custom',
 				),
@@ -970,16 +964,6 @@ function set_current_item_class( $menu_items ) {
 	}
 
 	return $menu_items;
-}
-
-/**
- * Replace the current submenu down-arrow with a custom icon.
- *
- * @param string $block_content The block content about to be appended.
- * @return string The filtered block content.
- */
-function swap_submenu_arrow_svg( $block_content ) {
-	return str_replace( block_core_navigation_link_render_submenu_icon(), "<svg width='10' height='7' viewBox='0 0 10 7' stroke-width='1.2' xmlns='http://www.w3.org/2000/svg'><path d='M0.416667 1.33325L5 5.49992L9.58331 1.33325'></path></svg>", $block_content );
 }
 
 /**
