@@ -1,0 +1,33 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "wporg/google-map-event-filters",
+	"title": "Event Filters for the Google Map block",
+	"icon": "nametag",
+	"category": "widgets",
+	"description": "Displays a map and/or list of a subset of events.",
+	"textdomain": "wporg",
+	"attributes": {
+		"filterSlug": {
+			"type": "string",
+			"default": ""
+		},
+		"startDate": {
+			"type": "string",
+			"default": ""
+		},
+		"endDate": {
+			"type": "string",
+			"default": ""
+		},
+		"googleMapBlockAttributes": {
+			"type": "object",
+			"default": []
+		}
+	},
+	"supports": {
+		"inserter": false
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style.css"
+}
