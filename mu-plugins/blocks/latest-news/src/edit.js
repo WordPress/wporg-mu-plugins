@@ -4,6 +4,7 @@
 import { __ } from '@wordpress/i18n';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import {
+	CheckboxControl,
 	Disabled,
 	__experimentalNumberControl as NumberControl, // eslint-disable-line @wordpress/no-unsafe-wp-apis
 	PanelBody,
@@ -21,10 +22,11 @@ import ServerSideRender from '@wordpress/server-side-render';
  * @return {WPElement} Element to render.
  */
 export default function Edit( { attributes, setAttributes, name } ) {
-	const { blogId, perPage } = attributes;
+	const { blogId, perPage, showCategories } = attributes;
 
 	const onPerPageChange = ( value ) => setAttributes( { perPage: value * 1 } );
 	const onBlogIdChange = ( value ) => setAttributes( { blogId: Number( value ) } );
+	const onShowCategoriesChange = ( value ) => setAttributes( { showCategories: value } );
 
 	return (
 		<div { ...useBlockProps() }>
@@ -43,6 +45,11 @@ export default function Edit( { attributes, setAttributes, name } ) {
 						label={ __( 'Items To Show', 'wporg' ) }
 						onChange={ onPerPageChange }
 						value={ perPage }
+					/>
+					<CheckboxControl
+						label={ __( 'Show Categories', 'wporg' ) }
+						onChange={ onShowCategoriesChange }
+						checked={ showCategories }
 					/>
 				</PanelBody>
 			</InspectorControls>
