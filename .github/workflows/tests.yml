@@ -16,10 +16,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
 
-      - name: Setup PHP
+      - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: 7.4
+
+      - name: Check PHP Version
+        run: php -v
 
       - name: Install NodeJS
         uses: actions/setup-node@eeb10cff27034e7acf239c5d29f62154018672fd # v3.3.0
@@ -37,6 +40,9 @@ jobs:
             composer install
             yarn build
             yarn wp-env start
+
+      - name: Check PHP Version again
+        run: php -v
 
       - name: Run PHP unit tests
         run: |
