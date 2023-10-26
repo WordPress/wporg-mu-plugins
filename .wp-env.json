@@ -8,6 +8,7 @@
 			"config": {
 				"WP_ENVIRONMENT_TYPE": false
 			},
+			"phpVersion": "7.4",
 			"mappings": {
 				"vendor": "./vendor",
 				"phpunit": "./phpunit",
