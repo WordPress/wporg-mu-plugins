@@ -18,6 +18,10 @@
 		"perPage": {
 			"type": "integer",
 			"default": 3
+		},
+		"showCategories": {
+			"type": "boolean",
+			"default": false
 		}
 	}
 }
