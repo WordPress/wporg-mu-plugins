@@ -25,6 +25,11 @@ html {
 	--wp-global-header-offset: calc(var(--wp-global-header-height, 0px) + var(--wp-admin--admin-bar--height, 0px));
 	margin-top: var(--wp-admin--admin-bar--height, 0);
 	height: unset; /* Let height use default browser height. */
+
+	@media (--tablet) {
+		scroll-padding-top: var(--wp-global-header-offset, 0);
+		margin-top: var(--wp-global-header-offset, 0);
+	}
 }
 
 /**
