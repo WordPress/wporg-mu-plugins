@@ -14,7 +14,7 @@ function Edit() {
 	return (
 		<Placeholder
 			instructions={ __(
-				'This is a placeholder for the editor. Data is supplied to this block via the pattern that includes it.',
+				'This is a placeholder for the editor until a back-end UI is built. See the README for instructions on supplying data.',
 				'wporg'
 			) }
 			label={ __( 'Google Map Event Filters', 'wporg' ) }
