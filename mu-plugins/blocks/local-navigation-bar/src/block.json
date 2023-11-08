@@ -82,8 +82,6 @@
 		"__experimentalLayout": true
 	},
 	"editorScript": "file:./index.js",
-	"viewScript": "file:./view.js",
 	"editorStyle": "file:./editor-style.css",
-	"style": "file:./style.css",
-	"render": "file:../render.php"
+	"style": "file:./style.css"
 }

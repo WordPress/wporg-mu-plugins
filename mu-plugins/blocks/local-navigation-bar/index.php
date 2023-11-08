@@ -20,7 +20,12 @@ add_filter( 'render_block', __NAMESPACE__ . '\customize_navigation_block_icon', 
  * @see https://developer.wordpress.org/reference/functions/register_block_type/
  */
 function init() {
-	register_block_type( __DIR__ . '/build' );
+	register_block_type(
+		__DIR__ . '/build',
+		array(
+			'render_callback' => __NAMESPACE__ . '\render',
+		)
+	);
 
 	// Add the Brush Stroke block style.
 	register_block_style(
@@ -29,6 +34,25 @@ function init() {
 			'name'         => 'brush-stroke',
 			'label'        => __( 'Brush Stroke', 'wporg' ),
 		)
+	);
+}
+
+/**
+ * Render the block content.
+ *
+ * @param array    $attributes Block attributes.
+ * @param string   $content    Block default content.
+ * @param WP_Block $block      Block instance.
+ *
+ * @return string Returns the block markup.
+ */
+function render( $attributes, $content, $block ) {
+	$wrapper_attributes = get_block_wrapper_attributes();
+
+	return sprintf(
+		'<div %1$s>%2$s</div>',
+		$wrapper_attributes,
+		$content
 	);
 }
 

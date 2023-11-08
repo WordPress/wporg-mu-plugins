@@ -5,14 +5,12 @@
 .wp-block-group.global-header {
 	& .global-header__desktop-get-wordpress,
 	& .global-header__mobile-get-wordpress a {
-		display: block;
 		background-color: var(--wp--preset--color--blueberry-1) !important; /* Override Gutenberg's !important */
 		color: var(--wp--preset--color--white) !important; /* Override the header color scheme */
 		padding: 10px 19px;
 		border-radius: 2px;
 		font-weight: 700;
 		font-size: var(--wp--preset--font-size--small);
-		line-height: 1.15;
 
 		&:hover {
 			cursor: pointer;
@@ -37,8 +35,6 @@
 	/* Desktop - `div` containing `a` */
 	& .global-header__desktop-get-wordpress-container {
 		display: none;
-		padding-top: 27px;
-		padding-bottom: 27px;
 		padding-left: var(--wp--style--block-gap);
 
 		@media (--tablet) {
@@ -46,8 +42,8 @@
 		}
 
 		@media (--short-screen) {
-			padding-top: 12px;
-			padding-bottom: 12px;
+			padding-top: 18px;
+			padding-bottom: 18px;
 		}
 
 		& a:hover,
