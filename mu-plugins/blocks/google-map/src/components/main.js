@@ -67,8 +67,8 @@ export default function Main( {
 			behavior: 'smooth',
 		} );
 
-		// This is passing the value directly, instead of using, state because the throttled function only has
-		// access to the versionof state that existed at the time the function was created. Updating the
+		// This is passing the value directly, instead of using state, because the throttled function only has
+		// access to the version of state that existed at the time the function was created. Updating the
 		// function with something like `useCallback` is more complicated than you'd think.
 		throttledRedrawMap( event.target.value );
 	}, [] );

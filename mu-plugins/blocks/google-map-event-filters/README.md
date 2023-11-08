@@ -29,5 +29,11 @@ It uses the `wporg/google-map` block to display a searchable list and/or map of 
 	<!-- wp:wporg/google-map-event-filters <?php echo wp_json_encode( $filter_options ); ?> /-->
 	```
 
+	Alternatively, you could take that JSON and manually put it in the post source like this:
+
+	```html
+	<!-- wp:wporg/google-map-event-filters {"filterSlug":"wp20","startDate":"April 21, 2023","endDate":"May 30, 2023","googleMapBlockAttributes":{"id":"wp20","apiKey":"WORDCAMP_DEV_GOOGLE_MAPS_API_KEY"}} /-->
+	```
+
 1. View the page where the block is used. That will create the cron job that updates the data automatically in the future.
 1. Run `wp cron event run prime_event_filters` to test the filtering. Look at each title, and add any false positives to `$false_positives` in `filter_potential_events()`. If any events that should be included were ignored, add a keyword from the title to `$keywords`. Run the command after those changes and make sure it's correct now.
