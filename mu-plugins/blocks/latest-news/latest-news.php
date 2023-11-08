@@ -86,7 +86,7 @@ function render_block( $attributes ) {
 		$date_element = sprintf(
 			'<time datetime="%1$s">%2$s</time>',
 			$date->format( 'c' ),
-			$date->format( 'F j, Y' )
+			wp_date( get_option( 'date_format' ), $date->getTimestamp(), null )
 		);
 
 		$list_items .= sprintf(
