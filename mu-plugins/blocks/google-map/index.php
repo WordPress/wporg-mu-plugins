@@ -62,6 +62,15 @@ function render( $attributes, $content, $block ) {
 		'before'
 	);
 
+	wp_add_inline_script(
+		$block->block_type->editor_script_handles[0],
+		sprintf(
+			'const wporgGoogleMap = %s;',
+			wp_json_encode( $attributes )
+		),
+		'before'
+	);
+
 	$wrapper_attributes = get_block_wrapper_attributes( array( 'id' => $attributes['id'] ) );
 
 	ob_start();
