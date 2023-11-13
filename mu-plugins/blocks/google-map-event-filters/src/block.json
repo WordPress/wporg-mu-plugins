@@ -28,6 +28,5 @@
 	"supports": {
 		"inserter": false
 	},
-	"editorScript": "file:./index.js",
-	"style": "file:./style.css"
+	"editorScript": "file:./index.js"
 }
