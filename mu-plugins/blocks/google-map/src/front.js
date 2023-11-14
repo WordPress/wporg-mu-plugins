@@ -11,15 +11,19 @@ import { createRoot } from '@wordpress/element';
 import Main from './components/main';
 
 const init = () => {
-	const wrapper = document.getElementById( wporgGoogleMap.id );
+	const containers = document.querySelectorAll( '.wp-block-wporg-google-map' );
 
-	if ( ! wrapper ) {
+	if ( ! containers.length ) {
 		throw "Map container element isn't present in the DOM.";
 	}
 
-	const root = createRoot( wrapper );
+	let root;
 
-	root.render( <Main { ...wporgGoogleMap } /> );
+	for ( const container of containers ) {
+		root = createRoot( container );
+
+		root.render( <Main { ...wporgGoogleMap[ container.dataset.mapId ] } /> );
+	}
 };
 
 document.addEventListener( 'DOMContentLoaded', init );
