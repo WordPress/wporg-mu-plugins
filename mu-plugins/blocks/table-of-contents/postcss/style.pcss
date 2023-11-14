@@ -7,16 +7,6 @@
 	@media (max-width: 1199px) {
 		border: 1px solid var(--wp--preset--color--light-grey-1);
 		padding: 15px var(--wp--preset--spacing--20);
-
-		.wporg-table-of-contents__list {
-			display: none;
-		}
-	}
-
-	@media (min-width: 1200px) {
-		.wporg-table-of-contents__toggle {
-			display: none;
-		}
 	}
 }
 
@@ -37,6 +27,10 @@
 		cursor: pointer;
 		height: var(--local--icon-size);
 
+		@media (min-width: 1200px) {
+			display: none;
+		}
+
 		&::before {
 			content: "";
 			display: inline-block;
@@ -51,6 +45,7 @@
 
 		&[aria-expanded="true"]::before {
 			transform: revert;
+			background-color: var(--wp--preset--color--charcoal-1);
 		}
 
 		&:focus-visible {
@@ -66,6 +61,11 @@
 	font-size: var(--wp--preset--font-size--small);
 	line-height: 1.6;
 	list-style: none;
+
+	@media (max-width: 1199px) {
+		display: none;
+		margin-bottom: 0;
+	}
 
 	& li {
 		margin-block: calc(var(--wp--preset--spacing--20) / 4);
