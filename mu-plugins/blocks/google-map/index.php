@@ -32,8 +32,6 @@ function init() {
  * @return string Returns the block markup.
  */
 function render( $attributes, $content, $block ) {
-	$attributes['id'] = 'wp-block-wporg-google-map-' . $attributes['id'];
-
 	if ( ! empty( $attributes['apiKey'] ) ) {
 		// See README for why this has to be a constant.
 		$attributes['apiKey'] = constant( $attributes['apiKey'] );
@@ -53,25 +51,25 @@ function render( $attributes, $content, $block ) {
 
 	$attributes['markerIcon']['markerAnchorXOffset'] = $attributes['markerIcon']['markerWidth'] / -4;
 
-	wp_add_inline_script(
-		$block->block_type->view_script_handles[0],
-		sprintf(
-			'const wporgGoogleMap = %s;',
-			wp_json_encode( $attributes )
-		),
-		'before'
-	);
+	$handles = array( $block->block_type->view_script_handles[0], $block->block_type->editor_script_handles[0] );
 
-	wp_add_inline_script(
-		$block->block_type->editor_script_handles[0],
-		sprintf(
-			'const wporgGoogleMap = %s;',
-			wp_json_encode( $attributes )
-		),
-		'before'
-	);
+	foreach ( $handles as $handle ) {
+		wp_add_inline_script(
+			$handle,
+			sprintf(
+				'var wporgGoogleMap = wporgGoogleMap || {};
+				wporgGoogleMap["%s"] = %s;',
+				$attributes['id'],
+				wp_json_encode( $attributes )
+			),
+			'before'
+		);
+	}
 
-	$wrapper_attributes = get_block_wrapper_attributes( array( 'id' => $attributes['id'] ) );
+	$wrapper_attributes = get_block_wrapper_attributes( array(
+		'id'          => 'wp-block-wporg-google-map-' . $attributes['id'],
+		'data-map-id' => $attributes['id'],
+	) );
 
 	ob_start();
 

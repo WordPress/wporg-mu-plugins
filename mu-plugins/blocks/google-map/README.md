@@ -36,3 +36,9 @@ array(
 	2 => (object) array ( 'id' => '72189909', 'type' => 'wordcamp', 'title' => 'WordCamp Jinja 2023', 'url' => 'https://jinja.wordcamp.org/2023/', 'meetup' => NULL, 'location' => 'Jinja City, Uganda', 'latitude' => '0.5862795', 'longitude' => '33.4589384', 'timestamp' => 1693803600, ),
 )
 ```
+
+If you have a small number of markers, you can manually json-encode them and then put them directly in the post content:
+
+```html
+<!-- wp:wporg/google-map {"id":"wp20","apiKey":"WORDCAMP_DEV_GOOGLE_MAPS_API_KEY","markers":[{"id":"72190010","type":"meetup","title":"ONLINE DISCUSSION- Learn about your DIVI Theme- Divisociety.com","url":"https://www.meetup.com/milwaukee-wordpress-meetup/events/292286293","meetup":"Greater Milwaukee Area WordPress Meetup","location":"online","latitude":"43.04","longitude":"-87.92","tz_offset":"-21600","timestamp":1700006400},{"id":"72190007","type":"meetup","title":"Meetup Virtual - SEO MÃ¡s allÃ¡ del ranking","url":"https://www.meetup.com/wpsanjose/events/294644892","meetup":"WordPress Meetup San JosÃ©","location":"online","latitude":"9.93","longitude":"-84.08","tz_offset":"-21600","timestamp":1700010000},{"id":"72190008","type":"meetup","title":"WordPress Developer Night - #IEWP","url":"https://www.meetup.com/inlandempirewp/events/292287676","meetup":"Inland Empire WordPress Meetup Group","location":"online","latitude":"33.99","longitude":"-117.37","tz_offset":"-28800","timestamp":1700017200}]} /-->
+```
