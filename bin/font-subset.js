@@ -2,14 +2,14 @@
 /* eslint-disable no-console */
 /**
  * Prerequisite:
- * 1. Install glyphhanger - https://github.com/zachleat/glyphhanger
+ * 1. Install/Update glyphhanger - https://github.com/zachleat/glyphhanger
  * Usage:
  * 1. Add {"type": "module"} to package.json.
- * 2. mkdir output fonts.
+ * 2. Run 'mkdir output fonts'.
  * 3. Put all font files into /fonts and change the file name if it's hard to read.
- * 4. Change the fontFileName, fontWeight and fontFamily etc. accroding to the font you use in this script.
- * 5. npm run font-subset.
- * 6. Copy subsetting files and css styles to where they should be placed.
+ * 4. Change the fontFileName, fontWeight and fontFamily etc. below according to the font you use in this script.
+ * 5. Run 'npm run font-subset'.
+ * 6. Copy subsetting files and css styles to where they should be placed. (Usually mu-plugins/global-fonts)
  * 7. remove output and fonts.
  * 8. Remove {"type": "module"} from package.json or the linter would prompt an error.
  */
@@ -50,12 +50,13 @@ const alphabets = [
 ];
 
 const __dirname = process.cwd();
-const fontFileName = 'Inter';
+// Update the values below if necessary.
+const fontFileName = 'Newsreader-Italic';
 const fontFileExt = 'ttf';
-const fontFamily = 'Inter';
+const fontFamily = 'Newsreader';
 const fontWeight = '100 900';
-const fontStyle = 'normal';
-const fontFinalDir = 'Inter';
+const fontStyle = 'italic';
+const fontFinalDir = 'Newsreader';
 
 for ( const alphabet of alphabets ) {
 	await new Promise( ( resolve ) => {
