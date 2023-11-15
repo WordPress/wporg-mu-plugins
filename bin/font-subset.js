@@ -15,7 +15,17 @@
  */
 import { spawn } from 'child_process';
 import path from 'path';
-import { renameSync, writeFile } from 'fs';
+import { existsSync, renameSync, readFileSync, writeFile } from 'fs';
+import { createHash } from 'crypto';
+
+function generateHash( filename ) {
+	filename = path.join( __dirname, `output/${ filename }` )
+	/*
+	 * Magic Number 12, See get_file_hash()
+	 * https://github.com/WordPress/wporg-mu-plugins/blob/trunk/mu-plugins/cdn/assets.php
+	 */
+	return createHash('sha1').update( readFileSync( filename ), 'binary').digest('hex').substring( 0, 12 );
+}
 
 const alphabets = [
 	{
@@ -90,17 +100,25 @@ let cssCode = '';
 // Create our font face rules
 // This would need to be modified for other weights and styles
 alphabets.forEach( ( alphabet ) => {
+	let filename = `${ fontFileName }-${ alphabet.name }.woff2`;
+
+	if ( ! existsSync( filename ) ) {
+		return;
+	}
+
+	let hash = generateHash( filename );
+
 	cssCode += `
 	/* ${ alphabet.name } */
-    @font-face {
+	@font-face {
 		font-family: ${ fontFamily };
 		font-weight: ${ fontWeight };
 		font-style: ${ fontStyle };
-      	font-display: swap;
-      	src: url(./${ fontFinalDir }/${ fontFileName }-${ alphabet.name }.woff2) format("woff2");
-      	unicode-range: ${ alphabet.unicodeRange };
-    }
-  `;
+		font-display: swap;
+		src: url(./${ fontFinalDir }/${ filename }?ver=${ hash }) format("woff2");
+		unicode-range: ${ alphabet.unicodeRange };
+	}
+	`;
 } );
 
 // Determine where to save our file

@@ -261,7 +261,7 @@
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
-	src: url(./CourierPrime/CourierPrime-Regular-cyrillic-ext.woff2) format("woff2");
+	src: url(./CourierPrime/CourierPrime-Regular-cyrillic-ext.woff2?ver=4ecb2879668a) format("woff2");
 	unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
 }
 
@@ -271,7 +271,7 @@
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
-	src: url(./CourierPrime/CourierPrime-Regular-cyrillic.woff2) format("woff2");
+	src: url(./CourierPrime/CourierPrime-Regular-cyrillic.woff2?ver=4ecb2879668a) format("woff2");
 	unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 
@@ -281,7 +281,7 @@
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
-	src: url(./CourierPrime/CourierPrime-Regular-greek-ext.woff2) format("woff2");
+	src: url(./CourierPrime/CourierPrime-Regular-greek-ext.woff2?ver=4ecb2879668a) format("woff2");
 	unicode-range: U+1F00-1FFF;
 }
 
@@ -291,7 +291,7 @@
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
-	src: url(./CourierPrime/CourierPrime-Regular-greek.woff2) format("woff2");
+	src: url(./CourierPrime/CourierPrime-Regular-greek.woff2?ver=eba1f8ff4da0) format("woff2");
 	unicode-range: U+0370-03FF;
 }
 
@@ -301,7 +301,7 @@
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
-	src: url(./CourierPrime/CourierPrime-Regular-vietnamese.woff2) format("woff2");
+	src: url(./CourierPrime/CourierPrime-Regular-vietnamese.woff2?ver=da75b869896c) format("woff2");
 	unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
 }
 
@@ -311,7 +311,7 @@
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
-	src: url(./CourierPrime/CourierPrime-Regular-latin-ext.woff2) format("woff2");
+	src: url(./CourierPrime/CourierPrime-Regular-latin-ext.woff2?ver=2aad680866fd) format("woff2");
 	unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -321,7 +321,7 @@
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
-	src: url(./CourierPrime/CourierPrime-Regular-latin.woff2) format("woff2");
+	src: url(./CourierPrime/CourierPrime-Regular-latin.woff2?ver=7b9aa715ce49) format("woff2");
 	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -335,7 +335,7 @@
 	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
-	src: url(./CourierPrime/CourierPrime-Bold-cyrillic-ext.woff2) format("woff2");
+	src: url(./CourierPrime/CourierPrime-Bold-cyrillic-ext.woff2?ver=c11c7999d78e) format("woff2");
 	unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
 }
 
@@ -345,7 +345,7 @@
 	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
-	src: url(./CourierPrime/CourierPrime-Bold-cyrillic.woff2) format("woff2");
+	src: url(./CourierPrime/CourierPrime-Bold-cyrillic.woff2?ver=c11c7999d78e) format("woff2");
 	unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 
@@ -355,7 +355,7 @@
 	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
-	src: url(./CourierPrime/CourierPrime-Bold-greek-ext.woff2) format("woff2");
+	src: url(./CourierPrime/CourierPrime-Bold-greek-ext.woff2?ver=c11c7999d78e) format("woff2");
 	unicode-range: U+1F00-1FFF;
 }
 
@@ -365,7 +365,7 @@
 	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
-	src: url(./CourierPrime/CourierPrime-Bold-greek.woff2) format("woff2");
+	src: url(./CourierPrime/CourierPrime-Bold-greek.woff2?ver=ba79634e2cd8) format("woff2");
 	unicode-range: U+0370-03FF;
 }
 
@@ -375,7 +375,7 @@
 	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
-	src: url(./CourierPrime/CourierPrime-Bold-vietnamese.woff2) format("woff2");
+	src: url(./CourierPrime/CourierPrime-Bold-vietnamese.woff2?ver=180aa42496b5) format("woff2");
 	unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
 }
 
@@ -385,7 +385,7 @@
 	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
-	src: url(./CourierPrime/CourierPrime-Bold-latin-ext.woff2) format("woff2");
+	src: url(./CourierPrime/CourierPrime-Bold-latin-ext.woff2?ver=94527d576afd) format("woff2");
 	unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -395,7 +395,7 @@
 	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
-	src: url(./CourierPrime/CourierPrime-Bold-latin.woff2) format("woff2");
+	src: url(./CourierPrime/CourierPrime-Bold-latin.woff2?ver=01c037d9e0a1) format("woff2");
 	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -409,7 +409,7 @@
 	font-weight: 100 900;
 	font-style: normal;
 	font-display: swap;
-	src: url(./Inter/Inter-cyrillic-ext.woff2) format("woff2");
+	src: url(./Inter/Inter-cyrillic-ext.woff2?ver=870d267d091f) format("woff2");
 	unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
 }
 
@@ -419,7 +419,7 @@
 	font-weight: 100 900;
 	font-style: normal;
 	font-display: swap;
-	src: url(./Inter/Inter-cyrillic.woff2) format("woff2");
+	src: url(./Inter/Inter-cyrillic.woff2?ver=2e1f0e6a6eda) format("woff2");
 	unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 
@@ -429,7 +429,7 @@
 	font-weight: 100 900;
 	font-style: normal;
 	font-display: swap;
-	src: url(./Inter/Inter-greek-ext.woff2) format("woff2");
+	src: url(./Inter/Inter-greek-ext.woff2?ver=f1fb719a6429) format("woff2");
 	unicode-range: U+1F00-1FFF;
 }
 
@@ -439,7 +439,7 @@
 	font-weight: 100 900;
 	font-style: normal;
 	font-display: swap;
-	src: url(./Inter/Inter-greek.woff2) format("woff2");
+	src: url(./Inter/Inter-greek.woff2?ver=8fb4801a481e) format("woff2");
 	unicode-range: U+0370-03FF;
 }
 
@@ -449,7 +449,7 @@
 	font-weight: 100 900;
 	font-style: normal;
 	font-display: swap;
-	src: url(./Inter/Inter-vietnamese.woff2) format("woff2");
+	src: url(./Inter/Inter-vietnamese.woff2?ver=ec198636627a) format("woff2");
 	unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
 }
 
@@ -459,7 +459,7 @@
 	font-weight: 100 900;
 	font-style: normal;
 	font-display: swap;
-	src: url(./Inter/Inter-latin-ext.woff2) format("woff2");
+	src: url(./Inter/Inter-latin-ext.woff2?ver=802f9ad48332) format("woff2");
 	unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -469,7 +469,7 @@
 	font-weight: 100 900;
 	font-style: normal;
 	font-display: swap;
-	src: url(./Inter/Inter-latin.woff2) format("woff2");
+	src: url(./Inter/Inter-latin.woff2?ver=b07a289bdf69) format("woff2");
 	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -479,7 +479,7 @@
 	font-weight: 100 900;
 	font-style: normal;
 	font-display: swap;
-	src: url(./Inter/Inter-arrows.woff2) format("woff2");
+	src: url(./Inter/Inter-arrows.woff2?ver=63555c379a62) format("woff2");
 	unicode-range: U+2190-2199;
 }
 
@@ -494,7 +494,7 @@
 	font-weight: 400 700;
 	font-style: normal;
 	font-display: swap;
-	src: url(./EB-Garamond/EBGaramond-cyrillic-ext.woff2) format("woff2");
+	src: url(./EB-Garamond/EBGaramond-cyrillic-ext.woff2?ver=8176ef6e06a1) format("woff2");
 	unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
 }
 
@@ -504,7 +504,7 @@
 	font-weight: 400 700;
 	font-style: normal;
 	font-display: swap;
-	src: url(./EB-Garamond/EBGaramond-cyrillic.woff2) format("woff2");
+	src: url(./EB-Garamond/EBGaramond-cyrillic.woff2?ver=1af56bf0af64) format("woff2");
 	unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 
@@ -514,7 +514,7 @@
 	font-weight: 400 700;
 	font-style: normal;
 	font-display: swap;
-	src: url(./EB-Garamond/EBGaramond-greek-ext.woff2) format("woff2");
+	src: url(./EB-Garamond/EBGaramond-greek-ext.woff2?ver=d3bd499d027a) format("woff2");
 	unicode-range: U+1F00-1FFF;
 }
 
@@ -524,7 +524,7 @@
 	font-weight: 400 700;
 	font-style: normal;
 	font-display: swap;
-	src: url(./EB-Garamond/EBGaramond-greek.woff2) format("woff2");
+	src: url(./EB-Garamond/EBGaramond-greek.woff2?ver=ec834832b30b) format("woff2");
 	unicode-range: U+0370-03FF;
 }
 
@@ -534,7 +534,7 @@
 	font-weight: 400 700;
 	font-style: normal;
 	font-display: swap;
-	src: url(./EB-Garamond/EBGaramond-vietnamese.woff2) format("woff2");
+	src: url(./EB-Garamond/EBGaramond-vietnamese.woff2?ver=30eaef521e8a) format("woff2");
 	unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
 }
 
@@ -544,7 +544,7 @@
 	font-weight: 400 700;
 	font-style: normal;
 	font-display: swap;
-	src: url(./EB-Garamond/EBGaramond-latin-ext.woff2) format("woff2");
+	src: url(./EB-Garamond/EBGaramond-latin-ext.woff2?ver=a08861311328) format("woff2");
 	unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -554,7 +554,7 @@
 	font-weight: 400 700;
 	font-style: normal;
 	font-display: swap;
-	src: url(./EB-Garamond/EBGaramond-latin.woff2) format("woff2");
+	src: url(./EB-Garamond/EBGaramond-latin.woff2?ver=2c7bc866cb03) format("woff2");
 	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -564,7 +564,7 @@
 	font-weight: 400 700;
 	font-style: normal;
 	font-display: swap;
-	src: url(./EB-Garamond/EBGaramond-arrows.woff2) format("woff2");
+	src: url(./EB-Garamond/EBGaramond-arrows.woff2?ver=943d7defaf99) format("woff2");
 	unicode-range: U+2190-2199;
 }
 
@@ -579,7 +579,7 @@
 	font-weight: 400 700;
 	font-style: italic;
 	font-display: swap;
-	src: url(./EB-Garamond/EBGaramond-Italic-cyrillic-ext.woff2) format("woff2");
+	src: url(./EB-Garamond/EBGaramond-Italic-cyrillic-ext.woff2?ver=7808b24a969c) format("woff2");
 	unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
 }
 
@@ -589,7 +589,7 @@
 	font-weight: 400 700;
 	font-style: italic;
 	font-display: swap;
-	src: url(./EB-Garamond/EBGaramond-Italic-cyrillic.woff2) format("woff2");
+	src: url(./EB-Garamond/EBGaramond-Italic-cyrillic.woff2?ver=766320cf480d) format("woff2");
 	unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 
@@ -599,7 +599,7 @@
 	font-weight: 400 700;
 	font-style: italic;
 	font-display: swap;
-	src: url(./EB-Garamond/EBGaramond-Italic-greek-ext.woff2) format("woff2");
+	src: url(./EB-Garamond/EBGaramond-Italic-greek-ext.woff2?ver=5c9c07959839) format("woff2");
 	unicode-range: U+1F00-1FFF;
 }
 
@@ -609,7 +609,7 @@
 	font-weight: 400 700;
 	font-style: italic;
 	font-display: swap;
-	src: url(./EB-Garamond/EBGaramond-Italic-greek.woff2) format("woff2");
+	src: url(./EB-Garamond/EBGaramond-Italic-greek.woff2?ver=9cdc7745aab9) format("woff2");
 	unicode-range: U+0370-03FF;
 }
 
@@ -619,7 +619,7 @@
 	font-weight: 400 700;
 	font-style: italic;
 	font-display: swap;
-	src: url(./EB-Garamond/EBGaramond-Italic-vietnamese.woff2) format("woff2");
+	src: url(./EB-Garamond/EBGaramond-Italic-vietnamese.woff2?ver=47ae16ca8ebd) format("woff2");
 	unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
 }
 
@@ -629,7 +629,7 @@
 	font-weight: 400 700;
 	font-style: italic;
 	font-display: swap;
-	src: url(./EB-Garamond/EBGaramond-Italic-latin-ext.woff2) format("woff2");
+	src: url(./EB-Garamond/EBGaramond-Italic-latin-ext.woff2?ver=cdaf0905fb1c) format("woff2");
 	unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -639,18 +639,8 @@
 	font-weight: 400 700;
 	font-style: italic;
 	font-display: swap;
-	src: url(./EB-Garamond/EBGaramond-Italic-latin.woff2) format("woff2");
+	src: url(./EB-Garamond/EBGaramond-Italic-latin.woff2?ver=b6b388074e82) format("woff2");
 	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-/* arrows */
-@font-face {
-	font-family: "EB Garamond";
-	font-weight: 400 700;
-	font-style: italic;
-	font-display: swap;
-	src: url(./EB-Garamond/EBGaramond-Italic-arrows.woff2) format("woff2");
-	unicode-range: U+2190-2199;
 }
 
 
@@ -664,7 +654,7 @@
 	font-weight: 200;
 	font-style: normal;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-ExtraLight-cyrillic-ext.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-ExtraLight-cyrillic-ext.woff2?ver=99488ab1f1b4) format("woff2");
 	unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
 }
 
@@ -674,7 +664,7 @@
 	font-weight: 200;
 	font-style: normal;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-ExtraLight-cyrillic.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-ExtraLight-cyrillic.woff2?ver=370513b21aa8) format("woff2");
 	unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 
@@ -684,7 +674,7 @@
 	font-weight: 200;
 	font-style: normal;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-ExtraLight-vietnamese.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-ExtraLight-vietnamese.woff2?ver=04a172643c2d) format("woff2");
 	unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
 }
 
@@ -694,7 +684,7 @@
 	font-weight: 200;
 	font-style: normal;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-ExtraLight-latin-ext.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-ExtraLight-latin-ext.woff2?ver=1214d6939808) format("woff2");
 	unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -704,7 +694,7 @@
 	font-weight: 200;
 	font-style: normal;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-ExtraLight-latin.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-ExtraLight-latin.woff2?ver=075de20a9833) format("woff2");
 	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -719,7 +709,7 @@
 	font-weight: 200;
 	font-style: italic;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-ExtraLightItalic-cyrillic-ext.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-ExtraLightItalic-cyrillic-ext.woff2?ver=f67b80c3648c) format("woff2");
 	unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
 }
 
@@ -729,7 +719,7 @@
 	font-weight: 200;
 	font-style: italic;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-ExtraLightItalic-cyrillic.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-ExtraLightItalic-cyrillic.woff2?ver=51c4ca00cdb0) format("woff2");
 	unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 
@@ -739,7 +729,7 @@
 	font-weight: 200;
 	font-style: italic;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-ExtraLightItalic-vietnamese.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-ExtraLightItalic-vietnamese.woff2?ver=632a48e3ba8e) format("woff2");
 	unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
 }
 
@@ -749,7 +739,7 @@
 	font-weight: 200;
 	font-style: italic;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-ExtraLightItalic-latin-ext.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-ExtraLightItalic-latin-ext.woff2?ver=454bc3623abc) format("woff2");
 	unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -759,7 +749,7 @@
 	font-weight: 200;
 	font-style: italic;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-ExtraLightItalic-latin.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-ExtraLightItalic-latin.woff2?ver=38cfc7b0cee7) format("woff2");
 	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -774,7 +764,7 @@
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-Regular-cyrillic-ext.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-Regular-cyrillic-ext.woff2?ver=d5b4785e465e) format("woff2");
 	unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
 }
 
@@ -784,7 +774,7 @@
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-Regular-cyrillic.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-Regular-cyrillic.woff2?ver=dbae9f565349) format("woff2");
 	unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 
@@ -794,7 +784,7 @@
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-Regular-vietnamese.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-Regular-vietnamese.woff2?ver=0aa3dc1ec47b) format("woff2");
 	unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
 }
 
@@ -804,7 +794,7 @@
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-Regular-latin-ext.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-Regular-latin-ext.woff2?ver=139e6cd03358) format("woff2");
 	unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -814,7 +804,7 @@
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-Regular-latin.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-Regular-latin.woff2?ver=8ddc86b0ebf4) format("woff2");
 	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -829,7 +819,7 @@
 	font-weight: 400;
 	font-style: italic;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-Italic-cyrillic-ext.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-Italic-cyrillic-ext.woff2?ver=c415eab9d09e) format("woff2");
 	unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
 }
 
@@ -839,7 +829,7 @@
 	font-weight: 400;
 	font-style: italic;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-Italic-cyrillic.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-Italic-cyrillic.woff2?ver=c586ce96eb42) format("woff2");
 	unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 
@@ -849,7 +839,7 @@
 	font-weight: 400;
 	font-style: italic;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-Italic-vietnamese.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-Italic-vietnamese.woff2?ver=0b8d65223f8f) format("woff2");
 	unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
 }
 
@@ -859,7 +849,7 @@
 	font-weight: 400;
 	font-style: italic;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-Italic-latin-ext.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-Italic-latin-ext.woff2?ver=bb87d332affb) format("woff2");
 	unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -869,7 +859,7 @@
 	font-weight: 400;
 	font-style: italic;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-Italic-latin.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-Italic-latin.woff2?ver=b8d4f3563cf8) format("woff2");
 	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -883,7 +873,7 @@
 	font-weight: 500;
 	font-style: normal;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-Medium-cyrillic-ext.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-Medium-cyrillic-ext.woff2?ver=431d255a3afa) format("woff2");
 	unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
 }
 
@@ -893,7 +883,7 @@
 	font-weight: 500;
 	font-style: normal;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-Medium-cyrillic.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-Medium-cyrillic.woff2?ver=beb561f0d2e7) format("woff2");
 	unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 
@@ -903,7 +893,7 @@
 	font-weight: 500;
 	font-style: normal;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-Medium-greek-ext.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-Medium-greek-ext.woff2?ver=49bf3255c571) format("woff2");
 	unicode-range: U+1F00-1FFF;
 }
 
@@ -913,7 +903,7 @@
 	font-weight: 500;
 	font-style: normal;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-Medium-greek.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-Medium-greek.woff2?ver=6152b28764d6) format("woff2");
 	unicode-range: U+0370-03FF;
 }
 
@@ -923,7 +913,7 @@
 	font-weight: 500;
 	font-style: normal;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-Medium-vietnamese.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-Medium-vietnamese.woff2?ver=c58ce4527d80) format("woff2");
 	unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
 }
 
@@ -933,7 +923,7 @@
 	font-weight: 500;
 	font-style: normal;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-Medium-latin-ext.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-Medium-latin-ext.woff2?ver=4ace19a3c116) format("woff2");
 	unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -943,7 +933,7 @@
 	font-weight: 500;
 	font-style: normal;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-Medium-latin.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-Medium-latin.woff2?ver=44150b50e9d4) format("woff2");
 	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -953,7 +943,7 @@
 	font-weight: 500;
 	font-style: normal;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-Medium-arrows.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-Medium-arrows.woff2?ver=e9f571cc6a63) format("woff2");
 	unicode-range: U+2190-2199;
 }
 
@@ -967,7 +957,7 @@
 	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-Bold-cyrillic-ext.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-Bold-cyrillic-ext.woff2?ver=d20781be5b07) format("woff2");
 	unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
 }
 
@@ -977,7 +967,7 @@
 	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-Bold-cyrillic.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-Bold-cyrillic.woff2?ver=c6178ab7258f) format("woff2");
 	unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 
@@ -987,7 +977,7 @@
 	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-Bold-vietnamese.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-Bold-vietnamese.woff2?ver=5e8388bb91ff) format("woff2");
 	unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
 }
 
@@ -997,7 +987,7 @@
 	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-Bold-latin-ext.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-Bold-latin-ext.woff2?ver=ac5ae799cb8f) format("woff2");
 	unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -1007,7 +997,7 @@
 	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-Bold-latin.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-Bold-latin.woff2?ver=59cad49c271e) format("woff2");
 	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -1022,7 +1012,7 @@
 	font-weight: 700;
 	font-style: italic;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-BoldItalic-cyrillic-ext.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-BoldItalic-cyrillic-ext.woff2?ver=acd7ea8d0d94) format("woff2");
 	unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
 }
 
@@ -1032,7 +1022,7 @@
 	font-weight: 700;
 	font-style: italic;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-BoldItalic-cyrillic.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-BoldItalic-cyrillic.woff2?ver=20d5b885400b) format("woff2");
 	unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 
@@ -1042,7 +1032,7 @@
 	font-weight: 700;
 	font-style: italic;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-BoldItalic-vietnamese.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-BoldItalic-vietnamese.woff2?ver=a005afe26029) format("woff2");
 	unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
 }
 
@@ -1052,7 +1042,7 @@
 	font-weight: 700;
 	font-style: italic;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-BoldItalic-latin-ext.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-BoldItalic-latin-ext.woff2?ver=580700b45e3a) format("woff2");
 	unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -1062,6 +1052,7 @@
 	font-weight: 700;
 	font-style: italic;
 	font-display: swap;
-	src: url(./IBMPlexMono/IBMPlexMono-BoldItalic-latin.woff2) format("woff2");
+	src: url(./IBMPlexMono/IBMPlexMono-BoldItalic-latin.woff2?ver=a96c20e7edc2) format("woff2");
 	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2212, U+2215, U+FEFF, U+FFFD;
 }
+
