@@ -141,6 +141,14 @@ function get_font_url( $font, $subset ) {
 	}
 
 	switch ( $lower_font ) {
+		case 'newsreader':
+			$font_folder    = 'Newsreader/';
+			$font_file_name = 'Newsreader-';
+			break;
+		case 'newsreader italic':
+			$font_folder    = 'Newsreader/';
+			$font_file_name = 'Newsreader-Italic-';
+			break;
 		case 'anton':
 			$font_folder    = 'Anton/';
 			$font_file_name = 'Anton-Regular-';
