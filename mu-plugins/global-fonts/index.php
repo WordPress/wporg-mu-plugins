@@ -141,6 +141,10 @@ function get_font_url( $font, $subset ) {
 	}
 
 	switch ( $lower_font ) {
+		case 'anton':
+			$font_folder    = 'Anton/';
+			$font_file_name = 'Anton-Regular-';
+			break;
 		case 'courier prime':
 			$font_folder    = 'CourierPrime/';
 			$font_file_name = 'CourierPrime-Regular-';
