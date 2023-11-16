@@ -65,7 +65,7 @@ function render( array $attributes, string $content, WP_Block $block ): string {
  */
 function get_events( string $filter_slug, int $start_timestamp, int $end_timestamp, bool $force_refresh = false ) : array {
 	$events        = array();
-	$cache_key     = 'google-map-event-filters-' . md5( wp_json_encode( func_get_args() ) );
+	$cache_key     = 'google-map-event-filters-' . md5( wp_json_encode( $filter_slug . $start_timestamp . $end_timestamp ) );
 	$cached_events = get_transient( $cache_key );
 
 	if ( $cached_events && ! $force_refresh ) {
