@@ -10,7 +10,10 @@
 	"attributes": {},
 	"supports": {
 		"inserter": false,
-		"__experimentalLayout": true
+		"__experimentalLayout": true,
+		"spacing": {
+			"margin": true
+		}
 	},
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./editor-style.css",

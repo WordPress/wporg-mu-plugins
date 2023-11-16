@@ -34,6 +34,16 @@
 		&.is-fixed-sidebar .is-link-to-top,
 		&.is-bottom-sidebar .is-link-to-top {
 			display: block;
+			margin-top: 0;
+
+			& a {
+				color: var(--wp--preset--color--charcoal-4);
+			}
+		}
+
+		.wp-block-wporg-table-of-contents + .is-link-to-top {
+			border-top: 1px solid var(--wp--preset--color--light-grey-1);
+			padding-top: var(--wp--preset--spacing--20);
 		}
 	}
 }
