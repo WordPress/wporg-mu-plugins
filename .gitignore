@@ -11,3 +11,4 @@ phpcs.xml.dist
 .stylelintrc
 .prettierrc.js
 .eslintrc.js
+output
