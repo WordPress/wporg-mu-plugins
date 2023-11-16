@@ -70,14 +70,58 @@ function get_events( string $filter_slug, int $start_timestamp, int $end_timesta
 
 	if ( $cached_events && ! $force_refresh ) {
 		$events = $cached_events;
+
 	} else {
-		$potential_matches = get_events_between_dates( $start_timestamp, $end_timestamp );
-		$filtered_events   = filter_potential_events( $filter_slug, $potential_matches );
-		$events            = $filtered_events;
+		switch ( $filter_slug ) {
+			case 'all-upcoming':
+				$events = get_all_upcoming_events();
+				break;
+
+			case 'wp20':
+			case 'sotw':
+				$potential_matches = get_events_between_dates( $start_timestamp, $end_timestamp );
+				$events            = filter_potential_events( $filter_slug, $potential_matches );
+				break;
+
+			default:
+				return apply_filters( "google_map_event_filters_{$filter_slug}", array() );
+		}
 
 		// Store for a day to make sure it never expires before the priming cron job runs.
-		set_transient( $cache_key, $filtered_events, DAY_IN_SECONDS );
+		set_transient( $cache_key, $events, DAY_IN_SECONDS );
 	}
+
+	return $events;
+}
+
+/**
+ * Get a list of all upcoming events across all sites.
+ */
+function get_all_upcoming_events(): array {
+	global $wpdb;
+
+	$query = '
+		SELECT
+			id, `type`, title, url, meetup, location, latitude, longitude, date_utc,
+			date_utc_offset AS tz_offset
+		FROM `wporg_events`
+		WHERE
+			status = "scheduled" AND
+			(
+				( "wordcamp" = type AND date_utc BETWEEN NOW() AND ADDDATE( NOW(), 180 ) ) OR
+				( "meetup" = type AND date_utc BETWEEN NOW() AND ADDDATE( NOW(), 30 ) )
+			)
+		ORDER BY date_utc ASC
+		LIMIT 400'
+	;
+
+	if ( 'latin1' === DB_CHARSET ) {
+		$events = $wpdb->get_results( $query );
+	} else {
+		$events = get_latin1_results_with_prepared_query( $query );
+	}
+
+	$events = prepare_events( $events );
 
 	return $events;
 }

@@ -32,6 +32,8 @@ It uses the `wporg/google-map` block to display a searchable list and/or map of 
 	Alternatively, you could take that JSON and manually put it in the post source like this:
 
 	```html
+	<!-- wp:wporg/google-map-event-filters {"filterSlug":"sotw","startDate":"December 10, 2023","endDate":"January 12, 2024","googleMapBlockAttributes":{"id":"sotw-2023","apiKey":"WORDCAMP_DEV_GOOGLE_MAPS_API_KEY"}} /-->
+
 	<!-- wp:wporg/google-map-event-filters {"filterSlug":"wp20","startDate":"April 21, 2023","endDate":"May 30, 2023","googleMapBlockAttributes":{"id":"wp20","apiKey":"WORDCAMP_DEV_GOOGLE_MAPS_API_KEY"}} /-->
 	```
 
