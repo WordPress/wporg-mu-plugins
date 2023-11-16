@@ -108,6 +108,15 @@ function get_events_between_dates( int $start_timestamp, int $end_timestamp ) : 
 		$events = get_latin1_results_with_prepared_query( $query );
 	}
 
+	$events = prepare_events( $events );
+
+	return $events;
+}
+
+/**
+ * Clean up events
+ */
+function prepare_events( array $events ): array {
 	foreach ( $events as $event ) {
 		// `capital_P_dangit()` won't work here because the current filter isn't `the_title` and there isn't a safelisted prefix before `$text`.
 		$event->title = str_replace( 'Wordpress', 'WordPress', $event->title );
