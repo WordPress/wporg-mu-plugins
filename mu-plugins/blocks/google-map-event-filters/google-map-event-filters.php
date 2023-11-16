@@ -38,7 +38,12 @@ function render( array $attributes, string $content, WP_Block $block ): string {
 	// This has to be called in `render()` to know which slug/dates to use.
 	$cron_args = array( $attributes['filterSlug'], $attributes['startDate'], $attributes['endDate'], true );
 
-	if ( ! wp_next_scheduled( 'prime_event_filters', $cron_args ) ) {
+	// Some custom filter slugs using `google_map_event_filters_{$filter_slug}` to pass data may need to run their
+	// own cron to prime the cache.
+	// See WordCamp's `themes/wporg-events-2023/inc/city-landing-pages.php` for an example.
+	$register_cron = apply_filters( 'google-map-event-filters-register-cron', true, $attributes['filterSlug'] );
+
+	if ( $register_cron && ! wp_next_scheduled( 'prime_event_filters', $cron_args ) ) {
 		wp_schedule_event(
 			time() + HOUR_IN_SECONDS,
 			'hourly',
@@ -65,7 +70,7 @@ function render( array $attributes, string $content, WP_Block $block ): string {
  */
 function get_events( string $filter_slug, int $start_timestamp, int $end_timestamp, bool $force_refresh = false ) : array {
 	$events        = array();
-	$cache_key     = 'google-map-event-filters-' . md5( wp_json_encode( $filter_slug . $start_timestamp . $end_timestamp ) );
+	$cache_key     = get_cache_key( compact( 'filter_slug', 'start_timestamp', 'end_timestamp' ) );
 	$cached_events = get_transient( $cache_key );
 
 	if ( $cached_events && ! $force_refresh ) {
@@ -92,6 +97,19 @@ function get_events( string $filter_slug, int $start_timestamp, int $end_timesta
 	}
 
 	return $events;
+}
+
+/**
+ * Get the cache key for a given set of events.
+ *
+ * Customizing the key is sometimes needed when using the `google_map_event_filters_{$filter_slug}` filter.
+ * See WordCamp's `themes/wporg-events-2023/inc/city-landing-pages.php` for an example.
+ */
+function get_cache_key( array $parts ): string {
+	$items = apply_filters( 'google_map_event_filters_cache_key_parts', $parts );
+	$key   = 'google-map-event-filters-' . md5( wp_json_encode( implode( '|', $items ) ) );
+
+	return $key;
 }
 
 /**
