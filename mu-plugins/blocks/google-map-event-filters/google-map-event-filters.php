@@ -84,7 +84,7 @@ function get_events( string $filter_slug, int $start_timestamp, int $end_timesta
 				break;
 
 			default:
-				return apply_filters( "google_map_event_filters_{$filter_slug}", array() );
+				$events = apply_filters( "google_map_event_filters_{$filter_slug}", array() );
 		}
 
 		// Store for a day to make sure it never expires before the priming cron job runs.

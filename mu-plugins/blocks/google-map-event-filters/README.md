@@ -8,7 +8,7 @@ It uses the `wporg/google-map` block to display a searchable list and/or map of 
 ## Usage
 
 1. Setup the API key needed for the `wporg/google-maps` block. See its README for details.
-1. Add a new filter to `filter_potential_events()` if you're not using an existing one.
+1. Add a new filter to `get_events()` and/or `filter_potential_events()` if you're not using an existing one. You can use the `google_map_event_filters_{$filter_slug}` WP filter to register  an event filter outside of this plugin. That can be useful in circumstances where the data is only used on a specific site, like WordCamp.org's `google_map_event_filters_city-landing-pages` filter.
 1. Add the following to a pattern in your theme. `googleMapBlockAttributes` are the attributes that will be passed to the `wporg/google-map` block, see it's README for details.
 
 	```php
@@ -35,7 +35,8 @@ It uses the `wporg/google-map` block to display a searchable list and/or map of 
 	<!-- wp:wporg/google-map-event-filters {"filterSlug":"sotw","startDate":"December 10, 2023","endDate":"January 12, 2024","googleMapBlockAttributes":{"id":"sotw-2023","apiKey":"WORDCAMP_DEV_GOOGLE_MAPS_API_KEY"}} /-->
 
 	<!-- wp:wporg/google-map-event-filters {"filterSlug":"wp20","startDate":"April 21, 2023","endDate":"May 30, 2023","googleMapBlockAttributes":{"id":"wp20","apiKey":"WORDCAMP_DEV_GOOGLE_MAPS_API_KEY"}} /-->
-	```
 
+	<!-- wp:wporg/google-map-event-filters {"filterSlug":"all-upcoming","googleMapBlockAttributes":{"id":"all-upcoming-map","apiKey":"WORDCAMP_DEV_GOOGLE_MAPS_API_KEY"}} /-->
+	```
 1. View the page where the block is used. That will create the cron job that updates the data automatically in the future.
 1. Run `wp cron event run prime_event_filters` to test the filtering. Look at each title, and add any false positives to `$false_positives` in `filter_potential_events()`. If any events that should be included were ignored, add a keyword from the title to `$keywords`. Run the command after those changes and make sure it's correct now.
