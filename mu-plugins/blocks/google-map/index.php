@@ -40,11 +40,10 @@ function render( $attributes, $content, $block ) {
 	$attributes['searchIcon'] = plugins_url( 'images/search.svg', __FILE__ );
 
 	$attributes['markerIcon'] = array(
-		'markerUrl'           => plugins_url( 'images/map-marker-red.svg', __FILE__ ),
+		'imagesDirUrl'        => plugins_url( 'images', __FILE__ ),
 		'markerHeight'        => 68,
 		'markerWidth'         => 68,
 		'markerAnchorYOffset' => -5,
-		'clusterUrl'          => plugins_url( 'images/cluster-background.svg', __FILE__ ),
 		'clusterWidth'        => 38,
 		'clusterHeight'       => 38,
 	);

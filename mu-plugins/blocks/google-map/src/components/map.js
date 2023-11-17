@@ -29,11 +29,12 @@ import {
  * @param {Object} props
  * @param {string} props.apiKey
  * @param {Array}  props.markers
+ * @param {string} props.blockStyle
  * @param {Object} props.icon
  *
  * @return {JSX.Element}
  */
-export default function Map( { apiKey, markers: rawMarkers, icon } ) {
+export default function Map( { apiKey, markers: rawMarkers, icon, blockStyle } ) {
 	const [ loaded, setLoaded ] = useState( false );
 	const clusterer = useRef( null );
 	const googleMap = useRef( null );
@@ -45,7 +46,7 @@ export default function Map( { apiKey, markers: rawMarkers, icon } ) {
 		zoomControl: true,
 		mapTypeControl: false,
 		streetViewControl: false,
-		styles: mapStyles,
+		styles: mapStyles[ blockStyle ],
 	};
 
 	/**
@@ -65,13 +66,21 @@ export default function Map( { apiKey, markers: rawMarkers, icon } ) {
 		} );
 
 		combinedMarkers = combineDuplicateLocations( rawMarkers );
-		combinedMarkers = assignMarkerReferences( map, maps, infoWindow.current, combinedMarkers, icon );
+		combinedMarkers = assignMarkerReferences(
+			map,
+			maps,
+			infoWindow.current,
+			combinedMarkers,
+			icon,
+			blockStyle
+		);
 
 		clusterer.current = clusterMarkers(
 			map,
 			maps,
 			combinedMarkers.map( ( marker ) => marker.markerRef ),
-			icon
+			icon,
+			blockStyle
 		);
 
 		panToCenter(
@@ -99,7 +108,8 @@ export default function Map( { apiKey, markers: rawMarkers, icon } ) {
 			googleMapsApi.current,
 			infoWindow.current,
 			combinedMarkers,
-			icon
+			icon,
+			blockStyle
 		);
 
 		const markerObjects = combinedMarkers.map( ( marker ) => marker.markerRef );

@@ -79,10 +79,11 @@ export function combineDuplicateLocations( rawMarkers ) {
  * @param {google.maps.InfoWindow} infoWindow
  * @param {Array}                  wpEvents
  * @param {Object}                 rawIcon
+ * @param {string}                 blockStyle
  */
-export function assignMarkerReferences( map, maps, infoWindow, wpEvents, rawIcon ) {
+export function assignMarkerReferences( map, maps, infoWindow, wpEvents, rawIcon, blockStyle ) {
 	const icon = {
-		url: rawIcon.markerUrl,
+		url: rawIcon.imagesDirUrl + `/map-marker-${ blockStyle }.svg`,
 		size: new maps.Size( rawIcon.markerHeight, rawIcon.markerWidth ),
 		anchor: new maps.Point( 34, rawIcon.markerWidth / 2 ),
 		scaledSize: new maps.Size( rawIcon.markerHeight / 2, rawIcon.markerWidth / 2 ),
@@ -141,12 +142,13 @@ function openInfoWindow( infoWindow, map, markerObject, rawMarker ) {
  * @param {google.maps}          maps
  * @param {google.maps.Marker[]} markers
  * @param {Object}               rawIcon
+ * @param {string}               blockStyle
  *
  * @return {MarkerClusterer}
  */
-export function clusterMarkers( map, maps, markers, rawIcon ) {
+export function clusterMarkers( map, maps, markers, rawIcon, blockStyle ) {
 	const clusterIcon = {
-		url: rawIcon.clusterUrl,
+		url: rawIcon.imagesDirUrl + `/cluster-background-${ blockStyle }.svg`,
 		size: new maps.Size( rawIcon.clusterHeight, rawIcon.clusterWidth ),
 		anchor: new maps.Point( rawIcon.clusterHeight, rawIcon.clusterWidth ),
 		scaledSize: new maps.Size( rawIcon.clusterHeight, rawIcon.clusterWidth ),
