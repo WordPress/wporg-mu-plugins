@@ -21,6 +21,7 @@ import { getValidMarkers } from '../utilities/google-maps-api';
 /**
  *
  * @param {Object}  props
+ * @param {string}  props.blockStyle
  * @param {boolean} props.showMap
  * @param {boolean} props.showList
  * @param {boolean} props.showSearch
@@ -33,6 +34,7 @@ import { getValidMarkers } from '../utilities/google-maps-api';
  * @return {JSX.Element}
  */
 export default function Main( {
+	blockStyle,
 	showMap,
 	showList,
 	showSearch,
@@ -109,7 +111,9 @@ export default function Main( {
 				<Search searchQuery={ searchQuery } onQueryChange={ onQueryChange } iconURL={ searchIcon } />
 			) }
 
-			{ showMap && <Map apiKey={ apiKey } markers={ visibleMarkers } icon={ markerIcon } /> }
+			{ showMap && (
+				<Map apiKey={ apiKey } markers={ visibleMarkers } icon={ markerIcon } blockStyle={ blockStyle } />
+			) }
 
 			{ showList && visibleMarkers.length > 0 && <List markers={ visibleMarkers } /> }
 
