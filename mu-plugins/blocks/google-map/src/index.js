@@ -12,10 +12,10 @@ import { useBlockProps } from '@wordpress/block-editor';
 import metadata from './block.json';
 import Main from './components/main';
 
-function Edit() {
+function Edit( { attributes } ) {
 	return (
 		<div { ...useBlockProps() }>
-			<Main { ...wporgGoogleMap } />
+			<Main { ...wporgGoogleMap[ attributes.id ] } />
 		</div>
 	);
 }
