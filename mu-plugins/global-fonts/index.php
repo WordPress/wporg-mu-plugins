@@ -201,6 +201,14 @@ function get_font_url( $font, $subset ) {
 			$font_folder    = 'IBMPlexMono/';
 			$font_file_name = 'IBMPlexMono-BoldItalic-';
 			break;
+		case 'ibm plex sans':
+			$font_folder    = 'IBMPlexSans/';
+			$font_file_name = 'IBMPlexSans-Regular-';
+			break;
+		case 'ibm plex sans semibold':
+			$font_folder    = 'IBMPlexSans/';
+			$font_file_name = 'IBMPlexSans-SemiBold-';
+			break;
 	}
 
 	$filepath = $font_folder . $font_file_name . $lower_subset . '.woff2';
