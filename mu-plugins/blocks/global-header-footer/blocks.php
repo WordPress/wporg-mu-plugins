@@ -544,16 +544,6 @@ function get_global_menu_items() {
 					'type'  => 'custom',
 				),
 				array(
-					'title' => esc_html_x( 'WordCamp ↗︎', 'Menu item title', 'wporg' ),
-					'url'   => 'https://central.wordcamp.org/',
-					'type'  => 'custom',
-				),
-				array(
-					'title' => esc_html_x( 'Meetups ↗︎', 'Menu item title', 'wporg' ),
-					'url'   => 'https://www.meetup.com/pro/wordpress/',
-					'type'  => 'custom',
-				),
-				array(
 					'title' => esc_html_x( 'Job Board ↗︎', 'Menu item title', 'wporg' ),
 					'url'   => 'https://jobs.wordpress.net/',
 					'type'  => 'custom',
