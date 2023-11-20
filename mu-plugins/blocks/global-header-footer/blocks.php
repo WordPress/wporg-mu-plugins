@@ -586,6 +586,11 @@ function get_global_menu_items() {
 					'type'  => 'custom',
 				),
 			),
+			array(
+				'title' => esc_html_x( 'Events', 'Menu item title', 'wporg' ),
+				'url'   => 'https://events.wordpress.org/',
+				'type'  => 'custom',
+			),
 		),
 	);
 
