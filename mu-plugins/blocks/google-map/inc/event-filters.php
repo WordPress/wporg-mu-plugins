@@ -1,47 +1,22 @@
 <?php
 
-namespace WordPressdotorg\MU_Plugins\Google_Map_Event_Filters;
-use WP_Block;
+namespace WordPressdotorg\MU_Plugins\Google_Map;
 
 defined( 'WPINC' ) || die();
 
-add_action( 'init', __NAMESPACE__ . '\init' );
 add_action( 'prime_event_filters', __NAMESPACE__ . '\get_events', 10, 4 );
 
 
 /**
- * Registers the block from `block.json`.
+ * Schedule a cron job to update events that match the given filter/dates.
  */
-function init() {
-	register_block_type(
-		__DIR__ . '/build',
-		array(
-			'render_callback' => __NAMESPACE__ . '\render',
-		)
-	);
-}
-
-/**
- * Render the block content.
- */
-function render( array $attributes, string $content, WP_Block $block ): string {
-	$attributes['startDate'] = strtotime( $attributes['startDate'] );
-	$attributes['endDate']   = strtotime( $attributes['endDate'] );
-	$wrapper_attributes      = get_block_wrapper_attributes( array( 'id' => 'wp-block-wporg-google-map-event-filters-' . $attributes['filterSlug'] ) );
-
-	// The REST API doesn't support associative arrays, so this had to be defined as an object in this block. It
-	// needs to be an array when passed to the Google Map block though.
-	// See `rest_is_array()`.
-	$map_options             = (array) $attributes['googleMapBlockAttributes'];
-	$map_options['markers']  = get_events( $attributes['filterSlug'], $attributes['startDate'], $attributes['endDate'] );
-
-	// This has to be called in `render()` to know which slug/dates to use.
-	$cron_args = array( $attributes['filterSlug'], $attributes['startDate'], $attributes['endDate'], true );
+function schedule_filter_cron( string $filter_slug, string $start_date, string $end_date ): void {
+	$cron_args = array( $filter_slug, $start_date, $end_date, true );
 
 	// Some custom filter slugs using `google_map_event_filters_{$filter_slug}` to pass data may need to run their
 	// own cron to prime the cache.
 	// See WordCamp's `themes/wporg-events-2023/inc/city-landing-pages.php` for an example.
-	$register_cron = apply_filters( 'google-map-event-filters-register-cron', true, $attributes['filterSlug'] );
+	$register_cron = apply_filters( 'google-map-event-filters-register-cron', true, $filter_slug );
 
 	if ( $register_cron && ! wp_next_scheduled( 'prime_event_filters', $cron_args ) ) {
 		wp_schedule_event(
@@ -51,18 +26,6 @@ function render( array $attributes, string $content, WP_Block $block ): string {
 			$cron_args
 		);
 	}
-
-	ob_start();
-
-	?>
-
-	<div <?php echo wp_kses_data( $wrapper_attributes ); ?>>
-		<!-- wp:wporg/google-map <?php echo wp_json_encode( $map_options ); ?> /-->
-	</div>
-
-	<?php
-
-	return do_blocks( ob_get_clean() );
 }
 
 /**
@@ -271,7 +234,7 @@ function filter_potential_events( string $filter_slug, array $potential_events )
 		}
 	}
 
-	print_results( $matched_events, $other_events );
+	print_results( $filter_slug, $matched_events, $other_events );
 
 	return $matched_events;
 }
@@ -281,7 +244,7 @@ function filter_potential_events( string $filter_slug, array $potential_events )
  *
  * Run `wp cron event run prime_event_filters` to see this.
  */
-function print_results( array $matched_events, array $other_events ) : void {
+function print_results( string $filter, array $matched_events, array $other_events ) : void {
 	if ( 'cli' !== php_sapi_name() ) {
 		return;
 	}
@@ -292,9 +255,11 @@ function print_results( array $matched_events, array $other_events ) : void {
 	sort( $matched_names );
 	sort( $other_names );
 
+	printf( "\n\n============================== \nResults for $filter: \n==============================\n" );
+
 	echo "\nIgnored these events. Double check for false-negatives.\n\n";
 	print_r( $other_names );
 
-	echo "\Included these events. Double check for false-positives.\n\n";
+	echo "\nIncluded these events. Double check for false-positives.\n\n";
 	print_r( $matched_names );
 }

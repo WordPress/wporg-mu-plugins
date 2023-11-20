@@ -16,6 +16,18 @@
 			"type": "string",
 			"default": ""
 		},
+		"filterSlug": {
+			"type": "string",
+			"default": ""
+		},
+		"startDate": {
+			"type": "string",
+			"default": ""
+		},
+		"endDate": {
+			"type": "string",
+			"default": ""
+		},
 		"markers": {
 			"type": "array",
 			"default": []
