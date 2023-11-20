@@ -70,13 +70,17 @@ class Remembers_Controller extends WP_REST_Controller {
 		);
 
 		$results = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL -- prepare called above.
+		$user_ids = wp_list_pluck( $results, 'user_id' );
 
-		if ( ! $results ) {
-			return new WP_Error( 'rest_error_fetching', 'Error fetching users.', array( 'status' => 500 ) );
+		// Grabs user display_name and user_nicename for profile link.
+		$user_data = get_users( array( 'blog_id' => 0, 'include' => $user_ids, 'fields' => array( 'display_name', 'user_nicename' ) ) );
+
+		if ( ! $user_data ) {
+			return new WP_Error( 'rest_error_fetching', 'Error fetching user data.', array( 'status' => 500 ) );
 
 		}
 
-		return new WP_REST_Response( $results, 200 );
+		return new WP_REST_Response( $user_data, 200 );
 	}
 }
 
