@@ -74,6 +74,12 @@ export default function Map( { apiKey, markers: rawMarkers, icon } ) {
 			icon
 		);
 
+		panToCenter(
+			combinedMarkers.map( ( marker ) => marker.markerRef ),
+			googleMap.current,
+			googleMapsApi.current
+		);
+
 		setLoaded( true );
 	}, [] );
 
