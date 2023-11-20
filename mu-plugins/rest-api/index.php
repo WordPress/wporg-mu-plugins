@@ -15,6 +15,7 @@ add_filter( 'rest_user_query', __NAMESPACE__ . '\modify_user_query_parameters', 
  * @return void
  */
 function initialize_rest_endpoints() {
+	require_once __DIR__ . '/endpoints/class-wporg-rest-remembers-controller.php';
 	require_once __DIR__ . '/endpoints/class-wporg-rest-users-controller.php';
 	require_once __DIR__ . '/endpoints/class-wporg-site-quality-controller.php';
 
