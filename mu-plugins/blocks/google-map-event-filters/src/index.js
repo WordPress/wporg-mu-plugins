@@ -9,12 +9,12 @@ import { InnerBlocks, useBlockProps } from '@wordpress/block-editor';
  */
 import metadata from './block.json';
 
-function Edit() {
+function Edit( { attributes } ) {
 	return (
 		<div { ...useBlockProps() }>
 			<InnerBlocks
 				allowedBlocks={ [ 'wporg/google-map' ] }
-				template={ [ [ 'wporg/google-map' ] ] }
+				template={ [ [ 'wporg/google-map', attributes.googleMapBlockAttributes ] ] }
 				templateLock="all"
 			/>
 		</div>
