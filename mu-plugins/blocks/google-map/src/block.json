@@ -44,6 +44,10 @@
 			"type": "boolean",
 			"default": true
 		},
+		"listDisplayLimit": {
+			"type": "number",
+			"default": -1
+		},
 		"searchFields": {
 			"type": "array",
 			"default": [ "title", "location", "meetup" ]
