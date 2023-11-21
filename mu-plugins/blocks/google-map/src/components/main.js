@@ -19,6 +19,7 @@ import { filterMarkers, speakSearchUpdates } from '../utilities/content';
 import { getValidMarkers } from '../utilities/google-maps-api';
 
 /**
+ * Primary entry point and rendering component for the block.
  *
  * @param {Object}  props
  * @param {string}  props.blockStyle
@@ -30,6 +31,7 @@ import { getValidMarkers } from '../utilities/google-maps-api';
  * @param {Object}  props.markerIcon
  * @param {string}  props.searchIcon
  * @param {Array}   props.searchFields
+ * @param {number}  props.listDisplayLimit
  *
  * @return {JSX.Element}
  */
@@ -37,6 +39,7 @@ export default function Main( {
 	blockStyle,
 	showMap,
 	showList,
+	listDisplayLimit,
 	showSearch,
 	apiKey,
 	markers: rawMarkers,
@@ -115,7 +118,9 @@ export default function Main( {
 				<Map apiKey={ apiKey } markers={ visibleMarkers } icon={ markerIcon } blockStyle={ blockStyle } />
 			) }
 
-			{ showList && visibleMarkers.length > 0 && <List markers={ visibleMarkers } /> }
+			{ showList && visibleMarkers.length > 0 && (
+				<List markers={ visibleMarkers } displayLimit={ listDisplayLimit } />
+			) }
 
 			{ visibleMarkers.length === 0 && searchQuery.length > 0 && (
 				<p className="wporg-marker-list__container">

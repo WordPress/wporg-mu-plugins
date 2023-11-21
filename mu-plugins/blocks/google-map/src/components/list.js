@@ -14,12 +14,17 @@ import { formatLocation } from '../utilities/content';
  *
  * @param {Object} props
  * @param {Array}  props.markers
+ * @param {number} props.displayLimit
  *
  * @return {JSX.Element}
  */
-export default function List( { markers } ) {
+export default function List( { markers, displayLimit } ) {
 	if ( markers.length === 0 ) {
 		return <p className="wporg-marker-list__container">{ __( 'No events available', 'wporg' ) }</p>;
+	}
+
+	if ( displayLimit > 0 ) {
+		markers = markers.slice( 0, displayLimit );
 	}
 
 	return (
