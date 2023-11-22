@@ -524,6 +524,11 @@ function get_global_menu_items() {
 			),
 		),
 		array(
+			'title' => esc_html_x( 'Events', 'Menu item title', 'wporg' ),
+			'url'   => 'https://events.wordpress.org/',
+			'type'  => 'custom',
+		),
+		array(
 			'title'   => esc_html_x( 'Community', 'Menu item title', 'wporg' ),
 			'url'     => '#',
 			'type'    => 'custom',
@@ -575,11 +580,6 @@ function get_global_menu_items() {
 					'url'   => 'https://mercantile.wordpress.org/',
 					'type'  => 'custom',
 				),
-			),
-			array(
-				'title' => esc_html_x( 'Events', 'Menu item title', 'wporg' ),
-				'url'   => 'https://events.wordpress.org/',
-				'type'  => 'custom',
 			),
 		),
 	);
