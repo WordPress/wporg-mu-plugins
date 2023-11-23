@@ -25,6 +25,9 @@ function Edit( { attributes } ) {
 
 registerBlockType( metadata.name, {
 	edit: Edit,
+	supports: {
+		align: [ 'wide', 'full' ],
+	},
 } );
 
 registerBlockStyle( metadata.name, {
