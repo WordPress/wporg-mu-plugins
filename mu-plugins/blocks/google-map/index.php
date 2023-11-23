@@ -79,6 +79,7 @@ function render( $attributes, $content, $block ) {
 
 	$wrapper_attributes = get_block_wrapper_attributes( array(
 		'id'          => 'wp-block-wporg-google-map-' . $attributes['id'],
+		'class'       => isset( $attributes['align'] ) ? 'align' . $attributes['align'] : '',
 		'data-map-id' => $attributes['id'],
 	) );
 
