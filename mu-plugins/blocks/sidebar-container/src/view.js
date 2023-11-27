@@ -136,6 +136,28 @@ function init() {
 			container.classList.add( 'is-fixed-sidebar' );
 			onScroll(); // Run once to avoid footer collisions on load (ex, when linked to #reply-title).
 			window.addEventListener( 'scroll', onScroll );
+
+			const observer = new window.ResizeObserver( () => {
+				// If the sidebar is positioned at the bottom and mainEl resizes,
+				// it will remain fixed at the previous bottom position, leading to a broken page layout.
+				// In this case manually trigger the scroll handler to reposition.
+				if ( container.classList.contains( 'is-bottom-sidebar' ) ) {
+					container.classList.remove( 'is-bottom-sidebar' );
+					container.style.removeProperty( 'top' );
+					const isBottom = onScroll();
+					// After the sidebar is repositioned, also adjusts the scroll position
+					// to a point where the sidebar is visible.
+					if ( isBottom ) {
+						window.scrollTo( {
+							top: container.offsetTop - FIXED_HEADER_HEIGHT,
+							behavior: 'instant',
+						} );
+					}
+				}
+			} );
+
+			const mainEl = document.getElementById( 'wp--skip-link--target' );
+			observer.observe( mainEl );
 		}
 	}
 
