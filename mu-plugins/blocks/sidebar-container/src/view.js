@@ -147,7 +147,15 @@ function init() {
 				if ( container.classList.contains( 'is-bottom-sidebar' ) ) {
 					container.classList.remove( 'is-bottom-sidebar' );
 					container.style.removeProperty( 'top' );
-					onScroll();
+					const isBottom = onScroll();
+					// After the sidebar is repositioned, also adjusts the scroll position
+					// to a point where the sidebar is visible.
+					if ( isBottom ) {
+						window.scrollTo( {
+							top: container.offsetTop - FIXED_HEADER_HEIGHT,
+							behavior: 'instant',
+						} );
+					}
 				}
 			} );
 
