@@ -62,6 +62,6 @@
 	},
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",
-	"viewScript": "file:./front.js",
-	"style": "file:./style.css"
+	"viewScript": [ "file:./front.js", "wp-components" ],
+	"style": [ "file:./style.css", "wp-components" ]
 }
