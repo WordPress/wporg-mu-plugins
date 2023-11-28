@@ -87,6 +87,12 @@ export default function Main( {
 	}, [] );
 
 	const onFilterChange = useCallback( ( event ) => {
+		console.log( event );
+
+		// setFilters( {} ); // gotta merge the new value into current state
+
+		// call redrawmap? would need to refactor it for filters in addition to search. will want speaking and setvismarkers though
+		// wont need debounce b/c not as fast as typing
 	} );
 
 	/**
@@ -125,7 +131,7 @@ export default function Main( {
 				<Search searchQuery={ searchQuery } onQueryChange={ onQueryChange } iconURL={ searchIcon } />
 			) }
 
-			{ showFilters && <Filters filters={ filters } onChange={ onFilterChange } /> }
+			{ /* { showFilters && <Filters filters={ filters } onChange={ onFilterChange } /> } */ }
 
 			{ showMap && (
 				<Map apiKey={ apiKey } markers={ visibleMarkers } icon={ markerIcon } blockStyle={ blockStyle } />

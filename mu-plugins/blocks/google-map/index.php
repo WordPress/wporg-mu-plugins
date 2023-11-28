@@ -85,13 +85,74 @@ function render( $attributes, $content, $block ) {
 
 	ob_start();
 
+	// still need to move this into react, not just echo'd here
+	echo do_blocks( '<!-- wp:group {"style":{"spacing":{"blockGap":"0"}},"layout":{"type":"flex","flexWrap":"nowrap"},"className":"wporg-query-filters"} -->
+	<div class="wp-block-group wporg-query-filters">
+		<!-- wp:wporg/query-filter {"key":"map_format"} /-->
+	</div>
+	<!-- /wp:group -->
+' );
+
 	?>
 
 	<div <?php echo wp_kses_data( $wrapper_attributes ); ?>>
 		Loading...
+
+
 	</div>
 
 	<?php
 
 	return ob_get_clean();
 }
+
+
+
+/**
+ * Get the list of tags for the filters.
+ *
+ * @param array $options The options for this filter.
+ * @return array New list of tag options.
+ */
+function get_map_format_options( $options ) {
+	// global $wp_query;
+	// // Get top 20 tags ordered by count, then sort them alphabetically.
+	// $tags = get_terms(
+	// 	array(
+	// 		'taxonomy' => 'post_tag',
+	// 		'orderby' => 'count',
+	// 		'order' => 'DESC',
+	// 		'number' => 20,
+	// 	)
+	// );
+	// usort(
+	// 	$tags,
+	// 	function ( $a, $b ) {
+	// 		return strcmp( strtolower( $a->name ), strtolower( $b->name ) );
+	// 	}
+	// );
+	// $selected = isset( $wp_query->query['tag'] ) ? (array) $wp_query->query['tag'] : array();
+	// $count = count( $selected );
+
+	// $formats = 
+
+	// $label = sprintf(
+	// 	/* translators: The dropdown label for filtering, %s is the selected term count. */
+	// 	_n( 'Popular tags <span>%s</span>', 'Popular tags <span>%s</span>', $count, 'wporg' ),
+	// 	$count
+	// );
+
+	return array(
+		'label' => __( 'Format x', 'wporg' ),
+		'title' => __( 'Format y', 'wporg' ),
+		'key' => 'map_format',
+		'action' => 'javascript:;',
+		'options' => array(
+			'in-person' => 'In Person',
+			'online' => 'Online',
+		),
+		'selected' => array(),
+	);
+}
+add_filter( 'wporg_query_filter_options_map_format', __NAMESPACE__ . '\get_map_format_options' );
+
