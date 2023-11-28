@@ -44,6 +44,10 @@
 			"type": "boolean",
 			"default": true
 		},
+		"showFilters": {
+			"type": "boolean",
+			"default": true
+		},
 		"listDisplayLimit": {
 			"type": "number",
 			"default": -1

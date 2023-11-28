@@ -13,6 +13,7 @@ import { __, sprintf } from '@wordpress/i18n';
  * Internal dependencies
  */
 import Search from './search';
+import Filters from './filters';
 import Map from './map';
 import List from './list';
 import { filterMarkers, speakSearchUpdates } from '../utilities/content';
@@ -26,6 +27,7 @@ import { getValidMarkers } from '../utilities/google-maps-api';
  * @param {boolean} props.showMap
  * @param {boolean} props.showList
  * @param {boolean} props.showSearch
+ * @param {boolean} props.showFilters
  * @param {string}  props.apiKey
  * @param {Array}   props.markers
  * @param {Object}  props.markerIcon
@@ -39,6 +41,7 @@ export default function Main( {
 	showList,
 	listDisplayLimit,
 	showSearch,
+	showFilters,
 	apiKey,
 	markers: rawMarkers,
 	markerIcon,
@@ -47,6 +50,13 @@ export default function Main( {
 } ) {
 	const [ searchQuery, setSearchQuery ] = useState( '' );
 	const searchQueryInitialized = useRef( false );
+
+	const [ filters, setFilters ] = useState( {
+		format: '',
+		type: '',
+		month: [],
+		country: [],
+	} );
 
 	// This probably shouldn't be state because it can be derived from `markers` and `searchQuery`,
 	// but it also feels wrong to have the map and list components do the filtering when they could
@@ -75,6 +85,9 @@ export default function Main( {
 		// function with something like `useCallback` is more complicated than you'd think.
 		throttledRedrawMap( event.target.value );
 	}, [] );
+
+	const onFilterChange = useCallback( ( event ) => {
+	} );
 
 	/**
 	 * Redraw the map and list based on the user's search query.
@@ -111,6 +124,8 @@ export default function Main( {
 			{ showSearch && (
 				<Search searchQuery={ searchQuery } onQueryChange={ onQueryChange } iconURL={ searchIcon } />
 			) }
+
+			{ showFilters && <Filters filters={ filters } onChange={ onFilterChange } /> }
 
 			{ showMap && (
 				<Map apiKey={ apiKey } markers={ visibleMarkers } icon={ markerIcon } blockStyle={ blockStyle } />
