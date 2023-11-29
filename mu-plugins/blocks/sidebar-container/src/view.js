@@ -1,8 +1,9 @@
 /**
  * This is the calculated value of the admin bar + header height + local nav bar.
+ * LOCAL_NAV_HEIGHT fallback value matches that of the CSS variable.
  */
-const localNavHeight = getCustomPropValue( '--wp--custom--local-navigation-bar--spacing--height' );
-const FIXED_HEADER_HEIGHT = 32 + 90 + localNavHeight;
+const LOCAL_NAV_HEIGHT = getCustomPropValue( '--wp--custom--local-navigation-bar--spacing--height' ) || 60;
+const FIXED_HEADER_HEIGHT = 32 + 90 + LOCAL_NAV_HEIGHT;
 
 /**
  * Get the value of a CSS custom property.
