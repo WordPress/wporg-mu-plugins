@@ -119,6 +119,9 @@ function get_map_format_options( array $options ): array {
 		'title' => __( 'Format', 'wporg' ),
 		'key' => 'map_format',
 		'action' => 'javascript:;',
+			// TODO: this is temporary, to prevent Apply from making a POST request.
+			// ideally we'd update the block to accept an `event` param in addition to `action`.
+			// if `event` exists, that event is fired and passed the data so it can filter the map markers based on the selected filters.
 		'options' => array(
 			'in-person' => 'In Person',
 			'online'    => 'Online',
@@ -141,3 +144,5 @@ function get_map_type_options( array $options ): array {
 		'selected' => array(),
 	);
 }
+
+// TODO: add month, country
