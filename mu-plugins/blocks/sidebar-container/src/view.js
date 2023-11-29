@@ -1,10 +1,10 @@
 /**
- * This is the calculated value of the admin bar + header height + local nav bar.
- * LOCAL_NAV_HEIGHT fallback value matches that of the CSS variable.
+ * FIXED_HEADER_HEIGHT is the calculated value of the admin bar + header height + local nav bar.
+ * Fallback values for custom properties match CSS defaults.
  */
 const LOCAL_NAV_HEIGHT = getCustomPropValue( '--wp--custom--local-navigation-bar--spacing--height' ) || 60;
 const FIXED_HEADER_HEIGHT = 32 + 90 + LOCAL_NAV_HEIGHT;
-const GAP = getCustomPropValue( '--wp--custom--wporg-sidebar-container--spacing--margin--top' ) || 150;
+const GAP = getCustomPropValue( '--wp--custom--wporg-sidebar-container--spacing--margin--top' ) || 80;
 const BOTTOM_GAP = getCustomPropValue( '--wp--preset--spacing--edge-space' ) || 80;
 
 let container;
