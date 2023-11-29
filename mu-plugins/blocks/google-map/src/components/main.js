@@ -26,7 +26,6 @@ import { getValidMarkers } from '../utilities/google-maps-api';
  * @param {boolean} props.showMap
  * @param {boolean} props.showList
  * @param {boolean} props.showSearch
- * @param {boolean} props.showFilters
  * @param {string}  props.apiKey
  * @param {Array}   props.markers
  * @param {Object}  props.markerIcon
@@ -84,21 +83,14 @@ export default function Main( {
 		throttledRedrawMap( event.target.value );
 	}, [] );
 
-	const onFilterChange = useCallback( ( event ) => {
-		console.log( event );
-
-		// setFilters( {} ); // gotta merge the new value into current state
-
-		// call redrawmap? would need to refactor it for filters in addition to search. will want speaking and setvismarkers though
-		// wont need debounce b/c not as fast as typing
-	} );
+	// TODO: write an event handler to listen for when the filters change from the query-filters block, and call setFilters to update them here.
 
 	/**
 	 * Redraw the map and list based on the user's search query.
 	 */
 	const redrawMap = useCallback(
 		( newSearchQuery ) => {
-			const filteredMarkers = filterMarkers( validMarkers, newSearchQuery, searchFields );
+			const filteredMarkers = filterMarkers( validMarkers, newSearchQuery, searchFields, filters );
 
 			setVisibleMarkers( filteredMarkers );
 
@@ -110,7 +102,7 @@ export default function Main( {
 
 			speakSearchUpdates( newSearchQuery, filteredMarkers.length );
 		},
-		[ validMarkers, searchFields ]
+		[ validMarkers, searchFields, filters ]
 	);
 
 	/**

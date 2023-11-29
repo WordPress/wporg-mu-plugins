@@ -31,9 +31,14 @@ export function formatLocation( location ) {
  * @param {Array}  unfilteredMarkers
  * @param {string} query
  * @param {Array}  searchFields
+ * @param {Array}  filters
+ *
+ * @return {Array}
  */
-export function filterMarkers( unfilteredMarkers, query, searchFields ) {
+export function filterMarkers( unfilteredMarkers, query, searchFields, filters ) {
 	const filteredMarkers = [];
+
+	// TODO: filter by `filters`.
 
 	if ( '' === query ) {
 		return unfilteredMarkers;

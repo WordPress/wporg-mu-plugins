@@ -87,20 +87,25 @@ function render( $attributes, $content, $block ) {
 
 	ob_start();
 
-
 	?>
 
 	<div class="wporg-google-map-container">
-		<?php echo do_blocks( '
-			<!-- wp:group {"style":{"spacing":{"blockGap":"0"}},"layout":{"type":"flex","flexWrap":"nowrap"},"className":"wporg-map-query-filters"} -->
-				<div class="wp-block-group wporg-query-filters">
-					<!-- wp:wporg/query-filter {"key":"map_format"} /-->
-					<!-- wp:wporg/query-filter {"key":"map_type"} /-->
-					<!-- wp:wporg/query-filter {"key":"map_month"} /-->
-					<!-- wp:wporg/query-filter {"key":"map_country"} /-->
-				</div>
-			<!-- /wp:group -->
-		' ); ?>
+		<?php if ( $attributes['showFilters'] ) : ?>
+			<?php echo do_blocks( '
+				<!-- wp:group {"style":{"spacing":{"blockGap":"0"}},"layout":{"type":"flex","flexWrap":"nowrap"},"className":"wporg-google-map-query-filters"} -->
+					<div class="wp-block-group wporg-query-filters">
+						<!-- wp:wporg/query-filter {"key":"map_format"} /-->
+						<!-- wp:wporg/query-filter {"key":"map_type"} /-->
+						<!-- wp:wporg/query-filter {"key":"map_month"} /-->
+						<!-- wp:wporg/query-filter {"key":"map_country"} /-->
+					</div>
+				<!-- /wp:group -->
+			' ); ?>
+		<?php endif; ?>
+
+		<!-- TODO: rearrange this so that .wporg-google-map-query-filters above and the map/list/search elements below are all direct descendents of the same container.
+		  -- then use Grid to change the `order` so that filters shows up after search
+		  -->
 
 		<div <?php echo wp_kses_data( $wrapper_attributes ); ?>>
 			Loading...
