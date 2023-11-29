@@ -76,6 +76,9 @@ function onScroll() {
 }
 
 function isSidebarWithinViewport() {
+	if ( ! container ) {
+		return false;
+	}
 	// Margin offset from the top of the sidebar.
 	const gap = getCustomPropValue( '--wp--custom--wporg-sidebar-container--spacing--margin--top' );
 	// Usable viewport height.
@@ -107,32 +110,30 @@ function init() {
 		} );
 	}
 
-	if ( container ) {
-		if ( isSidebarWithinViewport() ) {
-			onScroll(); // Run once to avoid footer collisions on load (ex, when linked to #reply-title).
-			window.addEventListener( 'scroll', onScroll );
+	if ( isSidebarWithinViewport() ) {
+		onScroll(); // Run once to avoid footer collisions on load (ex, when linked to #reply-title).
+		window.addEventListener( 'scroll', onScroll );
 
-			const observer = new window.ResizeObserver( () => {
-				// If the sidebar is positioned at the bottom and mainEl resizes,
-				// it will remain fixed at the previous bottom position, leading to a broken page layout.
-				// In this case manually trigger the scroll handler to reposition.
-				if ( container.classList.contains( 'is-bottom-sidebar' ) ) {
-					container.classList.remove( 'is-bottom-sidebar' );
-					container.style.removeProperty( 'top' );
-					const isBottom = onScroll();
-					// After the sidebar is repositioned, also adjusts the scroll position
-					// to a point where the sidebar is visible.
-					if ( isBottom ) {
-						window.scrollTo( {
-							top: container.offsetTop - FIXED_HEADER_HEIGHT,
-							behavior: 'instant',
-						} );
-					}
+		const observer = new window.ResizeObserver( () => {
+			// If the sidebar is positioned at the bottom and mainEl resizes,
+			// it will remain fixed at the previous bottom position, leading to a broken page layout.
+			// In this case manually trigger the scroll handler to reposition.
+			if ( container.classList.contains( 'is-bottom-sidebar' ) ) {
+				container.classList.remove( 'is-bottom-sidebar' );
+				container.style.removeProperty( 'top' );
+				const isBottom = onScroll();
+				// After the sidebar is repositioned, also adjusts the scroll position
+				// to a point where the sidebar is visible.
+				if ( isBottom ) {
+					window.scrollTo( {
+						top: container.offsetTop - FIXED_HEADER_HEIGHT,
+						behavior: 'instant',
+					} );
 				}
-			} );
+			}
+		} );
 
-			observer.observe( mainEl );
-		}
+		observer.observe( mainEl );
 	}
 
 	// If there is no table of contents, hide the heading.
