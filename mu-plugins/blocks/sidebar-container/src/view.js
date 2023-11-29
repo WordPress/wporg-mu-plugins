@@ -34,7 +34,7 @@ function getCustomPropValue( name, element = document.body ) {
  */
 function onScroll() {
 	// Only run the scroll code if the sidebar is floating.
-	if ( ! container || ! window.matchMedia( '(min-width: 1200px)' ).matches ) {
+	if ( ! mainEl || ! container || ! window.matchMedia( '(min-width: 1200px)' ).matches ) {
 		return;
 	}
 
