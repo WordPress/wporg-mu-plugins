@@ -47,7 +47,7 @@ function WordCampMarker( { id, title, url, timestamp, location } ) {
 			<h3 className="wporg-map-marker__title">{ title }</h3>
 
 			<p className="wporg-map-marker__url">
-				<a href={ url }>{ title }</a>
+				<a href={ url }>Open event site</a>
 			</p>
 
 			<p className="wporg-map-marker__location">{ formatLocation( location ) }</p>

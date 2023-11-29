@@ -28,6 +28,10 @@
 			/* Make sure there's enough room to scroll past it using mobile gestures. */
 			max-height: 90vh;
 		}
+
+		& .wporg-map-marker__title {
+			margin: 0;
+		}
 	}
 
 	& .wporg-marker-list__container {
@@ -35,19 +39,32 @@
 		& p {
 			margin: 0;
 		}
+	}
 
-		& .wporg-marker-list-item__date-time {
-			display: flex;
-			align-items: center;
-			gap: 10px;
-		}
+	& .wporg-marker-list-item__title a,
+	& .wporg-map-marker__url a {
+		text-decoration: none;
 
-		& .wporg-google-map__date-time-separator {
-			width: 3px;
-			height: 4px;
-			background-image: url(../images/separator-dot.svg);
-			background-repeat: no-repeat;
+		&:after {
+			content: "↗";
+			margin-left: 5px;
+			font-family: var(--wp--preset--font-family--inter);
 		}
+	}
+
+
+	& .wporg-marker-list-item__date-time,
+	& .wporg-map-marker__date-time {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	& .wporg-google-map__date-time-separator {
+		width: 3px;
+		height: 4px;
+		background-image: url(../images/separator-dot.svg);
+		background-repeat: no-repeat;
 	}
 }
 
