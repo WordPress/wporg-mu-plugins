@@ -5,6 +5,7 @@
 const LOCAL_NAV_HEIGHT = getCustomPropValue( '--wp--custom--local-navigation-bar--spacing--height' ) || 60;
 const FIXED_HEADER_HEIGHT = 32 + 90 + LOCAL_NAV_HEIGHT;
 const GAP = getCustomPropValue( '--wp--custom--wporg-sidebar-container--spacing--margin--top' ) || 150;
+const BOTTOM_GAP = getCustomPropValue( '--wp--preset--spacing--edge-space' ) || 80;
 
 let container;
 let mainEl;
@@ -52,18 +53,18 @@ function onScroll() {
 		const sidebarBottom = scrollPosition + container.offsetHeight + container.offsetTop;
 
 		// Is the sidebar bottom crashing into the footer?
-		if ( footerStart - GAP < sidebarBottom ) {
+		if ( footerStart - BOTTOM_GAP < sidebarBottom ) {
 			container.classList.add( 'is-bottom-sidebar' );
 			// Bottom sidebar is absolutely positioned, so we need to set the top relative to the page origin.
 			container.style.setProperty(
 				'top',
 				// Starting from the footer Y position, subtract the sidebar height and gap/margins, and add
 				// the viewport offset. This ensures the sidebar doesn't jump when the class is switched.
-				`${ footerStart - container.clientHeight - GAP * 2 + viewportYOffset * 1 }px`
+				`${ footerStart - container.clientHeight - GAP - BOTTOM_GAP + viewportYOffset * 1 }px`
 			);
 			return true;
 		}
-	} else if ( footerStart - container.offsetHeight - GAP * 2 > scrollPosition ) {
+	} else if ( footerStart - container.offsetHeight - GAP - BOTTOM_GAP > scrollPosition ) {
 		// If the scroll position is higher than the top of the sidebar, switch back to just a fixed sidebar.
 		container.classList.remove( 'is-bottom-sidebar' );
 		container.style.removeProperty( 'top' );
