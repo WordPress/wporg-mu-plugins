@@ -1,7 +1,8 @@
 /**
  * This is the calculated value of the admin bar + header height + local nav bar.
  */
-const FIXED_HEADER_HEIGHT = 179;
+const localNavHeight = getCustomPropValue( '--wp--custom--local-navigation-bar--spacing--height' );
+const FIXED_HEADER_HEIGHT = 32 + 90 + localNavHeight;
 
 /**
  * Get the value of a CSS custom property.
@@ -27,12 +28,11 @@ function getCustomPropValue( name, element = document.body ) {
  * @return {boolean} True if the sidebar is at the bottom of the page.
  */
 function onScroll() {
-	// Only run the scroll code if the sidebar is fixed.
+	// Only run the scroll code if the sidebar is floating.
 	const sidebarContainer = document.querySelector( '.wp-block-wporg-sidebar-container' );
-	if ( ! sidebarContainer || ! sidebarContainer.classList.contains( 'is-fixed-sidebar' ) ) {
+	if ( ! sidebarContainer || ! window.matchMedia( '(min-width: 1200px)' ).matches ) {
 		return;
 	}
-
 	const mainEl = document.getElementById( 'wp--skip-link--target' );
 	const footerStart = mainEl.offsetTop + mainEl.offsetHeight;
 
@@ -61,11 +61,15 @@ function onScroll() {
 			);
 			return true;
 		}
-	} else if ( footerStart - sidebarContainer.offsetHeight - FIXED_HEADER_HEIGHT - gap * 2 > scrollPosition ) {
+	} else if ( footerStart - sidebarContainer.offsetHeight - gap * 2 > scrollPosition ) {
 		// If the scroll position is higher than the top of the sidebar, switch back to just a fixed sidebar.
 		sidebarContainer.classList.remove( 'is-bottom-sidebar' );
 		sidebarContainer.style.removeProperty( 'top' );
 	}
+
+	// Toggle the fixed position based on whether the scrollPosition is greater than the initial gap from the top.
+	sidebarContainer.classList.toggle( 'is-fixed-sidebar', scrollPosition > gap );
+
 	return false;
 }
 
@@ -133,7 +137,6 @@ function init() {
 
 	if ( container ) {
 		if ( isSidebarWithinViewport( container ) ) {
-			container.classList.add( 'is-fixed-sidebar' );
 			onScroll(); // Run once to avoid footer collisions on load (ex, when linked to #reply-title).
 			window.addEventListener( 'scroll', onScroll );
 
