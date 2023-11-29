@@ -18,7 +18,7 @@ export function getEventDateTime( timestamp ) {
 	const localeDate = eventDate.toLocaleDateString( [], {
 		weekday: 'long',
 		year: 'numeric',
-		month: 'long',
+		month: 'short',
 		day: 'numeric',
 	} );
 
@@ -28,5 +28,11 @@ export function getEventDateTime( timestamp ) {
 		minute: '2-digit',
 	} );
 
-	return `${ localeDate } ${ localeTime }`;
+	return (
+		<>
+			<span className="wporg-google-map__date">{ localeDate }</span>
+			<span className="wporg-google-map__date-time-separator"></span>
+			<span className="wporg-google-map__time">{ localeTime }</span>
+		</>
+	);
 }
