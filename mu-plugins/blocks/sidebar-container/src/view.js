@@ -4,6 +4,10 @@
  */
 const LOCAL_NAV_HEIGHT = getCustomPropValue( '--wp--custom--local-navigation-bar--spacing--height' ) || 60;
 const FIXED_HEADER_HEIGHT = 32 + 90 + LOCAL_NAV_HEIGHT;
+const GAP = getCustomPropValue( '--wp--custom--wporg-sidebar-container--spacing--margin--top' );
+
+let container;
+let mainEl;
 
 /**
  * Get the value of a CSS custom property.
@@ -30,14 +34,11 @@ function getCustomPropValue( name, element = document.body ) {
  */
 function onScroll() {
 	// Only run the scroll code if the sidebar is floating.
-	const sidebarContainer = document.querySelector( '.wp-block-wporg-sidebar-container' );
-	if ( ! sidebarContainer || ! window.matchMedia( '(min-width: 1200px)' ).matches ) {
+	if ( ! container || ! window.matchMedia( '(min-width: 1200px)' ).matches ) {
 		return;
 	}
-	const mainEl = document.getElementById( 'wp--skip-link--target' );
-	const footerStart = mainEl.offsetTop + mainEl.offsetHeight;
 
-	const gap = getCustomPropValue( '--wp--custom--wporg-sidebar-container--spacing--margin--top' );
+	const footerStart = mainEl.offsetTop + mainEl.offsetHeight;
 	const viewportYOffset = window
 		.getComputedStyle( document.documentElement )
 		.getPropertyValue( 'margin-top' )
@@ -46,35 +47,35 @@ function onScroll() {
 	// This value needs to take account the margin on `html`.
 	const scrollPosition = window.scrollY - viewportYOffset;
 
-	if ( ! sidebarContainer.classList.contains( 'is-bottom-sidebar' ) ) {
+	if ( ! container.classList.contains( 'is-bottom-sidebar' ) ) {
 		// The pixel location of the bottom of the sidebar, relative to the top of the page.
-		const sidebarBottom = scrollPosition + sidebarContainer.offsetHeight + sidebarContainer.offsetTop;
+		const sidebarBottom = scrollPosition + container.offsetHeight + container.offsetTop;
 
 		// Is the sidebar bottom crashing into the footer?
-		if ( footerStart - gap < sidebarBottom ) {
-			sidebarContainer.classList.add( 'is-bottom-sidebar' );
+		if ( footerStart - GAP < sidebarBottom ) {
+			container.classList.add( 'is-bottom-sidebar' );
 			// Bottom sidebar is absolutely positioned, so we need to set the top relative to the page origin.
-			sidebarContainer.style.setProperty(
+			container.style.setProperty(
 				'top',
 				// Starting from the footer Y position, subtract the sidebar height and gap/margins, and add
 				// the viewport offset. This ensures the sidebar doesn't jump when the class is switched.
-				`${ footerStart - sidebarContainer.clientHeight - gap * 2 + viewportYOffset * 1 }px`
+				`${ footerStart - container.clientHeight - GAP * 2 + viewportYOffset * 1 }px`
 			);
 			return true;
 		}
-	} else if ( footerStart - sidebarContainer.offsetHeight - gap * 2 > scrollPosition ) {
+	} else if ( footerStart - container.offsetHeight - GAP * 2 > scrollPosition ) {
 		// If the scroll position is higher than the top of the sidebar, switch back to just a fixed sidebar.
-		sidebarContainer.classList.remove( 'is-bottom-sidebar' );
-		sidebarContainer.style.removeProperty( 'top' );
+		container.classList.remove( 'is-bottom-sidebar' );
+		container.style.removeProperty( 'top' );
 	}
 
 	// Toggle the fixed position based on whether the scrollPosition is greater than the initial gap from the top.
-	sidebarContainer.classList.toggle( 'is-fixed-sidebar', scrollPosition > gap );
+	container.classList.toggle( 'is-fixed-sidebar', scrollPosition > GAP );
 
 	return false;
 }
 
-function isSidebarWithinViewport( container ) {
+function isSidebarWithinViewport() {
 	// Margin offset from the top of the sidebar.
 	const gap = getCustomPropValue( '--wp--custom--wporg-sidebar-container--spacing--margin--top' );
 	// Usable viewport height.
@@ -89,7 +90,8 @@ function isSidebarWithinViewport( container ) {
 }
 
 function init() {
-	const container = document.querySelector( '.wp-block-wporg-sidebar-container' );
+	container = document.querySelector( '.wp-block-wporg-sidebar-container' );
+	mainEl = document.getElementById( 'wp--skip-link--target' );
 	const toggleButton = container?.querySelector( '.wporg-table-of-contents__toggle' );
 	const list = container?.querySelector( '.wporg-table-of-contents__list' );
 
@@ -160,7 +162,6 @@ function init() {
 				}
 			} );
 
-			const mainEl = document.getElementById( 'wp--skip-link--target' );
 			observer.observe( mainEl );
 		}
 	}
