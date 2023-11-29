@@ -4,7 +4,7 @@
  */
 const LOCAL_NAV_HEIGHT = getCustomPropValue( '--wp--custom--local-navigation-bar--spacing--height' ) || 60;
 const FIXED_HEADER_HEIGHT = 32 + 90 + LOCAL_NAV_HEIGHT;
-const GAP = getCustomPropValue( '--wp--custom--wporg-sidebar-container--spacing--margin--top' );
+const GAP = getCustomPropValue( '--wp--custom--wporg-sidebar-container--spacing--margin--top' ) || 150;
 
 let container;
 let mainEl;
