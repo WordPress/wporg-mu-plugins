@@ -13,7 +13,6 @@ import { __, sprintf } from '@wordpress/i18n';
  * Internal dependencies
  */
 import Search from './search';
-import Filters from './filters';
 import Map from './map';
 import List from './list';
 import { filterMarkers, speakSearchUpdates } from '../utilities/content';
@@ -41,7 +40,6 @@ export default function Main( {
 	showList,
 	listDisplayLimit,
 	showSearch,
-	showFilters,
 	apiKey,
 	markers: rawMarkers,
 	markerIcon,
@@ -130,8 +128,6 @@ export default function Main( {
 			{ showSearch && (
 				<Search searchQuery={ searchQuery } onQueryChange={ onQueryChange } iconURL={ searchIcon } />
 			) }
-
-			{ /* { showFilters && <Filters filters={ filters } onChange={ onFilterChange } /> } */ }
 
 			{ showMap && (
 				<Map apiKey={ apiKey } markers={ visibleMarkers } icon={ markerIcon } blockStyle={ blockStyle } />
