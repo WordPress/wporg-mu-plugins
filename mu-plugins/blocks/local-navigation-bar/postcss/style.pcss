@@ -14,7 +14,7 @@
 }
 
 .wp-block-wporg-local-navigation-bar {
-	height: var(--wp--custom--local-navigation-bar--spacing--height, 60px);
+	height: var(--wp--custom--local-navigation-bar--spacing--height);
 
 	@media (min-width: 890px) {
 		& .global-header__wporg-logo-mark {
@@ -121,4 +121,9 @@
 			margin-left: 8px;
 		}
 	}
+}
+
+/* Set up the custom properties. These can be overridden by settings in theme.json. */
+:where(body) {
+	--wp--custom--local-navigation-bar--spacing--height: 60px;
 }
