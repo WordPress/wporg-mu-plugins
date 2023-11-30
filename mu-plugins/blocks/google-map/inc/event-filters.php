@@ -32,17 +32,32 @@ function schedule_filter_cron( string $filter_slug, string $start_date, string $
  * Get events matching the provider filter during the given timeframe.
  */
 function get_events( string $filter_slug, int $start_timestamp, int $end_timestamp, bool $force_refresh = false ) : array {
-	$events        = array();
-	$cache_key     = get_cache_key( compact( 'filter_slug', 'start_timestamp', 'end_timestamp' ) );
-	$cached_events = get_transient( $cache_key );
+	$cacheable = true;
+	$events    = array();
+	$facets    = array_merge( array( 'search' => '' ), $_GET );
 
-	if ( $cached_events && ! $force_refresh ) {
-		$events = $cached_events;
+	array_walk( $facets, 'sanitize_text_field' );
 
-	} else {
+	if ( ! empty( $facets['search'] ) || count( $facets ) > 1 ) {
+		// Search terms vary so much that caching them probably wouldn't result in a significant degree of
+		// cache hits, but it would generate a lot of extra transients. With memcached, that could push
+		// more useful values out of the cache.
+		$cacheable = false;
+	}
+
+	if ( $cacheable && ! $force_refresh ) {
+		$cache_key     = get_cache_key( compact( 'filter_slug', 'start_timestamp', 'end_timestamp' ) );
+		$cached_events = get_transient( $cache_key );
+
+		if ( $cached_events ) {
+			$events = $cached_events;
+		}
+	}
+
+	if ( ! $events ) {
 		switch ( $filter_slug ) {
 			case 'all-upcoming':
-				$events = get_all_upcoming_events();
+				$events = get_all_upcoming_events( $facets );
 				break;
 
 			case 'wp20':
@@ -56,7 +71,9 @@ function get_events( string $filter_slug, int $start_timestamp, int $end_timesta
 		}
 
 		// Store for a day to make sure it never expires before the priming cron job runs.
-		set_transient( $cache_key, $events, DAY_IN_SECONDS );
+		if ( $cacheable ) {
+			set_transient( $cache_key, $events, DAY_IN_SECONDS );
+		}
 	}
 
 	return $events;
@@ -78,23 +95,39 @@ function get_cache_key( array $parts ): string {
 /**
  * Get a list of all upcoming events across all sites.
  */
-function get_all_upcoming_events(): array {
+function get_all_upcoming_events( array $facets = array() ): array {
 	global $wpdb;
 
-	$query = '
+	$where_clauses       = '';
+	$where_clause_values = array();
+
+	if ( $facets['search'] ) {
+		$where_clauses         .= ' AND ( title LIKE "%%%s%%" OR description LIKE "%%%s%%" OR meetup LIKE "%%%s%%" OR location LIKE "%%%s%%" )';
+		$where_clause_values[] = $facets['search'];
+		$where_clause_values[] = $facets['search'];
+		$where_clause_values[] = $facets['search'];
+		$where_clause_values[] = $facets['search'];
+	}
+
+	$query = "
 		SELECT
 			id, `type`, title, url, meetup, location, latitude, longitude, date_utc,
 			date_utc_offset AS tz_offset
 		FROM `wporg_events`
 		WHERE
-			status = "scheduled" AND
+			status = 'scheduled' AND
 			(
-				( "wordcamp" = type AND date_utc BETWEEN NOW() AND ADDDATE( NOW(), 180 ) ) OR
-				( "meetup" = type AND date_utc BETWEEN NOW() AND ADDDATE( NOW(), 30 ) )
+				( 'wordcamp' = type AND date_utc BETWEEN NOW() AND ADDDATE( NOW(), 180 ) ) OR
+				( 'meetup' = type AND date_utc BETWEEN NOW() AND ADDDATE( NOW(), 30 ) )
 			)
+			$where_clauses
 		ORDER BY date_utc ASC
-		LIMIT 400'
+		LIMIT 400"
 	;
+
+	if ( $where_clause_values ) {
+		$query = $wpdb->prepare( $query, $where_clause_values );
+	}
 
 	if ( 'latin1' === DB_CHARSET ) {
 		$events = $wpdb->get_results( $query );
