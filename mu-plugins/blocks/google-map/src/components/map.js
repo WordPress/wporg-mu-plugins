@@ -31,8 +31,6 @@ import {
  * @param {Array}  props.markers
  * @param {string} props.blockStyle
  * @param {Object} props.icon
- *
- * @return {JSX.Element}
  */
 export default function Map( { apiKey, markers: rawMarkers, icon, blockStyle } ) {
 	const [ loaded, setLoaded ] = useState( false );

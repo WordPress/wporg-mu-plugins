@@ -11,7 +11,7 @@ import { createRoot, flushSync } from '@wordpress/element';
  *
  * @param {JSX.Element} element
  *
- * @return {string}
+ * @return {string} The HTML for the given element.
  */
 export default function getElementHTML( element ) {
 	const div = document.createElement( 'div' );

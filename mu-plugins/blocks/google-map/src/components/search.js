@@ -10,8 +10,6 @@ import { __, _x } from '@wordpress/i18n';
  * @param {string}   props.searchQuery
  * @param {Function} props.onQueryChange
  * @param {string}   props.iconURL
- *
- * @return {JSX.Element}
  */
 export default function Search( { searchQuery, onQueryChange, iconURL } ) {
 	return (
