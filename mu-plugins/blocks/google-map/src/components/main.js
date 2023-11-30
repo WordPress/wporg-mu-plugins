@@ -32,8 +32,6 @@ import { getValidMarkers } from '../utilities/google-maps-api';
  * @param {string}  props.searchIcon
  * @param {Array}   props.searchFields
  * @param {number}  props.listDisplayLimit
- *
- * @return {JSX.Element}
  */
 export default function Main( {
 	blockStyle,

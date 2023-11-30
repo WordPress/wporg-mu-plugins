@@ -15,7 +15,7 @@ import { __, sprintf } from '@wordpress/i18n';
  *
  * @param {string} location
  *
- * @return {string}
+ * @return {string} The formatted location.
  */
 export function formatLocation( location ) {
 	if ( 'online' === location ) {

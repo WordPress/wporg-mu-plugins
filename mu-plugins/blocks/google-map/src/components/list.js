@@ -15,8 +15,6 @@ import { formatLocation } from '../utilities/content';
  * @param {Object} props
  * @param {Array}  props.markers
  * @param {number} props.displayLimit
- *
- * @return {JSX.Element}
  */
 export default function List( { markers, displayLimit } ) {
 	if ( markers.length === 0 ) {

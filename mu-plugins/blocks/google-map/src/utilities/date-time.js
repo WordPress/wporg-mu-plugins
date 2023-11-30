@@ -10,7 +10,7 @@
  *
  * @param {number} timestamp
  *
- * @return {string}
+ * @return {string} The formatted date and time.
  */
 export function getEventDateTime( timestamp ) {
 	const eventDate = new Date( timestamp * 1000 );

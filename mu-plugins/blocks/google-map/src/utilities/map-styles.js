@@ -463,7 +463,8 @@ const sotw2023 = [
  * This shouldn't be needed if https://github.com/WordPress/gutenberg/issues/56278 is resolved.
  *
  * @param { string } className
- * @return { string }
+ *
+ * @return { string } The slug of the block style.
  */
 export function getBlockStyle( className ) {
 	let blockStyle = 'wp20';

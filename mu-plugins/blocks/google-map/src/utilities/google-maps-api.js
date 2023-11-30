@@ -18,7 +18,7 @@ import getElementHTML from '../utilities/dom';
  *
  * @param {Array} markers
  *
- * @return {Array}
+ * @return {Array} Valid markers.
  */
 export function getValidMarkers( markers ) {
 	markers = markers.map( ( marker ) => {
@@ -40,7 +40,7 @@ export function getValidMarkers( markers ) {
  *
  * @param {Array} rawMarkers
  *
- * @return {Array}
+ * @return {Array} The original markers, with events in the same location combined into a single marker.
  */
 export function combineDuplicateLocations( rawMarkers ) {
 	const combinedMarkers = {};
@@ -144,7 +144,7 @@ function openInfoWindow( infoWindow, map, markerObject, rawMarker ) {
  * @param {Object}               rawIcon
  * @param {string}               blockStyle
  *
- * @return {MarkerClusterer}
+ * @return {MarkerClusterer} The clusterer object.
  */
 export function clusterMarkers( map, maps, markers, rawIcon, blockStyle ) {
 	const clusterIcon = {
