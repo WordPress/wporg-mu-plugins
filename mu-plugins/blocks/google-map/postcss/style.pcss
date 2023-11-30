@@ -4,6 +4,14 @@
 
 .wp-block-wporg-google-map {
 	& .wporg-marker-search__container {
+		display: flex;
+
+		/* Enqueuing the `wp-components` stylesheet add too much to the page load just for these styles, so they're duplicated here. */
+		& button.is-tertiary {
+			background: none;
+			border: none;
+		}
+
 		& .wporg-marker-search__icon {
 			width: 24px;
 			height: 24px;

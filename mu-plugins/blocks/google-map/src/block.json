@@ -44,6 +44,10 @@
 			"type": "boolean",
 			"default": true
 		},
+		"searchFormAction": {
+			"type": "string",
+			"default": ""
+		},
 		"listDisplayLimit": {
 			"type": "number",
 			"default": -1

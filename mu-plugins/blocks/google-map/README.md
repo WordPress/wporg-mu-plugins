@@ -92,3 +92,10 @@ Filters can be setup for anything, but some common examples are watch parties fo
 
 1. View the page where the block is used. That will create the cron job that updates the data automatically in the future.
 1. Run `wp cron event run prime_event_filters` to test the filtering. Look at each title, and add any false positives to `$false_positives` in `filter_potential_events()`. If any events that should be included were ignored, add a keyword from the title to `$keywords`. Run the command after those changes and make sure it's correct now.
+
+
+## Live Search vs GET Search
+
+If the map/list is shown in a context where all of the events fit onto the same page, then it's generally best to use the default "live search" feature. The map markers and list items will be filtered down in real time as the user types.
+
+If there's too many to fit on one page, then it's generally better to submit the search form to the server, so that all of the possible events can be searched, not just the ones on the current page. You can do that by setting the `searchFormAction` attribute to the URL of the page where search results should be displayed. That should be a page that has this block in the post content.

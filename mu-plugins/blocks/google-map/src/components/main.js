@@ -31,6 +31,7 @@ import { getValidMarkers } from '../utilities/google-maps-api';
  * @param {Object}  props.markerIcon
  * @param {string}  props.searchIcon
  * @param {Array}   props.searchFields
+ * @param {string}  props.searchFormAction
  * @param {number}  props.listDisplayLimit
  */
 export default function Main( {
@@ -44,6 +45,7 @@ export default function Main( {
 	markerIcon,
 	searchIcon,
 	searchFields,
+	searchFormAction,
 } ) {
 	const [ searchQuery, setSearchQuery ] = useState( '' );
 	const searchQueryInitialized = useRef( false );
@@ -60,6 +62,11 @@ export default function Main( {
 	 */
 	const onQueryChange = useCallback( ( event ) => {
 		setSearchQuery( event.target.value );
+
+		// The form will submit a GET request, so don't do a live search.
+		if ( searchFormAction ) {
+			return;
+		}
 
 		/*
 		 * Sometimes the map may be taking up most of the viewport, so the user won't see the list changing as
@@ -106,10 +113,18 @@ export default function Main( {
 		} );
 	}, [ redrawMap ] );
 
+	const currentURL = new URL( document.location.href );
+	const noEventsFoundQuery = searchFormAction ? currentURL.searchParams.get( 'search' ) : searchQuery;
+
 	return (
 		<>
 			{ showSearch && (
-				<Search searchQuery={ searchQuery } onQueryChange={ onQueryChange } iconURL={ searchIcon } />
+				<Search
+					formAction={ searchFormAction }
+					searchQuery={ searchQuery }
+					onQueryChange={ onQueryChange }
+					iconURL={ searchIcon }
+				/>
 			) }
 
 			{ showMap && (
@@ -120,11 +135,11 @@ export default function Main( {
 				<List markers={ visibleMarkers } displayLimit={ listDisplayLimit } />
 			) }
 
-			{ visibleMarkers.length === 0 && searchQuery.length > 0 && (
+			{ visibleMarkers.length === 0 && noEventsFoundQuery.length > 0 && (
 				<p className="wporg-marker-list__container">
 					{
 						// Translators: %s is the search query.
-						sprintf( __( 'No events were found matching %s.', 'wporg' ), searchQuery )
+						sprintf( __( 'No events were found matching %s.', 'wporg' ), noEventsFoundQuery )
 					}
 				</p>
 			) }
