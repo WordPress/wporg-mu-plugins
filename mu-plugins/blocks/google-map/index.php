@@ -123,8 +123,14 @@ function get_map_format_options( array $options ): array {
 		'label' => __( 'Format', 'wporg' ),
 		'title' => __( 'Format', 'wporg' ),
 		'key' => 'map_format',
-		'action' => 'javascript:;',
-			// TODO: this is temporary, to prevent Apply from making a POST request.
+		'action' => get_permalink(),
+			// this wont work if there's more than one instance of block on page
+
+			// maybe make this the upcoming-events page, but pass the url params to get_upcoming_events() and add them to the sql query to filter down results?
+			// make sure to prepare b/c untrusted data
+			// or maybe post to a search page b/c that could include past events?
+
+			// TODO: javascript:; action is temporary, to prevent Apply from making a POST request.
 			// ideally we'd update the block to accept an `event` param in addition to `action`.
 			// if `event` exists, that event is fired and passed the data so it can filter the map markers based on the selected filters.
 		'options' => array(
