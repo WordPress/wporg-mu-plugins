@@ -35,13 +35,14 @@ function get_events( string $filter_slug, int $start_timestamp, int $end_timesta
 	$cacheable = true;
 	$events    = array();
 	$facets    = array_merge( array( 'search' => '' ), $_GET );
+	$page      = get_query_var( 'paged' ) ? absint( get_query_var( 'paged' ) ) : 1;
 
 	array_walk( $facets, 'sanitize_text_field' );
 
-	if ( ! empty( $facets['search'] ) || count( $facets ) > 1 ) {
+	if ( ! empty( $facets['search'] ) || count( $facets ) > 1 || $page !== 1 ) {
 		// Search terms vary so much that caching them probably wouldn't result in a significant degree of
 		// cache hits, but it would generate a lot of extra transients. With memcached, that could push
-		// more useful values out of the cache.
+		// more useful values out of the cache. Old pages are similar.
 		$cacheable = false;
 	}
 
@@ -58,6 +59,10 @@ function get_events( string $filter_slug, int $start_timestamp, int $end_timesta
 		switch ( $filter_slug ) {
 			case 'all-upcoming':
 				$events = get_all_upcoming_events( $facets );
+				break;
+
+			case 'all-past':
+				$events = get_all_past_events( $page );
 				break;
 
 			case 'wp20':
@@ -138,6 +143,66 @@ function get_all_upcoming_events( array $facets = array() ): array {
 	$events = prepare_events( $events );
 
 	return $events;
+}
+
+/**
+ * Get a list of all upcoming events across all sites.
+ */
+function get_all_past_events( $page ): array {
+	global $wpdb;
+
+	$limit  = 50;
+	$offset = ( $page - 1 ) * $limit;
+
+	// wporg_events.status doesn't have a separate value for "completed", it's just scheduled events that have
+	// a date in the past.
+	$query = $wpdb->prepare( '
+		SELECT
+			id, `type`, title, url, meetup, location, latitude, longitude, date_utc,
+			date_utc_offset AS tz_offset
+		FROM `wporg_events`
+		WHERE
+			status = "scheduled" AND
+			date_utc < NOW()
+		ORDER BY date_utc DESC
+		LIMIT %d, %d',
+		$offset,
+		$limit
+	);
+
+	if ( 'latin1' === DB_CHARSET ) {
+		$events = $wpdb->get_results( $query );
+	} else {
+		$events = get_latin1_results_with_prepared_query( $query );
+	}
+
+	$events = prepare_events( $events );
+
+	return $events;
+}
+
+/**
+ * Get the total number of past events.
+ */
+function get_all_past_events_count(): int {
+	global $wpdb;
+
+	$transient_key = 'google_map_event_filters_past_events_count';
+	$count         = get_transient( $transient_key );
+
+	if ( ! $count ) {
+		$count = $wpdb->get_var( '
+			SELECT COUNT( id ) as found_events
+			FROM `wporg_events`
+			WHERE
+				status = "scheduled" AND
+				date_utc < NOW()'
+		);
+
+		set_transient( $transient_key, $count, HOUR_IN_SECONDS );
+	}
+
+	return $count;
 }
 
 /**
