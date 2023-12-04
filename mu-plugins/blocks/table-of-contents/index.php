@@ -113,7 +113,7 @@ function render( $attributes, $content, $block ) {
  * @return array A list of heading objects.
  */
 function get_headings( $content ) {
-	$tag = 'h(?P<level>[1-4])';
+	$tag = 'h(?P<level>[1-3])';
 	preg_match_all( "/(?P<tag><{$tag}(?P<attrs>[^>]*)>)(?P<title>.*?)(<\/{$tag}>)/iJ", $content, $matches, PREG_SET_ORDER );
 
 	foreach ( $matches as $i => $item ) {
