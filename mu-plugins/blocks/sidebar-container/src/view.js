@@ -2,16 +2,16 @@
  * Fallback values for custom properties match CSS defaults.
  */
 const globalNavHeight = 90;
-const localNavHeight = getCustomPropValue( '--wp--custom--local-navigation-bar--spacing--height' ) || 60;
 
+const LOCAL_NAV_HEIGHT = getCustomPropValue( '--wp--custom--local-navigation-bar--spacing--height' ) || 60;
 const ADMIN_BAR_HEIGHT = parseInt(
 	window.getComputedStyle( document.documentElement ).getPropertyValue( 'margin-top' ),
 	10
 );
 const SPACE_FROM_BOTTOM = getCustomPropValue( '--wp--preset--spacing--edge-space' ) || 80;
 const SPACE_TO_TOP = getCustomPropValue( '--wp--custom--wporg-sidebar-container--spacing--margin--top' ) || 80;
-const FIXED_HEADER_HEIGHT = globalNavHeight + localNavHeight + ADMIN_BAR_HEIGHT;
-const SCROLL_POSITION_TO_FIX = globalNavHeight + SPACE_TO_TOP - localNavHeight - ADMIN_BAR_HEIGHT;
+const FIXED_HEADER_HEIGHT = globalNavHeight + LOCAL_NAV_HEIGHT + ADMIN_BAR_HEIGHT;
+const SCROLL_POSITION_TO_FIX = globalNavHeight + SPACE_TO_TOP - LOCAL_NAV_HEIGHT - ADMIN_BAR_HEIGHT;
 
 let container;
 let mainEl;
@@ -59,12 +59,12 @@ function onScroll() {
 			// Bottom sidebar is absolutely positioned, so we need to set the top relative to the page origin.
 			// The pixel location of the top of the sidebar, relative to the footer.
 			const sidebarTop =
-				footerStart - container.offsetHeight - localNavHeight * 2 + ADMIN_BAR_HEIGHT - SPACE_FROM_BOTTOM;
+				footerStart - container.offsetHeight - LOCAL_NAV_HEIGHT * 2 + ADMIN_BAR_HEIGHT - SPACE_FROM_BOTTOM;
 			container.style.setProperty( 'top', `${ sidebarTop }px` );
 
 			return true;
 		}
-	} else if ( container.getBoundingClientRect().top > localNavHeight * 2 + ADMIN_BAR_HEIGHT ) {
+	} else if ( container.getBoundingClientRect().top > LOCAL_NAV_HEIGHT * 2 + ADMIN_BAR_HEIGHT ) {
 		// If the top of the sidebar is above the top fixing position, switch back to just a fixed sidebar.
 		container.classList.remove( 'is-bottom-sidebar' );
 		container.style.removeProperty( 'top' );
@@ -81,11 +81,11 @@ function isSidebarWithinViewport() {
 		return false;
 	}
 	// Usable viewport height.
-	const viewHeight = window.innerHeight - FIXED_HEADER_HEIGHT;
-	// Get the height of the sidebar, plus the top margin and 50px for the
+	const viewHeight = window.innerHeight - LOCAL_NAV_HEIGHT + ADMIN_BAR_HEIGHT;
+	// Get the height of the sidebar, plus the top offset and 60px for the
 	// "Back to top" link, which isn't visible until `is-fixed-sidebar` is
 	// added, therefore not included in the offsetHeight value.
-	const sidebarHeight = container.offsetHeight + SPACE_TO_TOP + 50;
+	const sidebarHeight = container.offsetHeight + LOCAL_NAV_HEIGHT + 60;
 	// If the sidebar is shorter than the view area, apply the class so
 	// that it's fixed and scrolls with the page content.
 	return sidebarHeight < viewHeight;
