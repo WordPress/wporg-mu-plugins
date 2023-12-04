@@ -106,7 +106,7 @@ function get_all_upcoming_events( array $facets = array() ): array {
 	$where_clauses       = '';
 	$where_clause_values = array();
 
-	if ( $facets['search'] ) {
+	if ( ! empty( $facets['search'] ) ) {
 		$where_clauses         .= ' AND ( title LIKE "%%%s%%" OR description LIKE "%%%s%%" OR meetup LIKE "%%%s%%" OR location LIKE "%%%s%%" )';
 		$where_clause_values[] = $facets['search'];
 		$where_clause_values[] = $facets['search'];
