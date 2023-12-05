@@ -14,8 +14,9 @@ function convertTimes() {
 		);
 	};
 
-	const formatTime = function ( date ) {
-		return date.toLocaleTimeString( window.navigator.language, {
+	const formatTime = function (
+		date,
+		timeFormat = {
 			weekday: 'long',
 			month: 'long',
 			day: 'numeric',
@@ -23,7 +24,9 @@ function convertTimes() {
 			hour: '2-digit',
 			minute: '2-digit',
 			timeZoneName: 'short',
-		} );
+		}
+	) {
+		return date.toLocaleTimeString( window.navigator.language, timeFormat );
 	};
 
 	const formatDate = function ( date ) {
@@ -50,30 +53,39 @@ function convertTimes() {
 		let localTime = '';
 		const datetime = dateElement.getAttribute( 'datetime' );
 		const datetimeISO = dateElement.getAttribute( 'data-iso' );
+		const timeFormat = dateElement.getAttribute( 'data-time-format' );
 		const date = datetime && parseDate( datetime );
 
-		if ( date && !! datetimeISO ) {
+		if ( date ) {
 			if ( ! toLocaleTimeStringSupportsLocales ) {
 				localTime += formatDate( date );
 				localTime += ' ';
 			}
 
-			localTime += formatTime( date );
+			if( !! timeFormat ) {
+				localTime += formatTime( date, JSON.parse( timeFormat ) );
+			} else {
+				localTime += formatTime( date );
+			}
 
 			dateElement.innerText = localTime;
-			dateElement.removeAttribute( 'data-iso' );
-			// Remove the dotted underline style applied for the editor only
-			dateElement.style.textDecoration = '';
-			dateElement.style.textDecorationStyle = '';
 
-			const linkElement = document.createElement( 'a' );
-			linkElement.setAttribute(
-				'href',
-				`https://www.timeanddate.com/worldclock/fixedtime.html?iso=${ datetimeISO }`
-			);
+			if ( !! datetimeISO ) {
+				dateElement.removeAttribute( 'data-iso' );
+				// Remove the dotted underline style applied for the editor only
+				dateElement.style.textDecoration = '';
+				dateElement.style.textDecorationStyle = '';
 
-			linkElement.appendChild( dateElement.cloneNode( true ) );
-			dateElement.parentNode.replaceChild( linkElement, dateElement );
+				const linkElement = document.createElement( 'a' );
+				linkElement.setAttribute(
+					'href',
+					`https://www.timeanddate.com/worldclock/fixedtime.html?iso=${ datetimeISO }`
+				);
+
+				linkElement.appendChild( dateElement.cloneNode( true ) );
+
+				dateElement.parentNode.replaceChild( linkElement, dateElement );
+			}
 		}
 	} );
 }
