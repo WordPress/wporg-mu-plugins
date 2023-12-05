@@ -62,7 +62,7 @@ function convertTimes() {
 				localTime += ' ';
 			}
 
-			if( !! dateFormat ) {
+			if ( !! dateFormat ) {
 				localTime += formatTime( date, JSON.parse( dateFormat ) );
 			} else {
 				localTime += formatTime( date );
