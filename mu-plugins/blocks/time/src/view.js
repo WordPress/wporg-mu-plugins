@@ -16,7 +16,7 @@ function convertTimes() {
 
 	const formatTime = function (
 		date,
-		timeFormat = {
+		dateFormat = {
 			weekday: 'long',
 			month: 'long',
 			day: 'numeric',
@@ -26,7 +26,7 @@ function convertTimes() {
 			timeZoneName: 'short',
 		}
 	) {
-		return date.toLocaleTimeString( window.navigator.language, timeFormat );
+		return date.toLocaleTimeString( window.navigator.language, dateFormat );
 	};
 
 	const formatDate = function ( date ) {
@@ -53,7 +53,7 @@ function convertTimes() {
 		let localTime = '';
 		const datetime = dateElement.getAttribute( 'datetime' );
 		const datetimeISO = dateElement.getAttribute( 'data-iso' );
-		const timeFormat = dateElement.getAttribute( 'data-time-format' );
+		const dateFormat = dateElement.getAttribute( 'data-date-format' );
 		const date = datetime && parseDate( datetime );
 
 		if ( date ) {
@@ -62,8 +62,8 @@ function convertTimes() {
 				localTime += ' ';
 			}
 
-			if( !! timeFormat ) {
-				localTime += formatTime( date, JSON.parse( timeFormat ) );
+			if( !! dateFormat ) {
+				localTime += formatTime( date, JSON.parse( dateFormat ) );
 			} else {
 				localTime += formatTime( date );
 			}
