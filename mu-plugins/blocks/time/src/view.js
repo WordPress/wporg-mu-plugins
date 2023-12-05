@@ -83,7 +83,6 @@ function convertTimes() {
 				);
 
 				linkElement.appendChild( dateElement.cloneNode( true ) );
-
 				dateElement.parentNode.replaceChild( linkElement, dateElement );
 			}
 		}
