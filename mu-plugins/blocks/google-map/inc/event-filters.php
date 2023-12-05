@@ -4,14 +4,14 @@ namespace WordPressdotorg\MU_Plugins\Google_Map;
 
 defined( 'WPINC' ) || die();
 
-add_action( 'prime_event_filters', __NAMESPACE__ . '\get_events', 10, 4 );
+add_action( 'prime_event_filters', __NAMESPACE__ . '\get_events', 10, 5 );
 
 
 /**
  * Schedule a cron job to update events that match the given filter/dates.
  */
-function schedule_filter_cron( string $filter_slug, string $start_date, string $end_date ): void {
-	$cron_args = array( $filter_slug, $start_date, $end_date, true );
+function schedule_filter_cron( string $filter_slug, string $start_date, string $end_date, array $facets = array() ): void {
+	$cron_args = array( $filter_slug, $start_date, $end_date, $facets, true );
 
 	// Some custom filter slugs using `google_map_event_filters_{$filter_slug}` to pass data may need to run their
 	// own cron to prime the cache.
@@ -31,13 +31,11 @@ function schedule_filter_cron( string $filter_slug, string $start_date, string $
 /**
  * Get events matching the provider filter during the given timeframe.
  */
-function get_events( string $filter_slug, int $start_timestamp, int $end_timestamp, bool $force_refresh = false ) : array {
+function get_events( string $filter_slug, int $start_timestamp, int $end_timestamp, array $facets = array(), bool $force_refresh = false ) : array {
 	$cacheable = true;
 	$events    = array();
-	$facets    = array_merge( array( 'search' => '' ), $_GET );
 	$page      = get_query_var( 'paged' ) ? absint( get_query_var( 'paged' ) ) : 1;
-
-	array_walk( $facets, 'sanitize_text_field' );
+	$facets    = array_filter( $facets ); // Remove empty so that `count()` below is accurate.
 
 	if ( ! empty( $facets['search'] ) || count( $facets ) > 1 || $page !== 1 ) {
 		// Search terms vary so much that caching them probably wouldn't result in a significant degree of
@@ -47,7 +45,11 @@ function get_events( string $filter_slug, int $start_timestamp, int $end_timesta
 	}
 
 	if ( $cacheable && ! $force_refresh ) {
-		$cache_key     = get_cache_key( compact( 'filter_slug', 'start_timestamp', 'end_timestamp' ) );
+		$cache_key = get_cache_key( array_merge(
+			compact( 'filter_slug', 'start_timestamp', 'end_timestamp' ),
+			$facets // It's safe to include this because of the logic around `$cacheable`.
+		) );
+
 		$cached_events = get_transient( $cache_key );
 
 		if ( $cached_events ) {
@@ -103,16 +105,7 @@ function get_cache_key( array $parts ): string {
 function get_all_upcoming_events( array $facets = array() ): array {
 	global $wpdb;
 
-	$where_clauses       = '';
-	$where_clause_values = array();
-
-	if ( ! empty( $facets['search'] ) ) {
-		$where_clauses         .= ' AND ( title LIKE "%%%s%%" OR description LIKE "%%%s%%" OR meetup LIKE "%%%s%%" OR location LIKE "%%%s%%" )';
-		$where_clause_values[] = $facets['search'];
-		$where_clause_values[] = $facets['search'];
-		$where_clause_values[] = $facets['search'];
-		$where_clause_values[] = $facets['search'];
-	}
+	$where = get_where_clauses( $facets );
 
 	$query = "
 		SELECT
@@ -121,17 +114,13 @@ function get_all_upcoming_events( array $facets = array() ): array {
 		FROM `wporg_events`
 		WHERE
 			status = 'scheduled' AND
-			(
-				( 'wordcamp' = type AND date_utc BETWEEN NOW() AND ADDDATE( NOW(), 180 ) ) OR
-				( 'meetup' = type AND date_utc BETWEEN NOW() AND ADDDATE( NOW(), 30 ) )
-			)
-			$where_clauses
+			{$where['clauses']}
 		ORDER BY date_utc ASC
-		LIMIT 400"
+		LIMIT 100"
 	;
 
-	if ( $where_clause_values ) {
-		$query = $wpdb->prepare( $query, $where_clause_values );
+	if ( $where['values'] ) {
+		$query = $wpdb->prepare( $query, $where['values'] );
 	}
 
 	if ( 'latin1' === DB_CHARSET ) {
@@ -146,9 +135,57 @@ function get_all_upcoming_events( array $facets = array() ): array {
 }
 
 /**
+ * Get the `WHERE` clauses/values for a given set of facets.
+ */
+function get_where_clauses( array $facets ): array {
+	$clauses = '1=1';
+	$values  = array();
+
+	if ( ! empty( $facets['search'] ) ) {
+		$clauses .= ' AND ( title LIKE "%%%s%%" OR description LIKE "%%%s%%" OR meetup LIKE "%%%s%%" OR location LIKE "%%%s%%" )';
+		$values[] = $facets['search'];
+		$values[] = $facets['search'];
+		$values[] = $facets['search'];
+		$values[] = $facets['search'];
+	}
+
+	$type_wordcamp = "( 'wordcamp' = type AND date_utc >= NOW() )";
+	$type_meetup   = "( 'meetup' = type AND date_utc >= NOW() )";
+
+	if ( empty( $facets['type'] ) ) {
+		$clauses .= " AND ( $type_wordcamp OR $type_meetup )";
+	} else {
+		if ( 'wordcamp' === $facets['type'] ) {
+			$clauses .= " AND $type_wordcamp";
+		} else if ( 'meetup' === $facets['type'] ) {
+			$clauses .= " AND $type_meetup";
+		}
+	}
+
+	if ( ! empty( $facets['month'] ) ) {
+		$clauses .= ' AND MONTH( date_utc ) = %d';
+		$values[] = $facets['month'];
+	}
+
+	if ( ! empty( $facets['format'] ) ) {
+		if ( 'online' === $facets['format'] ) {
+			$clauses .= ' AND location = "online" ';
+		} else if ( 'in-person' === $facets['format'] ) {
+			$clauses .= ' AND location != "online" ';
+		}
+	}
+
+	if ( ! empty( $facets['country'] ) ) {
+		$clauses .= ' AND LOWER( country ) = %s';
+		$values[] = strtolower( $facets['country'] );
+	}
+
+	return compact( 'clauses', 'values' );
+}
+/**
  * Get a list of all upcoming events across all sites.
  */
-function get_all_past_events( $page ): array {
+function get_all_past_events( int $page ): array {
 	global $wpdb;
 
 	$limit  = 50;
