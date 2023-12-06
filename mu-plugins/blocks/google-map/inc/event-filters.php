@@ -44,16 +44,18 @@ function get_events( string $filter_slug, int $start_timestamp, int $end_timesta
 		$cacheable = false;
 	}
 
-	if ( $cacheable && ! $force_refresh ) {
+	if ( $cacheable ) {
 		$cache_key = get_cache_key( array_merge(
 			compact( 'filter_slug', 'start_timestamp', 'end_timestamp' ),
 			$facets // It's safe to include this because of the logic around `$cacheable`.
 		) );
 
-		$cached_events = get_transient( $cache_key );
+		if ( ! $force_refresh ) {
+			$cached_events = get_transient( $cache_key );
 
-		if ( $cached_events ) {
-			$events = $cached_events;
+			if ( $cached_events ) {
+				$events = $cached_events;
+			}
 		}
 	}
 
