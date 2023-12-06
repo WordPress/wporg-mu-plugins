@@ -52,13 +52,21 @@ function render_shortcode( $attr, $content = '', $tag ) {
 	$content = apply_filters( 'the_content', $content );
 	remove_filter( 'o2_process_the_content', '__return_false', 1 );
 
+	// Create a unique placeholder for the content.
+	// Directly processing `$content` with `do_blocks` can lead to buggy layouts on make.wp.org.
+	// See https://github.com/WordPress/wporg-mu-plugins/pull/337#issuecomment-1819992059.
+	$placeholder = '<!-- CONTENT_PLACEHOLDER -->';
+
 	$block_markup = <<<EOT
 <!-- wp:wporg/notice {"type":"$type"} -->
 <div class="wp-block-wporg-notice is-{$type}-notice">
 <div class="wp-block-wporg-notice__icon"></div>
-<div class="wp-block-wporg-notice__content">$content</div></div>
+<div class="wp-block-wporg-notice__content">$placeholder</div></div>
 <!-- /wp:wporg/notice -->
 EOT;
 
-	return do_blocks( $block_markup );
+	$processed_markup = do_blocks( $block_markup );
+	$final_markup = str_replace( $placeholder, $content, $processed_markup );
+
+	return $final_markup;
 }
