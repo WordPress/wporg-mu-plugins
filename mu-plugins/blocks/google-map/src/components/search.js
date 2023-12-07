@@ -2,7 +2,6 @@
  * WordPress dependencies
  */
 import { __, _x } from '@wordpress/i18n';
-import { Button } from '@wordpress/components';
 import { useCallback } from '@wordpress/element';
 
 /**
@@ -52,13 +51,13 @@ export default function Search( { formAction, searchQuery, onQueryChange, iconUR
 				/>
 			</label>
 
-			{ formAction && (
-				<Button type="submit" variant="tertiary">
+			{ formAction ? (
+				<button type="submit" className="is-tertiary">
 					{ searchIcon }
-				</Button>
+				</button>
+			) : (
+				searchIcon
 			) }
-
-			{ ! formAction && searchIcon }
 		</form>
 	);
 }
