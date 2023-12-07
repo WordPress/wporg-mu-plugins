@@ -134,6 +134,7 @@ function get_all_upcoming_events( array $facets = array() ): array {
 		FROM `wporg_events`
 		WHERE
 			status = 'scheduled' AND
+			date_utc >= NOW() AND
 			{$where['clauses']}
 		ORDER BY date_utc ASC
 		LIMIT 500"
@@ -169,17 +170,20 @@ function get_where_clauses( array $facets ): array {
 		$values[] = $facets['search'];
 	}
 
-	$type_wordcamp = "( 'wordcamp' = type AND date_utc >= NOW() )";
-	$type_meetup   = "( 'meetup' = type AND date_utc >= NOW() )";
+	switch( $facets['type'] ?? '' ) {
+		// Traditional WordCamps are hosted on wordcamp.org.
+		case 'wordcamp':
+			$clauses .= " AND 'wordcamp' = type AND url REGEXP 'https?://(.*)wordcamp\.org' ";
+			break;
 
-	if ( empty( $facets['type'] ) ) {
-		$clauses .= " AND ( $type_wordcamp OR $type_meetup )";
-	} else {
-		if ( 'wordcamp' === $facets['type'] ) {
-			$clauses .= " AND $type_wordcamp";
-		} else if ( 'meetup' === $facets['type'] ) {
-			$clauses .= " AND $type_meetup";
-		}
+		// NextGen WordCamps are hosted on events.wordpress.org.
+		case 'other':
+			$clauses .= " AND 'wordcamp' = type AND url REGEXP 'https?://events\.wordpress\.org' ";
+			break;
+
+		case 'meetup':
+			$clauses .= " AND 'meetup' = type";
+			break;
 	}
 
 	if ( ! empty( $facets['month'] ) ) {
