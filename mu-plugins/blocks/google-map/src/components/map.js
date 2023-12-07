@@ -7,7 +7,6 @@ import GoogleMapReact from 'google-map-react';
  * WordPress dependencies
  */
 import { useCallback, useEffect, useRef, useState } from '@wordpress/element';
-import { Spinner } from '@wordpress/components';
 
 /**
  * Internal dependencies
@@ -20,6 +19,7 @@ import {
 	panToCenter,
 	updateMapMarkers,
 } from '../utilities/google-maps-api';
+import Spinner from './spinner';
 
 /**
  * Render a Google Map with info windows for the given markers.
