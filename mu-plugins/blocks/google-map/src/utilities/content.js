@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { debounce } from 'lodash';
+import debounce from 'lodash.debounce';
 const debouncedSpeak = debounce( speak, 1000 );
 
 /**
