@@ -9,6 +9,9 @@ add_action( 'prime_event_filters', __NAMESPACE__ . '\get_events', 10, 5 );
 
 /**
  * Schedule a cron job to update events that match the given filter/dates.
+ *
+ * This makes sure that there's always a fresh cache, so that users never experience a delay while waiting for a
+ * stale one to be renewed.
  */
 function schedule_filter_cron( string $filter_slug, string $start_date, string $end_date, array $facets = array() ): void {
 	$cron_args = array( $filter_slug, $start_date, $end_date, $facets, true );
@@ -32,19 +35,15 @@ function schedule_filter_cron( string $filter_slug, string $start_date, string $
  * Get events matching the provider filter during the given timeframe.
  */
 function get_events( string $filter_slug, int $start_timestamp, int $end_timestamp, array $facets = array(), bool $force_refresh = false ) : array {
-	$cacheable = true;
 	$events    = array();
 	$page      = get_query_var( 'paged' ) ? absint( get_query_var( 'paged' ) ) : 1;
-	$facets    = array_filter( $facets ); // Remove empty so that `count()` below is accurate.
-
-	if ( ! empty( $facets['search'] ) || count( $facets ) > 1 || $page !== 1 ) {
-		// Search terms vary so much that caching them probably wouldn't result in a significant degree of
-		// cache hits, but it would generate a lot of extra transients. With memcached, that could push
-		// more useful values out of the cache. Old pages are similar.
-		$cacheable = false;
-	}
+	$facets    = array_filter( $facets ); // Remove empty.
+	$cacheable = is_cacheable( $facets, $page );
 
 	if ( $cacheable ) {
+		// This has to be called here so that the facets match the ones used to generate the cache.
+		schedule_filter_cron( $filter_slug, $start_timestamp, $end_timestamp, $facets );
+
 		$cache_key = get_cache_key( array_merge(
 			compact( 'filter_slug', 'start_timestamp', 'end_timestamp' ),
 			$facets // It's safe to include this because of the logic around `$cacheable`.
@@ -89,12 +88,31 @@ function get_events( string $filter_slug, int $start_timestamp, int $end_timesta
 }
 
 /**
+ * Determine if the given request is cacheable.
+ */
+function is_cacheable( array $facets, int $page ): bool {
+	$cacheable = true;
+	$facets    = array_filter( $facets ); // Remove empty so that `count()` below is accurate.
+
+	// Only cache regularly visited pages.
+	// Search terms vary so much that caching them probably wouldn't result in a significant degree of
+	// cache hits, but it would generate a lot of extra transients. With memcached, that could push
+	// more useful values out of the cache. Old pages and multi-facet requests are similar.
+	if ( ! empty( $facets['search'] ) || count( $facets ) > 1 || $page !== 1 ) {
+		$cacheable = false;
+	}
+
+	return $cacheable;
+}
+
+/**
  * Get the cache key for a given set of events.
  *
  * Customizing the key is sometimes needed when using the `google_map_event_filters_{$filter_slug}` filter.
  * See WordCamp's `themes/wporg-events-2023/inc/city-landing-pages.php` for an example.
  */
 function get_cache_key( array $parts ): string {
+	$parts = array_filter( $parts ); // Remove empty so that cache key is normalized.
 	$items = apply_filters( 'google_map_event_filters_cache_key_parts', $parts );
 	$key   = 'google-map-event-filters-' . md5( wp_json_encode( implode( '|', $items ) ) );
 

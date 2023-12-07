@@ -56,10 +56,7 @@ function render( $attributes, $content, $block ) {
 	$attributes['markerIcon']['markerAnchorXOffset'] = $attributes['markerIcon']['markerWidth'] / -4;
 
 	if ( ! empty( $attributes['filterSlug'] ) ) {
-		$attributes['markers'] = get_events( $attributes['filterSlug'], $attributes['startDate'], $attributes['endDate'] );
-
-		// This has to be called in `render()` to know which slug/dates to use.
-		schedule_filter_cron( $attributes['filterSlug'], $attributes['startDate'], $attributes['endDate'] );
+		$attributes['markers'] = get_events( $attributes['filterSlug'], $attributes['startDate'], $attributes['endDate'], array() );
 	}
 
 	$handles = array( $block->block_type->view_script_handles[0], $block->block_type->editor_script_handles[0] );
