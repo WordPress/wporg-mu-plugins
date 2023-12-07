@@ -118,7 +118,7 @@ function get_all_upcoming_events( array $facets = array() ): array {
 			status = 'scheduled' AND
 			{$where['clauses']}
 		ORDER BY date_utc ASC
-		LIMIT 100"
+		LIMIT 500"
 	;
 
 	if ( $where['values'] ) {
