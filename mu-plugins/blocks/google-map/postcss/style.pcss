@@ -6,7 +6,6 @@
 	& .wporg-marker-search__container {
 		display: flex;
 
-		/* Enqueuing the `wp-components` stylesheet add too much to the page load just for these styles, so they're duplicated here. */
 		& button.is-tertiary {
 			background: none;
 			border: none;
@@ -74,8 +73,47 @@
 		background-image: url(../images/separator-dot.svg);
 		background-repeat: no-repeat;
 	}
+
+	& .wporg-google-map__spinner {
+		--local-size: 16px;
+		--local-position: calc(50% - (var(--local-size) / 2));
+
+		width: var(--local-size);
+		height: var(--local-size);
+		position: absolute;
+		left: var(--local-position);
+		top: var(--local-position);
+		color: var(--wp--custom--google-map--spinner--color);
+		overflow: visible;
+		opacity: 1;
+		background-color: transparent;
+
+		& > circle {
+			fill: transparent;
+			stroke-width: 1.5px;
+			stroke: rgb(221, 221, 221);
+		}
+
+		& > path {
+			fill: transparent;
+			stroke-width: 1.5px;
+			stroke: currentcolor;
+			stroke-linecap: round;
+			transform-origin: 50% 50%;
+			animation: 1.4s linear 0s infinite normal both running wp-block-wporg-google-map-spinner-animation;
+		}
+	}
 }
 
+@keyframes wp-block-wporg-google-map-spinner-animation {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
 
 /*
  * State of the Word 2023 block style
@@ -87,4 +125,9 @@
 			color: #ff2b2b;
 		}
 	}
+}
+
+/* Set up the custom properties. These can be overridden by settings in theme.json. */
+:where(body) {
+	--wp--custom--google-map--spinner--color: var(--wp--preset--color--blueberry-1, var(--wp-admin-theme-color, #3858e9));
 }
