@@ -83,7 +83,7 @@
 		position: absolute;
 		left: var(--local-position);
 		top: var(--local-position);
-		color: var(--wp-components-color-accent, var(--wp-admin-theme-color, #3858e9));
+		color: var(--wp--custom--google-map--spinner--color);
 		overflow: visible;
 		opacity: 1;
 		background-color: transparent;
@@ -125,4 +125,9 @@
 			color: #ff2b2b;
 		}
 	}
+}
+
+/* Set up the custom properties. These can be overridden by settings in theme.json. */
+:where(body) {
+	--wp--custom--google-map--spinner--color: var(--wp--preset--color--blueberry-1, var(--wp-admin-theme-color, #3858e9));
 }
