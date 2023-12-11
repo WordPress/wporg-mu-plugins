@@ -41,9 +41,6 @@ function get_events( string $filter_slug, int $start_timestamp, int $end_timesta
 	$cacheable = is_cacheable( $facets, $page );
 
 	if ( $cacheable ) {
-		// This has to be called here so that the facets match the ones used to generate the cache.
-		schedule_filter_cron( $filter_slug, $start_timestamp, $end_timestamp, $facets );
-
 		$cache_key = get_cache_key( array_merge(
 			compact( 'filter_slug', 'start_timestamp', 'end_timestamp' ),
 			$facets // It's safe to include this because of the logic around `$cacheable`.
@@ -79,8 +76,12 @@ function get_events( string $filter_slug, int $start_timestamp, int $end_timesta
 		}
 
 		// Store for a day to make sure it never expires before the priming cron job runs.
-		if ( $cacheable ) {
+		// There's no point in caching empty values, or scheduling crons to update them.
+		if ( $cacheable && $events ) {
 			set_transient( $cache_key, $events, DAY_IN_SECONDS );
+
+			// This has to be called here so that the facets match the ones used to generate the cache.
+			schedule_filter_cron( $filter_slug, $start_timestamp, $end_timestamp, $facets );
 		}
 	}
 
