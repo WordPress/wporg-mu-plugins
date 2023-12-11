@@ -18,6 +18,7 @@
 		"chalk": "4.1.2",
 		"cross-spawn": "7.0.3",
 		"cssnano": "5.1.11",
+		"lodash": "^4.17.21",
 		"node-watch": "^0.7.3",
 		"postcss": "8.4.14",
 		"postcss-cli": "9.1.0",
@@ -66,8 +67,6 @@
 	"dependencies": {
 		"@googlemaps/markerclusterer": "^2.4.0",
 		"google-map-react": "^2.2.1",
-		"locutus": "^2.0.16",
-		"lodash.debounce": "^4.0.8",
-		"lodash.throttle": "^4.1.1"
+		"locutus": "^2.0.16"
 	}
 }
