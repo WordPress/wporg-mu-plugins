@@ -101,6 +101,13 @@ function is_cacheable( array $facets, int $page ): bool {
 	// more useful values out of the cache. Old pages and multi-facet requests are similar.
 	if ( ! empty( $facets['search'] ) || count( $facets ) > 1 || $page !== 1 ) {
 		$cacheable = false;
+	} else {
+		foreach ( $facets as $facet ) {
+			if ( is_array( $facet ) && count( $facet ) > 1 ) {
+				$cacheable = false;
+				break;
+			}
+		}
 	}
 
 	return $cacheable;
@@ -115,7 +122,7 @@ function is_cacheable( array $facets, int $page ): bool {
 function get_cache_key( array $parts ): string {
 	$parts = array_filter( $parts ); // Remove empty so that cache key is normalized.
 	$items = apply_filters( 'google_map_event_filters_cache_key_parts', $parts );
-	$key   = 'google-map-event-filters-' . md5( wp_json_encode( implode( '|', $items ) ) );
+	$key   = 'google-map-event-filters-' . md5( wp_json_encode( $items ) );
 
 	return $key;
 }
@@ -171,25 +178,36 @@ function get_where_clauses( array $facets ): array {
 		$values[] = $facets['search'];
 	}
 
-	switch( $facets['type'] ?? '' ) {
-		// Traditional WordCamps are hosted on wordcamp.org.
-		case 'wordcamp':
-			$clauses .= " AND 'wordcamp' = type AND url REGEXP 'https?://(.*)wordcamp\.org' ";
-			break;
+	if ( ! empty( $facets['type'] ) ) {
+		$type_clauses = array();
 
-		// NextGen WordCamps are hosted on events.wordpress.org.
-		case 'other':
-			$clauses .= " AND 'wordcamp' = type AND url REGEXP 'https?://events\.wordpress\.org' ";
-			break;
+		foreach ( (array) $facets['type'] as $type ) {
+			switch ( $type ) {
+				// Traditional WordCamps are hosted on wordcamp.org.
+				case 'wordcamp':
+					$type_clauses[] = " ( 'wordcamp' = type AND url REGEXP 'https?://(.*)wordcamp\.org' ) ";
+					break;
 
-		case 'meetup':
-			$clauses .= " AND 'meetup' = type";
-			break;
+				// NextGen WordCamps are hosted on events.wordpress.org.
+				case 'other':
+					$type_clauses[] = " ( 'wordcamp' = type AND url REGEXP 'https?://events\.wordpress\.org' ) ";
+					break;
+
+				case 'meetup':
+					$type_clauses[] = " 'meetup' = type";
+					break;
+			}
+		}
+
+		if ( $type_clauses ) {
+			$clauses .= ' AND ( ' . implode( ' OR ', $type_clauses ) . ' )';
+		}
 	}
 
 	if ( ! empty( $facets['month'] ) ) {
-		$clauses .= ' AND MONTH( date_utc ) = %d';
-		$values[] = $facets['month'];
+		$placeholders = implode( ', ', array_fill( 0, count( $facets['month'] ), '%d' ) );
+		$clauses .= " AND MONTH( date_utc ) IN ( $placeholders )";
+		$values = array_merge( $values, $facets['month'] );
 	}
 
 	if ( ! empty( $facets['format'] ) ) {
@@ -201,8 +219,9 @@ function get_where_clauses( array $facets ): array {
 	}
 
 	if ( ! empty( $facets['country'] ) ) {
-		$clauses .= ' AND LOWER( country ) = %s';
-		$values[] = strtolower( $facets['country'] );
+		$placeholders = implode( ', ', array_fill( 0, count( $facets['country'] ), '%s' ) );
+		$clauses .= " AND LOWER( country ) IN ( $placeholders )";
+		$values = array_merge( $values, array_map( 'strtolower', $facets['country'] ) );
 	}
 
 	return compact( 'clauses', 'values' );
