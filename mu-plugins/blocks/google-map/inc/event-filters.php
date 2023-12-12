@@ -37,7 +37,13 @@ function schedule_filter_cron( string $filter_slug, string $start_date, string $
 function get_events( string $filter_slug, int $start_timestamp, int $end_timestamp, array $facets = array(), bool $force_refresh = false ) : array {
 	$events    = array();
 	$page      = get_query_var( 'paged' ) ? absint( get_query_var( 'paged' ) ) : 1;
-	$facets    = array_filter( $facets ); // Remove empty.
+	$facets    = clean_facets( $facets );
+
+	// Short circuit query to avoid unnecessary delay, and make it obvious that the invalid arguments don't work.
+	if ( false === $facets ) {
+		return array();
+	}
+
 	$cacheable = is_cacheable( $facets, $page );
 
 	if ( $cacheable ) {
@@ -86,6 +92,59 @@ function get_events( string $filter_slug, int $start_timestamp, int $end_timesta
 	}
 
 	return $events;
+}
+
+/**
+ * Clean the provided facets and notify if any are invalid.
+ *
+ * @return array|false False if invalid parameters are passed. On success, an array of clean facets.
+ */
+function clean_facets( array $facets ) {
+	foreach ( $facets as $key => & $facet ) {
+		if ( is_array( $facet ) ) {
+			$facet = array_filter( $facet ); // Remove empty.
+		} else {
+			if ( 'search' === $key ) {
+				$facet = sanitize_text_field( strval( $facet ) );
+			} else {
+				$facet = array( $facet );
+			}
+		}
+	}
+
+	$facets = array_filter( $facets ); // Remove empty.
+
+	$valid_formats = array( 'online', 'in-person' );
+	$valid_types   = array( 'wordcamp', 'other', 'meetup' );
+	$valid_months  = range( 1, 12 );
+
+	if ( isset( $facets['format'] ) && array_diff( $facets['format'], $valid_formats ) ) {
+		return false;
+	}
+
+	if ( isset( $facets['type'] ) && array_diff( $facets['type'], $valid_types ) ) {
+		return false;
+	}
+
+	if ( isset ( $facets['month'] ) ) {
+		$facets['month'] = array_map( 'absint', $facets['month'] );
+
+		if ( array_diff( $facets['month'], $valid_months ) ) {
+			return false;
+		}
+	}
+
+	if ( isset( $facets['country'] ) ) {
+		$facets['country'] = array_map( 'sanitize_text_field', $facets['country'] );
+
+		foreach ( $facets['country'] as $country ) {
+			if ( ! ctype_alpha( $country ) || 2 !== strlen( $country ) ) {
+				return false;
+			}
+		}
+	}
+
+	return $facets;
 }
 
 /**
@@ -210,10 +269,11 @@ function get_where_clauses( array $facets ): array {
 		$values = array_merge( $values, $facets['month'] );
 	}
 
-	if ( ! empty( $facets['format'] ) ) {
-		if ( 'online' === $facets['format'] ) {
+	// If both valid formats are selected, don't filter by format at all.
+	if ( ! empty( $facets['format'] ) && 1 === count( $facets['format'] ) ) {
+		if ( 'online' === $facets['format'][0] ) {
 			$clauses .= ' AND location = "online" ';
-		} else if ( 'in-person' === $facets['format'] ) {
+		} else if ( 'in-person' === $facets['format'][0] ) {
 			$clauses .= ' AND location != "online" ';
 		}
 	}
