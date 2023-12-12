@@ -5,6 +5,7 @@ namespace WordPressdotorg\MU_Plugins\Google_Map;
 defined( 'WPINC' ) || die();
 
 add_action( 'prime_event_filters', __NAMESPACE__ . '\get_events', 10, 5 );
+add_action( 'purge_event_filter_jobs', __NAMESPACE__ . '\purge_event_filter_jobs' );
 
 
 /**
@@ -29,6 +30,34 @@ function schedule_filter_cron( string $filter_slug, string $start_date, string $
 			$cron_args
 		);
 	}
+
+	if ( ! wp_next_scheduled( 'purge_event_filter_jobs' ) ) {
+		wp_schedule_event(
+			time() + HOUR_IN_SECONDS,
+			'weekly',
+			'purge_event_filter_jobs'
+		);
+	}
+}
+
+/**
+ * Unscheduled all crons to avoid buildup
+ *
+ * `prime_event_filters` jobs get created with user input to ensure fast responses for common requests, but those
+ * can build up over time. We don't want to eventually have hundreds of jobs running for uncommon requests, so
+ * this purges them weekly.
+ */
+function purge_event_filter_jobs(): void {
+	wp_unschedule_hook( 'prime_event_filters' );
+
+	// Re-prime the most common filters, so that users don't experience a delay while waiting for a new cache.
+	get_events( 'all-upcoming', 0, 0, array(), true );
+	get_events( 'all-upcoming', 0, 0, array( 'format' => 'online' ), true );
+	get_events( 'all-upcoming', 0, 0, array( 'format' => 'in-person' ), true );
+	get_events( 'all-upcoming', 0, 0, array( 'type' => 'wordcamp' ), true );
+	get_events( 'all-upcoming', 0, 0, array( 'type' => 'other' ), true );
+	get_events( 'all-upcoming', 0, 0, array( 'type' => 'meetup' ), true );
+	get_events( 'all-past', 0, 0, array(), true );
 }
 
 /**
