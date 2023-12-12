@@ -210,7 +210,9 @@ function is_cacheable( array $facets, int $page ): bool {
 function get_cache_key( array $parts ): string {
 	$parts = array_filter( $parts ); // Remove empty so that cache key is normalized.
 	$items = apply_filters( 'google_map_event_filters_cache_key_parts', $parts );
-	$key   = 'google-map-event-filters-' . md5( wp_json_encode( $items ) );
+	ksort( $items ); // Normalize top-level items.
+
+	$key = 'google-map-event-filters-' . md5( wp_json_encode( $items ) );
 
 	return $key;
 }
