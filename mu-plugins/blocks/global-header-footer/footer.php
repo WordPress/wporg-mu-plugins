@@ -86,13 +86,13 @@ $code_is_poetry_src = isset( $attributes['textColor'] ) && str_contains( $attrib
 		<li><a href="https://make.wordpress.org/"><?php echo esc_html_x( 'Get Involved', 'Menu item title', 'wporg' ); ?></a></li>
 		<!-- /wp:list-item -->
 		<!-- wp:list-item -->
+		<li><a href="https://events.wordpress.org/"><?php echo esc_html_x( 'Events', 'Menu item title', 'wporg' ); ?></a></li>
+		<!-- /wp:list-item -->
+		<!-- wp:list-item -->
 		<li><a href="https://wordpressfoundation.org/donate/"><?php echo esc_html_x( 'Donate ↗', 'Menu item title', 'wporg' ); ?></a></li>
 		<!-- /wp:list-item -->
 		<!-- wp:list-item -->
 		<li><a href="https://mercantile.wordpress.org/"><?php echo esc_html_x( 'Swag Store ↗', 'Menu item title', 'wporg' ); ?></a></li>
-		<!-- /wp:list-item -->
-		<!-- wp:list-item -->
-		<li><a href="https://central.wordcamp.org/"><?php echo esc_html_x( 'WordCamp ↗', 'Menu item title', 'wporg' ); ?></a></li>
 		<!-- /wp:list-item -->
 	</ul>
 	<!-- /wp:list -->
