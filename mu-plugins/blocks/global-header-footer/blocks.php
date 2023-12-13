@@ -524,6 +524,11 @@ function get_global_menu_items() {
 			),
 		),
 		array(
+			'title' => esc_html_x( 'Events', 'Menu item title', 'wporg' ),
+			'url'   => 'https://events.wordpress.org/',
+			'type'  => 'custom',
+		),
+		array(
 			'title'   => esc_html_x( 'Community', 'Menu item title', 'wporg' ),
 			'url'     => '#',
 			'type'    => 'custom',
@@ -541,16 +546,6 @@ function get_global_menu_items() {
 				array(
 					'title' => esc_html_x( 'Five for the Future', 'Menu item title', 'wporg' ),
 					'url'   => 'https://wordpress.org/five-for-the-future/',
-					'type'  => 'custom',
-				),
-				array(
-					'title' => esc_html_x( 'WordCamp ↗︎', 'Menu item title', 'wporg' ),
-					'url'   => 'https://central.wordcamp.org/',
-					'type'  => 'custom',
-				),
-				array(
-					'title' => esc_html_x( 'Meetups ↗︎', 'Menu item title', 'wporg' ),
-					'url'   => 'https://www.meetup.com/pro/wordpress/',
 					'type'  => 'custom',
 				),
 				array(
