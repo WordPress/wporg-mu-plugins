@@ -110,6 +110,8 @@ function get_events( string $filter_slug, int $start_timestamp, int $end_timesta
 				$events = apply_filters( "google_map_event_filters_{$filter_slug}", array() );
 		}
 
+		$events = prepare_events( $events );
+
 		// Store for a day to make sure it never expires before the priming cron job runs.
 		// There's no point in caching empty values, or scheduling crons to update them.
 		if ( $cacheable && $events ) {
@@ -248,8 +250,6 @@ function get_all_upcoming_events( array $facets = array() ): array {
 		$events = get_latin1_results_with_prepared_query( $query );
 	}
 
-	$events = prepare_events( $events );
-
 	return $events;
 }
 
@@ -348,8 +348,6 @@ function get_all_past_events( int $page ): array {
 		$events = get_latin1_results_with_prepared_query( $query );
 	}
 
-	$events = prepare_events( $events );
-
 	return $events;
 }
 
@@ -402,8 +400,6 @@ function get_events_between_dates( int $start_timestamp, int $end_timestamp ) : 
 	} else {
 		$events = get_latin1_results_with_prepared_query( $query );
 	}
-
-	$events = prepare_events( $events );
 
 	return $events;
 }
