@@ -90,7 +90,7 @@ function render_block( $attributes ) {
 		);
 
 		$list_items .= sprintf(
-			'<li>%1$s <div class="wp-block-wporg-latest-news__details">%2$s %3$s %4$s</div></li>',
+			'<li><div class="wp-block-wporg-latest-news__title">%1$s</div> <div class="wp-block-wporg-latest-news__details">%2$s %3$s %4$s</div></li>',
 			$title_element,
 			$category_element,
 			! empty( $category_element ) ? '<span>·</span>' : '',
