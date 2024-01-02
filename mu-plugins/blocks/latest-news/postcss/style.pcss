@@ -49,6 +49,7 @@
 		padding: var(--wp--preset--spacing--20);
 		border: 1px solid var(--wp--preset--color--light-grey-1);
 		color: var(--wp--preset--color--charcoal-1);
+		font-size: var(--wp--custom--latest-news--title--font-size, 16px);
 
 		&:not(:last-child) {
 			border-bottom: unset;
@@ -74,8 +75,9 @@
 			text-decoration: none !important;
 		}
 
-		& > a {
-			flex-basis: calc(100% - var(--local-details-column-width));
+		.wp-block-wporg-latest-news__title {
+			flex: 1;
+			font-weight: var(--wp--custom--latest-news--title--font-weight, 600);
 		}
 
 		.wp-block-wporg-latest-news__details {
