@@ -34,7 +34,7 @@ function init() {
  *
  * @return string Shortcode output as HTML markup.
  */
-function render_shortcode( $attr, $content = '', $tag ) {
+function render_shortcode( $attr, $content, $tag ) {
 	$shortcode_mapping = array(
 		'info'     => 'info',
 		'tip'      => 'tip',
