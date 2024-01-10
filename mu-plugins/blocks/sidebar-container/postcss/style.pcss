@@ -14,6 +14,7 @@
 @media (min-width: 1200px) {
 	.wp-block-wporg-sidebar-container {
 		--local--block-end-sidebar--width: 340px;
+		--local--top-offset: calc(var(--wp-admin--admin-bar--height, 0px) + var(--wp--custom--local-navigation-bar--spacing--height, 60px));
 
 		position: absolute;
 		top: calc(var(--wp-global-header-offset, 90px) + var(--wp--custom--local-navigation-bar--spacing--height, 60px));
@@ -23,32 +24,47 @@
 		width: var(--local--block-end-sidebar--width);
 		margin-top: var(--wp--custom--wporg-sidebar-container--spacing--margin--top);
 		margin-bottom: 0 !important;
+		padding-top: var(--wp--preset--spacing--20);
+
+		&:not(.is-fixed-sidebar) {
+
+			/* Match width of custom scrollbar when fixed, stops content width changing */
+			padding-right: 16px;
+		}
 
 		&.is-fixed-sidebar {
 			position: fixed;
 			top: 0;
+			height: calc(100vh - var(--local--top-offset));
+			margin-top: var(--local--top-offset);
+			overflow-y: scroll;
 
-			/* Make the space above the sidebar the same as the height of the local nav. */
-			margin-top: calc(var(--wp-admin--admin-bar--height, 0px) + var(--wp--custom--local-navigation-bar--spacing--height, 60px) * 2);
-		}
+			/* Custom scrollbar so that it can be made visible on hover */
+			&::-webkit-scrollbar,
+			&::-webkit-scrollbar-thumb {
+				background-color: transparent;
+			}
 
-		&.is-bottom-sidebar {
-			position: absolute;
-		}
+			&:hover::-webkit-scrollbar-thumb {
+				background-color: var(--wp--preset--color--charcoal-4);
+				border: 4.5px solid transparent;
+				background-clip: content-box;
+				border-radius: 10px;
+			}
 
-		&.is-fixed-sidebar .is-link-to-top,
-		&.is-bottom-sidebar .is-link-to-top {
-			display: block;
-			margin-top: 0;
+			.is-link-to-top {
+				display: block;
+				padding-top: var(--wp--preset--spacing--20);
 
-			& a {
-				color: var(--wp--preset--color--charcoal-4);
+				& a {
+					color: var(--wp--preset--color--charcoal-4);
+				}
 			}
 		}
 
 		.wp-block-wporg-table-of-contents + .is-link-to-top {
 			border-top: 1px solid var(--wp--preset--color--light-grey-1);
-			padding-top: var(--wp--preset--spacing--20);
+			padding-bottom: var(--wp--preset--spacing--20);
 		}
 	}
 }
