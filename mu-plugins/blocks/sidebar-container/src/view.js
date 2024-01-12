@@ -10,7 +10,7 @@ const ADMIN_BAR_HEIGHT = parseInt(
 const SPACE_TO_TOP = getCustomPropValue( '--wp--custom--wporg-sidebar-container--spacing--margin--top' ) || 80;
 const SCROLL_POSITION_TO_FIX = GLOBAL_NAV_HEIGHT + SPACE_TO_TOP - ADMIN_BAR_HEIGHT;
 
-let container;
+let containers;
 let mainEl;
 
 /**
@@ -45,23 +45,29 @@ function onScroll() {
 	const scrollPosition = scrollY - ADMIN_BAR_HEIGHT;
 
 	// Toggle the fixed position based on whether the scrollPosition is greater than the initial gap from the top.
-	container.classList.toggle( 'is-fixed-sidebar', scrollPosition > SCROLL_POSITION_TO_FIX );
+	containers.forEach( ( container ) => {
+		container.classList.toggle( 'is-fixed-sidebar', scrollPosition > SCROLL_POSITION_TO_FIX );
+	} );
 
 	const footerStart = mainEl.offsetTop + mainEl.offsetHeight;
 
 	// Is footerStart visible in the viewport?
 	if ( footerStart < scrollPosition + windowHeight ) {
-		container.style.setProperty( 'height', `${ footerStart - scrollPosition - container.offsetTop }px` );
+		containers.forEach( ( container ) => {
+			container.style.setProperty( 'height', `${ footerStart - scrollPosition - container.offsetTop }px` );
+		} );
 	} else {
-		container.style.removeProperty( 'height' );
+		containers.forEach( ( container ) => {
+			container.style.removeProperty( 'height' );
+		} );
 	}
 }
 
 function init() {
-	container = document.querySelector( '.wp-block-wporg-sidebar-container' );
+	containers = document.querySelectorAll( '.wp-block-wporg-sidebar-container' );
 	mainEl = document.getElementById( 'wp--skip-link--target' );
 
-	if ( mainEl && container ) {
+	if ( mainEl && containers.length ) {
 		onScroll(); // Run once to avoid footer collisions on load (ex, when linked to #reply-title).
 		window.addEventListener( 'scroll', onScroll );
 	}
