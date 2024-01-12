@@ -39,10 +39,12 @@ function init() {
  * @return string Returns the block markup.
  */
 function render( $attributes, $content, $block ) {
-	$back_to_top = sprintf(
-		'<p class="has-small-font-size is-link-to-top"><a href="#wp--skip-link--target">%s</a></p>',
-		esc_html__( '↑ Back to top', 'wporg' )
-	);
+	$back_to_top = $attributes['hasBackToTop']
+		? sprintf(
+			'<p class="has-small-font-size is-link-to-top"><a href="#wp--skip-link--target">%s</a></p>',
+			esc_html__( '↑ Back to top', 'wporg' )
+		)
+		: '';
 
 	$wrapper_attributes = get_block_wrapper_attributes();
 	return sprintf(

@@ -7,7 +7,12 @@
 	"category": "layout",
 	"description": "A sticky container to be used in 2-column layouts.",
 	"textdomain": "wporg",
-	"attributes": {},
+	"attributes": {
+		"hasBackToTop": {
+			"type": "boolean",
+			"default": true
+		}
+	},
 	"supports": {
 		"inserter": false,
 		"__experimentalLayout": true,
