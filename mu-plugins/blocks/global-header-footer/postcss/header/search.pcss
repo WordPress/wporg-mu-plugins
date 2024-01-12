@@ -63,6 +63,14 @@
 		}
 	}
 
+	& .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content {
+
+		@media (max-width: 889px) {
+			padding-left: var(--wp--custom--margin--horizontal);
+			padding-right: var(--wp--custom--margin--horizontal);
+		}
+	}
+
 	& .wp-block-search {
 
 		/* Set local custom properties so child themes can set these in one place. */
@@ -78,6 +86,10 @@
 		margin-top: var(--wp--custom--margin--vertical);
 		max-width: 100%;
 
+		@media (max-width: 889px) {
+			width: 100%;
+		}
+
 		& > label {
 			width: 100%;
 			margin-bottom: calc(var(--wp--custom--form--padding) / 2);
@@ -87,6 +99,7 @@
 
 		& .wp-block-search__inside-wrapper {
 			flex: auto;
+			width: 100%;
 			padding: 0;
 			border: var(--wp--custom--form--border--width) var(--wp--custom--form--border--style) var(--local--border-color);
 			border-radius: var(--wp--custom--form--border--radius);
