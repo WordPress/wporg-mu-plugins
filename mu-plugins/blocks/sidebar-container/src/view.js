@@ -60,20 +60,6 @@ function onScroll() {
 function init() {
 	container = document.querySelector( '.wp-block-wporg-sidebar-container' );
 	mainEl = document.getElementById( 'wp--skip-link--target' );
-	const toggleButton = container?.querySelector( '.wporg-table-of-contents__toggle' );
-	const list = container?.querySelector( '.wporg-table-of-contents__list' );
-
-	if ( toggleButton && list ) {
-		toggleButton.addEventListener( 'click', function () {
-			if ( toggleButton.getAttribute( 'aria-expanded' ) === 'true' ) {
-				toggleButton.setAttribute( 'aria-expanded', false );
-				list.removeAttribute( 'style' );
-			} else {
-				toggleButton.setAttribute( 'aria-expanded', true );
-				list.setAttribute( 'style', 'display:block;' );
-			}
-		} );
-	}
 
 	if ( mainEl && container ) {
 		onScroll(); // Run once to avoid footer collisions on load (ex, when linked to #reply-title).
