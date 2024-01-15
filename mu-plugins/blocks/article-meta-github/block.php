@@ -12,7 +12,7 @@ add_action( 'init', __NAMESPACE__ . '\init' );
  */
 function init() {
 	register_block_type(
-		register_block_type( __DIR__ . '/build' ),
+		__DIR__ . '/build',
 		array(
 			'render_callback' => __NAMESPACE__ . '\render',
 		)
