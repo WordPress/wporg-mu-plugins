@@ -27,6 +27,7 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 }
 
 require_once __DIR__ . '/helpers/helpers.php';
+require_once __DIR__ . '/blocks/article-meta-github/block.php';
 require_once __DIR__ . '/blocks/global-header-footer/blocks.php';
 require_once __DIR__ . '/blocks/google-map/index.php';
 require_once __DIR__ . '/blocks/horizontal-slider/horizontal-slider.php';
