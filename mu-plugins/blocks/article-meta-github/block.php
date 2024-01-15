@@ -1,5 +1,5 @@
 <?php
-namespace WordPressdotorg\Theme\Developer_2023\Article_Meta_Github;
+namespace WordPressdotorg\MU_Plugins\Article_Meta_Github;
 
 add_action( 'init', __NAMESPACE__ . '\init' );
 
