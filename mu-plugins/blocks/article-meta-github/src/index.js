@@ -6,7 +6,7 @@ import { registerBlockType } from '@wordpress/blocks';
 /**
  * Internal dependencies
  */
-import Edit from '../shared/dynamic-edit';
+import Edit from './edit';
 import metadata from './block.json';
 
 registerBlockType( metadata.name, {
