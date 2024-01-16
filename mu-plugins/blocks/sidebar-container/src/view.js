@@ -30,9 +30,9 @@ function getCustomPropValue( name, element = document.body ) {
 }
 
 /**
- * Check the position of the sidebar vs the height of the viewport & page
- * container, and toggle the "bottom" class to position the sidebar without
- * overlapping the footer.
+ * Check the position of each sidebar relative to the scroll position,
+ * and toggle the "fixed" class at a certain point.
+ * Reduce the height of each sidebar to stop them overlapping the footer.
  */
 function onScroll() {
 	// Only run the scroll code if the sidebar is floating on a wide screen.
@@ -41,7 +41,6 @@ function onScroll() {
 	}
 
 	const { scrollY, innerHeight: windowHeight } = window;
-	// const footerTop = footer.getBoundingClientRect().top;
 	const scrollPosition = scrollY - ADMIN_BAR_HEIGHT;
 
 	// Toggle the fixed position based on whether the scrollPosition is greater than the initial gap from the top.
@@ -51,7 +50,7 @@ function onScroll() {
 
 	const footerStart = mainEl.offsetTop + mainEl.offsetHeight;
 
-	// Is footerStart visible in the viewport?
+	// Is the footer visible in the viewport?
 	if ( footerStart < scrollPosition + windowHeight ) {
 		containers.forEach( ( container ) => {
 			container.style.setProperty( 'height', `${ footerStart - scrollPosition - container.offsetTop }px` );
