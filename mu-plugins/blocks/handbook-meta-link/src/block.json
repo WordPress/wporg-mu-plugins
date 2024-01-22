@@ -1,9 +1,9 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 2,
-	"name": "wporg/article-meta-github",
+	"name": "wporg/handbook-meta-link",
 	"version": "0.1.0",
-	"title": "Article Meta GitHub",
+	"title": "Handbook Meta Link",
 	"category": "widgets",
 	"icon": "smiley",
 	"description": "",

@@ -1,5 +1,5 @@
 <?php
-namespace WordPressdotorg\MU_Plugins\Article_Meta_Github;
+namespace WordPressdotorg\MU_Plugins\Handbook_Meta_Link;
 
 add_action( 'init', __NAMESPACE__ . '\init' );
 
