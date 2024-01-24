@@ -20,15 +20,6 @@
 		margin-bottom: 0 !important;
 		padding: var(--wp--preset--spacing--20) 0;
 
-		main & {
-			position: absolute;
-			top: calc(var(--wp-global-header-offset, 90px) + var(--wp--custom--local-navigation-bar--spacing--height, 60px));
-			margin-top: var(--wp--custom--wporg-sidebar-container--spacing--margin--top);
-
-			/* Right offset should be "edge spacing" at minimum, otherwise calculate it to be centered. */
-			right: max(var(--wp--preset--spacing--edge-space), calc((100% - var(--wp--style--global--wide-size)) / 2));
-		}
-
 		&:not(.is-fixed-sidebar) {
 
 			/* Match width of custom scrollbar when fixed, stops content width changing */
@@ -68,6 +59,15 @@
 		& * + .is-link-to-top {
 			border-top: 1px solid var(--wp--preset--color--light-grey-1);
 		}
+	}
+
+	main .wp-block-wporg-sidebar-container {
+		position: absolute;
+		top: calc(var(--wp-global-header-offset, 90px) + var(--wp--custom--local-navigation-bar--spacing--height, 60px));
+		margin-top: var(--wp--custom--wporg-sidebar-container--spacing--margin--top);
+
+		/* Right offset should be "edge spacing" at minimum, otherwise calculate it to be centered. */
+		right: max(var(--wp--preset--spacing--edge-space), calc((100% - var(--wp--style--global--wide-size)) / 2));
 	}
 }
 
