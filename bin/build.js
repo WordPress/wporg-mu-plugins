@@ -13,23 +13,26 @@ const { sync: spawn } = require( 'cross-spawn' );
 const postCssConfig = require( '../postcss.config.js' );
 
 /**
- * Build the JS files using webpack, if the `src` directory exists.
+ * Build the files, if the `src` directory exists.
+ *
+ * This builds JS and any SCSS, using wp-scripts. We can't use wp-scripts
+ * directly due to the folder structure of the blocks, but can pass through
+ * the folders with CLI args.
  *
  * @param {string} inputDir
  * @param {string} outputDir
  */
-async function maybeBuildJavaScript( inputDir, outputDir ) {
+async function maybeBuildBlock( inputDir, outputDir ) {
 	const project = path.basename( path.dirname( inputDir ) );
 	if ( fs.existsSync( inputDir ) ) {
-		// Set the src directory based on the relative location from projet root.
-		process.env.WP_SRC_DIRECTORY = path.relative( path.dirname( __dirname ), inputDir );
-		const { status, stdout } = spawn(
-			resolveBin( 'webpack' ),
+		// Run wp-scripts with a specific input and output directory.
+		const { status, output } = spawn(
+			resolveBin( '@wordpress/scripts', { executable: 'wp-scripts' } ),
 			[
-				'--config',
-				path.join( path.dirname( __dirname ), 'webpack.config.js' ),
-				'--output-path',
-				outputDir,
+				'build',
+				'--experimental-modules',
+				'--webpack-src-dir=' + path.relative( path.dirname( __dirname ), inputDir ),
+				'--output-path=' + outputDir,
 				'--color', // Enables colors in `stdout`.
 			],
 			{
@@ -38,10 +41,10 @@ async function maybeBuildJavaScript( inputDir, outputDir ) {
 		);
 		// Only output the webpack result if there was an issue.
 		if ( 0 !== status ) {
-			console.log( stdout.toString() );
-			console.log( chalk.red( `Error in JavaScript for ${ project }` ) );
+			console.log( output.toString() );
+			console.log( chalk.red( `Error in block for ${ project }` ) );
 		} else {
-			console.log( chalk.green( `JavaScript built for ${ project }` ) );
+			console.log( chalk.green( `Block built for ${ project }` ) );
 		}
 	}
 }
@@ -109,7 +112,10 @@ projects.forEach( async ( file ) => {
 
 		// We `await` because JS needs to be built first— the first webpack step deletes the build
 		// directory, and could remove the built CSS if it was truely async.
-		await maybeBuildJavaScript( path.resolve( path.join( basePath, 'src' ) ), outputDir );
+		await maybeBuildBlock( path.resolve( path.join( basePath, 'src' ) ), outputDir );
+
+		// `maybeBuildBlock` supports SCSS, but current blocks still have postCSS
+		// files. Until those are converted, we still need a separate PostCSS step.
 		await maybeBuildPostCSS( path.resolve( path.join( basePath, 'postcss' ) ), outputDir );
 	} catch ( error ) {
 		console.log( chalk.red( `Error in ${ file }:` ), error.message );
