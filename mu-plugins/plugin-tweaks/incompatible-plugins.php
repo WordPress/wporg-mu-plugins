@@ -52,8 +52,9 @@ function filter_the_filters() {
 					return $plugins;
 				}
 			);
+		}
 
-		} elseif ( isset( $active_sitewide_plugins[ $from ] ) ) {
+		if ( isset( $active_sitewide_plugins[ $from ] ) ) {
 			add_filter(
 				'site_option_active_sitewide_plugins',
 				function( $plugins ) use ( $from, $to ) {
@@ -63,7 +64,6 @@ function filter_the_filters() {
 					return $plugins;
 				}
 			);
-
 		}
 	}
 }
