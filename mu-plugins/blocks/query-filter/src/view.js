@@ -64,10 +64,9 @@ const { actions } = store( 'wporg/query-filter', {
 			// Only update the apply button if multiple selections are allowed.
 			if ( context.hasMultiple ) {
 				if ( count ) {
-					/* translators: %s is count of currently selected filters. */
-					applyButton.value = 'Apply (%s)';
+					applyButton.value = applyButton.dataset.labelWithCount.replace( '%s', count );
 				} else {
-					applyButton.value = 'Apply';
+					applyButton.value = applyButton.dataset.label;
 				}
 			}
 

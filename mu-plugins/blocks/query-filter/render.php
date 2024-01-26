@@ -152,6 +152,11 @@ if ( $selected_count && $has_multiple ) {
 				/>
 				<input
 					type="submit"
+					data-label-with-count="<?php
+						/* translators: %s is count of currently selected filters. */
+						esc_attr_e( 'Apply (%s)', 'wporg' );
+					?>"
+					data-label=<?php esc_attr_e( 'Apply', 'wporg' ); ?>
 					value="<?php echo esc_html( $apply_label ); ?>"
 				/>
 			</div> <!-- /.wporg-query-filter__modal-actions -->
