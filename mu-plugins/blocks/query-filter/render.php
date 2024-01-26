@@ -140,6 +140,9 @@ if ( $selected_count && $has_multiple ) {
 			 * @param WP_Block $block The current block being rendered.
 			 */
 			do_action( 'wporg_query_filter_in_form', $settings['key'], $block );
+
+			/* translators: %s is count of currently selected filters. */
+			$label_count = __( 'Apply (%s)', 'wporg' );
 			?>
 
 			<div class="wporg-query-filter__modal-actions">
@@ -152,10 +155,7 @@ if ( $selected_count && $has_multiple ) {
 				/>
 				<input
 					type="submit"
-					data-label-with-count="<?php
-						/* translators: %s is count of currently selected filters. */
-						esc_attr_e( 'Apply (%s)', 'wporg' );
-					?>"
+					data-label-with-count="<?php echo esc_attr( $label_count ); ?>"
 					data-label=<?php esc_attr_e( 'Apply', 'wporg' ); ?>
 					value="<?php echo esc_html( $apply_label ); ?>"
 				/>
