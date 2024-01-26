@@ -41,7 +41,7 @@
 		"setup:tools": "yarn install && composer install && TEXTDOMAIN=wporg composer exec update-configs",
 		"update:tools": "composer update && TEXTDOMAIN=wporg composer exec update-configs",
 		"wp-env": "wp-env",
-		"test:php": "wp-env run phpunit 'phpunit -c /var/www/html/phpunit.xml.dist --verbose'"
+		"test:php": "wp-env run tests-cli --env-cwd=/var/www/html/ phpunit"
 	},
 	"rtlcssConfig": {},
 	"stylelint": {
