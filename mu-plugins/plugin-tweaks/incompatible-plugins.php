@@ -43,12 +43,13 @@ function filter_the_filters() {
 				'option_active_plugins',
 				function( $plugins ) use ( $from, $to ) {
 					// Splice to retain load order, if it's important.
-					return array_splice(
+					array_splice(
 						$plugins,
 						array_search( $from, $plugins, true ),
 						1,
 						$to
 					);
+					return $plugins;
 				}
 			);
 
