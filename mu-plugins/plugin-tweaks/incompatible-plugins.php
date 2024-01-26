@@ -58,8 +58,8 @@ function filter_the_filters() {
 			add_filter(
 				'site_option_active_sitewide_plugins',
 				function( $plugins ) use ( $from, $to ) {
+					$plugins[ $to ] = $plugins[ $from ];
 					unset( $plugins[ $from ] );
-					$plugins[ $to ] = time();
 
 					return $plugins;
 				}
