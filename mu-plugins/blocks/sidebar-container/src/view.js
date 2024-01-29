@@ -45,7 +45,10 @@ function onScroll() {
 
 	// Toggle the fixed position based on whether the scrollPosition is greater than the initial gap from the top.
 	containers.forEach( ( container ) => {
-		container.classList.toggle( 'is-fixed-sidebar', scrollPosition > SCROLL_POSITION_TO_FIX );
+		container.classList.toggle(
+			'is-fixed-sidebar',
+			scrollPosition > SCROLL_POSITION_TO_FIX - getCustomPropValue( '--local--padding-top', container )
+		);
 	} );
 
 	const footerStart = mainEl.offsetTop + mainEl.offsetHeight;
