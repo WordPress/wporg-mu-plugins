@@ -114,8 +114,6 @@ projects.forEach( async ( file ) => {
 		// directory, and could remove the built CSS if it was truely async.
 		await maybeBuildBlock( path.resolve( path.join( basePath, 'src' ) ), outputDir );
 
-		// `maybeBuildBlock` supports SCSS, but current blocks still have postCSS
-		// files. Until those are converted, we still need a separate PostCSS step.
 		await maybeBuildPostCSS( path.resolve( path.join( basePath, 'postcss' ) ), outputDir );
 	} catch ( error ) {
 		console.log( chalk.red( `Error in ${ file }:` ), error.message );
