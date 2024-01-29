@@ -1,17 +1,13 @@
 /**
  * Fallback values for custom properties match CSS defaults.
  */
-
-const GLOBAL_NAV_HEIGHT = getCustomPropValue( '--wp-global-header-height' ) || 90;
-const ADMIN_BAR_HEIGHT = parseInt(
-	window.getComputedStyle( document.documentElement ).getPropertyValue( 'margin-top' ),
-	10
-);
 const SPACE_TO_TOP = getCustomPropValue( '--wp--custom--wporg-sidebar-container--spacing--margin--top' ) || 80;
-const SCROLL_POSITION_TO_FIX = GLOBAL_NAV_HEIGHT + SPACE_TO_TOP - ADMIN_BAR_HEIGHT;
 
 let containers;
 let mainEl;
+let adminBarHeight;
+let globalNavHeight;
+const scrollHandlers = [];
 
 /**
  * Get the value of a CSS custom property.
@@ -30,39 +26,62 @@ function getCustomPropValue( name, element = document.body ) {
 }
 
 /**
- * Check the position of each sidebar relative to the scroll position,
+ * Check the position of the sidebar relative to the scroll position,
  * and toggle the "fixed" class at a certain point.
- * Reduce the height of each sidebar to stop them overlapping the footer.
+ * Reduce the height of the sidebar to stop it overlapping the footer.
+ *
+ * @param {HTMLElement} container
  */
-function onScroll() {
-	// Only run the scroll code if the sidebar is floating on a wide screen.
-	if ( ! window.matchMedia( '(min-width: 1200px)' ).matches ) {
-		return;
-	}
+function createScrollHandler( container ) {
+	return function onScroll() {
+		// Only run the scroll code if the sidebar is floating.
+		if ( ! container.classList.contains( 'is-floating-sidebar' ) ) {
+			return false;
+		}
 
-	const { scrollY, innerHeight: windowHeight } = window;
-	const scrollPosition = scrollY - ADMIN_BAR_HEIGHT;
+		const { scrollY, innerHeight: windowHeight } = window;
+		const scrollPosition = scrollY - adminBarHeight;
+		const localNavOffset = getCustomPropValue( '--local--nav--offset', container );
+		const paddingTop = getCustomPropValue( '--local--padding', container );
 
-	// Toggle the fixed position based on whether the scrollPosition is greater than the initial gap from the top.
-	containers.forEach( ( container ) => {
+		// Toggle the fixed position based on whether the scrollPosition is greater than the
+		// initial gap from the top minus the padding applied when fixed.
 		container.classList.toggle(
 			'is-fixed-sidebar',
-			scrollPosition > SCROLL_POSITION_TO_FIX - getCustomPropValue( '--local--padding-top', container )
+			scrollPosition > SPACE_TO_TOP + globalNavHeight + localNavOffset - adminBarHeight - paddingTop
 		);
+
+		const footerStart = mainEl.offsetTop + mainEl.offsetHeight;
+
+		// Is the footer visible in the viewport?
+		if ( footerStart < scrollPosition + windowHeight ) {
+			container.style.setProperty( 'height', `${ footerStart - scrollPosition - container.offsetTop }px` );
+		} else {
+			container.style.removeProperty( 'height' );
+		}
+	};
+}
+
+/**
+ * Set the height for the admin bar and global nav vars.
+ * Set the floating sidebar class on each container based on their breakpoint.
+ * Show hidden containers after layout.
+ */
+function onResize() {
+	adminBarHeight = getCustomPropValue( '--wp-admin--admin-bar--height' ) || 32;
+	globalNavHeight = getCustomPropValue( '--wp-global-header-height' ) || 90;
+
+	containers.forEach( ( container ) => {
+		// Toggle the floating class based on the configured breakpoint.
+		const shouldFloat = window.matchMedia( `(min-width: ${ container.dataset.breakpoint })` ).matches;
+		container.classList.toggle( 'is-floating-sidebar', shouldFloat );
+		// Show the sidebar after layout, if it has been hidden to avoid FOUC.
+		if ( 'none' === window.getComputedStyle( container ).display ) {
+			container.style.setProperty( 'display', 'revert' );
+		}
 	} );
 
-	const footerStart = mainEl.offsetTop + mainEl.offsetHeight;
-
-	// Is the footer visible in the viewport?
-	if ( footerStart < scrollPosition + windowHeight ) {
-		containers.forEach( ( container ) => {
-			container.style.setProperty( 'height', `${ footerStart - scrollPosition - container.offsetTop }px` );
-		} );
-	} else {
-		containers.forEach( ( container ) => {
-			container.style.removeProperty( 'height' );
-		} );
-	}
+	scrollHandlers.forEach( ( handler ) => handler() );
 }
 
 function init() {
@@ -70,9 +89,17 @@ function init() {
 	mainEl = document.getElementById( 'wp--skip-link--target' );
 
 	if ( mainEl && containers.length ) {
-		onScroll(); // Run once to avoid footer collisions on load (ex, when linked to #reply-title).
-		window.addEventListener( 'scroll', onScroll );
+		containers.forEach( ( container ) => {
+			const scrollHandler = createScrollHandler( container );
+			scrollHandlers.push( scrollHandler );
+			window.addEventListener( 'scroll', scrollHandler );
+		} );
 	}
+
+	// Run once to set height vars and position elements on load.
+	// Avoids footer collisions (ex, when linked to #reply-title).
+	onResize();
+	window.addEventListener( 'resize', onResize );
 
 	// If there is no table of contents, hide the heading.
 	if ( ! document.querySelector( '.wp-block-wporg-table-of-contents' ) ) {

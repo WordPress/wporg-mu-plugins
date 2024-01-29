@@ -45,11 +45,13 @@ function render( $attributes, $content, $block ) {
 			esc_html__( '↑ Back to top', 'wporg' )
 		)
 		: '';
+	$inlineBreakpoint = $attributes['inlineBreakpoint'];
 
 	$wrapper_attributes = get_block_wrapper_attributes();
 	return sprintf(
-		'<div %1$s>%2$s%3$s</div>',
+		'<div %1$s data-breakpoint="%2$s">%3$s%4$s</div>',
 		$wrapper_attributes,
+		esc_attr( $inlineBreakpoint ),
 		$content,
 		$back_to_top
 	);

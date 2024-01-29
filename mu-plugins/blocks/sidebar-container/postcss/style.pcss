@@ -1,21 +1,32 @@
-.wp-block-wporg-sidebar-container .is-link-to-top {
-	display: none;
+.wp-block-wporg-sidebar-container {
+	--local--offset-top: var(--wp-admin--admin-bar--height, 0);
 
-	& a {
-		text-decoration-line: none;
+	/* These vars are used in JS calcs */
+	--local--nav--offset: var(--wp--custom--local-navigation-bar--spacing--height, 60px);
+	--local--padding: var(--wp--preset--spacing--20);
 
-		&:hover {
-			text-decoration-line: underline;
+	/* Account for local nav height on larger screens where it becomes fixed. */
+	@media (min-width: 890px) {
+		/* stylelint-disable-next-line length-zero-no-unit */
+		--local--nav--offset: 0px;
+		--local--offset-top: calc(var(--wp-admin--admin-bar--height, 0px) + var(--wp--custom--local-navigation-bar--spacing--height, 60px));
+	}
+
+	& .is-link-to-top {
+		display: none;
+
+		& a {
+			text-decoration-line: none;
+
+			&:hover {
+				text-decoration-line: underline;
+			}
 		}
 	}
-}
 
-/* Slot the search & table of contents into a floating sidebar on large screens. */
-@media (min-width: 1200px) {
-	.wp-block-wporg-sidebar-container {
+	/* Slot the search & table of contents into a floating sidebar on large screens. */
+	&.is-floating-sidebar {
 		--local--block-end-sidebar--width: 340px;
-		--local--offset-top: calc(var(--wp-admin--admin-bar--height, 0px) + var(--wp--custom--local-navigation-bar--spacing--height, 60px));
-		--local--padding-top: var(--wp--preset--spacing--20);
 
 		width: var(--local--block-end-sidebar--width);
 
@@ -30,7 +41,7 @@
 			top: 0;
 			height: calc(100vh - var(--local--offset-top));
 			margin-top: var(--local--offset-top) !important;
-			padding: var(--local--padding-top) 0;
+			padding: var(--local--padding) 0;
 			overflow-y: scroll;
 
 			/* Custom scrollbar so that it can be made visible on hover */
@@ -60,8 +71,14 @@
 			border-top: 1px solid var(--wp--preset--color--light-grey-1);
 		}
 	}
+}
 
-	main .wp-block-wporg-sidebar-container {
+main .wp-block-wporg-sidebar-container {
+
+	/* Hide the main sidebar until layout classes have been applied, to avoid FOUC */
+	display: none;
+
+	&.is-floating-sidebar {
 		position: absolute;
 		top: calc(var(--wp-global-header-offset, 90px) + var(--wp--custom--local-navigation-bar--spacing--height, 60px));
 		margin-top: var(--wp--custom--wporg-sidebar-container--spacing--margin--top);

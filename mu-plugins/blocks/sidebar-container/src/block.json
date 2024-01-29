@@ -11,6 +11,10 @@
 		"hasBackToTop": {
 			"type": "boolean",
 			"default": true
+		},
+		"inlineBreakpoint": {
+			"type": "string",
+			"default": "1200px"
 		}
 	},
 	"supports": {
