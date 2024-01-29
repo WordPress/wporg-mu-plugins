@@ -42,7 +42,7 @@ function getCustomPropValue( name, element = document.body ) {
 function onScroll() {
 	// Only run the scroll code if the sidebar is floating on a wide screen.
 	if ( ! mainEl || ! container || ! window.matchMedia( '(min-width: 1200px)' ).matches ) {
-		return;
+		return false;
 	}
 
 	const scrollPosition = window.scrollY - ADMIN_BAR_HEIGHT;
