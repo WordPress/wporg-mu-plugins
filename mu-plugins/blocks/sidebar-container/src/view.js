@@ -72,7 +72,10 @@ function createScrollHandler( container ) {
  * Show hidden containers after layout.
  */
 function onResize() {
-	adminBarHeight = getCustomPropValue( '--wp-admin--admin-bar--height' ) || 32;
+	adminBarHeight = parseInt(
+		window.getComputedStyle( document.documentElement ).getPropertyValue( 'margin-top' ),
+		10
+	);
 	globalNavHeight = getCustomPropValue( '--wp-global-header-height' ) || 90;
 
 	containers.forEach( ( container ) => {
