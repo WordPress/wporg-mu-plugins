@@ -19,6 +19,9 @@ const scrollHandlers = [];
  */
 function getCustomPropValue( name, element = document.body ) {
 	const value = window.getComputedStyle( element ).getPropertyValue( name );
+	if ( '0' === value ) {
+		return 0;
+	}
 	if ( 'px' === value.slice( -2 ) ) {
 		return Number( value.replace( 'px', '' ) );
 	}
