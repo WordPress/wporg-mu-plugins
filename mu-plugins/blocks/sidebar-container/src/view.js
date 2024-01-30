@@ -100,12 +100,6 @@ function init() {
 	// Avoids footer collisions (ex, when linked to #reply-title).
 	onResize();
 	window.addEventListener( 'resize', onResize );
-
-	// If there is no table of contents, hide the heading.
-	if ( ! document.querySelector( '.wp-block-wporg-table-of-contents' ) ) {
-		const heading = document.querySelector( '.wp-block-wporg-sidebar-container h2' );
-		heading?.style.setProperty( 'display', 'none' );
-	}
 }
 
 window.addEventListener( 'load', init );

@@ -56,11 +56,14 @@ function render( $attributes, $content, $block ) {
 	$title = apply_filters( 'wporg_table_of_contents_heading', __( 'In this article', 'wporg' ), $post->ID );
 
 	$content = '<div class="wporg-table-of-contents__header">';
-	$content .= do_blocks(
-		'<!-- wp:heading {"style":{"typography":{"fontStyle":"normal","fontWeight":"400"},"spacing":{"margin":{"top":"0","bottom":"0"}}},"fontSize":"normal","fontFamily":"inter"} -->
-		<h2 class="wp-block-heading has-inter-font-family has-normal-font-size" style="margin-top:0;margin-bottom:0;font-style:normal;font-weight:400">' . esc_html( $title ) . '</h2>
-		<!-- /wp:heading -->'
-	);
+	// If there is no content, don't render the heading.
+	$content .= empty( trim( wp_strip_all_tags( $post_content ) ) )
+		? '' 
+		: do_blocks(
+			'<!-- wp:heading {"style":{"typography":{"fontStyle":"normal","fontWeight":"400"},"spacing":{"margin":{"top":"0","bottom":"0"}}},"fontSize":"normal","fontFamily":"inter"} -->
+			<h2 class="wp-block-heading has-inter-font-family has-normal-font-size" style="margin-top:0;margin-bottom:0;font-style:normal;font-weight:400">' . esc_html( $title ) . '</h2>
+			<!-- /wp:heading -->'
+		);
 	$content .= '<button type="button" class="wporg-table-of-contents__toggle" aria-expanded="false">';
 	$content .= '<span class="screen-reader-text">' . esc_html__( 'Table of Contents', 'wporg' ) . '</span>';
 	$content .= '</button>';
