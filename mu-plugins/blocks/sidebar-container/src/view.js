@@ -33,7 +33,8 @@ function getCustomPropValue( name, element = document.body ) {
  * and toggle the "fixed" class at a certain point.
  * Reduce the height of the sidebar to stop it overlapping the footer.
  *
- * @param {HTMLElement} container
+ * @param {HTMLElement} container The sidebar container.
+ * @return {Function}   onScroll  The sidebar scroll handler.
  */
 function createScrollHandler( container ) {
 	return function onScroll() {
@@ -67,7 +68,7 @@ function createScrollHandler( container ) {
 
 /**
  * Set the height for the admin bar and global nav vars.
- * Set the floating sidebar class on each container based on their breakpoint.
+ * Set the floating sidebar class on each container based on its breakpoint.
  * Show hidden containers after layout.
  */
 function onResize() {
