@@ -26,13 +26,39 @@
 
 	/* Slot the search & table of contents into a floating sidebar on large screens. */
 	&.is-floating-sidebar {
-		--local--block-end-sidebar--width: 340px;
+		--local--block-end-sidebar--width: 356px;
 
 		width: var(--local--block-end-sidebar--width);
+		overflow-y: scroll;
+		overscroll-behavior: contain;
+		scrollbar-color: var(--wp--preset--color--charcoal-5) transparent;
 
-		&:not(.is-fixed-sidebar) {
+		/* Custom scrollbar so that it can be made visible on hover */
+		&::-webkit-scrollbar,
+		&::-webkit-scrollbar-track {
+			background-color: transparent;
+		}
 
-			/* Match width of custom scrollbar when fixed, stops content width changing */
+		&::-webkit-scrollbar-thumb {
+			&:active,
+			&:hover {
+				background-color: var(--wp--preset--color--charcoal-4) !important;
+			}
+		}
+
+		&:active,
+		&:focus-within,
+		&:focus,
+		&:hover {
+			&::-webkit-scrollbar-thumb {
+				background-color: var(--wp--preset--color--charcoal-5);
+				border: 4px solid transparent;
+				background-clip: content-box;
+				border-radius: 10px;
+			}
+		}
+
+		& > * {
 			padding-right: 16px;
 		}
 
@@ -42,20 +68,6 @@
 			height: calc(100vh - var(--local--offset-top));
 			margin-top: var(--local--offset-top) !important;
 			padding: var(--local--padding) 0;
-			overflow-y: scroll;
-
-			/* Custom scrollbar so that it can be made visible on hover */
-			&::-webkit-scrollbar,
-			&::-webkit-scrollbar-thumb {
-				background-color: transparent;
-			}
-
-			&:hover::-webkit-scrollbar-thumb {
-				background-color: var(--wp--preset--color--charcoal-4);
-				border: 4.5px solid transparent;
-				background-clip: content-box;
-				border-radius: 10px;
-			}
 
 			& .is-link-to-top {
 				display: block;
