@@ -1,20 +1,13 @@
 /**
  * Fallback values for custom properties match CSS defaults.
  */
-const globalNavHeight = 90;
-
-const LOCAL_NAV_HEIGHT = getCustomPropValue( '--wp--custom--local-navigation-bar--spacing--height' ) || 60;
-const ADMIN_BAR_HEIGHT = parseInt(
-	window.getComputedStyle( document.documentElement ).getPropertyValue( 'margin-top' ),
-	10
-);
-const SPACE_FROM_BOTTOM = getCustomPropValue( '--wp--preset--spacing--edge-space' ) || 80;
 const SPACE_TO_TOP = getCustomPropValue( '--wp--custom--wporg-sidebar-container--spacing--margin--top' ) || 80;
-const FIXED_HEADER_HEIGHT = globalNavHeight + LOCAL_NAV_HEIGHT + ADMIN_BAR_HEIGHT;
-const SCROLL_POSITION_TO_FIX = globalNavHeight + SPACE_TO_TOP - LOCAL_NAV_HEIGHT - ADMIN_BAR_HEIGHT;
 
-let container;
+let containers;
 let mainEl;
+let adminBarHeight;
+let globalNavHeight;
+const scrollHandlers = [];
 
 /**
  * Get the value of a CSS custom property.
@@ -26,6 +19,9 @@ let mainEl;
  */
 function getCustomPropValue( name, element = document.body ) {
 	const value = window.getComputedStyle( element ).getPropertyValue( name );
+	if ( '0' === value ) {
+		return 0;
+	}
 	if ( 'px' === value.slice( -2 ) ) {
 		return Number( value.replace( 'px', '' ) );
 	}
@@ -33,113 +29,82 @@ function getCustomPropValue( name, element = document.body ) {
 }
 
 /**
- * Check the position of the sidebar vs the height of the viewport & page
- * container, and toggle the "bottom" class to position the sidebar without
- * overlapping the footer.
+ * Check the position of the sidebar relative to the scroll position,
+ * and toggle the "fixed" class at a certain point.
+ * Reduce the height of the sidebar to stop it overlapping the footer.
  *
- * @return {boolean} True if the sidebar is at the bottom of the page.
+ * @param {HTMLElement} container The sidebar container.
+ * @return {Function}   onScroll  The sidebar scroll handler.
  */
-function onScroll() {
-	// Only run the scroll code if the sidebar is floating on a wide screen.
-	if ( ! mainEl || ! container || ! window.matchMedia( '(min-width: 1200px)' ).matches ) {
-		return false;
-	}
-
-	const scrollPosition = window.scrollY - ADMIN_BAR_HEIGHT;
-
-	if ( ! container.classList.contains( 'is-bottom-sidebar' ) ) {
-		const footerStart = mainEl.offsetTop + mainEl.offsetHeight;
-		// The pixel location of the bottom of the sidebar, relative to the top of the page.
-		const sidebarBottom = scrollPosition + container.offsetHeight + container.offsetTop - ADMIN_BAR_HEIGHT;
-
-		// Is the sidebar bottom crashing into the footer?
-		if ( footerStart - SPACE_FROM_BOTTOM < sidebarBottom ) {
-			container.classList.add( 'is-bottom-sidebar' );
-
-			// Bottom sidebar is absolutely positioned, so we need to set the top relative to the page origin.
-			// The pixel location of the top of the sidebar, relative to the footer.
-			const sidebarTop =
-				footerStart - container.offsetHeight - LOCAL_NAV_HEIGHT * 2 + ADMIN_BAR_HEIGHT - SPACE_FROM_BOTTOM;
-			container.style.setProperty( 'top', `${ sidebarTop }px` );
-
-			return true;
+function createScrollHandler( container ) {
+	return function onScroll() {
+		// Only run the scroll code if the sidebar is floating.
+		if ( ! container.classList.contains( 'is-floating-sidebar' ) ) {
+			return false;
 		}
-	} else if ( container.getBoundingClientRect().top > LOCAL_NAV_HEIGHT * 2 + ADMIN_BAR_HEIGHT ) {
-		// If the top of the sidebar is above the top fixing position, switch back to just a fixed sidebar.
-		container.classList.remove( 'is-bottom-sidebar' );
-		container.style.removeProperty( 'top' );
-	}
 
-	// Toggle the fixed position based on whether the scrollPosition is greater than the initial gap from the top.
-	container.classList.toggle( 'is-fixed-sidebar', scrollPosition > SCROLL_POSITION_TO_FIX );
+		const { scrollY, innerHeight: windowHeight } = window;
+		const scrollPosition = scrollY - adminBarHeight;
+		const localNavOffset = getCustomPropValue( '--local--nav--offset', container );
+		const paddingTop = getCustomPropValue( '--local--padding', container );
 
-	return false;
+		// Toggle the fixed position based on whether the scrollPosition is greater than the
+		// initial gap from the top minus the padding applied when fixed.
+		const shouldFix =
+			scrollPosition > SPACE_TO_TOP + globalNavHeight + localNavOffset - adminBarHeight - paddingTop;
+		container.classList.toggle( 'is-fixed-sidebar', shouldFix );
+
+		// If the sidebar is fixed and the footer is visible in the viewport, reduce the height to stop overlap.
+		const footerStart = mainEl.offsetTop + mainEl.offsetHeight;
+		if ( shouldFix && footerStart < scrollPosition + windowHeight ) {
+			container.style.setProperty( 'height', `${ footerStart - scrollPosition - container.offsetTop }px` );
+		} else {
+			container.style.removeProperty( 'height' );
+		}
+	};
 }
 
-function isSidebarWithinViewport() {
-	if ( ! container ) {
-		return false;
-	}
-	// Usable viewport height.
-	const viewHeight = window.innerHeight - LOCAL_NAV_HEIGHT + ADMIN_BAR_HEIGHT;
-	// Get the height of the sidebar, plus the top offset and 60px for the
-	// "Back to top" link, which isn't visible until `is-fixed-sidebar` is
-	// added, therefore not included in the offsetHeight value.
-	const sidebarHeight = container.offsetHeight + LOCAL_NAV_HEIGHT + 60;
-	// If the sidebar is shorter than the view area, apply the class so
-	// that it's fixed and scrolls with the page content.
-	return sidebarHeight < viewHeight;
+/**
+ * Set the height for the admin bar and global nav vars.
+ * Set the floating sidebar class on each container based on its breakpoint.
+ * Show hidden containers after layout.
+ */
+function onResize() {
+	adminBarHeight = parseInt(
+		window.getComputedStyle( document.documentElement ).getPropertyValue( 'margin-top' ),
+		10
+	);
+	globalNavHeight = getCustomPropValue( '--wp-global-header-height' ) || 90;
+
+	containers.forEach( ( container ) => {
+		// Toggle the floating class based on the configured breakpoint.
+		const shouldFloat = window.matchMedia( `(min-width: ${ container.dataset.breakpoint })` ).matches;
+		container.classList.toggle( 'is-floating-sidebar', shouldFloat );
+		// Show the sidebar after layout, if it has been hidden to avoid FOUC.
+		if ( 'none' === window.getComputedStyle( container ).display ) {
+			container.style.setProperty( 'display', 'revert' );
+		}
+	} );
+
+	scrollHandlers.forEach( ( handler ) => handler() );
 }
 
 function init() {
-	container = document.querySelector( '.wp-block-wporg-sidebar-container' );
+	containers = document.querySelectorAll( '.wp-block-wporg-sidebar-container' );
 	mainEl = document.getElementById( 'wp--skip-link--target' );
-	const toggleButton = container?.querySelector( '.wporg-table-of-contents__toggle' );
-	const list = container?.querySelector( '.wporg-table-of-contents__list' );
 
-	if ( toggleButton && list ) {
-		toggleButton.addEventListener( 'click', function () {
-			if ( toggleButton.getAttribute( 'aria-expanded' ) === 'true' ) {
-				toggleButton.setAttribute( 'aria-expanded', false );
-				list.removeAttribute( 'style' );
-			} else {
-				toggleButton.setAttribute( 'aria-expanded', true );
-				list.setAttribute( 'style', 'display:block;' );
-			}
+	if ( mainEl && containers.length ) {
+		containers.forEach( ( container ) => {
+			const scrollHandler = createScrollHandler( container );
+			scrollHandlers.push( scrollHandler );
+			window.addEventListener( 'scroll', scrollHandler );
 		} );
 	}
 
-	if ( isSidebarWithinViewport() ) {
-		onScroll(); // Run once to avoid footer collisions on load (ex, when linked to #reply-title).
-		window.addEventListener( 'scroll', onScroll );
-
-		const observer = new window.ResizeObserver( () => {
-			// If the sidebar is positioned at the bottom and mainEl resizes,
-			// it will remain fixed at the previous bottom position, leading to a broken page layout.
-			// In this case manually trigger the scroll handler to reposition.
-			if ( container.classList.contains( 'is-bottom-sidebar' ) ) {
-				container.classList.remove( 'is-bottom-sidebar' );
-				container.style.removeProperty( 'top' );
-				const isBottom = onScroll();
-				// After the sidebar is repositioned, also adjusts the scroll position
-				// to a point where the sidebar is visible.
-				if ( isBottom ) {
-					window.scrollTo( {
-						top: container.offsetTop - FIXED_HEADER_HEIGHT,
-						behavior: 'instant',
-					} );
-				}
-			}
-		} );
-
-		observer.observe( mainEl );
-	}
-
-	// If there is no table of contents, hide the heading.
-	if ( ! document.querySelector( '.wp-block-wporg-table-of-contents' ) ) {
-		const heading = document.querySelector( '.wp-block-wporg-sidebar-container h2' );
-		heading?.style.setProperty( 'display', 'none' );
-	}
+	// Run once to set height vars and position elements on load.
+	// Avoids footer collisions (ex, when linked to #reply-title).
+	onResize();
+	window.addEventListener( 'resize', onResize );
 }
 
 window.addEventListener( 'load', init );

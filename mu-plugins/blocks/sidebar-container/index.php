@@ -39,15 +39,19 @@ function init() {
  * @return string Returns the block markup.
  */
 function render( $attributes, $content, $block ) {
-	$back_to_top = sprintf(
-		'<p class="has-small-font-size is-link-to-top"><a href="#wp--skip-link--target">%s</a></p>',
-		esc_html__( '↑ Back to top', 'wporg' )
-	);
-
 	$wrapper_attributes = get_block_wrapper_attributes();
+	$inline_breakpoint = $attributes['inlineBreakpoint'];
+	$back_to_top = $attributes['hasBackToTop']
+		? sprintf(
+			'<p class="has-small-font-size is-link-to-top"><a href="#wp--skip-link--target">%s</a></p>',
+			esc_html__( '↑ Back to top', 'wporg' )
+		)
+		: '';
+
 	return sprintf(
-		'<div %1$s>%2$s%3$s</div>',
+		'<div %1$s data-breakpoint="%2$s">%3$s%4$s</div>',
 		$wrapper_attributes,
+		esc_attr( $inline_breakpoint ),
 		$content,
 		$back_to_top
 	);
