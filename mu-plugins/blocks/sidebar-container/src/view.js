@@ -50,15 +50,13 @@ function createScrollHandler( container ) {
 
 		// Toggle the fixed position based on whether the scrollPosition is greater than the
 		// initial gap from the top minus the padding applied when fixed.
-		container.classList.toggle(
-			'is-fixed-sidebar',
-			scrollPosition > SPACE_TO_TOP + globalNavHeight + localNavOffset - adminBarHeight - paddingTop
-		);
+		const shouldFix =
+			scrollPosition > SPACE_TO_TOP + globalNavHeight + localNavOffset - adminBarHeight - paddingTop;
+		container.classList.toggle( 'is-fixed-sidebar', shouldFix );
 
+		// If the sidebar is fixed and the footer is visible in the viewport, reduce the height to stop overlap.
 		const footerStart = mainEl.offsetTop + mainEl.offsetHeight;
-
-		// Is the footer visible in the viewport?
-		if ( footerStart < scrollPosition + windowHeight ) {
+		if ( shouldFix && footerStart < scrollPosition + windowHeight ) {
 			container.style.setProperty( 'height', `${ footerStart - scrollPosition - container.offsetTop }px` );
 		} else {
 			container.style.removeProperty( 'height' );
