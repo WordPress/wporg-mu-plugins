@@ -4,15 +4,20 @@ namespace WordPressdotorg\MU_Plugins\Plugin_Tweaks\IncompatiblePlugins;
 
 defined( 'WPINC' ) || die();
 
+/**
+ * Plugin config.
+ *
+ * Each item in the array contains a plugin to check (`check`), and a plugin
+ * that should be deactivated (`from`) in favor of another plugin (`to`).
+ */
 const PLUGINS = [
 	[
-		// If this plugin is enabled..
+		// Blocks Everywhere: Uses private/unstable APIs,
+		// which are blocked after GB 16.8.
 		'check' => 'blocks-everywhere/blocks-everywhere.php',
-		// Don't load this plugin..
 		'from'  => 'gutenberg/gutenberg.php',
-		// Instead load this plugin
 		'to'    => 'gutenberg-16.8/gutenberg.php',
-	]
+	],
 ];
 
 /**
