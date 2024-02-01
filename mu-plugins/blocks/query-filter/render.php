@@ -41,7 +41,7 @@ $init_state = [
 	'hasHover' => false,
 	'hasMultiple' => $has_multiple,
 ];
-$encoded_state = wp_json_encode( [ 'wporg' => [ 'queryFilter' => $init_state ] ] );
+$encoded_state = wp_json_encode( $init_state );
 
 // Set up a unique ID for this filter.
 $html_id = wp_unique_id( "filter-{$settings['key']}-" );
@@ -66,43 +66,43 @@ if ( $selected_count && $has_multiple ) {
 ?>
 <div
 	<?php echo get_block_wrapper_attributes(); // phpcs:ignore ?>
-	data-wp-interactive
+	data-wp-interactive="<?php echo esc_attr( '{"namespace":"wporg/query-filter"}' ); ?>"
 	data-wp-context="<?php echo esc_attr( $encoded_state ); ?>"
-	data-wp-effect="effects.wporg.queryFilter.init"
-	data-wp-class--is-modal-open="context.wporg.queryFilter.isOpen"
-	data-wp-on--keydown="actions.wporg.queryFilter.handleKeydown"
+	data-wp-watch="effects.init"
+	data-wp-class--is-modal-open="context.isOpen"
+	data-wp-on--keydown="actions.handleKeydown"
 >
 	<button
 		class="<?php echo esc_attr( implode( ' ', $button_classes ) ); ?>"
-		data-wp-class--is-active="context.wporg.queryFilter.isOpen"
-		data-wp-on--click="actions.wporg.queryFilter.toggle"
-		data-wp-bind--aria-expanded="context.wporg.queryFilter.isOpen"
+		data-wp-class--is-active="context.isOpen"
+		data-wp-on--click="actions.toggle"
+		data-wp-bind--aria-expanded="context.isOpen"
 		aria-controls="<?php echo esc_attr( $html_id ); ?>"
 	><?php echo wp_kses_post( $settings['label'] ); ?></button>
 
 	<div
 		class="wporg-query-filter__modal-backdrop"
-		data-wp-bind--hidden="!context.wporg.queryFilter.isOpen"
-		data-wp-on--click="actions.wporg.queryFilter.toggle"
+		data-wp-bind--hidden="!context.isOpen"
+		data-wp-on--click="actions.toggle"
 	></div>
 
 	<div
 		class="wporg-query-filter__modal"
 		id="<?php echo esc_attr( $html_id ); ?>"
-		data-wp-bind--hidden="!context.wporg.queryFilter.isOpen"
-		data-wp-effect--focus="effects.wporg.queryFilter.focusFirstElement"
-		data-wp-effect--position="effects.wporg.queryFilter.checkPosition"
+		data-wp-bind--hidden="!context.isOpen"
+		data-wp-effect--focus="effects.focusFirstElement"
+		data-wp-effect--position="effects.checkPosition"
 	>
 		<form
 			action="<?php echo esc_attr( $settings['action'] ); ?>"
-			data-wp-on--change="actions.wporg.queryFilter.handleFormChange"
+			data-wp-on--change="actions.handleFormChange"
 		>
 			<div class="wporg-query-filter__modal-header">
 				<h2><?php echo wp_kses_post( $settings['title'] ); ?></h2>
 				<input
 					type="button"
 					class="wporg-query-filter__modal-close"
-					data-wp-on--click="actions.wporg.queryFilter.toggle"
+					data-wp-on--click="actions.toggle"
 					aria-label="<?php esc_attr_e( 'Close', 'wporg' ); ?>"
 				/>
 			</div> <!-- /.wporg-query-filter__modal-header -->
@@ -140,6 +140,9 @@ if ( $selected_count && $has_multiple ) {
 			 * @param WP_Block $block The current block being rendered.
 			 */
 			do_action( 'wporg_query_filter_in_form', $settings['key'], $block );
+
+			/* translators: %s is count of currently selected filters. */
+			$label_count = __( 'Apply (%s)', 'wporg' );
 			?>
 
 			<div class="wporg-query-filter__modal-actions">
@@ -147,11 +150,13 @@ if ( $selected_count && $has_multiple ) {
 					type="button"
 					class="wporg-query-filter__modal-action-clear"
 					value="<?php esc_attr_e( 'Clear', 'wporg' ); ?>"
-					data-wp-on--click="actions.wporg.queryFilter.clearSelection"
+					data-wp-on--click="actions.clearSelection"
 					aria-disabled="<?php echo $selected_count ? 'false' : 'true'; ?>"
 				/>
 				<input
 					type="submit"
+					data-label-with-count="<?php echo esc_attr( $label_count ); ?>"
+					data-label=<?php esc_attr_e( 'Apply', 'wporg' ); ?>
 					value="<?php echo esc_html( $apply_label ); ?>"
 				/>
 			</div> <!-- /.wporg-query-filter__modal-actions -->
