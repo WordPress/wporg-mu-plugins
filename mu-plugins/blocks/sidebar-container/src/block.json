@@ -14,7 +14,7 @@
 		},
 		"inlineBreakpoint": {
 			"type": "string",
-			"default": "1200px"
+			"default": "1300px"
 		}
 	},
 	"supports": {
