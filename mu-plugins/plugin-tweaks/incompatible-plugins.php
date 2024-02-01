@@ -4,6 +4,11 @@ namespace WordPressdotorg\MU_Plugins\Plugin_Tweaks\IncompatiblePlugins;
 
 defined( 'WPINC' ) || die();
 
+// Don't run this on the plugins.php page, as we don't want to operate on filtered options.
+if ( defined( 'WP_ADMIN' ) && WP_ADMIN && str_contains( $_SERVER['REQUEST_URI'] ?? '', '/plugins.php' ) ) {
+	return;
+}
+
 /**
  * Plugin config.
  *
