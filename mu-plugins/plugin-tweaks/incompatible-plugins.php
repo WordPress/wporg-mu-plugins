@@ -61,39 +61,35 @@ function filter_the_filters() {
 			continue;
 		}
 
-		if ( in_array( $from, $active_plugins, true ) ) {
-			add_filter(
-				'option_active_plugins',
-				function( $plugins ) use ( $from, $to ) {
-					$pos = array_search( $from, $plugins, true );
-					if ( false !== $pos ) {
-						// Splice to retain load order, if it's important.
-						array_splice(
-							$plugins,
-							$pos,
-							1,
-							$to
-						);
-					}
-
-					return $plugins;
+		add_filter(
+			'option_active_plugins',
+			function( $plugins ) use ( $from, $to ) {
+				$pos = array_search( $from, $plugins, true );
+				if ( false !== $pos ) {
+					// Splice to retain load order, if it's important.
+					array_splice(
+						$plugins,
+						$pos,
+						1,
+						$to
+					);
 				}
-			);
-		}
 
-		if ( isset( $active_sitewide_plugins[ $from ] ) ) {
-			add_filter(
-				'site_option_active_sitewide_plugins',
-				function( $plugins ) use ( $from, $to ) {
-					if ( isset( $plugins[ $from ] ) ) {
-						$plugins[ $to ] = $plugins[ $from ];
-						unset( $plugins[ $from ] );
-					}
+				return $plugins;
+			}
+		);
 
-					return $plugins;
+		add_filter(
+			'site_option_active_sitewide_plugins',
+			function( $plugins ) use ( $from, $to ) {
+				if ( isset( $plugins[ $from ] ) ) {
+					$plugins[ $to ] = $plugins[ $from ];
+					unset( $plugins[ $from ] );
 				}
-			);
-		}
+
+				return $plugins;
+			}
+		);
 	}
 }
 
