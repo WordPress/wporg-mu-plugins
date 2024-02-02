@@ -36,6 +36,12 @@ const PLUGINS = [
  * Check the above list of plugins, and filter the appropriate option.
  *
  * This needs to be done on plugin inclusion, as network-wide plugins are included immediately after mu-plugins.
+ *
+ * NOTE: This doesn't support blog switching well at all, on a switched blog the filters will be applied to the wrong blog,
+ *       this isn't as bad as it sounds, as loading plugins for other sites from the context of a different site rarely
+ *       works in the first place. Instead, this code simply double-checks that the `$from` plugin is active.
+ *       The `$check` plugin is not checked for in the switched context, as including two different versions of the same
+ *       plugin on the same request is not going to work, so it still needs to attempt to load the versioned version.
  */
 function filter_the_filters() {
 	$active_plugins          = (array) get_option( 'active_plugins', [] );
@@ -55,33 +61,35 @@ function filter_the_filters() {
 			continue;
 		}
 
-		if ( in_array( $from, $active_plugins, true ) ) {
-			add_filter(
-				'option_active_plugins',
-				function( $plugins ) use ( $from, $to ) {
+		add_filter(
+			'option_active_plugins',
+			function( $plugins ) use ( $from, $to ) {
+				$pos = array_search( $from, $plugins, true );
+				if ( false !== $pos ) {
 					// Splice to retain load order, if it's important.
 					array_splice(
 						$plugins,
-						array_search( $from, $plugins, true ),
+						$pos,
 						1,
 						$to
 					);
-					return $plugins;
 				}
-			);
-		}
 
-		if ( isset( $active_sitewide_plugins[ $from ] ) ) {
-			add_filter(
-				'site_option_active_sitewide_plugins',
-				function( $plugins ) use ( $from, $to ) {
+				return $plugins;
+			}
+		);
+
+		add_filter(
+			'site_option_active_sitewide_plugins',
+			function( $plugins ) use ( $from, $to ) {
+				if ( isset( $plugins[ $from ] ) ) {
 					$plugins[ $to ] = $plugins[ $from ];
 					unset( $plugins[ $from ] );
-
-					return $plugins;
 				}
-			);
-		}
+
+				return $plugins;
+			}
+		);
 	}
 }
 
