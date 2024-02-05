@@ -114,6 +114,7 @@
 	/* Navigation. */
 
 	/* Remove padding from menu items with background color, which is used to color the modal background. */
+	& .wp-block-navigation ul.has-background,
 	& .wp-block-navigation:where(.has-background) .wp-block-navigation-item a:not(.wp-element-button),
 	& .wp-block-navigation:where(.has-background) .wp-block-navigation-submenu a:not(.wp-element-button) {
 		padding: 0;
@@ -130,6 +131,13 @@
 			padding-left: var(--wp--preset--spacing--edge-space) !important;
 			padding-top: 21px !important;
 			padding-bottom: 18px !important;
+
+			& .wp-block-navigation__submenu-container {
+				padding: 0 !important;
+				padding-inline-start: var(--wp--preset--spacing--20, 20px) !important;
+				margin-top: var(--wp--preset--spacing--20, 20px) !important;
+				gap: var(--wp--preset--spacing--20, 20px) !important;
+			}
 		}
 	}
 
