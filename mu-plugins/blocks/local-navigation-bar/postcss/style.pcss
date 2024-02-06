@@ -92,6 +92,25 @@
 		}
 	}
 
+	& .wp-block-group {
+		& p {
+			position: relative;
+			margin-inline-end: var(--wp--preset--spacing--10);
+			padding-inline-end: var(--wp--preset--spacing--10);
+
+			&::after {
+				content: "\2022";
+				position: absolute;
+				inset-inline-end: -4px;
+				opacity: 0.4;
+			}
+
+			&:last-of-type::after {
+				display: none;
+			}
+		}
+	}
+
 	/* Navigation. */
 
 	/* Remove padding from menu items with background color, which is used to color the modal background. */
