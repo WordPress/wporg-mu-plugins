@@ -36,10 +36,21 @@
 			}
 		}
 
-		&.is-sticking .global-header__wporg-logo-mark {
-			opacity: 1;
-			top: 0;
-			visibility: visible;
+		& .wporg-local-navigation-bar__show-on-scroll {
+			position: relative;
+			top: -5px;
+			opacity: 0;
+			transition: all 0.2s ease-in-out;
+			visibility: hidden;
+		}
+
+		&.is-sticking {
+			& .global-header__wporg-logo-mark,
+			& .wporg-local-navigation-bar__show-on-scroll {
+				opacity: 1;
+				top: 0;
+				visibility: visible;
+			}
 		}
 	}
 
