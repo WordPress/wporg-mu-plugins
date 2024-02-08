@@ -1,3 +1,8 @@
+/* Set up the custom properties. These can be overridden by settings in theme.json. */
+:where(body) {
+	--wp--custom--local-navigation-bar--spacing--height: 60px;
+}
+
 :where(.wp-block-wporg-local-navigation-bar) {
 	background-color: var(--wp--preset--color--blueberry-1);
 	color: var(--wp--preset--color--white);
@@ -9,7 +14,7 @@
 
 	/* If a sticky element is next, it needs to account for the nav bar offset. */
 	& + :where(.wp-block-group.is-position-sticky) {
-		top: calc(var(--wp-admin--admin-bar--height, 0px) + 60px);
+		top: calc(var(--wp-admin--admin-bar--height, 0px) + var(--wp--custom--local-navigation-bar--spacing--height));
 	}
 }
 
@@ -166,9 +171,4 @@
 	#wp--skip-link--target {
 		scroll-margin-top: var(--wp--custom--local-navigation-bar--spacing--height, 0);
 	}
-}
-
-/* Set up the custom properties. These can be overridden by settings in theme.json. */
-:where(body) {
-	--wp--custom--local-navigation-bar--spacing--height: 60px;
 }
