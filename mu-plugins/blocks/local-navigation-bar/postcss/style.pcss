@@ -12,6 +12,22 @@
 
 	top: var(--wp-admin--admin-bar--height, 0);
 
+	/* Set this as a custom property so that it can be changed based on container background. */
+	--wp--custom--local-navigation-bar--focus--color: var(--wp--preset--color--white);
+
+	&:where(.has-background) {
+		--wp--custom--local-navigation-bar--focus--color: var(--wp--preset--color--charcoal-5);
+	}
+
+	&:where(.has-white-background-color) {
+		--wp--custom--local-navigation-bar--focus--color: var(--wp--preset--color--blueberry-1);
+	}
+
+	&:where(.has-charcoal-1-background-color),
+	&:where(.has-charcoal-2-background-color) {
+		--wp--custom--local-navigation-bar--focus--color: var(--wp--preset--color--blueberry-2);
+	}
+
 	/* If a sticky element is next, it needs to account for the nav bar offset. */
 	& + :where(.wp-block-group.is-position-sticky) {
 		top: calc(var(--wp-admin--admin-bar--height, 0px) + var(--wp--custom--local-navigation-bar--spacing--height));
@@ -20,6 +36,17 @@
 
 .wp-block-wporg-local-navigation-bar {
 	height: var(--wp--custom--local-navigation-bar--spacing--height);
+
+	& a:where(:not(.wp-element-button)) {
+		margin: calc(var(--wp--preset--spacing--10) / -2);
+		padding: calc(var(--wp--preset--spacing--10) / 2);
+
+		&:focus-visible {
+			outline: none;
+			border-radius: 2px;
+			box-shadow: 0 0 0 1.5px var(--wp--custom--local-navigation-bar--focus--color);
+		}
+	}
 
 	@media (min-width: 890px) {
 		& .global-header__wporg-logo-mark {
@@ -117,51 +144,112 @@
 	}
 
 	/* Navigation. */
+	& .wp-block-navigation {
+		& .wp-block-navigation-submenu__toggle {
+			padding-block: calc(var(--wp--preset--spacing--10) / 2);
+			padding-inline-start: calc(var(--wp--preset--spacing--10) / 2);
+			padding-inline-end: calc(var(--wp--preset--spacing--10) / 2 + 1em);
 
-	/* Remove padding from menu items with background color, which is used to color the modal background. */
-	& .wp-block-navigation ul.has-background,
-	& .wp-block-navigation:where(.has-background) .wp-block-navigation-item a:not(.wp-element-button),
-	& .wp-block-navigation:where(.has-background) .wp-block-navigation-submenu a:not(.wp-element-button) {
-		padding: 0;
-	}
+			&:focus-visible {
+				outline: none;
+				border-radius: 2px;
+				box-shadow: inset 0 0 0 1.5px var(--wp--custom--local-navigation-bar--focus--color);
+			}
 
-	& .wp-block-navigation__responsive-container {
+			& + .wp-block-navigation__submenu-icon {
+				margin-left: -1em;
+				width: 1em;
+			}
+		}
 
-		/* Adjust the modal container so the close button is not hidden by the global header when open. */
-		@media (max-width: 599px) {
-			top: var(--wp-global-header-height);
+		& .wp-block-navigation__submenu-container {
+			top: calc(100% + 10px) !important;
+			left: auto !important;
+			right: 0 !important;
+			padding: calc(var(--wp--preset--spacing--10) / 2) !important;
 
-			/* Matches the padding of the global header button. */
-			padding-right: calc(16px + var(--wp--custom--alignment--scroll-bar-width)) !important;
-			padding-left: var(--wp--preset--spacing--edge-space) !important;
-			padding-top: 21px !important;
-			padding-bottom: 18px !important;
-
-			& .wp-block-navigation__submenu-container {
-				padding: 0 !important;
-				padding-inline-start: var(--wp--preset--spacing--20, 20px) !important;
-				margin-top: var(--wp--preset--spacing--20, 20px) !important;
-				gap: var(--wp--preset--spacing--20, 20px) !important;
+			a:where(:not(.wp-element-button)):focus-visible {
+				box-shadow: inset 0 0 0 1.5px var(--wp--custom--local-navigation-bar--focus--color);
 			}
 		}
 	}
 
-	& .wp-block-navigation .wp-block-navigation__submenu-container {
-		top: calc(100% + 10px) !important;
-		left: auto !important;
-		right: 0 !important;
+	& .wp-block-navigation.is-collapsed {
 
-		& .wp-block-navigation-item {
-			display: block;
+		/* Remove padding from menu items with background color, which is used to color the modal background. */
+		&  ul.has-background {
+			padding: 0;
 		}
 
-		& .wp-block-navigation__submenu-icon {
-			display: none;
+		& .wp-block-navigation__responsive-container-open,
+		& .wp-block-navigation__responsive-container-close {
+			padding: 18px;
+
+			&:focus-visible {
+				outline: none;
+				border-radius: 2px;
+				box-shadow: inset 0 0 0 1.5px var(--wp--custom--local-navigation-bar--focus--color);
+			}
 		}
 
-		& .wp-block-navigation__submenu-container {
-			border: none;
-			margin-left: 8px;
+		&  .wp-block-navigation__responsive-container-close {
+			margin-block-start: calc(var(--wp--custom--local-navigation-bar--spacing--height) * -1) !important;
+
+			@media (max-width: 599px) {
+				margin-inline-end: calc(16px + var(--wp--custom--alignment--scroll-bar-width));
+			}
+		}
+
+		& .wp-block-navigation__responsive-close,
+		& .wp-block-navigation__responsive-container-close,
+		& .wp-block-navigation__responsive-dialog {
+			background-color: inherit;
+		}
+
+		& .wp-block-navigation__container,
+		& .wp-block-navigation-item,
+		& .wp-block-navigation-item__content {
+			width: 100%;
+		}
+
+		& .wp-block-navigation__responsive-container {
+			top: calc(var(--wp--custom--local-navigation-bar--spacing--height) + var(--wp-global-header-offset)) !important;
+			min-width: 14rem;
+
+			/* Make the close button visible, even though it's pulled out of this frame. */
+			overflow: visible;
+
+			& .wp-block-navigation__responsive-container-content {
+				padding-block-start: calc(var(--wp--preset--spacing--10) / 2) !important;
+				padding-inline: var(--wp--preset--spacing--10) !important;
+				padding-block-end: calc(var(--wp--preset--spacing--10) / 2) !important;
+			}
+
+			@media (min-width: 600px) {
+				position: absolute !important;
+				top: var(--wp--custom--local-navigation-bar--spacing--height) !important;
+				bottom: auto !important;
+				left: auto !important;
+			}
+		}
+
+		& .wp-block-navigation__responsive-container-content {
+			gap: 0;
+
+			& .wp-block-navigation-item {
+				display: block;
+
+				& .wp-block-navigation-item__content {
+					margin: 0;
+					padding: var(--wp--preset--spacing--10);
+
+					&:focus-visible {
+						outline: none;
+						border-radius: 2px;
+						box-shadow: inset 0 0 0 1.5px var(--wp--custom--local-navigation-bar--focus--color);
+					}
+				}
+			}
 		}
 	}
 }
