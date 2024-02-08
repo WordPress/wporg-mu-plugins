@@ -10,8 +10,8 @@ namespace WordPressdotorg\MU_Plugins\LocalNavigationBar_Block;
 
 add_action( 'init', __NAMESPACE__ . '\init' );
 add_filter( 'render_block_data', __NAMESPACE__ . '\update_block_attributes' );
-add_filter( 'render_block_wporg/local-navigation-bar', __NAMESPACE__ . '\customize_navigation_block_icon', 10, 2 );
 add_filter( 'render_block_data', __NAMESPACE__ . '\update_child_block_attributes', 10, 3 );
+add_filter( 'render_block_wporg/local-navigation-bar', __NAMESPACE__ . '\customize_navigation_block_icon' );
 
 /**
  * Registers the block using the metadata loaded from the `block.json` file.
@@ -98,20 +98,44 @@ function update_child_block_attributes( $parsed_block, $source_block, $parent_bl
 			'type' => 'flex',
 			'orientation' => 'horizontal',
 		);
+
+		// Add an extra navigation block which is always collapsed, so that it
+		// can be swapped out when the section title + nav menu collide.
+		add_filter( 'render_block_core/navigation', __NAMESPACE__ . '\add_extra_navigation', 10, 3 );
 	}
 
 	return $parsed_block;
 }
+
+/**
+ * Inject an extra navigation block into the local nav, which is enabled when the section title is long.
+ */
+function add_extra_navigation( $block_content, $block ) {
+	remove_filter( 'render_block_core/navigation', __NAMESPACE__ . '\add_extra_navigation', 10, 3 );
+
+	// This menu should always be in the collapsed state.
+	$block['attrs']['overlayMenu'] = 'always';
+
+	if ( isset( $block['attrs']['className'] ) ) {
+		$block['attrs']['className'] .= ' wporg-is-collapsed-nav';
+	} else {
+		$block['attrs']['className'] = 'wporg-is-collapsed-nav';
+	}
+
+	$menu_block_content = do_blocks( '<!-- wp:navigation ' . wp_json_encode( $block['attrs'] ) . ' /-->' );
+	$menu_block_content = customize_navigation_block_icon( $menu_block_content );
+	return $block_content . $menu_block_content;
+}
+
 /**
  * Replace a nested navigation block mobile button icon with a caret icon.
  * Only applies if it has the 3 bar icon set, as this has an svg with <path> to update.
  *
  * @param string $block_content The block content.
- * @param array  $block The parsed block data.
  *
  * @return string
  */
-function customize_navigation_block_icon( $block_content, $block ) {
+function customize_navigation_block_icon( $block_content ) {
 	$tag_processor = new \WP_HTML_Tag_Processor( $block_content );
 
 	if (

@@ -252,6 +252,20 @@
 			}
 		}
 	}
+
+	& .wp-block-navigation.wporg-is-collapsed-nav {
+		display: none;
+	}
+
+	&.wporg-show-collapsed-nav {
+		& .wp-block-navigation {
+			display: none;
+		}
+
+		& .wp-block-navigation.wporg-is-collapsed-nav {
+			display: block;
+		}
+	}
 }
 
 @media (min-width: 890px) {
