@@ -36,9 +36,9 @@
 
 .wp-block-wporg-local-navigation-bar {
 	height: var(--wp--custom--local-navigation-bar--spacing--height);
+	margin-inline-start: calc(var(--wp--preset--spacing--10) / -2);
 
 	& a:where(:not(.wp-element-button)) {
-		margin: calc(var(--wp--preset--spacing--10) / -2);
 		padding: calc(var(--wp--preset--spacing--10) / 2);
 
 		&:focus-visible {
@@ -61,6 +61,7 @@
 			& a {
 				display: block;
 				color: inherit;
+				padding: 0;
 			}
 
 			& svg {
@@ -195,7 +196,7 @@
 		&  .wp-block-navigation__responsive-container-close {
 			margin-block-start: calc(var(--wp--custom--local-navigation-bar--spacing--height) * -1) !important;
 
-			@media (max-width: 599px) {
+			@media (max-width: 600px) {
 				margin-inline-end: calc(16px + var(--wp--custom--alignment--scroll-bar-width));
 			}
 		}
@@ -225,7 +226,7 @@
 				padding-block-end: calc(var(--wp--preset--spacing--10) / 2) !important;
 			}
 
-			@media (min-width: 600px) {
+			@media (min-width: 601px) {
 				position: absolute !important;
 				top: var(--wp--custom--local-navigation-bar--spacing--height) !important;
 				bottom: auto !important;
