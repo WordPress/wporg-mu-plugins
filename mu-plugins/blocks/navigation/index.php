@@ -94,6 +94,34 @@ function get_menu_content( $menu_slug ) {
 
 	$menu_content = '';
 	foreach ( $menu_items as $item ) {
+		$menu_content .= render_menu_item( $item );
+	}
+
+	return $menu_content;
+}
+
+/**
+ * Render an individual navigation item, to support recursively building submenus.
+ *
+ * @param array $item
+ *
+ * @return string Menu item in block syntax.
+ */
+function render_menu_item( $item ) {
+	$output = '';
+
+	if ( isset( $item['submenu'] ) ) {
+		$output = sprintf(
+			'<!-- wp:navigation-submenu {"label":"%1$s","url":"#","kind":"custom"} -->',
+			$item['label']
+		);
+
+		foreach ( $item['submenu'] as $submenu_item ) {
+			$output .= render_menu_item( $submenu_item, false );
+		}
+
+		$output .= '<!-- /wp:navigation-submenu -->';
+	} else {
 		$block_code = '<!-- wp:navigation-link {"label":"%1$s","url":"%2$s","kind":"custom"} /-->';
 
 		// If this is a relative link, convert it to absolute and try to find
@@ -108,7 +136,7 @@ function get_menu_content( $menu_slug ) {
 			}
 		}
 
-		$menu_content .= sprintf(
+		$output .= sprintf(
 			$block_code,
 			esc_html( $item['label'] ),
 			esc_url( $item['url'], ),
@@ -116,7 +144,7 @@ function get_menu_content( $menu_slug ) {
 		);
 	}
 
-	return $menu_content;
+	return $output;
 }
 
 /**
