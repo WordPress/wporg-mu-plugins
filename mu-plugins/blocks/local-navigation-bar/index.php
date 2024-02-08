@@ -48,7 +48,7 @@ function update_block_attributes( $block ) {
 		// Set layout values if they don't exist.
 		$default_layout = array(
 			'type' => 'flex',
-			'flexWrap' => 'wrap',
+			'flexWrap' => 'nowrap',
 			'justifyContent' => 'space-between',
 		);
 		if ( ! empty( $block['attrs']['layout'] ) ) {
