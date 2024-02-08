@@ -11,6 +11,7 @@ namespace WordPressdotorg\MU_Plugins\LocalNavigationBar_Block;
 add_action( 'init', __NAMESPACE__ . '\init' );
 add_filter( 'render_block_data', __NAMESPACE__ . '\update_block_attributes' );
 add_filter( 'render_block_wporg/local-navigation-bar', __NAMESPACE__ . '\customize_navigation_block_icon', 10, 2 );
+add_filter( 'render_block_data', __NAMESPACE__ . '\update_child_block_attributes', 10, 3 );
 
 /**
  * Registers the block using the metadata loaded from the `block.json` file.
@@ -69,6 +70,38 @@ function update_block_attributes( $block ) {
 	return $block;
 }
 
+/**
+ * Ensure the child navigation block uses the expected attributes.
+ *
+ * @param array         $parsed_block The block being rendered.
+ * @param array         $source_block An un-modified copy of $parsed_block, as it appeared in the source content.
+ * @param WP_Block|null $parent_block If this is a nested block, a reference to the parent block.
+ *
+ * @return array The updated block.
+ */
+function update_child_block_attributes( $parsed_block, $source_block, $parent_block ) {
+	if ( empty( $parsed_block['blockName'] ) ) {
+		return $parsed_block;
+	}
+
+	// If navigation block…
+	if ( 'core/navigation' === $parsed_block['blockName'] ) {
+		// with the local navigation bar as a parent…
+		if ( ! $parent_block || 'wporg/local-navigation-bar' !== $parent_block->name ) {
+			return $parsed_block;
+		}
+		// set the values we need.
+		$parsed_block['attrs']['icon'] = 'menu';
+		$parsed_block['attrs']['fontSize'] = 'small';
+		$parsed_block['attrs']['openSubmenusOnClick'] = true;
+		$parsed_block['attrs']['layout'] = array(
+			'type' => 'flex',
+			'orientation' => 'horizontal',
+		);
+	}
+
+	return $parsed_block;
+}
 /**
  * Replace a nested navigation block mobile button icon with a caret icon.
  * Only applies if it has the 3 bar icon set, as this has an svg with <path> to update.
