@@ -10,7 +10,7 @@ namespace WordPressdotorg\MU_Plugins\LocalNavigationBar_Block;
 
 add_action( 'init', __NAMESPACE__ . '\init' );
 add_filter( 'render_block_data', __NAMESPACE__ . '\update_block_attributes' );
-add_filter( 'render_block', __NAMESPACE__ . '\customize_navigation_block_icon', 10, 2 );
+add_filter( 'render_block_wporg/local-navigation-bar', __NAMESPACE__ . '\customize_navigation_block_icon', 10, 2 );
 
 /**
  * Registers the block using the metadata loaded from the `block.json` file.
@@ -71,7 +71,7 @@ function update_block_attributes( $block ) {
 
 /**
  * Replace a nested navigation block mobile button icon with a caret icon.
- * Only applies if it has the 3 bar icon set, as this has an svg with <path> to update. 
+ * Only applies if it has the 3 bar icon set, as this has an svg with <path> to update.
  *
  * @param string $block_content The block content.
  * @param array  $block The parsed block data.
@@ -79,37 +79,41 @@ function update_block_attributes( $block ) {
  * @return string
  */
 function customize_navigation_block_icon( $block_content, $block ) {
-	if ( ! empty( $block['blockName'] ) && 'wporg/local-navigation-bar' === $block['blockName'] ) {
-		$tag_processor = new \WP_HTML_Tag_Processor( $block_content );
+	$tag_processor = new \WP_HTML_Tag_Processor( $block_content );
+
+	if (
+		$tag_processor->next_tag(
+			array(
+				'tag_name' => 'nav',
+				'class_name' => 'wp-block-navigation',
+			)
+		)
+	) {
+		if (
+			$tag_processor->next_tag(
+				array(
+					'tag_name' => 'button',
+					'class_name' => 'wp-block-navigation__responsive-container-open',
+				)
+			) &&
+			$tag_processor->next_tag( 'path' )
+		) {
+			$tag_processor->set_attribute( 'd', 'M17.5 11.6L12 16l-5.5-4.4.9-1.2L12 14l4.5-3.6 1 1.2z' );
+		}
 
 		if (
-			$tag_processor->next_tag( array( 
-				'tag_name' => 'nav', 
-				'class_name' => 'wp-block-navigation' 
-			)
-		) ) {
-			if ( 
-				$tag_processor->next_tag( array( 
-					'tag_name' => 'button', 
-					'class_name' => 'wp-block-navigation__responsive-container-open' 
-				) ) &&
-				$tag_processor->next_tag( 'path' )
-			) {
-				$tag_processor->set_attribute( 'd', 'M17.5 11.6L12 16l-5.5-4.4.9-1.2L12 14l4.5-3.6 1 1.2z' );
-			}
-		
-			if ( 
-				$tag_processor->next_tag( array( 
-					'tag_name' => 'button', 
-					'class_name' => 'wp-block-navigation__responsive-container-close' 
-				) ) &&
-				$tag_processor->next_tag( 'path' )
-			) {
-				$tag_processor->set_attribute( 'd', 'M6.5 12.4L12 8l5.5 4.4-.9 1.2L12 10l-4.5 3.6-1-1.2z' );
-			}
-		
-			return $tag_processor->get_updated_html();
+			$tag_processor->next_tag(
+				array(
+					'tag_name' => 'button',
+					'class_name' => 'wp-block-navigation__responsive-container-close',
+				)
+			) &&
+			$tag_processor->next_tag( 'path' )
+		) {
+			$tag_processor->set_attribute( 'd', 'M6.5 12.4L12 8l5.5 4.4-.9 1.2L12 10l-4.5 3.6-1-1.2z' );
 		}
+
+		return $tag_processor->get_updated_html();
 	}
 
 	return $block_content;
