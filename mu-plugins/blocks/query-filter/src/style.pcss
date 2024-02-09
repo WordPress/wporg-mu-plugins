@@ -245,10 +245,12 @@
 	}
 
 	.wporg-query-filter__modal-backdrop {
+		display: none;
 		background-color: rgba(0, 0, 0, 0.15);
 	}
 
 	.wporg-query-filter__modal {
+		display: none;
 		position: fixed;
 		top: 20vh;
 		bottom: 20vh;
@@ -300,6 +302,10 @@
 
 
 	.is-modal-open {
+		& .wporg-query-filter__modal {
+			display: block;
+		}
+
 		& .wporg-query-filter__modal-backdrop {
 			display: block;
 		}
