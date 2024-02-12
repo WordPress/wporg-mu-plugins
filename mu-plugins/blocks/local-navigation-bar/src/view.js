@@ -36,6 +36,64 @@ function init() {
 
 		document.addEventListener( 'scroll', debounce( onScroll ), { passive: true } );
 		onScroll();
+
+		// Check the size of child elements to determine if the local navigation
+		// menu should be collapsed in mobile-view by default. If so, toggle a
+		// CSS class to show the nav block with {"overlayMenu":"always"}
+		// added by `add_extra_navigation`.
+		const onResize = () => {
+			// Bail early on small screens, the visible nav block is already mobile.
+			if ( window.innerWidth <= 600 ) {
+				container.classList.remove( 'wporg-show-collapsed-nav' );
+				return;
+			}
+
+			// Fetch the navWidth from a data value which is set on page load,
+			// so that the uncollapsed visible menu's width is used.
+			let navWidth = container.dataset.navWidth;
+			if ( ! navWidth ) {
+				// Get the nav width based on items, so that it stays
+				// consistent even if the menu wraps to a new line.
+				const menuItems = container.querySelectorAll(
+					'nav:not(.wporg-is-collapsed-nav) .wp-block-navigation__container > li'
+				);
+				navWidth =
+					[ ...menuItems ].reduce(
+						( acc, current ) => ( acc += current.getBoundingClientRect().width ),
+						0
+					) +
+					20 * ( menuItems.length - 1 ); // 20px gap between items.
+
+				// Save the value for future resize callbacks.
+				container.dataset.navWidth = Math.ceil( navWidth );
+			}
+
+			const {
+				paddingInlineStart = '0px',
+				paddingInlineEnd = '0px',
+				gap = '0px',
+			} = window.getComputedStyle( container );
+
+			const availableWidth =
+				window.innerWidth -
+				paddingInlineStart.replace( 'px', '' ) * 1 -
+				paddingInlineEnd.replace( 'px', '' ) * 1 -
+				gap.replace( 'px', '' ) * 1;
+
+			const titleElement = container.querySelector( 'p.wp-block-site-title, div.wp-block-group' );
+			const { width: titleWidth } = titleElement.getBoundingClientRect();
+
+			const usedWidth = Math.ceil( titleWidth ) + Math.ceil( navWidth );
+
+			if ( usedWidth > availableWidth ) {
+				container.classList.add( 'wporg-show-collapsed-nav' );
+			} else {
+				container.classList.remove( 'wporg-show-collapsed-nav' );
+			}
+		};
+
+		window.addEventListener( 'resize', debounce( onResize ), { passive: true } );
+		onResize();
 	}
 }
 window.addEventListener( 'load', init );
