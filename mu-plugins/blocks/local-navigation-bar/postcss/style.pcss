@@ -128,24 +128,30 @@
 	& .wp-block-group {
 		& p {
 			position: relative;
-			margin-inline-end: var(--wp--preset--spacing--10);
-			padding-inline-end: var(--wp--preset--spacing--10);
+			margin-inline-start: var(--wp--preset--spacing--10);
+			padding-inline-start: var(--wp--preset--spacing--10);
 
-			&::after {
+			&::before {
 				content: "\2022";
 				position: absolute;
-				inset-inline-end: -2px;
+				inset-inline-start: -5px;
 				opacity: 0.4;
 			}
 
-			&:last-of-type {
-				margin-inline-end: 0;
-				padding-inline-end: 0;
+			&:first-of-type {
+				margin-inline-start: 0;
+				padding-inline-start: 0;
 
-				&::after {
+				&::before {
 					display: none;
 				}
 			}
+		}
+	}
+
+	@media ( max-width: 550px ) {
+		& .wp-block-group p:not(.wp-block-site-title) {
+			display: none;
 		}
 	}
 
