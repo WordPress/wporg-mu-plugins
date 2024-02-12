@@ -44,7 +44,7 @@
 		&:focus-visible {
 			outline: none;
 			border-radius: 2px;
-			box-shadow: 0 0 0 1.5px var(--wp--custom--local-navigation-bar--focus--color);
+			box-shadow: inset 0 0 0 1.5px var(--wp--custom--local-navigation-bar--focus--color);
 		}
 	}
 
@@ -129,6 +129,7 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+		padding-block: 5px; /* Add space for the focus outline. */
 
 		& p {
 			position: relative;
