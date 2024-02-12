@@ -52,17 +52,17 @@ function init() {
 			// so that the uncollapsed visible menu's width is used.
 			let navWidth = container.dataset.navWidth;
 			if ( ! navWidth ) {
+				const navElement = container.querySelector( 'nav:not(.wporg-is-collapsed-nav)' );
+				const navGap = ( window.getComputedStyle( navElement ).gap || '20px' ).replace( 'px', '' ) * 1;
 				// Get the nav width based on items, so that it stays
 				// consistent even if the menu wraps to a new line.
-				const menuItems = container.querySelectorAll(
-					'nav:not(.wporg-is-collapsed-nav) .wp-block-navigation__container > li'
-				);
+				const menuItems = navElement.querySelectorAll( '.wp-block-navigation__container > li' );
 				navWidth =
 					[ ...menuItems ].reduce(
 						( acc, current ) => ( acc += current.getBoundingClientRect().width ),
 						0
 					) +
-					20 * ( menuItems.length - 1 ); // 20px gap between items.
+					navGap * ( menuItems.length - 1 ); // 20px gap between items.
 
 				// Save the value for future resize callbacks.
 				container.dataset.navWidth = Math.ceil( navWidth );
