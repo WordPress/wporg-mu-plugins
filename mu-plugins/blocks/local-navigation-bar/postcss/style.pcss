@@ -134,12 +134,17 @@
 			&::after {
 				content: "\2022";
 				position: absolute;
-				inset-inline-end: -4px;
+				inset-inline-end: -2px;
 				opacity: 0.4;
 			}
 
-			&:last-of-type::after {
-				display: none;
+			&:last-of-type {
+				margin-inline-end: 0;
+				padding-inline-end: 0;
+
+				&::after {
+					display: none;
+				}
 			}
 		}
 	}
