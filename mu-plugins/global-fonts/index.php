@@ -41,6 +41,9 @@ function relative_to_absolute_urls( $editor_settings ) {
 	}
 
 	foreach ( $editor_settings['styles'] as $i => $style ) {
+		if ( ! isset( $style['css'] ) ) {
+			continue;
+		}
 		if ( str_contains( $style['css'], './Inter' ) || str_contains( $style['css'], './EB-Garamond' ) ) {
 			$url = plugins_url( '', __FILE__ );
 			$style['css'] = str_replace( 'url(./', "url($url/", $style['css'] );
