@@ -7,6 +7,10 @@
 		@media (max-width: 889px) {
 			z-index: 100000; /* admin bar + 1. */
 		}
+
+		& .wporg-query-filter__modal {
+			display: block;
+		}
 	}
 }
 
@@ -106,6 +110,7 @@
 		var(--wp--custom--wporg-query-filters--border--color);
 	background-color: var(--wp--custom--wporg-query-filters--color--background);
 	color: var(--wp--custom--wporg-query-filters--color--text);
+	display: none;
 
 	& .wporg-query-filter__modal-header {
 		display: none;
@@ -250,7 +255,6 @@
 	}
 
 	.wporg-query-filter__modal {
-		display: none;
 		position: fixed;
 		top: 20vh;
 		bottom: 20vh;
@@ -302,10 +306,6 @@
 
 
 	.is-modal-open {
-		& .wporg-query-filter__modal {
-			display: block;
-		}
-
 		& .wporg-query-filter__modal-backdrop {
 			display: block;
 		}
