@@ -11,6 +11,7 @@ const rtlcss = require( 'rtlcss' );
 const { sync: resolveBin } = require( 'resolve-bin' );
 const { sync: spawn } = require( 'cross-spawn' );
 const postCssConfig = require( '../postcss.config.js' );
+const { hashElement } = require('folder-hash');
 
 /**
  * Build the files, if the `src` directory exists.
@@ -88,6 +89,49 @@ async function maybeBuildPostCSS( inputDir, outputDir ) {
 	}
 }
 
+/**
+ * Update the block.json version field with the hash of the build.
+ *
+ * @param {string} basePath
+ */
+async function setBlockVersion( basePath ) {
+	const project = path.basename( basePath );
+	let blockJson;
+
+	const paths = [
+		basePath + '/block.json',
+		basePath + '/build/block.json',
+		basePath + '/src/block.json'
+	];
+	for ( let i = 0; i < paths.length; i++ ) {
+		if ( fs.existsSync( paths[ i ] ) ) {
+			blockJson = paths[i];
+			break;
+		}
+	}
+
+	if ( ! blockJson ) {
+		console.log( chalk.red( `Couldn't find block.json for ${ project }` ) );
+		return;
+	}
+
+	const blockJsonContents = require( blockJson );
+
+	const options = {
+		algo: 'sha1',
+		encoding: 'hex',
+	};
+
+	await hashElement( basePath, options ).then( hash => {
+		blockJsonContents.version = blockJsonContents.version.replace( /(^|-)[0-9a-f]{40}$/, '' ) || '';
+		blockJsonContents.version += ( blockJsonContents.version ? '-' : '' ) + hash.hash;
+
+		fs.writeFileSync( blockJson, JSON.stringify( blockJsonContents, null, '\t' ) );
+	} );
+
+	console.log( chalk.green( `block.json version set for ${ project } to ${ blockJsonContents.version }` ) );
+}
+
 // If we have more paths that need building, we could switch this to an array.
 const projectPath = path.join( path.dirname( __dirname ), 'mu-plugins/blocks' );
 const cliProjects = process.argv.slice( 2 );
@@ -115,6 +159,8 @@ projects.forEach( async ( file ) => {
 		await maybeBuildBlock( path.resolve( path.join( basePath, 'src' ) ), outputDir );
 
 		await maybeBuildPostCSS( path.resolve( path.join( basePath, 'postcss' ) ), outputDir );
+
+		await setBlockVersion( basePath );
 	} catch ( error ) {
 		console.log( chalk.red( `Error in ${ file }:` ), error.message );
 	}
