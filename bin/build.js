@@ -11,7 +11,7 @@ const rtlcss = require( 'rtlcss' );
 const { sync: resolveBin } = require( 'resolve-bin' );
 const { sync: spawn } = require( 'cross-spawn' );
 const postCssConfig = require( '../postcss.config.js' );
-const { hashElement } = require('folder-hash');
+const { hashElement } = require( 'folder-hash' );
 
 /**
  * Build the files, if the `src` directory exists.
@@ -105,7 +105,7 @@ async function setBlockVersion( basePath ) {
 	];
 	for ( let i = 0; i < paths.length; i++ ) {
 		if ( fs.existsSync( paths[ i ] ) ) {
-			blockJson = paths[i];
+			blockJson = paths[ i ];
 			break;
 		}
 	}
