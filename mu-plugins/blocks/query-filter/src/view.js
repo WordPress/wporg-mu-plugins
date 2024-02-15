@@ -15,8 +15,6 @@ const focusableSelectors = [
 ];
 
 const { actions } = store( 'wporg/query-filter', {
-	// Need to add real code to bump the version hash.
-	CACHEBUSTER: 20240201,
 	actions: {
 		/**
 		 * Toggles the overflow-x style of the query filter between 'hidden' and 'scroll'.
