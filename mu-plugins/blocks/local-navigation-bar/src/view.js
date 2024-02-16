@@ -80,7 +80,10 @@ function init() {
 				paddingInlineEnd.replace( 'px', '' ) * 1 -
 				gap.replace( 'px', '' ) * 1;
 
-			const titleElement = container.querySelector( 'p.wp-block-site-title, div.wp-block-group' );
+			const titleElement = container.querySelector( '.wp-block-site-title, div.wp-block-group' );
+			if ( ! titleElement ) {
+				return;
+			}
 			const { width: titleWidth } = titleElement.getBoundingClientRect();
 
 			const usedWidth = Math.ceil( titleWidth ) + Math.ceil( navWidth );
