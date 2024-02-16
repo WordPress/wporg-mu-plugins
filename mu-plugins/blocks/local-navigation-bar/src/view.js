@@ -53,7 +53,7 @@ function init() {
 			let navWidth = container.dataset.navWidth;
 			if ( ! navWidth ) {
 				const navElement = container.querySelector( 'nav:not(.wporg-is-collapsed-nav)' );
-				const navGap = ( window.getComputedStyle( navElement ).gap || '20px' ).replace( 'px', '' ) * 1;
+				const navGap = parseInt( window.getComputedStyle( navElement ).gap, 10 ) || 20;
 				// Get the nav width based on items, so that it stays
 				// consistent even if the menu wraps to a new line.
 				const menuItems = navElement.querySelectorAll( '.wp-block-navigation__container > li' );
@@ -76,9 +76,9 @@ function init() {
 
 			const availableWidth =
 				window.innerWidth -
-				paddingInlineStart.replace( 'px', '' ) * 1 -
-				paddingInlineEnd.replace( 'px', '' ) * 1 -
-				gap.replace( 'px', '' ) * 1;
+				parseInt( paddingInlineStart, 10 ) -
+				parseInt( paddingInlineEnd, 10 ) -
+				parseInt( gap, 10 );
 
 			const titleElement = container.querySelector( '.wp-block-site-title, div.wp-block-group' );
 			if ( ! titleElement ) {
