@@ -81,9 +81,16 @@
 			visibility: hidden;
 		}
 
+		& .wporg-local-navigation-bar__fade-in-scroll {
+			opacity: 0;
+			transition: all 0.2s ease-in-out;
+			visibility: hidden;
+		}
+
 		&.is-sticking {
 			& .global-header__wporg-logo-mark,
-			& .wporg-local-navigation-bar__show-on-scroll {
+			& .wporg-local-navigation-bar__show-on-scroll,
+			& .wporg-local-navigation-bar__fade-in-scroll {
 				opacity: 1;
 				top: 0;
 				visibility: visible;
