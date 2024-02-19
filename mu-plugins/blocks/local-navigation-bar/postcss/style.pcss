@@ -14,18 +14,25 @@
 
 	/* Set this as a custom property so that it can be changed based on container background. */
 	--wp--custom--local-navigation-bar--focus--color: var(--wp--preset--color--white);
+	--wp--custom--local-navigation-bar--border--color: var(--wp--preset--color--white-opacity-15);
 
 	&:where(.has-background) {
 		--wp--custom--local-navigation-bar--focus--color: var(--wp--preset--color--charcoal-5);
+		--wp--custom--local-navigation-bar--border--color: var(--wp--preset--color--black-opacity-15);
 	}
 
 	&:where(.has-white-background-color) {
 		--wp--custom--local-navigation-bar--focus--color: var(--wp--preset--color--blueberry-1);
+		--wp--custom--local-navigation-bar--border--color: var(--wp--preset--color--black-opacity-15);
 	}
 
 	&:where(.has-charcoal-1-background-color),
 	&:where(.has-charcoal-2-background-color) {
 		--wp--custom--local-navigation-bar--focus--color: var(--wp--preset--color--blueberry-2);
+	}
+
+	&:where(.has-charcoal-2-background-color) {
+		--wp--custom--local-navigation-bar--border--color: var(--wp--preset--color--charcoal-1);
 	}
 
 	/* If a sticky element is next, it needs to account for the nav bar offset. */
@@ -215,7 +222,7 @@
 
 		& .wp-block-navigation__responsive-container-open,
 		& .wp-block-navigation__responsive-container-close {
-			padding: 18px;
+			padding: 17px;
 
 			&:focus-visible {
 				outline: none;
@@ -255,10 +262,14 @@
 			/* Make the close button visible, even though it's pulled out of this frame. */
 			overflow: visible;
 
+			border-top: 1px solid var(--wp--custom--local-navigation-bar--border--color);
+
 			& .wp-block-navigation__responsive-container-content {
 				padding-block-start: calc(var(--wp--preset--spacing--10) / 2) !important;
 				padding-inline: var(--wp--preset--spacing--10) !important;
 				padding-block-end: calc(var(--wp--preset--spacing--10) / 2) !important;
+				overflow-y: scroll;
+				height: calc(100vh - var(--wp--custom--local-navigation-bar--spacing--height) - var(--wp-global-header-offset)) !important;
 			}
 
 			@media (min-width: 601px) {
