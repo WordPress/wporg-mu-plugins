@@ -5,13 +5,14 @@
  */
 const chalk = require( 'chalk' );
 const fs = require( 'fs' ); // eslint-disable-line id-length
+const { sync: glob } = require( 'fast-glob' );
+const { hashElement } = require( 'folder-hash' );
 const path = require( 'path' );
 const postcss = require( 'postcss' );
 const rtlcss = require( 'rtlcss' );
 const { sync: resolveBin } = require( 'resolve-bin' );
 const { sync: spawn } = require( 'cross-spawn' );
 const postCssConfig = require( '../postcss.config.js' );
-const { hashElement } = require( 'folder-hash' );
 
 /**
  * Build the files, if the `src` directory exists.
@@ -96,40 +97,33 @@ async function maybeBuildPostCSS( inputDir, outputDir ) {
  */
 async function setBlockVersion( basePath ) {
 	const project = path.basename( basePath );
-	let blockJson;
 
-	const paths = [
-		basePath + '/block.json',
-		basePath + '/build/block.json',
-		basePath + '/src/block.json'
-	];
-	for ( let i = 0; i < paths.length; i++ ) {
-		if ( fs.existsSync( paths[ i ] ) ) {
-			blockJson = paths[ i ];
-			break;
-		}
-	}
+	const files = glob( '**/block.json', {
+		absolute: true,
+		cwd: basePath,
+	} );
 
-	if ( ! blockJson ) {
+	if ( ! files.length ) {
 		console.log( chalk.red( `Couldn't find block.json for ${ project }` ) );
 		return;
 	}
-
-	const blockJsonContents = require( blockJson );
 
 	const options = {
 		algo: 'sha1',
 		encoding: 'hex',
 	};
 
-	await hashElement( basePath, options ).then( hash => {
-		blockJsonContents.version = blockJsonContents.version.replace( /(^|-)[0-9a-f]{40}$/, '' ) || '';
+	const hash = await hashElement( basePath, options );
+
+	files.forEach( ( blockJson ) => {
+		const blockJsonContents = require( blockJson );
+		blockJsonContents.version = blockJsonContents.version?.replace( /(^|-)[0-9a-f]{40}$/, '' ) || '';
 		blockJsonContents.version += ( blockJsonContents.version ? '-' : '' ) + hash.hash;
 
 		fs.writeFileSync( blockJson, JSON.stringify( blockJsonContents, null, '\t' ) );
 	} );
 
-	console.log( chalk.green( `block.json version set for ${ project } to ${ blockJsonContents.version }` ) );
+	console.log( chalk.green( `block.json version set for ${ project } to ${ hash.hash }` ) );
 }
 
 // If we have more paths that need building, we could switch this to an array.
