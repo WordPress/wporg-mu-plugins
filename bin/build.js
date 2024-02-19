@@ -98,7 +98,8 @@ async function maybeBuildPostCSS( inputDir, outputDir ) {
 async function setBlockVersion( basePath ) {
 	const project = path.basename( basePath );
 
-	const files = glob( '**/block.json', {
+	// Find any block.json files under the project's `build` dir.
+	const files = glob( '**/build/**/block.json', {
 		absolute: true,
 		cwd: basePath,
 	} );
