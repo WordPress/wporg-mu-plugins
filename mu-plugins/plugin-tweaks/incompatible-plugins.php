@@ -23,13 +23,6 @@ const PLUGINS = [
 		'from'  => 'gutenberg/gutenberg.php',
 		'to'    => 'gutenberg-16.8/gutenberg.php',
 	],
-	[
-		// Pattern Creator: Uses private/unstable APIs,
-		// which are blocked after GB 16.8.
-		'check' => 'pattern-creator/pattern-creator.php',
-		'from'  => 'gutenberg/gutenberg.php',
-		'to'    => 'gutenberg-16.8/gutenberg.php',
-	],
 ];
 
 /**
