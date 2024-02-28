@@ -122,7 +122,7 @@ function render_menu_item( $item ) {
 
 		$output .= '<!-- /wp:navigation-submenu -->';
 	} else {
-		$block_code = '<!-- wp:navigation-link {"label":"%1$s","url":"%2$s","kind":"custom"} /-->';
+		$block_code = '<!-- wp:navigation-link {"label":"%1$s","url":"%2$s","kind":"custom","className":"%4$s"} /-->';
 
 		// If this is a relative link, convert it to absolute and try to find
 		// the corresponding ID, so that the `current` attributes are used.
@@ -131,7 +131,7 @@ function render_menu_item( $item ) {
 			$item['url'] = home_url( $item['url'] );
 			if ( $page_obj ) {
 				// A page was found, so use the post-type link.
-				$block_code = '<!-- wp:navigation-link {"label":"%1$s","url":"%2$s","kind":"post-type","id":"%3$s"} /-->';
+				$block_code = '<!-- wp:navigation-link {"label":"%1$s","url":"%2$s","kind":"post-type","id":"%3$s","className":"%4$s"} /-->';
 				$item['id'] = $page_obj->ID;
 			}
 		}
@@ -140,7 +140,8 @@ function render_menu_item( $item ) {
 			$block_code,
 			esc_html( $item['label'] ),
 			esc_url( $item['url'], ),
-			isset( $item['id'] ) ? intval( $item['id'] ) : ''
+			isset( $item['id'] ) ? intval( $item['id'] ) : '',
+			isset( $item['className'] ) ? esc_attr( $item['className'] ) : '',
 		);
 	}
 
