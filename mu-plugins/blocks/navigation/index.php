@@ -26,19 +26,20 @@ add_filter( 'block_core_navigation_render_inner_blocks', __NAMESPACE__ . '\updat
  * `wp_json_file_decode` & `register_block_script_handle.
  */
 function init() {
+	$dynamic_menus = apply_filters( 'wporg_block_navigation_menus', array() );
+	if ( ! $dynamic_menus ) {
+		return;
+	}
+
 	$metadata_file = dirname( dirname( __DIR__ ) ) . '/blocks/navigation/build/block.json';
 	$metadata = wp_json_file_decode( $metadata_file, array( 'associative' => true ) );
 	$metadata['file'] = $metadata_file;
 	$editor_script_handle = register_block_script_handle( $metadata, 'editorScript', 0 );
 	add_action(
 		'enqueue_block_assets',
-		function() use ( $editor_script_handle ) {
+		function() use ( $editor_script_handle, $dynamic_menus ) {
 			if ( is_admin() && wp_should_load_block_editor_scripts_and_styles() ) {
-				wp_localize_script(
-					$editor_script_handle,
-					'wporgLocalNavigationMenus',
-					apply_filters( 'wporg_block_navigation_menus', array() )
-				);
+				wp_localize_script( $editor_script_handle, 'wporgLocalNavigationMenus', $dynamic_menus );
 				wp_enqueue_script( $editor_script_handle );
 			}
 		}
