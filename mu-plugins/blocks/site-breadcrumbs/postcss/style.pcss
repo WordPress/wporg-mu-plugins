@@ -1,4 +1,28 @@
 .wp-block-wporg-site-breadcrumbs {
+	position: relative;
+	max-width: 100%;
+
+	&::after {
+		content: "";
+		position: absolute;
+		inset: 0 0 0 auto;
+		width: 60px;
+		background-image: linear-gradient(to left, #ffff, #fff0);
+	}
+
+	& .wporg-site-breadcrumbs__wrapper {
+		overflow-x: auto;
+		text-overflow: clip;
+		white-space: nowrap;
+
+		/* Add extra space so the page title can be fully visible when scrolled. */
+		&::after {
+			content: "";
+			display: inline-block;
+			width: 60px;
+		}
+	}
+
 	& a {
 		color: var(--wp--preset--color--charcoal-4);
 		text-decoration-line: none;
@@ -8,7 +32,7 @@
 		}
 	}
 
-	& > span {
+	& span {
 		display: inline-block;
 
 		&:not(:last-child) {

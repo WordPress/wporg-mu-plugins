@@ -9,6 +9,7 @@ import { createRoot } from '@wordpress/element';
  * Internal dependencies
  */
 import Main from './components/main';
+import { getBlockStyle } from './utilities/map-styles';
 
 const init = () => {
 	const containers = document.querySelectorAll( '.wp-block-wporg-google-map' );
@@ -22,7 +23,12 @@ const init = () => {
 	for ( const container of containers ) {
 		root = createRoot( container );
 
-		root.render( <Main { ...wporgGoogleMap[ container.dataset.mapId ] } /> );
+		root.render(
+			<Main
+				blockStyle={ getBlockStyle( container.className ) }
+				{ ...wporgGoogleMap[ container.dataset.mapId ] }
+			/>
+		);
 	}
 };
 

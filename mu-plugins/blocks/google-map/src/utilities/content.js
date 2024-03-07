@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { debounce } from 'lodash';
+import debounce from 'lodash.debounce';
 const debouncedSpeak = debounce( speak, 1000 );
 
 /**
@@ -15,7 +15,7 @@ import { __, sprintf } from '@wordpress/i18n';
  *
  * @param {string} location
  *
- * @return {string}
+ * @return {string} The formatted location.
  */
 export function formatLocation( location ) {
 	if ( 'online' === location ) {

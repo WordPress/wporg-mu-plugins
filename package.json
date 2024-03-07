@@ -12,29 +12,27 @@
 		"url": "https://github.com/WordPress/wporg-mu-plugins/issues"
 	},
 	"devDependencies": {
-		"@wordpress/browserslist-config": "4.1.2",
-		"@wordpress/env": "5.5.0",
-		"@wordpress/scripts": "23.5.0",
+		"@wordpress/browserslist-config": "5.34.0",
+		"@wordpress/env": "9.3.0",
+		"@wordpress/scripts": "27.2.0",
 		"chalk": "4.1.2",
 		"cross-spawn": "7.0.3",
-		"cssnano": "5.1.11",
-		"lodash": "^4.17.21",
-		"node-watch": "^0.7.3",
-		"postcss": "8.4.14",
-		"postcss-cli": "9.1.0",
-		"postcss-import": "14.1.0",
-		"postcss-preset-env": "7.7.1",
+		"cssnano": "6.0.3",
+		"node-watch": "0.7.4",
+		"postcss": "8.4.33",
+		"postcss-cli": "11.0.0",
+		"postcss-import": "16.0.0",
+		"postcss-preset-env": "9.3.0",
 		"resolve-bin": "1.0.1",
-		"rtlcss": "3.5.0",
-		"url-loader": "^3.0.0",
-		"webpack": "5.47.1",
-		"webpack-cli": "4.9.1"
+		"rtlcss": "4.1.1",
+		"url-loader": "4.1.1"
 	},
 	"browserslist": [
 		"extends @wordpress/browserslist-config"
 	],
 	"scripts": {
 		"build": "NODE_ENV=production ./bin/build.js",
+		"build:dev": "NODE_ENV=development ./bin/build.js",
 		"font-subset": "./bin/font-subset.js",
 		"prestart": "./bin/build.js",
 		"start": "NODE_ENV=development ./bin/watch.js",
@@ -43,7 +41,7 @@
 		"setup:tools": "yarn install && composer install && TEXTDOMAIN=wporg composer exec update-configs",
 		"update:tools": "composer update && TEXTDOMAIN=wporg composer exec update-configs",
 		"wp-env": "wp-env",
-		"test:php": "wp-env run phpunit 'phpunit -c /var/www/html/phpunit.xml.dist --verbose'"
+		"test:php": "wp-env run tests-cli --env-cwd=/var/www/html/ phpunit"
 	},
 	"rtlcssConfig": {},
 	"stylelint": {
@@ -66,7 +64,11 @@
 	},
 	"dependencies": {
 		"@googlemaps/markerclusterer": "^2.4.0",
+		"fast-glob": "^3.3.2",
+		"folder-hash": "^4.0.4",
 		"google-map-react": "^2.2.1",
-		"locutus": "^2.0.16"
+		"locutus": "^2.0.16",
+		"lodash.debounce": "^4.0.8",
+		"lodash.throttle": "^4.1.1"
 	}
 }

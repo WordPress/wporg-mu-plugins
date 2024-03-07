@@ -16,6 +16,18 @@
 			"type": "string",
 			"default": ""
 		},
+		"filterSlug": {
+			"type": "string",
+			"default": ""
+		},
+		"startDate": {
+			"type": "string",
+			"default": ""
+		},
+		"endDate": {
+			"type": "string",
+			"default": ""
+		},
 		"markers": {
 			"type": "array",
 			"default": []
@@ -31,6 +43,14 @@
 		"showSearch": {
 			"type": "boolean",
 			"default": true
+		},
+		"searchFormAction": {
+			"type": "string",
+			"default": ""
+		},
+		"listDisplayLimit": {
+			"type": "number",
+			"default": -1
 		},
 		"searchFields": {
 			"type": "array",

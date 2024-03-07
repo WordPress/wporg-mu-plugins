@@ -81,6 +81,13 @@ function render_block( $attributes, $content, $block ) {
 		}
 	}
 
+	$content = '<div class="wporg-site-breadcrumbs__wrapper">' . $content . '</div>';
+
 	$wrapper_attributes = get_block_wrapper_attributes();
-	return sprintf( '<div role="navigation" aria-label="%s" %s>%s</div>', esc_attr__( 'Breadcrumbs', 'wporg' ), $wrapper_attributes, $content );
+	return sprintf(
+		'<div role="navigation" aria-label="%s" %s>%s</div>',
+		esc_attr__( 'Breadcrumbs', 'wporg' ),
+		$wrapper_attributes,
+		$content
+	);
 }

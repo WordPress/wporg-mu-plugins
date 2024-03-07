@@ -7,7 +7,6 @@ import GoogleMapReact from 'google-map-react';
  * WordPress dependencies
  */
 import { useCallback, useEffect, useRef, useState } from '@wordpress/element';
-import { Spinner } from '@wordpress/components';
 
 /**
  * Internal dependencies
@@ -20,6 +19,7 @@ import {
 	panToCenter,
 	updateMapMarkers,
 } from '../utilities/google-maps-api';
+import Spinner from './spinner';
 
 /**
  * Render a Google Map with info windows for the given markers.
@@ -29,11 +29,10 @@ import {
  * @param {Object} props
  * @param {string} props.apiKey
  * @param {Array}  props.markers
+ * @param {string} props.blockStyle
  * @param {Object} props.icon
- *
- * @return {JSX.Element}
  */
-export default function Map( { apiKey, markers: rawMarkers, icon } ) {
+export default function Map( { apiKey, markers: rawMarkers, icon, blockStyle } ) {
 	const [ loaded, setLoaded ] = useState( false );
 	const clusterer = useRef( null );
 	const googleMap = useRef( null );
@@ -45,7 +44,7 @@ export default function Map( { apiKey, markers: rawMarkers, icon } ) {
 		zoomControl: true,
 		mapTypeControl: false,
 		streetViewControl: false,
-		styles: mapStyles,
+		styles: mapStyles[ blockStyle ],
 	};
 
 	/**
@@ -65,13 +64,27 @@ export default function Map( { apiKey, markers: rawMarkers, icon } ) {
 		} );
 
 		combinedMarkers = combineDuplicateLocations( rawMarkers );
-		combinedMarkers = assignMarkerReferences( map, maps, infoWindow.current, combinedMarkers, icon );
+		combinedMarkers = assignMarkerReferences(
+			map,
+			maps,
+			infoWindow.current,
+			combinedMarkers,
+			icon,
+			blockStyle
+		);
 
 		clusterer.current = clusterMarkers(
 			map,
 			maps,
 			combinedMarkers.map( ( marker ) => marker.markerRef ),
-			icon
+			icon,
+			blockStyle
+		);
+
+		panToCenter(
+			combinedMarkers.map( ( marker ) => marker.markerRef ),
+			googleMap.current,
+			googleMapsApi.current
 		);
 
 		setLoaded( true );
@@ -93,7 +106,8 @@ export default function Map( { apiKey, markers: rawMarkers, icon } ) {
 			googleMapsApi.current,
 			infoWindow.current,
 			combinedMarkers,
-			icon
+			icon,
+			blockStyle
 		);
 
 		const markerObjects = combinedMarkers.map( ( marker ) => marker.markerRef );

@@ -8,8 +8,6 @@ import { formatLocation } from '../utilities/content';
  * Render the content for a map marker.
  *
  * @param {Object} props
- *
- * @return {JSX.Element}
  */
 export default function MarkerContent( props ) {
 	const { type } = props;
@@ -38,8 +36,6 @@ export default function MarkerContent( props ) {
  * @param {string} props.url
  * @param {string} props.timestamp
  * @param {string} props.location
- *
- * @return {JSX.Element}
  */
 function WordCampMarker( { id, title, url, timestamp, location } ) {
 	return (
@@ -47,7 +43,7 @@ function WordCampMarker( { id, title, url, timestamp, location } ) {
 			<h3 className="wporg-map-marker__title">{ title }</h3>
 
 			<p className="wporg-map-marker__url">
-				<a href={ url }>{ title }</a>
+				<a href={ url }>Open event site</a>
 			</p>
 
 			<p className="wporg-map-marker__location">{ formatLocation( location ) }</p>
@@ -67,8 +63,6 @@ function WordCampMarker( { id, title, url, timestamp, location } ) {
  * @param {string} props.meetup
  * @param {string} props.timestamp
  * @param {string} props.location
- *
- * @return {JSX.Element}
  */
 function MeetupMarker( { id, title, url, meetup, timestamp, location } ) {
 	return (

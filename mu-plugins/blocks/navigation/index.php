@@ -26,19 +26,20 @@ add_filter( 'block_core_navigation_render_inner_blocks', __NAMESPACE__ . '\updat
  * `wp_json_file_decode` & `register_block_script_handle.
  */
 function init() {
+	$dynamic_menus = apply_filters( 'wporg_block_navigation_menus', array() );
+	if ( ! $dynamic_menus ) {
+		return;
+	}
+
 	$metadata_file = dirname( dirname( __DIR__ ) ) . '/blocks/navigation/build/block.json';
 	$metadata = wp_json_file_decode( $metadata_file, array( 'associative' => true ) );
 	$metadata['file'] = $metadata_file;
 	$editor_script_handle = register_block_script_handle( $metadata, 'editorScript', 0 );
 	add_action(
 		'enqueue_block_assets',
-		function() use ( $editor_script_handle ) {
+		function() use ( $editor_script_handle, $dynamic_menus ) {
 			if ( is_admin() && wp_should_load_block_editor_scripts_and_styles() ) {
-				wp_localize_script(
-					$editor_script_handle,
-					'wporgLocalNavigationMenus',
-					apply_filters( 'wporg_block_navigation_menus', array() )
-				);
+				wp_localize_script( $editor_script_handle, 'wporgLocalNavigationMenus', $dynamic_menus );
 				wp_enqueue_script( $editor_script_handle );
 			}
 		}
@@ -94,7 +95,35 @@ function get_menu_content( $menu_slug ) {
 
 	$menu_content = '';
 	foreach ( $menu_items as $item ) {
-		$block_code = '<!-- wp:navigation-link {"label":"%1$s","url":"%2$s","kind":"custom"} /-->';
+		$menu_content .= render_menu_item( $item );
+	}
+
+	return $menu_content;
+}
+
+/**
+ * Render an individual navigation item, to support recursively building submenus.
+ *
+ * @param array $item
+ *
+ * @return string Menu item in block syntax.
+ */
+function render_menu_item( $item ) {
+	$output = '';
+
+	if ( isset( $item['submenu'] ) ) {
+		$output = sprintf(
+			'<!-- wp:navigation-submenu {"label":"%1$s","url":"#","kind":"custom"} -->',
+			$item['label']
+		);
+
+		foreach ( $item['submenu'] as $submenu_item ) {
+			$output .= render_menu_item( $submenu_item, false );
+		}
+
+		$output .= '<!-- /wp:navigation-submenu -->';
+	} else {
+		$block_code = '<!-- wp:navigation-link {"label":"%1$s","url":"%2$s","kind":"custom","className":"%4$s"} /-->';
 
 		// If this is a relative link, convert it to absolute and try to find
 		// the corresponding ID, so that the `current` attributes are used.
@@ -103,20 +132,21 @@ function get_menu_content( $menu_slug ) {
 			$item['url'] = home_url( $item['url'] );
 			if ( $page_obj ) {
 				// A page was found, so use the post-type link.
-				$block_code = '<!-- wp:navigation-link {"label":"%1$s","url":"%2$s","kind":"post-type","id":"%3$s"} /-->';
+				$block_code = '<!-- wp:navigation-link {"label":"%1$s","url":"%2$s","kind":"post-type","id":"%3$s","className":"%4$s"} /-->';
 				$item['id'] = $page_obj->ID;
 			}
 		}
 
-		$menu_content .= sprintf(
+		$output .= sprintf(
 			$block_code,
 			esc_html( $item['label'] ),
 			esc_url( $item['url'], ),
-			isset( $item['id'] ) ? intval( $item['id'] ) : ''
+			isset( $item['id'] ) ? intval( $item['id'] ) : '',
+			isset( $item['className'] ) ? esc_attr( $item['className'] ) : '',
 		);
 	}
 
-	return $menu_content;
+	return $output;
 }
 
 /**

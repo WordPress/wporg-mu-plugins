@@ -11,3 +11,5 @@ defined( 'WPINC' ) || die();
 
 require_once __DIR__ . '/wporg-internal-notes.php';
 require_once __DIR__ . '/stream.php';
+require_once __DIR__ . '/incompatible-plugins.php';
+require_once __DIR__ . '/gutenberg.php';

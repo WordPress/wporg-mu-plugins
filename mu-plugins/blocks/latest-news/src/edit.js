@@ -19,7 +19,7 @@ import ServerSideRender from '@wordpress/server-side-render';
  * @param {Function} props.setAttributes
  * @param {string}   props.name
  *
- * @return {WPElement} Element to render.
+ * @return {Element} Element to render.
  */
 export default function Edit( { attributes, setAttributes, name } ) {
 	const { blogId, perPage, showCategories } = attributes;

@@ -1,21 +1,63 @@
+/* Set up the custom properties. These can be overridden by settings in theme.json. */
+:where(body) {
+	--wp--custom--local-navigation-bar--spacing--height: 60px;
+}
+
 :where(.wp-block-wporg-local-navigation-bar) {
 	background-color: var(--wp--preset--color--blueberry-1);
 	color: var(--wp--preset--color--white);
 
 	padding-right: var(--wp--preset--spacing--edge-space);
 	padding-left: var(--wp--preset--spacing--edge-space);
-	padding-top: 18px;
-	padding-bottom: 18px;
 
 	top: var(--wp-admin--admin-bar--height, 0);
 
+	/* Set this as a custom property so that it can be changed based on container background. */
+	--wp--custom--local-navigation-bar--focus--color: var(--wp--preset--color--white);
+	--wp--custom--local-navigation-bar--border--color: var(--wp--preset--color--white-opacity-15);
+
+	&:where(.has-background) {
+		--wp--custom--local-navigation-bar--focus--color: var(--wp--preset--color--charcoal-5);
+		--wp--custom--local-navigation-bar--border--color: var(--wp--preset--color--black-opacity-15);
+	}
+
+	&:where(.has-white-background-color) {
+		--wp--custom--local-navigation-bar--focus--color: var(--wp--preset--color--blueberry-1);
+		--wp--custom--local-navigation-bar--border--color: var(--wp--preset--color--black-opacity-15);
+	}
+
+	&:where(.has-charcoal-1-background-color),
+	&:where(.has-charcoal-2-background-color) {
+		--wp--custom--local-navigation-bar--focus--color: var(--wp--preset--color--blueberry-2);
+	}
+
+	&:where(.has-charcoal-2-background-color) {
+		--wp--custom--local-navigation-bar--border--color: var(--wp--preset--color--charcoal-1);
+	}
+
 	/* If a sticky element is next, it needs to account for the nav bar offset. */
 	& + :where(.wp-block-group.is-position-sticky) {
-		top: calc(var(--wp-admin--admin-bar--height, 0px) + 60px);
+		top: calc(var(--wp-admin--admin-bar--height, 0px) + var(--wp--custom--local-navigation-bar--spacing--height));
 	}
 }
 
 .wp-block-wporg-local-navigation-bar {
+	height: var(--wp--custom--local-navigation-bar--spacing--height);
+	margin-inline-start: calc(var(--wp--preset--spacing--10) / -2);
+
+	& a:where(:not(.wp-element-button)) {
+		padding: calc(var(--wp--preset--spacing--10) / 2);
+
+		&:focus-visible {
+			outline: none;
+			border-radius: 2px;
+			box-shadow: inset 0 0 0 1.5px var(--wp--custom--local-navigation-bar--focus--color);
+		}
+	}
+
+	&:not(.is-sticking) {
+		border-bottom: none !important;
+	}
 
 	@media (min-width: 890px) {
 		& .global-header__wporg-logo-mark {
@@ -30,6 +72,7 @@
 			& a {
 				display: block;
 				color: inherit;
+				padding: 0;
 			}
 
 			& svg {
@@ -37,10 +80,28 @@
 			}
 		}
 
-		&.is-sticking .global-header__wporg-logo-mark {
-			opacity: 1;
-			top: 0;
-			visibility: visible;
+		& .wporg-local-navigation-bar__show-on-scroll {
+			position: relative;
+			top: -5px;
+			opacity: 0;
+			transition: all 0.2s ease-in-out;
+			visibility: hidden;
+		}
+
+		& .wporg-local-navigation-bar__fade-in-scroll {
+			opacity: 0;
+			transition: all 0.2s ease-in-out;
+			visibility: hidden;
+		}
+
+		&.is-sticking {
+			& .global-header__wporg-logo-mark,
+			& .wporg-local-navigation-bar__show-on-scroll,
+			& .wporg-local-navigation-bar__fade-in-scroll {
+				opacity: 1;
+				top: 0;
+				visibility: visible;
+			}
 		}
 	}
 
@@ -82,44 +143,182 @@
 		}
 	}
 
-	/* Navigation. */
+	& .wp-block-group {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		padding-block: 5px; /* Add space for the focus outline. */
 
-	/* Remove padding from menu items with background color, which is used to color the modal background. */
-	& .wp-block-navigation:where(.has-background) .wp-block-navigation-item a:not(.wp-element-button),
-	& .wp-block-navigation:where(.has-background) .wp-block-navigation-submenu a:not(.wp-element-button) {
-		padding: 0;
-	}
+		> * {
+			white-space: nowrap;
+		}
 
-	& .wp-block-navigation__responsive-container {
+		& p {
+			position: relative;
+			margin-inline-start: var(--wp--preset--spacing--10);
+			padding-inline-start: var(--wp--preset--spacing--10);
 
-		/* Adjust the modal container so the close button is not hidden by the global header when open. */
-		@media (max-width: 599px) {
-			top: var(--wp-global-header-height);
+			&::before {
+				content: "\2022";
+				position: absolute;
+				inset-inline-start: -5px;
+				opacity: 0.4;
+			}
 
-			/* Matches the padding of the global header button. */
-			padding-right: calc(16px + var(--wp--custom--alignment--scroll-bar-width)) !important;
-			padding-left: var(--wp--preset--spacing--edge-space) !important;
-			padding-top: 21px !important;
-			padding-bottom: 18px !important;
+			&:first-of-type {
+				margin-inline-start: 0;
+				padding-inline-start: 0;
+
+				&::before {
+					display: none;
+				}
+			}
 		}
 	}
 
-	& .wp-block-navigation .wp-block-navigation__submenu-container {
-		top: calc(100% + 10px) !important;
-		left: auto !important;
-		right: 0 !important;
-
-		& .wp-block-navigation-item {
-			display: block;
-		}
-
-		& .wp-block-navigation__submenu-icon {
+	@media ( max-width: 550px ) {
+		& .wp-block-group p:not(.wp-block-site-title) {
 			display: none;
+		}
+	}
+
+	/* Navigation. */
+	& .wp-block-navigation {
+		& .wp-block-navigation-submenu__toggle {
+			padding-block: calc(var(--wp--preset--spacing--10) / 2);
+			padding-inline-start: calc(var(--wp--preset--spacing--10) / 2);
+			padding-inline-end: calc(var(--wp--preset--spacing--10) / 2 + 1em);
+
+			&:focus-visible {
+				outline: none;
+				border-radius: 2px;
+				box-shadow: inset 0 0 0 1.5px var(--wp--custom--local-navigation-bar--focus--color);
+			}
+
+			& + .wp-block-navigation__submenu-icon {
+				margin-left: -1em;
+				width: 1em;
+			}
 		}
 
 		& .wp-block-navigation__submenu-container {
-			border: none;
-			margin-left: 8px;
+			top: calc(100% + 10px) !important;
+			left: auto !important;
+			right: 0 !important;
+			padding: calc(var(--wp--preset--spacing--10) / 2) !important;
+
+			a:where(:not(.wp-element-button)):focus-visible {
+				box-shadow: inset 0 0 0 1.5px var(--wp--custom--local-navigation-bar--focus--color);
+			}
 		}
+	}
+
+	& .wp-block-navigation.is-collapsed {
+
+		/* Remove padding from menu items with background color, which is used to color the modal background. */
+		&  ul.has-background {
+			padding: 0;
+		}
+
+		& .wp-block-navigation__responsive-container-open,
+		& .wp-block-navigation__responsive-container-close {
+			padding: 17px;
+
+			&:focus-visible {
+				outline: none;
+				border-radius: 2px;
+				box-shadow: inset 0 0 0 1.5px var(--wp--custom--local-navigation-bar--focus--color);
+			}
+		}
+
+		&  .wp-block-navigation__responsive-container-close {
+			margin-block-start: calc(var(--wp--custom--local-navigation-bar--spacing--height) * -1) !important;
+
+			@media (max-width: 600px) {
+				margin-inline-end: calc(16px + var(--wp--custom--alignment--scroll-bar-width));
+			}
+		}
+
+		& .wp-block-navigation__responsive-close,
+		& .wp-block-navigation__responsive-container-close,
+		& .wp-block-navigation__responsive-dialog {
+			background-color: inherit;
+		}
+
+		& .wp-block-navigation__responsive-container .wp-block-navigation__responsive-dialog {
+			margin-top: 0;
+		}
+
+		& .wp-block-navigation__container,
+		& .wp-block-navigation-item,
+		& .wp-block-navigation-item__content {
+			width: 100%;
+		}
+
+		& .wp-block-navigation__responsive-container {
+			top: calc(var(--wp--custom--local-navigation-bar--spacing--height) + var(--wp-global-header-offset)) !important;
+			min-width: 14rem;
+
+			/* Make the close button visible, even though it's pulled out of this frame. */
+			overflow: visible;
+
+			border-top: 1px solid var(--wp--custom--local-navigation-bar--border--color);
+
+			& .wp-block-navigation__responsive-container-content {
+				padding-block-start: calc(var(--wp--preset--spacing--10) / 2) !important;
+				padding-inline: var(--wp--preset--spacing--10) !important;
+				padding-block-end: calc(var(--wp--preset--spacing--10) / 2) !important;
+				overflow-y: scroll;
+				max-height: calc(100vh - var(--wp--custom--local-navigation-bar--spacing--height) - var(--wp-global-header-offset)) !important;
+			}
+
+			@media (min-width: 601px) {
+				position: absolute !important;
+				top: calc(var(--wp--custom--local-navigation-bar--spacing--height) - 1px) !important;
+				bottom: auto !important;
+				left: auto !important;
+				border-top: none;
+			}
+		}
+
+		& .wp-block-navigation__responsive-container-content {
+			gap: 0;
+
+			& .wp-block-navigation-item {
+				display: block;
+
+				& .wp-block-navigation-item__content {
+					margin: 0;
+					padding: var(--wp--preset--spacing--10);
+
+					&:focus-visible {
+						outline: none;
+						border-radius: 2px;
+						box-shadow: inset 0 0 0 1.5px var(--wp--custom--local-navigation-bar--focus--color);
+					}
+				}
+			}
+		}
+	}
+
+	& .wp-block-navigation.wporg-is-collapsed-nav {
+		display: none;
+	}
+
+	&.wporg-show-collapsed-nav {
+		& .wp-block-navigation {
+			display: none;
+		}
+
+		& .wp-block-navigation.wporg-is-collapsed-nav {
+			display: block;
+		}
+	}
+}
+
+@media (min-width: 890px) {
+	/* stylelint-disable selector-id-pattern */
+	#wp--skip-link--target {
+		scroll-margin-top: var(--wp--custom--local-navigation-bar--spacing--height, 0);
 	}
 }

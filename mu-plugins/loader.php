@@ -29,12 +29,12 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 require_once __DIR__ . '/helpers/helpers.php';
 require_once __DIR__ . '/blocks/global-header-footer/blocks.php';
 require_once __DIR__ . '/blocks/google-map/index.php';
+require_once __DIR__ . '/blocks/handbook-meta-link/block.php';
 require_once __DIR__ . '/blocks/horizontal-slider/horizontal-slider.php';
 require_once __DIR__ . '/blocks/language-suggest/language-suggest.php';
 require_once __DIR__ . '/blocks/local-navigation-bar/index.php';
 require_once __DIR__ . '/blocks/latest-news/latest-news.php';
 require_once __DIR__ . '/blocks/link-wrapper/index.php';
-require_once __DIR__ . '/blocks/google-map-event-filters/google-map-event-filters.php';
 require_once __DIR__ . '/blocks/navigation/index.php';
 require_once __DIR__ . '/blocks/notice/index.php';
 require_once __DIR__ . '/blocks/query-filter/index.php';

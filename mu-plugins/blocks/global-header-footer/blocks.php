@@ -16,8 +16,6 @@ add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_compat_wp4_styles', 
 add_action( 'wp_head', __NAMESPACE__ . '\preload_google_fonts' );
 add_filter( 'style_loader_src', __NAMESPACE__ . '\update_google_fonts_url', 10, 2 );
 add_filter( 'render_block_core/search', __NAMESPACE__ . '\swap_header_search_action', 10, 2 );
-add_filter( 'render_block_wporg/global-header', __NAMESPACE__ . '\add_aria_hidden_to_arrows', 19 );
-add_filter( 'render_block_wporg/global-footer', __NAMESPACE__ . '\add_aria_hidden_to_arrows', 19 );
 add_filter( 'render_block_data', __NAMESPACE__ . '\update_block_style_colors' );
 
 /**
@@ -393,6 +391,7 @@ function render_global_header( $attributes = array() ) {
 	ob_start();
 	require_once __DIR__ . '/header.php';
 	$markup = do_blocks( ob_get_clean() );
+	$markup = add_aria_hidden_to_arrows( $markup );
 
 	restore_inner_group_container();
 
@@ -544,13 +543,8 @@ function get_global_menu_items() {
 					'type'  => 'custom',
 				),
 				array(
-					'title' => esc_html_x( 'WordCamp ↗︎', 'Menu item title', 'wporg' ),
-					'url'   => 'https://central.wordcamp.org/',
-					'type'  => 'custom',
-				),
-				array(
-					'title' => esc_html_x( 'Meetups ↗︎', 'Menu item title', 'wporg' ),
-					'url'   => 'https://www.meetup.com/pro/wordpress/',
+					'title' => esc_html_x( 'Events', 'Menu item title', 'wporg' ),
+					'url'   => 'https://events.wordpress.org/',
 					'type'  => 'custom',
 				),
 				array(
@@ -841,6 +835,7 @@ function render_global_footer( $attributes, $content, $block ) {
 	ob_start();
 	require_once __DIR__ . '/footer.php';
 	$markup = do_blocks( ob_get_clean() );
+	$markup = add_aria_hidden_to_arrows( $markup );
 
 	restore_inner_group_container();
 

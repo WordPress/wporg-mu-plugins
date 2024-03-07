@@ -1,57 +1,103 @@
-.wp-block-wporg-sidebar-container .is-link-to-top {
-	display: none;
+.wp-block-wporg-sidebar-container {
+	/* stylelint-disable-next-line length-zero-no-unit */
+	--local--offset-top: var(--wp-admin--admin-bar--height, 0px);
 
-	& a {
-		text-decoration-line: none;
+	/* These vars are used in JS calcs */
+	--local--nav--offset: var(--wp--custom--local-navigation-bar--spacing--height, 60px);
+	--local--padding: var(--wp--preset--spacing--20);
 
-		&:hover {
-			text-decoration-line: underline;
+	/* Account for local nav height on larger screens where it becomes fixed. */
+	@media (min-width: 890px) {
+		--local--nav--offset: 0;
+		--local--offset-top: calc(var(--wp-admin--admin-bar--height, 0px) + var(--wp--custom--local-navigation-bar--spacing--height, 60px));
+	}
+
+	& .is-link-to-top {
+		display: none;
+
+		& a {
+			text-decoration-line: none;
+
+			&:hover {
+				text-decoration-line: underline;
+			}
 		}
 	}
-}
 
-/* Slot the search & table of contents into a floating sidebar on large screens. */
-@media (min-width: 1200px) {
-	.wp-block-wporg-sidebar-container {
+	/* Slot the search & table of contents into a floating sidebar on large screens. */
+	&.is-floating-sidebar {
 		--local--block-end-sidebar--width: 340px;
 
-		position: absolute;
-		top: calc(var(--wp-global-header-offset, 0px) + var(--wp-local-header-offset, 0px));
-
-		/* Right offset should be "edge spacing" at minimum, otherwise calculate it to be centered. */
-		right: max(var(--wp--preset--spacing--edge-space), calc((100% - var(--wp--style--global--wide-size)) / 2));
 		width: var(--local--block-end-sidebar--width);
-		margin-top: var(--wp--custom--wporg-sidebar-container--spacing--margin--top) !important;
+		padding-bottom: var(--local--padding);
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		scrollbar-color: var(--wp--preset--color--charcoal-5) transparent;
 
-		&.is-fixed-sidebar {
-			position: fixed;
+		/* Custom scrollbar so that it can be made visible on hover */
+		&::-webkit-scrollbar,
+		&::-webkit-scrollbar-track {
+			background-color: transparent;
 		}
 
-		&.is-bottom-sidebar {
-			position: absolute;
-		}
-
-		&.is-fixed-sidebar .is-link-to-top,
-		&.is-bottom-sidebar .is-link-to-top {
-			display: block;
-			margin-top: 0;
-
-			& a {
-				color: var(--wp--preset--color--charcoal-4);
+		&::-webkit-scrollbar-thumb {
+			&:active,
+			&:hover {
+				background-color: var(--wp--preset--color--charcoal-4) !important;
 			}
 		}
 
-		.wp-block-wporg-table-of-contents + .is-link-to-top {
-			border-top: 1px solid var(--wp--preset--color--light-grey-1);
+		&:active,
+		&:focus-within,
+		&:focus,
+		&:hover {
+			&::-webkit-scrollbar-thumb {
+				background-color: var(--wp--preset--color--charcoal-5);
+				border: 4px solid transparent;
+				background-clip: content-box;
+				border-radius: 10px;
+			}
+		}
+
+		& > * {
+			padding-right: 16px;
+		}
+
+		&.is-fixed-sidebar {
+			position: fixed;
+			top: 0;
+			height: calc(100vh - var(--local--offset-top));
+			margin-top: var(--local--offset-top) !important;
+			padding: var(--local--padding) 0;
+
+			& .is-link-to-top {
+				display: block;
+
+				& a {
+					color: var(--wp--preset--color--charcoal-4);
+				}
+			}
+		}
+
+		& * + .is-link-to-top {
 			padding-top: var(--wp--preset--spacing--20);
+			border-top: 1px solid var(--wp--preset--color--light-grey-1);
 		}
 	}
 }
 
-@media (min-width: 890px) {
-	/* stylelint-disable selector-id-pattern */
-	#wp--skip-link--target {
-		scroll-margin-top: var(--wp-local-header-offset, 0);
+main .wp-block-wporg-sidebar-container {
+
+	/* Hide the main sidebar until layout classes have been applied, to avoid FOUC */
+	display: none;
+
+	&.is-floating-sidebar {
+		position: absolute;
+		top: calc(var(--wp-global-header-offset, 90px) + var(--wp--custom--local-navigation-bar--spacing--height, 60px));
+		margin-top: var(--wp--custom--wporg-sidebar-container--spacing--margin--top);
+
+		/* Right offset should be "edge spacing" at minimum, otherwise calculate it to be centered. */
+		right: max(var(--wp--preset--spacing--edge-space), calc((100% - var(--wp--style--global--wide-size)) / 2));
 	}
 }
 

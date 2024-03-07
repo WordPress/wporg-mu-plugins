@@ -24,7 +24,7 @@
 		}
 	},
 	"editorScript": "file:./index.js",
-	"style": "file:./style.css",
-	"viewScript": "file:./view.js",
+	"style": "file:./style-index.css",
+	"viewScriptModule": "file:./view.js",
 	"render": "file:../render.php"
 }

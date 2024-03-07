@@ -9,6 +9,8 @@ namespace WordPressdotorg\MU_Plugins\Google_Map;
 
 defined( 'WPINC' ) || die();
 
+require_once __DIR__ . '/inc/event-filters.php';
+
 add_action( 'init', __NAMESPACE__ . '\init' );
 
 
@@ -39,19 +41,25 @@ function render( $attributes, $content, $block ) {
 		$attributes['apiKey'] = constant( $attributes['apiKey'] );
 	}
 
+	$attributes['startDate'] = (int) strtotime( $attributes['startDate'] );
+	$attributes['endDate']   = (int) strtotime( $attributes['endDate'] );
+
 	$attributes['searchIcon'] = plugins_url( 'images/search.svg', __FILE__ );
 
 	$attributes['markerIcon'] = array(
-		'markerUrl'           => plugins_url( 'images/map-marker-red.svg', __FILE__ ),
+		'imagesDirUrl'        => plugins_url( 'images', __FILE__ ),
 		'markerHeight'        => 68,
 		'markerWidth'         => 68,
 		'markerAnchorYOffset' => -5,
-		'clusterUrl'          => plugins_url( 'images/cluster-background.svg', __FILE__ ),
 		'clusterWidth'        => 38,
 		'clusterHeight'       => 38,
 	);
 
 	$attributes['markerIcon']['markerAnchorXOffset'] = $attributes['markerIcon']['markerWidth'] / -4;
+
+	if ( ! empty( $attributes['filterSlug'] ) ) {
+		$attributes['markers'] = get_events( $attributes['filterSlug'], $attributes['startDate'], $attributes['endDate'], array() );
+	}
 
 	$handles = array( $block->block_type->view_script_handles[0], $block->block_type->editor_script_handles[0] );
 
@@ -70,6 +78,7 @@ function render( $attributes, $content, $block ) {
 
 	$wrapper_attributes = get_block_wrapper_attributes( array(
 		'id'          => 'wp-block-wporg-google-map-' . $attributes['id'],
+		'class'       => isset( $attributes['align'] ) ? 'align' . $attributes['align'] : '',
 		'data-map-id' => $attributes['id'],
 	) );
 
