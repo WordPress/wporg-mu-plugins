@@ -8,6 +8,8 @@
 
 namespace WordPressdotorg\MU_Plugins\Dynamic_ToC_Block;
 
+defined( 'WPINC' ) || die();
+
 add_action( 'init', __NAMESPACE__ . '\init' );
 
 /**

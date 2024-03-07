@@ -6,6 +6,8 @@
 
 namespace WordPressdotorg\MU_Plugins\Notice;
 
+defined( 'WPINC' ) || die();
+
 add_action( 'init', __NAMESPACE__ . '\init' );
 
 /**

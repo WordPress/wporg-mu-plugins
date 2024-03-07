@@ -7,6 +7,8 @@
 
 namespace WordPressdotorg\MU_Plugins\Google_Map;
 
+defined( 'WPINC' ) || die();
+
 add_action( 'init', __NAMESPACE__ . '\init' );
 
 
