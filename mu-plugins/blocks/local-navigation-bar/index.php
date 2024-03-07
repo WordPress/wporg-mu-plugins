@@ -160,6 +160,18 @@ function customize_navigation_block_icon( $block_content ) {
 			$tag_processor->set_attribute( 'd', 'M17.5 11.6L12 16l-5.5-4.4.9-1.2L12 14l4.5-3.6 1 1.2z' );
 		}
 
+		if (
+			$tag_processor->next_tag(
+				array(
+					'tag_name' => 'button',
+					'class_name' => 'wp-block-navigation__responsive-container-close',
+				)
+			) &&
+			$tag_processor->next_tag( 'path' )
+		) {
+			$tag_processor->set_attribute( 'd', 'M6.5 12.4L12 8l5.5 4.4-.9 1.2L12 10l-4.5 3.6-1-1.2z' );
+		}
+
 		return $tag_processor->get_updated_html();
 	}
 
