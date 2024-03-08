@@ -9,6 +9,7 @@ defined( 'WPINC' ) || die();
  */
 add_filter( 'render_block_core/post-title', __NAMESPACE__ . '\swap_h0_for_paragraph', 20 );
 add_filter( 'render_block_core/query-title', __NAMESPACE__ . '\swap_h0_for_paragraph', 20 );
+add_filter( 'wp_script_attributes', __NAMESPACE__ . '\inject_module_cachebuster' );
 
 /**
  * Replace invalid `h0` tags with paragraphs.
@@ -30,3 +31,36 @@ function swap_h0_for_paragraph( $block_content ) {
 	);
 }
 
+/**
+ * Add a custom cachebuster to the module scripts.
+ *
+ * See https://a8c.slack.com/archives/C0393K4ADM3/p1709930043067369
+ *
+ * @param array $attributes Key-value pairs representing `<script>` tag attributes.
+ *
+ * @return array
+ */
+function inject_module_cachebuster( $attributes ) {
+	if ( ! isset( $attributes['src'], $attributes['type'] ) ) {
+		return $attributes;
+	}
+
+	if ( 'module' !== $attributes['type'] ) {
+		return $attributes;
+	}
+
+	$cachebuster = '20240308';
+
+	$source = $attributes['src'];
+	wp_parse_str( wp_parse_url( $source, PHP_URL_QUERY ), $source_query );
+	$version = $source_query['ver'] ?? '';
+
+	$source = str_replace(
+		"ver={$version}",
+		"ver={$version}-{$cachebuster}",
+		$source
+	);
+
+	$attributes['src'] = $source;
+	return $attributes;
+}
