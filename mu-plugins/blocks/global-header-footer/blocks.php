@@ -988,7 +988,7 @@ function swap_header_search_action( $block_content, $block ) {
  * @return string The updated content.
  */
 function add_aria_hidden_to_arrows( $content ) {
-	return preg_replace( '/([←↑→↓↔↕↖↗↘↙])/u', '<span aria-hidden="true">\1</span>', $content );
+	return preg_replace( '/([←↑→↓↔↕↖↗↘↙])/u', '<span aria-hidden="true" class="wp-exclude-emoji">\1</span>', $content );
 }
 
 /**
