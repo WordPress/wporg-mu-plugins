@@ -34,10 +34,8 @@ function init() {
  * @return string Returns the block markup.
  */
 function render( $attributes, $content, $block ) {
-	if ( ! empty( $attributes['apiKey'] ) ) {
-		// See README for why this has to be a constant.
-		$attributes['apiKey'] = constant( $attributes['apiKey'] );
-	}
+	// Allow the apiKey to be defined dynamically.
+	$attributes['apiKey'] = apply_filters( 'wporg_google_map_apikey', $attributes['apiKey'] ?? '', $attributes, $content, $block );
 
 	$attributes['startDate'] = (int) strtotime( $attributes['startDate'] );
 	$attributes['endDate']   = (int) strtotime( $attributes['endDate'] );

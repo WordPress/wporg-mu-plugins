@@ -12,12 +12,12 @@ You can pass markers directly to the block via the `markers` attribute, or use a
 ## Map Setup
 
 ```html
-<!-- wp:wporg/google-map {"id":"my-map","apiKey":"WORDCAMP_DEV_GOOGLE_MAPS_API_KEY"} /-->
+<!-- wp:wporg/google-map {"id":"my-map","apiKey":"my api key OR define via filters"} /-->
 ```
 
 `id` will be used in the HTML element that wraps the map/list.
 
-`apiKey` should be the _name_ of a constant, not the value. It's not private because it'll be exposed in the HTTP request to Google Maps, but it should still be stored in a constant in a config file instead of `post_content`. That allows for centralization, documentation, and tracking changes over time. It should be restricted in Google Cloud Console to only the sites where it will be used, to prevent abuse.
+`apiKey` should be a Google API key, or, a static value that will be replaced via the 'wporg_google_map_apikey' filter. It's not private because it'll be exposed in the HTTP request to Google Maps, but the filter allows it to be stored in a constant in a config file instead of `post_content`. That allows for centralization, documentation, and tracking changes over time. It should be restricted in Google Cloud Console to only the sites where it will be used, to prevent abuse.
 
 Next, choose how you want to provide the markers. You can pass them directly from your code, or use a pre-defined event filter. See below for more.
 
@@ -31,7 +31,7 @@ Place something like the following in a block or pattern. If you'll be pulling e
 
 $map_options = array(
 	'id'      => 'my-map',
-	'apiKey'  => 'MY_API_KEY_CONSTANT',
+	'apiKey'  => get_my_api_key(),
 	'markers' => get_my_markers()
 );
 
@@ -53,7 +53,7 @@ array(
 If you have a small number of markers, you can manually json-encode them and then put them directly in the post content:
 
 ```html
-<!-- wp:wporg/google-map {"id":"wp20","apiKey":"WORDCAMP_DEV_GOOGLE_MAPS_API_KEY","markers":[{"id":"72190010","type":"meetup","title":"ONLINE DISCUSSION- Learn about your DIVI Theme- Divisociety.com","url":"https://www.meetup.com/milwaukee-wordpress-meetup/events/292286293","meetup":"Greater Milwaukee Area WordPress Meetup","location":"online","latitude":"43.04","longitude":"-87.92","tz_offset":"-21600","timestamp":1700006400},{"id":"72190007","type":"meetup","title":"Meetup Virtual - SEO MÃ¡s allÃ¡ del ranking","url":"https://www.meetup.com/wpsanjose/events/294644892","meetup":"WordPress Meetup San JosÃ©","location":"online","latitude":"9.93","longitude":"-84.08","tz_offset":"-21600","timestamp":1700010000},{"id":"72190008","type":"meetup","title":"WordPress Developer Night - #IEWP","url":"https://www.meetup.com/inlandempirewp/events/292287676","meetup":"Inland Empire WordPress Meetup Group","location":"online","latitude":"33.99","longitude":"-117.37","tz_offset":"-28800","timestamp":1700017200}]} /-->
+<!-- wp:wporg/google-map {"id":"wp20","apiKey":"","markers":[{"id":"72190010","type":"meetup","title":"ONLINE DISCUSSION- Learn about your DIVI Theme- Divisociety.com","url":"https://www.meetup.com/milwaukee-wordpress-meetup/events/292286293","meetup":"Greater Milwaukee Area WordPress Meetup","location":"online","latitude":"43.04","longitude":"-87.92","tz_offset":"-21600","timestamp":1700006400},{"id":"72190007","type":"meetup","title":"Meetup Virtual - SEO MÃ¡s allÃ¡ del ranking","url":"https://www.meetup.com/wpsanjose/events/294644892","meetup":"WordPress Meetup San JosÃ©","location":"online","latitude":"9.93","longitude":"-84.08","tz_offset":"-21600","timestamp":1700010000},{"id":"72190008","type":"meetup","title":"WordPress Developer Night - #IEWP","url":"https://www.meetup.com/inlandempirewp/events/292287676","meetup":"Inland Empire WordPress Meetup Group","location":"online","latitude":"33.99","longitude":"-117.37","tz_offset":"-28800","timestamp":1700017200}]} /-->
 ```
 
 
@@ -69,7 +69,7 @@ Filters can be setup for anything, but some common examples are watch parties fo
 	```php
 	$map_options = array(
 		'id'         => 'wp20',
-		'apiKey'     => 'WORDCAMP_DEV_GOOGLE_MAPS_API_KEY',
+		'apiKey'     => '',
 		'filterSlug' => 'wp20',
 		'startDate'  => 'April 21, 2023',
 		'endDate'    => 'May 30, 2023',
@@ -83,11 +83,11 @@ Filters can be setup for anything, but some common examples are watch parties fo
 	Alternatively, you could take that JSON and manually put it in the post source like this:
 
 	```html
-	<!-- wp:wporg/google-map {"id":"all-upcoming","apiKey":"WORDCAMP_DEV_GOOGLE_MAPS_API_KEY","filterSlug":"all-upcoming"} /-->
+	<!-- wp:wporg/google-map {"id":"all-upcoming","apiKey":"","filterSlug":"all-upcoming"} /-->
 
-	<!-- wp:wporg/google-map {"id":"sotw-2023","apiKey":"WORDCAMP_DEV_GOOGLE_MAPS_API_KEY","filterSlug":"sotw","startDate":"December 10, 2023","endDate":"January 12, 2024","className":"is-style-sotw-2023"} /-->
+	<!-- wp:wporg/google-map {"id":"sotw-2023","apiKey":"","filterSlug":"sotw","startDate":"December 10, 2023","endDate":"January 12, 2024","className":"is-style-sotw-2023"} /-->
 
-	<!-- wp:wporg/google-map {"id":"wp20","apiKey":"WORDCAMP_DEV_GOOGLE_MAPS_API_KEY","filterSlug":"wp20","startDate":"April 21, 2023","endDate":"May 30, 2023"} /-->
+	<!-- wp:wporg/google-map {"id":"wp20","apiKey":"","filterSlug":"wp20","startDate":"April 21, 2023","endDate":"May 30, 2023"} /-->
 	```
 
 1. View the page where the block is used. That will create the cron job that updates the data automatically in the future.
