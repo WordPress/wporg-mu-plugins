@@ -125,10 +125,18 @@ function render_menu_item( $item ) {
 	} else {
 		$block_code = '<!-- wp:navigation-link {"label":"%1$s","url":"%2$s","kind":"custom","className":"%4$s"} /-->';
 
+		// If a term is provided, use the term type link.
+		if ( ! empty( $item['term'] ) ) {
+			$block_code      = '<!-- wp:navigation-link {"label":"%1$s","url":"%2$s","kind":"taxonomy","id":"%3$s","className":"%4$s"} /-->';
+			$item['id']    ??= $item['term']->term_id;
+			$item['url']   ??= get_term_link( $item['term'] );
+			$item['label'] ??= $item['term']->name;
+		}
+
 		// If this is a relative link, convert it to absolute and try to find
 		// the corresponding ID, so that the `current` attributes are used.
 		if ( str_starts_with( $item['url'], '/' ) ) {
-			$page_obj = get_page_by_path( $item['url'] );
+			$page_obj    = get_page_by_path( $item['url'] );
 			$item['url'] = home_url( $item['url'] );
 			if ( $page_obj ) {
 				// A page was found, so use the post-type link.
