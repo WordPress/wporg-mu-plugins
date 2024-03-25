@@ -8,6 +8,8 @@
 
 namespace WordPressdotorg\MU_Plugins\LocalNavigationBar_Block;
 
+defined( 'WPINC' ) || die();
+
 add_action( 'init', __NAMESPACE__ . '\init' );
 add_filter( 'render_block_data', __NAMESPACE__ . '\update_block_attributes' );
 add_filter( 'render_block_data', __NAMESPACE__ . '\update_child_block_attributes', 10, 3 );
