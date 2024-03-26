@@ -5,9 +5,9 @@ const init = () => {
 		return;
 	}
 
-	const uri = encodeURIComponent( window.location.pathname );
+	const endpoint = container.dataset.endpoint || 'https://wordpress.org/lang-guess/lang-guess-ajax.php?uri=' + encodeURIComponent( window.location.pathname );
 
-	fetch( `https://wordpress.org/lang-guess/lang-guess-ajax.php?uri=${ uri }` )
+	fetch( endpoint )
 		.then( ( response ) => {
 			if ( ! response.ok ) {
 				throw Error( response.statusText );
