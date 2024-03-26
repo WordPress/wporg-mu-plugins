@@ -7,7 +7,8 @@ const init = () => {
 
 	const endpoint =
 		container.dataset.endpoint ||
-		'https://wordpress.org/lang-guess/lang-guess-ajax.php?uri=' + encodeURIComponent( window.location.pathname );
+		'https://wordpress.org/lang-guess/lang-guess-ajax.php?uri=' +
+			encodeURIComponent( window.location.pathname );
 
 	fetch( endpoint )
 		.then( ( response ) => {
