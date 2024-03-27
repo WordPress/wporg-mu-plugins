@@ -42,17 +42,21 @@ function init() {
 		// CSS class to show the nav block with {"overlayMenu":"always"}
 		// added by `add_extra_navigation`.
 		const onResize = () => {
+			const navElement = container.querySelector( 'nav:not(.wporg-is-collapsed-nav)' );
+
 			// Bail early on small screens, the visible nav block is already mobile.
-			if ( window.innerWidth <= 600 ) {
+			if ( window.innerWidth < 600 ) {
 				container.classList.remove( 'wporg-show-collapsed-nav' );
+				navElement.classList.add( 'wporg-is-mobile-nav' );
 				return;
 			}
+
+			navElement.classList.remove( 'wporg-is-mobile-nav' );
 
 			// Fetch the navWidth from a data value which is set on page load,
 			// so that the uncollapsed visible menu's width is used.
 			let navWidth = container.dataset.navWidth;
 			if ( ! navWidth ) {
-				const navElement = container.querySelector( 'nav:not(.wporg-is-collapsed-nav)' );
 				const navGap = parseInt( window.getComputedStyle( navElement ).gap, 10 ) || 20;
 				// Get the nav width based on items, so that it stays
 				// consistent even if the menu wraps to a new line.
