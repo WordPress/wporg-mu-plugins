@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "wporg/horizontal-slider",
+	"version": "0.1.0-630be05fb4248e95e2895887da8852800d027f61",
+	"title": "Horizontal Slider",
+	"category": "widgets",
+	"icon": "networking",
+	"description": "A block for use across the whole wp.org network.",
+	"textdomain": "horizontal-slider"
+}

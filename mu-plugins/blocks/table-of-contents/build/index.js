@@ -1,0 +1,1 @@
+(()=>{"use strict";const e=window.React,o=window.wp.blocks,t=window.wp.blockEditor,n=JSON.parse('{"UU":"wporg/table-of-contents"}');(0,o.registerBlockType)(n.UU,{edit:function(){return(0,e.createElement)("div",{...(0,t.useBlockProps)()},"Table of contents")},save:()=>null})})();

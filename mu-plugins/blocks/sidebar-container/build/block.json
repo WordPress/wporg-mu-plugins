@@ -1,0 +1,32 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "wporg/sidebar-container",
+	"title": "Sidebar Container",
+	"icon": "align-pull-right",
+	"category": "layout",
+	"description": "A sticky container to be used in 2-column layouts.",
+	"textdomain": "wporg",
+	"attributes": {
+		"hasBackToTop": {
+			"type": "boolean",
+			"default": true
+		},
+		"inlineBreakpoint": {
+			"type": "string",
+			"default": "1300px"
+		}
+	},
+	"supports": {
+		"inserter": false,
+		"__experimentalLayout": true,
+		"spacing": {
+			"margin": true
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./editor-style.css",
+	"style": "file:./style.css",
+	"viewScript": "file:./view.js",
+	"version": "82b26c6d4fa51728cf7add45345c307a179c0fc7"
+}
