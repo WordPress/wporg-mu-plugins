@@ -60,6 +60,16 @@ function render_block( $attributes ) {
 		set_transient( $cache_key, $posts, HOUR_IN_SECONDS );
 	}
 
+	$class_name = '';
+	if ( 0 === count( $posts ) % 4 ) {
+		$class_name = 'is-4-column';
+	} else if ( 0 === count( $posts ) % 3 ) {
+		$class_name = 'is-3-column';
+	} else if ( 0 === count( $posts ) % 2 ) {
+		$class_name = 'is-2-column';
+	}
+
+
 	$list_items = '';
 
 	foreach ( $posts as $post ) {
@@ -143,7 +153,7 @@ function render_block( $attributes ) {
 		restore_current_blog();
 	}
 
-	$wrapper_attributes = get_block_wrapper_attributes();
+	$wrapper_attributes = get_block_wrapper_attributes( array( 'class' => $class_name ) );
 
 	return sprintf(
 		'<ul %1$s>%2$s</ul>%3$s',

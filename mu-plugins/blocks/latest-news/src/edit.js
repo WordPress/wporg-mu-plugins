@@ -5,7 +5,6 @@ import { __ } from '@wordpress/i18n';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import {
 	CheckboxControl,
-	Disabled,
 	__experimentalNumberControl as NumberControl, // eslint-disable-line @wordpress/no-unsafe-wp-apis
 	PanelBody,
 } from '@wordpress/components';
@@ -53,9 +52,7 @@ export default function Edit( { attributes, setAttributes, name } ) {
 					/>
 				</PanelBody>
 			</InspectorControls>
-			<Disabled>
-				<ServerSideRender block={ name } attributes={ attributes } />
-			</Disabled>
+			<ServerSideRender block={ name } attributes={ attributes } skipBlockSupportAttributes />
 		</div>
 	);
 }
