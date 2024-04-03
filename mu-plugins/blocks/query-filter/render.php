@@ -57,6 +57,15 @@ $button_classes = array_keys(
 	)
 );
 
+$modal_classes = array_keys(
+	array_filter(
+		array(
+			'wporg-query-filter__modal' => true,
+			'is-single-select' => ! $has_multiple,
+		)
+	)
+);
+
 if ( $selected_count && $has_multiple ) {
 	/* translators: %s is count of currently selected filters. */
 	$apply_label = sprintf( __( 'Apply (%s)', 'wporg' ), $selected_count );
@@ -87,7 +96,7 @@ if ( $selected_count && $has_multiple ) {
 	></div>
 
 	<div
-		class="wporg-query-filter__modal"
+		class="<?php echo esc_attr( implode( ' ', $modal_classes ) ); ?>"
 		id="<?php echo esc_attr( $html_id ); ?>"
 		data-wp-bind--hidden="!context.isOpen"
 		data-wp-effect--focus="effects.focusFirstElement"
@@ -146,6 +155,7 @@ if ( $selected_count && $has_multiple ) {
 			?>
 
 			<div class="wporg-query-filter__modal-actions">
+				<?php if ( $has_multiple ) : ?>
 				<input
 					type="button"
 					class="wporg-query-filter__modal-action-clear"
@@ -153,8 +163,10 @@ if ( $selected_count && $has_multiple ) {
 					data-wp-on--click="actions.clearSelection"
 					aria-disabled="<?php echo $selected_count ? 'false' : 'true'; ?>"
 				/>
+				<?php endif; ?>
 				<input
 					type="submit"
+					class="wporg-query-filter__modal-action-submit"
 					data-label-with-count="<?php echo esc_attr( $label_count ); ?>"
 					data-label=<?php esc_attr_e( 'Apply', 'wporg' ); ?>
 					value="<?php echo esc_html( $apply_label ); ?>"
