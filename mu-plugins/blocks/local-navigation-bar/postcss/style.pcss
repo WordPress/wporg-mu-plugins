@@ -1,5 +1,5 @@
 /* Set up the custom properties. These can be overridden by settings in theme.json. */
-:where(body) {
+:where(html) {
 	--wp--custom--local-navigation-bar--spacing--height: 60px;
 }
 
@@ -318,8 +318,7 @@
 }
 
 @media (min-width: 890px) {
-	/* stylelint-disable selector-id-pattern */
-	#wp--skip-link--target {
-		scroll-margin-top: var(--wp--custom--local-navigation-bar--spacing--height, 0);
+	html {
+		scroll-padding-top: calc(var(--wp--custom--local-navigation-bar--spacing--height, 0px) + var(--wp-admin--admin-bar--height, 0px));
 	}
 }
