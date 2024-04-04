@@ -70,7 +70,9 @@ const { actions } = store( 'wporg/query-filter', {
 				}
 			}
 
-			clearButton.setAttribute( 'aria-disabled', count ? 'false' : 'true' );
+			if ( clearButton ) {
+				clearButton.setAttribute( 'aria-disabled', count ? 'false' : 'true' );
+			}
 		},
 
 		toggle: () => {
