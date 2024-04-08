@@ -38,6 +38,7 @@ require_once __DIR__ . '/blocks/link-wrapper/index.php';
 require_once __DIR__ . '/blocks/navigation/index.php';
 require_once __DIR__ . '/blocks/notice/index.php';
 require_once __DIR__ . '/blocks/query-filter/index.php';
+require_once __DIR__ . '/blocks/query-has-results/index.php';
 require_once __DIR__ . '/blocks/query-total/index.php';
 require_once __DIR__ . '/blocks/sidebar-container/index.php';
 require_once __DIR__ . '/blocks/screenshot-preview/block.php';
