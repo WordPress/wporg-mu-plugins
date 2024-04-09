@@ -1,14 +1,7 @@
 .wp-block-wporg-site-breadcrumbs {
 	position: relative;
 	max-width: 100%;
-
-	&::after {
-		content: "";
-		position: absolute;
-		inset: 0 0 0 auto;
-		width: 60px;
-		background-image: linear-gradient(to left, #ffff, #fff0);
-	}
+	mask-image: linear-gradient(to right, #000 calc(100% - 60px), transparent);
 
 	& .wporg-site-breadcrumbs__wrapper {
 		overflow-x: auto;
