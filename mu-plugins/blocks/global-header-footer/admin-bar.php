@@ -43,6 +43,16 @@ function filter_admin_bar_links( $wp_admin_bar ) {
 			[ 'updates', 'stats', 'search', 'my-sites', 'admin-bar-likes-widget' ]
 		);
 
+		// Restore edit profile link.
+		$wp_admin_bar->add_node(
+			array(
+				'parent' => 'my-account-actions',
+				'id'     => 'edit-profile',
+				'title'  => __( 'Edit Profile' ),
+				'href'   => get_edit_profile_url( get_current_user_id() ),
+			)
+		);
+
 		// Empty array so we can reverse it to keep the correct order.
 		$edit_items = [];
 
@@ -58,9 +68,20 @@ function filter_admin_bar_links( $wp_admin_bar ) {
 					$ab_item->meta['class'] = 'ab-sub-secondary';
 				}
 				$wp_admin_bar->add_node( $ab_item );
-			} else if ( in_array( $ab_item->id, [ 'edit-profile', 'logout' ] ) ) {
-				// Move "Edit Profile" and "Logout" to a new group at the end of the dropdown.
+			} else if ( 'user-info' === $ab_item->id || 'my-account' === $ab_item->id ) {
+				// Change the link location to the profile, rather than edit.
+				$ab_item->href = str_replace( '/profile/edit/', '/', $ab_item->href );
+
+				// Remove the Edit Profile text.
+				$ab_item->title = preg_replace( '!<span[^>]+edit-profile[^>]+>[^<]+</span>!i', '', $ab_item->title );
+
+				$wp_admin_bar->add_node( $ab_item );
+			} else if ( 'logout' === $ab_item->id ) {
+				// Move "Logout" to a new group at the end of the dropdown.
 				$ab_item->parent = 'my-account-actions';
+
+				// Remove it before adding, to ensure it's after the Edit Profile link.
+				$wp_admin_bar->remove_node('logout');
 				$wp_admin_bar->add_node( $ab_item );
 			} else if ( in_array( $ab_item->id, [ 'edit', 'site-editor', 'customize' ] ) ) {
 				// Move "Edit [object]", "Customize", and "Edit Site" (if exist) to list to be
