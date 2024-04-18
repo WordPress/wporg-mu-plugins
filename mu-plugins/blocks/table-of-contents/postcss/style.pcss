@@ -106,7 +106,8 @@
 .is-toc-heading {
 	& a {
 		--local--icon-size: 24px;
-		display: inline-block;
+		display: inline-flex;
+		align-items: center;
 		color: inherit;
 		text-decoration: none !important;
 		padding-right: calc(var(--local--icon-size) + 0.1em);
@@ -119,10 +120,9 @@
 			width: calc(var(--local--icon-size) + 0.1em);
 			height: var(--local--icon-size);
 			text-decoration: none !important;
-			vertical-align: baseline;
 
 			/* stylelint-disable-next-line function-url-quotes */
-			background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M10.083 17.639H8.444a5.194 5.194 0 1 1 0-10.389H10.084v1.5H8.443a3.694 3.694 0 0 0 0 7.389H10.084v1.5ZM13.917 7.25h1.639a5.194 5.194 0 0 1 0 10.39H13.915v-1.5H15.557a3.694 3.694 0 0 0 0-7.39H13.915v-1.5Zm-4.584 6.084h5.334v-1.5H9.333v1.5Z' fill='%233858E9'/%3E%3C/svg%3E%0A");
+			background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2724%27 height=%2713%27 fill=%27none%27%3E%3Cpath fill=%27%233858E9%27 fill-rule=%27evenodd%27 d=%27M10.083 9.91H6.32a3.069 3.069 0 0 1 0-6.139h3.764v1.5H6.32a1.569 1.569 0 0 0 0 3.138h3.764v1.5Zm3.834-6.138h3.764a3.069 3.069 0 0 1 0 6.137h-3.764v-1.5h3.764a1.569 1.569 0 0 0 0-3.137h-3.764zM9.333 7.304h5.334v-1.5H9.333z%27 clip-rule=%27evenodd%27/%3E%3C/svg%3E");
 			background-position: right center;
 			background-repeat: no-repeat;
 			background-size: contain;
