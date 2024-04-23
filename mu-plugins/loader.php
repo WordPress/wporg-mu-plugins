@@ -42,6 +42,7 @@ require_once __DIR__ . '/blocks/query-has-results/index.php';
 require_once __DIR__ . '/blocks/query-total/index.php';
 require_once __DIR__ . '/blocks/sidebar-container/index.php';
 require_once __DIR__ . '/blocks/screenshot-preview/block.php';
+require_once __DIR__ . '/blocks/screenshot-preview-block/block.php';
 require_once __DIR__ . '/blocks/site-breadcrumbs/index.php';
 require_once __DIR__ . '/blocks/table-of-contents/index.php';
 require_once __DIR__ . '/blocks/time/index.php';
