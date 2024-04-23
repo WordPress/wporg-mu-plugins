@@ -3,7 +3,11 @@ if ( ! isset( $attributes['src'] ) ) {
 	return '';
 }
 
-$view_url = $attributes['src'];
+$view_url = wp_http_validate_url( $attributes['src'] );
+if ( ! $view_url ) {
+	return '';
+}
+
 $alt_text = $attributes['alt'] ?? '';
 $has_link = isset( $attributes['href'] ) && $attributes['href'];
 $width = isset( $attributes['width'] ) ? $attributes['width'] * 2 : 800;
