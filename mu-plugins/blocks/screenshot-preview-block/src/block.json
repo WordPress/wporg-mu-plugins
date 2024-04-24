@@ -12,6 +12,10 @@
 			"type": "string",
 			"default": ""
 		},
+		"fullPage": {
+			"type": "boolean",
+			"default": true
+		},
 		"href": {
 			"type": "string",
 			"default": ""
@@ -20,13 +24,17 @@
 			"type": "string",
 			"default": ""
 		},
-		"width": {
+		"viewportHeight": {
 			"type": "integer",
-			"default": 800
+			"default": 0
 		},
 		"viewportWidth": {
 			"type": "integer",
 			"default": 1200
+		},
+		"width": {
+			"type": "integer",
+			"default": 800
 		}
 	},
 	"supports": {

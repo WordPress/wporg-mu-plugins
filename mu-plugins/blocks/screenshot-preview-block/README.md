@@ -28,8 +28,10 @@ echo do_blocks( '<!-- wp:wporg/screenshot-preview {"src":"https://wordpress.org/
 
 | Name          | Type    | Description                                | Default |
 |---------------|---------|--------------------------------------------|---------|
-| alt           | string  | Alt text for image.                        | ""      |
-| href          | string  | Destination for link wrapper, if provided. | ""      |
-| src           | string  | Source (website) to capture for display    | ""      |
-| width         | integer | Image width                                | 800     |
-| viewportWidth | integer | Viewport width                             | 1200    |
+| alt            | string  | Alt text for image.                         | ""      |
+| fullPage       | boolean | If true, image only captures page content, up to viewportHeight. If false, image is fixed height (viewportHeight), with whitespace surrounding. | "" |
+| href           | string  | Destination for link wrapper, if provided.  | ""      |
+| src            | string  | Source (website) to capture for display     | ""      |
+| viewportHeight | integer | Viewport height (or max-height if fullPage) | 0       |
+| viewportWidth  | integer | Viewport width                              | 1200    |
+| width          | integer | Image width                                 | 800     |
