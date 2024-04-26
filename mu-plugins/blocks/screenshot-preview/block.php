@@ -28,7 +28,7 @@ function register_assets() {
 
 	if ( ! is_admin() && function_exists( 'wporg_themes_init' ) ) {
 		wp_enqueue_script(
-			'wporg-screenshot-preview',
+			'wporg-mshots-preview',
 			plugin_dir_url( __FILE__ ) . 'build/index.js',
 			$block_info['dependencies'],
 			$block_info['version'],
@@ -36,12 +36,12 @@ function register_assets() {
 		);
 
 		wp_enqueue_style(
-			'wporg-screenshot-preview-style',
+			'wporg-mshots-preview-style',
 			plugin_dir_url( __FILE__ ) . '/build/style.css',
 			array(),
 			filemtime( __DIR__ . '/build/style.css' )
 		);
 
-		wp_style_add_data( 'wporg-screenshot-preview-style', 'rtl', 'replace' );
+		wp_style_add_data( 'wporg-mshots-preview-style', 'rtl', 'replace' );
 	}
 }
