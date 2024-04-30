@@ -3,6 +3,10 @@
 	max-width: 100%;
 	mask-image: linear-gradient(to right, #000 calc(100% - 60px), transparent);
 
+	[dir="rtl"] & {
+		mask-image: linear-gradient(to left, #000 calc(100% - 60px), transparent);
+	}
+
 	& .wporg-site-breadcrumbs__wrapper {
 		overflow-x: auto;
 		text-overflow: clip;
