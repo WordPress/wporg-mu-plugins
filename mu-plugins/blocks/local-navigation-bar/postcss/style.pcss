@@ -114,12 +114,8 @@
 		padding-right: 0;
 
 		/* Add right padding if the dropdown caret is not being displayed. */
-		&:not(.wporg-show-collapsed-nav) {
-			& .wp-block-navigation {
-				&:not(.wporg-is-mobile-nav) {
-					padding-right: calc(16px + var(--wp--custom--alignment--scroll-bar-width));
-				}
-			}
+		& nav:not(.wporg-is-mobile-nav):not(.wporg-is-collapsed-nav) {
+			padding-right: var(--wp--preset--spacing--edge-space);
 		}
 
 		& .global-header__wporg-logo-mark {
