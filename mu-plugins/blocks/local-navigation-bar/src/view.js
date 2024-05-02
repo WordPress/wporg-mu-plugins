@@ -83,7 +83,7 @@ function init() {
 				parseInt( paddingInlineStart, 10 ) -
 				parseInt( paddingInlineEnd, 10 ) -
 				parseInt( gap, 10 ) -
-				24; // 24px right padding is added when the collapsed nav is hidden.
+				20; // 20px right padding is added when the collapsed nav is hidden.
 
 			const titleElement = container.querySelector( '.wp-block-site-title, div.wp-block-group' );
 			if ( ! titleElement ) {
