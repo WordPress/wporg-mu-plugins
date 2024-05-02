@@ -113,6 +113,15 @@
 		/* Needed for aligning the dropdown caret correctly. */
 		padding-right: 0;
 
+		/* Add right padding if the dropdown caret is not being displayed. */
+		&:not(.wporg-show-collapsed-nav) {
+			& .wp-block-navigation {
+				&:not(.wporg-is-mobile-nav) {
+					padding-right: calc(16px + var(--wp--custom--alignment--scroll-bar-width));
+				}
+			}
+		}
+
 		& .global-header__wporg-logo-mark {
 			display: none;
 		}
@@ -184,11 +193,6 @@
 
 	/* Navigation. */
 	& .wp-block-navigation {
-
-		/* Add right padding if the dropdown caret is not being displayed. */
-		&:not(.wporg-is-mobile-nav):not(.wporg-is-collapsed-nav) {
-			padding-right: calc(16px + var(--wp--custom--alignment--scroll-bar-width));
-		}
 
 		& .wp-block-navigation-submenu__toggle {
 			padding-block: calc(var(--wp--preset--spacing--10) / 2);
