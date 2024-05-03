@@ -110,8 +110,13 @@
 		position: relative !important;
 		top: 0 !important;
 
-		/* Matches the padding of the global header button. */
-		padding-right: calc(16px + var(--wp--custom--alignment--scroll-bar-width)) !important;
+		/* Needed for aligning the dropdown caret correctly. */
+		padding-right: 0;
+
+		/* Add right padding if the dropdown caret is not being displayed. */
+		& nav:not(.wporg-is-mobile-nav):not(.wporg-is-collapsed-nav) {
+			padding-right: var(--wp--preset--spacing--edge-space);
+		}
 
 		& .global-header__wporg-logo-mark {
 			display: none;
@@ -225,6 +230,9 @@
 		& .wp-block-navigation__responsive-container-close {
 			padding: 17px;
 
+			/* Add right padding to correctly align the dropdown caret. */
+			padding-right: calc(16px + var(--wp--custom--alignment--scroll-bar-width));
+
 			&:focus-visible {
 				outline: none;
 				border-radius: 2px;
@@ -234,10 +242,6 @@
 
 		&  .wp-block-navigation__responsive-container-close {
 			margin-block-start: calc(var(--wp--custom--local-navigation-bar--spacing--height) * -1) !important;
-
-			@media (max-width: 600px) {
-				margin-inline-end: calc(16px + var(--wp--custom--alignment--scroll-bar-width));
-			}
 		}
 
 		& .wp-block-navigation__responsive-close,
