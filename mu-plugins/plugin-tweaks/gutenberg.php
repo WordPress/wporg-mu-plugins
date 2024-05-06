@@ -11,6 +11,10 @@ add_filter( 'render_block_core/post-title', __NAMESPACE__ . '\swap_h0_for_paragr
 add_filter( 'render_block_core/query-title', __NAMESPACE__ . '\swap_h0_for_paragraph', 20 );
 add_filter( 'wp_script_attributes', __NAMESPACE__ . '\inject_module_cachebuster' );
 
+// Remove duplicate elements generation, can be removed after GB18.3+ is active.
+// See https://github.com/WordPress/wporg-parent-2021/issues/135.
+remove_filter( 'render_block_data', 'wp_render_elements_support_styles', 10, 1 );
+
 /**
  * Replace invalid `h0` tags with paragraphs.
  *
