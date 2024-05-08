@@ -18,7 +18,6 @@ namespace WordPressdotorg\MU_Plugins\Language_Suggest;
 function language_suggest_block_init() {
 	register_block_type( __DIR__ . '/build' );
 
-
 	register_block_style(
 		'wporg/language-suggest',
 		array(
