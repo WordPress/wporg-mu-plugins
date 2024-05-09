@@ -6,28 +6,25 @@
  */
 
 .wp-block-wporg-language-suggest {
-	--wp--custom--wporg-language-suggest--background: var(--wp--preset--color--blueberry-4, #eff2ff);
-	--wp--custom--wporg-language-suggest--color--text: var(--wp--preset--color--charcoal-1, #1e1e1e);
-	--wp--custom--wporg-language-suggest--font-size: var(--wp--preset--font-size--extra-small, 12px);
-	--wp--custom--wporg-language-suggest--spacing: var(--wp--preset--spacing--10, 10px);
+	--wporg-language-suggest--background: var(--wp--custom--wporg-language-suggest--background, var(--wp--preset--color--blueberry-4, #eff2ff));
+	--wporg-language-suggest--text: var(--wp--custom--wporg-language-suggest--text, var(--wp--preset--color--charcoal-1, #1e1e1e));
+	--wporg-language-suggest--font-size: var(--wp--custom--wporg-language-suggest--font-size, var(--wp--preset--font-size--extra-small, 12px));
+	--wporg-language-suggest--spacing: var(--wp--custom--wporg-language-suggest--spacing, var(--wp--preset--spacing--10, 10px));
 
-	background-color: var(--wp--custom--wporg-language-suggest--background);
-	color: var(--wp--custom--wporg-language-suggest--color--text);
-	font-size: var(--wp--custom--wporg-language-suggest--font-size);
+	background-color: var(--wporg-language-suggest--background);
+	color: var(--wporg-language-suggest--text);
+	font-size: var(--wporg-language-suggest--font-size);
 	line-height: 1;
 	text-align: center;
 }
 
 /* The api returns a div element but that isn't guaranteed. */
 .wp-block-wporg-language-suggest > * {
-	padding: var(--wp--custom--wporg-language-suggest--spacing) 4px;
+	padding: var(--wporg-language-suggest--spacing) 4px;
 }
 
 .wp-block-wporg-language-suggest.is-style-prominent {
-	--wp--custom--wporg-language-suggest--background: var(--wp--preset--color--lemon-3, #fffdd6);
-	--wp--custom--wporg-language-suggest--font-size: var(--wp--preset--font-size--small, 14px);
-}
-
-.wp-block-wporg-language-suggest.is-style-prominent > * {
-	--wp--custom--wporg-language-suggest--spacing: var(--wp--preset--spacing--20);
+	--wporg-language-suggest--background: var(--wp--preset--color--lemon-3, #fffdd6);
+	--wporg-language-suggest--font-size: var(--wp--preset--font-size--small, 14px);
+	--wporg-language-suggest--spacing: var(--wp--preset--spacing--20, 20px);
 }
