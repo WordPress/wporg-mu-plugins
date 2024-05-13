@@ -3,7 +3,7 @@
 namespace WordPressdotorg\MU_Plugins\REST_API;
 
 use WordPressdotorg\Plugin_Directory\Plugin_Directory;
-use function WordPressdotorg\MU_Plugins\Helpers\Locale\{ get_all_locales_with_subdomain, get_all_valid_locales, get_locale_from_header, get_transalated_locales };
+use function WordPressdotorg\MU_Plugins\Helpers\Locale\{ get_all_locales_with_subdomain, get_all_valid_locales, get_locale_from_header, get_translated_locales };
 
 /**
  * Plugins_Locale_Banner_Controller
@@ -98,7 +98,7 @@ class Plugins_Locale_Banner_Controller extends Base_Locale_Banner_Controller {
 		$locale_subdomain_assoc = get_all_locales_with_subdomain();
 		$current_locale = get_locale();
 		$current_gp_locale = \GP_Locales::by_field( 'wp_locale', $current_locale );
-		$translated_locales = get_transalated_locales( 'plugin', $plugin_slug );
+		$translated_locales = get_translated_locales( 'plugin', $plugin_slug );
 
 		// Build a list of WordPress locales which we'll suggest to the user.
 		$suggest_locales = array_values( array_intersect( get_locale_from_header(), $translated_locales ) );

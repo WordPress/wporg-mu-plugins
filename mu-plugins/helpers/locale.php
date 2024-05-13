@@ -147,7 +147,7 @@ function map_locale( $lang, $region, $available_locales ) {
  *
  * @return array
  */
-function get_transalated_locales( $type, $slug ) {
+function get_translated_locales( $type, $slug ) {
 	global $wpdb;
 
 	$language_packs = $wpdb->get_results(
