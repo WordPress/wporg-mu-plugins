@@ -20,6 +20,19 @@ function initialize_rest_endpoints() {
 
 	$users_controller = new Users_Controller();
 	$users_controller->register_routes();
+
+	if ( defined( 'WPORG_THEME_DIRECTORY_BLOGID' ) && WPORG_THEME_DIRECTORY_BLOGID === get_current_blog_id() ) {
+		require_once __DIR__ . '/endpoints/class-wporg-base-locale-banner-controller.php';
+		require_once __DIR__ . '/endpoints/class-wporg-themes-locale-banner-controller.php';
+		$locale_banner_controller = new Themes_Locale_Banner_Controller();
+		$locale_banner_controller->register_routes();
+	}
+	if ( class_exists( 'WordPressdotorg\Plugin_Directory\Plugin_Directory' ) ) {
+		require_once __DIR__ . '/endpoints/class-wporg-base-locale-banner-controller.php';
+		require_once __DIR__ . '/endpoints/class-wporg-plugins-locale-banner-controller.php';
+		$locale_banner_controller = new Plugins_Locale_Banner_Controller();
+		$locale_banner_controller->register_routes();
+	}
 }
 
 /**
