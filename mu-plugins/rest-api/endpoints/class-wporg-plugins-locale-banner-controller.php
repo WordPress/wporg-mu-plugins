@@ -122,22 +122,21 @@ class Plugins_Locale_Banner_Controller extends Base_Locale_Banner_Controller {
 		if ( 'en_US' !== $current_locale && $current_gp_locale && ! in_array( $current_locale, $translated_locales ) ) {
 			$output_locale = $current_locale;
 			switch_to_locale( $output_locale );
-			$suggest_string = sprintf(
-				// translators: %s: Locale name.
-				__( 'This plugin is not translated into %s yet.', 'wporg' ),
-				$current_gp_locale->native_name
-			);
 
-			// Append some other suggestions if they exist.
 			if ( ! empty( $suggestion_links ) ) {
-				$suggest_string .= ' ' . sprintf(
-					// translators: %s: List of links to plugin in other locales.
-					__( 'This plugin is available in %s.', 'wporg' ),
+				$suggest_string = sprintf(
+					// translators: %1$s: Locale name, %2$s: List of links to plugin in other locales.
+					__( 'This plugin is not translated into %1$s yet, but it is available in %2$s.', 'wporg' ),
+					$current_gp_locale->native_name,
 					wp_sprintf_l( '%l', $suggestion_links )
 				);
+			} else {
+				$suggest_string = sprintf(
+					// translators: %s: Locale name.
+					__( 'This plugin is not translated into %s yet.', 'wporg' ),
+					$current_gp_locale->native_name
+				);
 			}
-
-			// Lastly, add the call for help.
 			$suggest_string .= ' ' . sprintf(
 				'<a href="%1$s">%2$s</a>',
 				esc_url( 'https://translate.wordpress.org/projects/wp-plugins/' . $plugin_slug ),
