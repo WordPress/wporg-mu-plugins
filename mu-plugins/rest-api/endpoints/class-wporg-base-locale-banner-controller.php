@@ -5,7 +5,7 @@ namespace WordPressdotorg\MU_Plugins\REST_API;
 /**
  * Base_Locale_Banner_Controller
  */
-class Base_Locale_Banner_Controller extends \WP_REST_Controller {
+abstract class Base_Locale_Banner_Controller extends \WP_REST_Controller {
 	/**
 	 * Register the endpoint routes used across both themes and plugins.
 	 *
@@ -54,15 +54,7 @@ class Base_Locale_Banner_Controller extends \WP_REST_Controller {
 	 *
 	 * Must be defined in the child class.
 	 */
-	public function check_slug( $param ) {
-		_doing_it_wrong(
-			'Base_Locale_Banner_Controller::check_slug',
-			/* translators: %s: register_routes() */
-			sprintf( "Method '%s' must be overridden.", __METHOD__ ),
-			'4.7.0'
-		);
-		return false;
-	}
+	abstract public function check_slug( $param );
 
 	/**
 	 * Send the response as plain text so it can be used as-is.
