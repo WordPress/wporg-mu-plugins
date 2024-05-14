@@ -20,9 +20,7 @@ abstract class Base_Locale_Banner_Controller extends \WP_REST_Controller {
 				'callback' => array( $this, 'get_response' ),
 				'args' => array(
 					'debug' => array(
-						'sanitize_callback' => function( $param ) {
-							return (bool) $param;
-						},
+						'type' => 'boolean',
 					),
 				),
 				'permission_callback' => '__return_true',
@@ -36,9 +34,7 @@ abstract class Base_Locale_Banner_Controller extends \WP_REST_Controller {
 				'callback' => array( $this, 'get_response_for_item' ),
 				'args' => array(
 					'debug' => array(
-						'sanitize_callback' => function( $param ) {
-							return (bool) $param;
-						},
+						'type' => 'boolean',
 					),
 					'slug' => array(
 						'validate_callback' => array( $this, 'check_slug' ),
