@@ -21,7 +21,7 @@ class Plugins_Locale_Banner_Controller extends Base_Locale_Banner_Controller {
 	 * Validate the plugin slug.
 	 */
 	public function check_slug( $param ) {
-		return is_string( $param ) && $param && Plugin_Directory::get_plugin_post( $param );
+		return Plugin_Directory::get_plugin_post( $param );
 	}
 
 	/**
