@@ -17,5 +17,13 @@ namespace WordPressdotorg\MU_Plugins\Language_Suggest;
  */
 function language_suggest_block_init() {
 	register_block_type( __DIR__ . '/build' );
+
+	register_block_style(
+		'wporg/language-suggest',
+		array(
+			'name'         => 'prominent',
+			'label'        => _x( 'Prominent', 'wporg' ),
+		)
+	);
 }
 add_action( 'init', __NAMESPACE__ . '\language_suggest_block_init' );
