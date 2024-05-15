@@ -1,7 +1,10 @@
 <?php
 
 namespace WordPressdotorg\MU_Plugins\Helpers;
+
 defined( 'WPINC' ) || die();
+
+require_once __DIR__ . '/locale.php';
 
 /**
  * Join a string with a natural language conjunction at the end.
