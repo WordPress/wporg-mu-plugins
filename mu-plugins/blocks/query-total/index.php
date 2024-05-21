@@ -30,7 +30,7 @@ function render( $attributes, $content, $block ) {
 	// Check whether this is a custom query or inheriting from global.
 	if ( isset( $block->context['query']['inherit'] ) && $block->context['query']['inherit'] ) {
 		global $wp_query;
-		$found_posts = $wp_query->found_posts;
+		$found_posts = $wp_query->original_found_posts ?? $wp_query->found_posts;
 	} else {
 		$custom_query = new WP_Query( build_query_vars_from_query_block( $block, $page ) );
 		$found_posts = (int) $custom_query->found_posts;
