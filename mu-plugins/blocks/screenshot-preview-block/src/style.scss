@@ -22,6 +22,10 @@
 		box-shadow: none;
 	}
 
+	&:where(.is-hidden) {
+		display: none;
+	}
+
 	.wporg-screenshot-preview__container {
 		aspect-ratio: 4 / 3;
 		display: flex;

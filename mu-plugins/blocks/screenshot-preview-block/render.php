@@ -10,6 +10,7 @@ if ( ! $view_url ) {
 
 $alt_text = $attributes['alt'] ?? '';
 $has_link = isset( $attributes['href'] ) && $attributes['href'];
+$is_hidden = (bool) $attributes['isHidden'];
 
 // Set up the viewport sizes.
 $viewport_width = $attributes['viewportWidth'] ?? 1200;
@@ -44,6 +45,7 @@ $init_state = [
 	'attempts' => 0,
 	'shouldRetry' => true,
 	'hasError' => false,
+	'isHidden' => $is_hidden,
 ];
 $encoded_state = wp_json_encode( $init_state );
 
@@ -57,9 +59,11 @@ if ( $has_link ) {
 	<?php echo get_block_wrapper_attributes( array( 'class' => $classname ) ); // phpcs:ignore ?>
 	data-wp-interactive="wporg/screenshot-preview"
 	data-wp-context="<?php echo esc_attr( $encoded_state ); ?>"
-	data-wp-init="callbacks.init"
+	data-wp-watch="callbacks.init"
 	data-wp-class--has-loaded="state.hasLoaded"
 	data-wp-class--has-error="state.hasError"
+	data-wp-class--is-hidden="context.isHidden"
+	data-wp-on--wporg-show="actions.makeVisible"
 	tabIndex="-1"
 >
 	<?php if ( $has_link ) : ?>
