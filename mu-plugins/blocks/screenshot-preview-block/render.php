@@ -33,8 +33,12 @@ if ( $fullpage ) {
 	$mshots_args['vph'] = $viewport_height ? $viewport_height : 900;
 }
 
-$cache_key = '20240423'; // To break out of cached image.
-$view_url = add_query_arg( 'v', $cache_key, $view_url );
+// Add cachebuster only if the existing URL doesn't have one.
+if ( ! str_contains( $view_url, '&v=' ) && ! str_contains( $view_url, '?v=' ) ) {
+	$cache_bust = '20240423'; // To break out of cached image.
+	$view_url = add_query_arg( 'v', $cache_bust, $view_url );
+}
+
 $url = add_query_arg( $mshots_args, 'https://s0.wp.com/mshots/v1/' . urlencode( $view_url ) );
 
 // Initial state to pass to Interactivity API.
