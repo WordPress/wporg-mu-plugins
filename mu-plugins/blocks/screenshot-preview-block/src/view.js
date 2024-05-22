@@ -44,6 +44,11 @@ const { actions, state } = store( 'wporg/screenshot-preview', {
 			context.base64Image = value;
 		},
 
+		makeVisible() {
+			const context = getContext();
+			context.isHidden = false;
+		},
+
 		*fetchImage( fullUrl ) {
 			try {
 				const context = getContext();
@@ -72,9 +77,12 @@ const { actions, state } = store( 'wporg/screenshot-preview', {
 	},
 
 	callbacks: {
-		// Run on init, starts the image fetch process.
+		// Run on any changes, trigger the image fetch process.
 		*init() {
-			const { src } = getContext();
+			const { isHidden, src } = getContext();
+			if ( isHidden ) {
+				return;
+			}
 
 			if ( ! state.base64Image ) {
 				// Initial fetch.
