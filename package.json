@@ -14,7 +14,7 @@
 	"devDependencies": {
 		"@wordpress/browserslist-config": "5.34.0",
 		"@wordpress/env": "9.3.0",
-		"@wordpress/scripts": "27.2.0",
+		"@wordpress/scripts": "27.9.0",
 		"chalk": "4.1.2",
 		"cross-spawn": "7.0.3",
 		"cssnano": "6.0.3",
