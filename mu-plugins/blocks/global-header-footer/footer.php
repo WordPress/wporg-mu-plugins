@@ -158,7 +158,7 @@ $code_is_poetry_src = isset( $attributes['textColor'] ) && str_contains( $attrib
 		<!-- wp:image {"width":188,"height":13,"className":"global-footer__code_is_poetry"} -->
 		<figure class="wp-block-image is-resized global-footer__code_is_poetry">
 			<img
-				src=<?php echo esc_url( $code_is_poetry_src ); ?>
+				src="<?php echo esc_url( $code_is_poetry_src ); ?>"
 				alt="<?php echo esc_html_x( 'Code is Poetry', 'Image alt text', 'wporg' ); ?>"
 				width="188"
 				height="13"
