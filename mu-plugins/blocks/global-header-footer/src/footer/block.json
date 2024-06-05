@@ -26,7 +26,12 @@
 			"width": true
 		}
 	},
-	"attributes": {},
+	"attributes": {
+		"tagName": {
+			"type": "string",
+			"default": "footer"
+		}
+	},
 	"textdomain": "wporg",
 	"style": "wporg-global-header-footer",
 	"editorStyle": "wporg-global-header-footer",

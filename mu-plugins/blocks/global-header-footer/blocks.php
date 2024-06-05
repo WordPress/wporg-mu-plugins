@@ -847,8 +847,10 @@ function render_global_footer( $attributes, $content, $block ) {
 	$wrapper_attributes = get_block_wrapper_attributes(
 		array( 'class' => 'global-footer wp-block-group' )
 	);
+	$tag_name = $attributes['tagName'] ?? 'footer';
 	return sprintf(
-		'<footer %1$s>%2$s</footer>%3$s',
+		'<%1$s %2$s>%3$s</%1$s>%4$s',
+		$tag_name,
 		$wrapper_attributes,
 		$markup,
 		$footer_markup,
