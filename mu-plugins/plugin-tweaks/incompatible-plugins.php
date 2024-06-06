@@ -17,11 +17,11 @@ if ( defined( 'WP_ADMIN' ) && WP_ADMIN && str_contains( $_SERVER['REQUEST_URI'] 
  */
 const PLUGINS = [
 	[
-		// Blocks Everywhere: Uses private/unstable APIs,
-		// which are blocked after GB 16.8.
-		'check' => 'blocks-everywhere/blocks-everywhere.php',
+		// Blocks Everywhere: Supports up to GB 17.9.
+		// See https://github.com/Automattic/blocks-everywhere/releases/tag/1.23.0
+		'check' => 'blocks-everywhere-1.23/blocks-everywhere.php',
 		'from'  => 'gutenberg/gutenberg.php',
-		'to'    => 'gutenberg-16.8/gutenberg.php',
+		'to'    => 'gutenberg-17.9/gutenberg.php',
 	],
 ];
 
