@@ -1,10 +1,6 @@
-/**
- * Fallback values for custom properties match CSS defaults.
- */
-const SPACE_TO_TOP = getCustomPropValue( '--wp--custom--wporg-sidebar-container--spacing--margin--top' ) || 80;
-
 let containers;
-let mainEl;
+let main;
+let footer;
 let adminBarHeight;
 let globalNavHeight;
 const scrollHandlers = [];
@@ -45,19 +41,21 @@ function createScrollHandler( container ) {
 
 		const { scrollY, innerHeight: windowHeight } = window;
 		const scrollPosition = scrollY - adminBarHeight;
-		const localNavOffset = getCustomPropValue( '--local--nav--offset', container );
-		const paddingTop = getCustomPropValue( '--local--padding', container );
+		const localNavHeight = getCustomPropValue( '--local--nav--offset', container );
+		const mainTop = main.getBoundingClientRect().top;
 
-		// Toggle the fixed position based on whether the scrollPosition is greater than the
-		// initial gap from the top minus the padding applied when fixed.
-		const shouldFix =
-			scrollPosition > SPACE_TO_TOP + globalNavHeight + localNavOffset - adminBarHeight - paddingTop;
+		// Toggle the fixed position based on whether main has reached the local nav.
+		// This assumes that main and the sidebar are top aligned.
+		const shouldFix = mainTop <= globalNavHeight + localNavHeight;
 		container.classList.toggle( 'is-fixed-sidebar', shouldFix );
 
 		// If the sidebar is fixed and the footer is visible in the viewport, reduce the height to stop overlap.
-		const footerStart = mainEl.offsetTop + mainEl.offsetHeight;
-		if ( shouldFix && footerStart < scrollPosition + windowHeight ) {
-			container.style.setProperty( 'height', `${ footerStart - scrollPosition - container.offsetTop }px` );
+		const footerShowing = scrollPosition + windowHeight > footer.offsetTop;
+		if ( shouldFix && footerShowing ) {
+			container.style.setProperty(
+				'height',
+				`${ footer.offsetTop - scrollPosition - container.offsetTop }px`
+			);
 		} else {
 			container.style.removeProperty( 'height' );
 		}
@@ -80,6 +78,7 @@ function onResize() {
 		// Toggle the floating class based on the configured breakpoint.
 		const shouldFloat = window.matchMedia( `(min-width: ${ container.dataset.breakpoint })` ).matches;
 		container.classList.toggle( 'is-floating-sidebar', shouldFloat );
+
 		// Show the sidebar after layout, if it has been hidden to avoid FOUC.
 		if ( 'none' === window.getComputedStyle( container ).display ) {
 			container.style.setProperty( 'display', 'revert' );
@@ -90,10 +89,11 @@ function onResize() {
 }
 
 function init() {
+	main = document.querySelector( 'main' );
 	containers = document.querySelectorAll( '.wp-block-wporg-sidebar-container' );
-	mainEl = document.getElementById( 'wp--skip-link--target' );
+	footer = document.querySelector( 'footer.wp-block-template-part' );
 
-	if ( mainEl && containers.length ) {
+	if ( main && containers.length && footer ) {
 		containers.forEach( ( container ) => {
 			const scrollHandler = createScrollHandler( container );
 			scrollHandlers.push( scrollHandler );

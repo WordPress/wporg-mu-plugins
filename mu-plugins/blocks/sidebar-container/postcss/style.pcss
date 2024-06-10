@@ -2,9 +2,8 @@
 	/* stylelint-disable-next-line length-zero-no-unit */
 	--local--offset-top: var(--wp-admin--admin-bar--height, 0px);
 
-	/* These vars are used in JS calcs */
+	/* Used in JS calcs */
 	--local--nav--offset: var(--wp--custom--local-navigation-bar--spacing--height, 60px);
-	--local--padding: var(--wp--preset--spacing--20);
 
 	/* Account for local nav height on larger screens where it becomes fixed. */
 	@media (min-width: 890px) {
@@ -29,7 +28,7 @@
 		--local--block-end-sidebar--width: 340px;
 
 		width: var(--local--block-end-sidebar--width);
-		padding-bottom: var(--local--padding);
+		padding-bottom: var(--wp--preset--spacing--20);
 		overflow-y: auto;
 		overscroll-behavior: contain;
 		scrollbar-color: var(--wp--preset--color--charcoal-5) transparent;
@@ -68,7 +67,8 @@
 			top: 0;
 			height: calc(100vh - var(--local--offset-top));
 			margin-top: var(--local--offset-top) !important;
-			padding: var(--local--padding) 0;
+			padding: var(--wp--preset--spacing--20) 0;
+			inset-inline-end: var(--wp--preset--spacing--edge-space);
 
 			& .is-link-to-top {
 				display: block;
@@ -93,15 +93,5 @@ main .wp-block-wporg-sidebar-container {
 
 	&.is-floating-sidebar {
 		position: absolute;
-		top: calc(var(--wp-global-header-offset, 90px) + var(--wp--custom--local-navigation-bar--spacing--height, 60px));
-		margin-top: var(--wp--custom--wporg-sidebar-container--spacing--margin--top);
-
-		/* Right offset should be "edge spacing" at minimum, otherwise calculate it to be centered. */
-		right: max(var(--wp--preset--spacing--edge-space), calc((100% - var(--wp--style--global--wide-size)) / 2));
 	}
-}
-
-/* Set up the custom properties. These can be overridden by settings in theme.json. */
-:where(body) {
-	--wp--custom--wporg-sidebar-container--spacing--margin--top: var(--wp--preset--spacing--edge-space);
 }
