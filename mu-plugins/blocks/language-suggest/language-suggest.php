@@ -27,3 +27,20 @@ function language_suggest_block_init() {
 	);
 }
 add_action( 'init', __NAMESPACE__ . '\language_suggest_block_init' );
+
+function language_suggest_enqueue_scripts() {
+    wp_enqueue_script(
+        'language-suggest-front',
+        plugins_url( 'src/front.js', __FILE__ ),
+        array(),
+        null,
+        true
+    );
+
+    wp_add_inline_script(
+        'language-suggest-front',
+        'var LanguageSuggestData = ' . json_encode( array( 'locale' => get_locale() ) ) . ';',
+        'before'
+    );
+}
+add_action( 'plugins_loaded', __NAMESPACE__ . '\language_suggest_enqueue_scripts' );
