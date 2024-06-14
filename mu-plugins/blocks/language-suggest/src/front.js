@@ -1,4 +1,4 @@
-/* global LanguageSuggestData */
+/* global languageSuggestData */
 
 const init = () => {
 	const container = document.querySelector( '.wp-block-wporg-language-suggest' );
@@ -11,7 +11,7 @@ const init = () => {
 		container.dataset.endpoint || 'https://wordpress.org/lang-guess/lang-guess-ajax.php'
 	);
 	endpoint.searchParams.set( 'uri', encodeURIComponent( window.location.pathname ) );
-	endpoint.searchParams.set( 'locale', encodeURIComponent( LanguageSuggestData.locale ) );
+	endpoint.searchParams.set( 'locale', encodeURIComponent( languageSuggestData.locale ) );
 
 	fetch( endpoint )
 		.then( ( response ) => {

@@ -39,7 +39,7 @@ function language_suggest_enqueue_scripts() {
 
     wp_add_inline_script(
         'language-suggest-front',
-        'var LanguageSuggestData = ' . json_encode( array( 'locale' => get_locale() ) ) . ';',
+        'var languageSuggestData = ' . json_encode( array( 'locale' => get_locale() ) ) . ';',
         'before'
     );
 }
