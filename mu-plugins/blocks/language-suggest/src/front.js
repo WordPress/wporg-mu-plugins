@@ -11,7 +11,7 @@ const init = () => {
 		container.dataset.endpoint || 'https://wordpress.org/lang-guess/lang-guess-ajax.php'
 	);
 	endpoint.searchParams.set( 'uri', encodeURIComponent( window.location.pathname ) );
-	endpoint.searchParams.set( 'locale', encodeURIComponent( languageSuggestData.locale ) );
+	endpoint.searchParams.set( 'locale', languageSuggestData.locale );
 
 	fetch( endpoint )
 		.then( ( response ) => {
