@@ -135,7 +135,7 @@ function get_font_url( $font, $subset ) {
 	$lower_font   = strtolower( trim( $font ) );
 	$lower_subset = strtolower( trim( $subset ) );
 
-	$valid_subsets = array( 'arrows', 'cyrillic-ext', 'cyrillic', 'greek-ext', 'greek', 'latin-ext', 'latin', 'vietnamese' );
+	$valid_subsets = array( 'arrows', 'cyrillic-ext', 'cyrillic', 'greek-ext', 'greek', 'latin-ext', 'latin', 'vietnamese', 'cjk' );
 	if ( ! in_array( $lower_subset, $valid_subsets ) ) {
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 			trigger_error( sprintf( 'Requested font subset %s does not exist.', esc_html( $lower_subset ) ), E_USER_WARNING );
@@ -211,6 +211,10 @@ function get_font_url( $font, $subset ) {
 		case 'ibm plex sans semibold':
 			$font_folder    = 'IBMPlexSans/';
 			$font_file_name = 'IBMPlexSans-SemiBold-';
+			break;
+		case 'noto serif':
+			$font_folder    = 'Noto Serif/';
+			$font_file_name = 'NotoSerifJP-';
 			break;
 	}
 
