@@ -22,7 +22,7 @@ function language_suggest_block_init() {
 		'wporg/language-suggest',
 		array(
 			'name'         => 'prominent',
-			'label'        => _x( 'Prominent', 'wporg' ),
+			'label'        => _x( 'Prominent', 'block style name', 'wporg' ),
 		)
 	);
 }
