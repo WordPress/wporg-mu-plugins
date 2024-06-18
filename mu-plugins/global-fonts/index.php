@@ -212,7 +212,7 @@ function get_font_url( $font, $subset ) {
 			$font_folder    = 'IBMPlexSans/';
 			$font_file_name = 'IBMPlexSans-SemiBold-';
 			break;
-		case 'noto serif':
+		case 'noto serif jp':
 			$font_folder    = 'Noto Serif/';
 			$font_file_name = 'NotoSerifJP-';
 			break;
