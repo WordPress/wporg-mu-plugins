@@ -15,10 +15,10 @@ if (
 <ul <?php echo get_block_wrapper_attributes(); // phpcs:ignore ?>>
 <?php
 foreach ( range( 5, 1 ) as $stars ) :
-	if ( ! isset( $attributes['ratings'][ $stars - 1 ] ) ) {
+	if ( ! isset( $attributes['ratings'][ $stars ] ) ) {
 		continue;
 	}
-	$count = $attributes['ratings'][ $stars - 1 ];
+	$count = $attributes['ratings'][ $stars ];
 	$rating_bar_width = 100 * $count / $attributes['num_ratings'];
 	?>
 	<li class="wporg-ratings-bars__bar">
