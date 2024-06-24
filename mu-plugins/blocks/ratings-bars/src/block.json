@@ -1,0 +1,39 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "wporg/ratings-bars",
+	"version": "0.1.0",
+	"title": "Ratings (bars)",
+	"category": "design",
+	"icon": "",
+	"description": "The breakdown of ratings displayed as bars for each rating value.",
+	"textdomain": "wporg",
+	"supports": {
+		"html": false
+	},
+	"attributes": {
+		"num_ratings": {
+			"type": "number",
+			"default": 0
+		},
+		"ratings": {
+			"type": "array",
+			"default": []
+		},
+		"slug": {
+			"type": "string",
+			"default": ""
+		},
+		"support_url": {
+			"type": "string",
+			"default": ""
+		},
+		"type": {
+			"type": "string",
+			"default": 0
+		}
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"render": "file:../render.php"
+}
