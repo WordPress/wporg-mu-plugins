@@ -879,7 +879,7 @@
 
 /* cyrillic-ext */
 @font-face {
-	font-family: IBM Plex Mono;
+	font-family: "IBM Plex Mono";
 	font-weight: 500;
 	font-style: normal;
 	font-display: swap;
@@ -889,7 +889,7 @@
 
 /* cyrillic */
 @font-face {
-	font-family: IBM Plex Mono;
+	font-family: "IBM Plex Mono";
 	font-weight: 500;
 	font-style: normal;
 	font-display: swap;
@@ -899,7 +899,7 @@
 
 /* greek-ext */
 @font-face {
-	font-family: IBM Plex Mono;
+	font-family: "IBM Plex Mono";
 	font-weight: 500;
 	font-style: normal;
 	font-display: swap;
@@ -909,7 +909,7 @@
 
 /* greek */
 @font-face {
-	font-family: IBM Plex Mono;
+	font-family: "IBM Plex Mono";
 	font-weight: 500;
 	font-style: normal;
 	font-display: swap;
@@ -919,7 +919,7 @@
 
 /* vietnamese */
 @font-face {
-	font-family: IBM Plex Mono;
+	font-family: "IBM Plex Mono";
 	font-weight: 500;
 	font-style: normal;
 	font-display: swap;
@@ -929,7 +929,7 @@
 
 /* latin-ext */
 @font-face {
-	font-family: IBM Plex Mono;
+	font-family: "IBM Plex Mono";
 	font-weight: 500;
 	font-style: normal;
 	font-display: swap;
@@ -939,7 +939,7 @@
 
 /* latin */
 @font-face {
-	font-family: IBM Plex Mono;
+	font-family: "IBM Plex Mono";
 	font-weight: 500;
 	font-style: normal;
 	font-display: swap;
@@ -949,7 +949,7 @@
 
 /* arrows */
 @font-face {
-	font-family: IBM Plex Mono;
+	font-family: "IBM Plex Mono";
 	font-weight: 500;
 	font-style: normal;
 	font-display: swap;
