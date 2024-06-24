@@ -21,13 +21,13 @@ foreach ( range( 5, 1 ) as $stars ) :
 			<span class="screen-reader-text">
 			<?php
 				// translators: %1$d: count of reviews. %2$d: level of star rating (ex, 5-star).
-				echo esc_html( sprintf( _n( '%1$d %2$d-star review', '%1$d %2$d-star reviews', $count, 'wporg-themes' ), $count, $stars ) );
+				echo esc_html( sprintf( _n( '%1$d %2$d-star review', '%1$d %2$d-star reviews', $count, 'wporg' ), $count, $stars ) );
 			?>
 			</span>
 			<span aria-hidden="true" class="wporg-ratings-bars__bar-label">
 			<?php
 				// translators: %d: star review amount, 1-5; ex "5 stars".
-				echo esc_html( sprintf( _n( '%d star', '%d stars', $stars, 'wporg-themes' ), $stars ) );
+				echo esc_html( sprintf( _n( '%d star', '%d stars', $stars, 'wporg' ), $stars ) );
 			?>
 			</span>
 			<span aria-hidden="true" class="wporg-ratings-bars__bar-background">
