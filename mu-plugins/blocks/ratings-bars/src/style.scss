@@ -44,7 +44,7 @@
 	position: absolute;
 	inset: 0;
 	right: auto;
-	background-color: var(--wp--custom--wporg-ratings-stars--color--fill);
+	background-color: var(--wp--custom--wporg-ratings-stars--color--fill, #e26f56);
 }
 
 @supports (grid-template-columns: subgrid) {
