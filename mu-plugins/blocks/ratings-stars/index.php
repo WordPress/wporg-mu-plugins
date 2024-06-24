@@ -18,5 +18,3 @@ add_action( 'init', __NAMESPACE__ . '\init' );
 function init() {
 	register_block_type( __DIR__ . '/build' );
 }
-
-
