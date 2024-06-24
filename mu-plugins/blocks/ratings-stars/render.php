@@ -12,7 +12,7 @@ if ( ! isset( $attributes['rating'] ) ) {
 	<!-- Hide the "See all…" link if there are no ratings. -->
 	<style>.wporg-ratings-link{display:none}</style>
 	<div class="wporg-ratings-stars__label-empty">
-		<?php esc_html_e( 'This theme has not been rated yet.', 'wporg' ); ?>
+		<?php esc_html_e( 'This has not been rated yet.', 'wporg' ); ?>
 	</div>
 	<?php else : ?>
 	<div class="wporg-ratings-stars__icons">
