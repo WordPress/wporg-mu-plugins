@@ -21,16 +21,13 @@
 			"default": []
 		},
 		"slug": {
-			"type": "string",
-			"default": ""
+			"type": "string"
 		},
 		"support_url": {
-			"type": "string",
-			"default": ""
+			"type": "string"
 		},
 		"type": {
-			"type": "string",
-			"default": 0
+			"type": "string"
 		}
 	},
 	"editorScript": "file:./index.js",
