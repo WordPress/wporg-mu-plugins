@@ -6,7 +6,7 @@
  * @package wporg
  */
 
-namespace WordPressdotorg\Theme\Theme_Directory_2024\Ratings_Bars_Block;
+namespace WordPressdotorg\Theme\MU_Plugins\Ratings_Bars_Block;
 
 defined( 'WPINC' ) || die();
 

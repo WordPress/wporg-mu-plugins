@@ -1,7 +1,5 @@
 <?php
 
-use function WordPressdotorg\Theme\Theme_Directory_2024\get_support_url;
-
 $attributes = apply_filters( 'wporg_block_ratings_bars', $attributes );
 
 if ( ! $attributes['num_ratings'] ) {
@@ -19,7 +17,7 @@ foreach ( range( 5, 1 ) as $stars ) :
 	$rating_bar_width = 100 * $count / $attributes['num_ratings'];
 	?>
 	<li class="wporg-ratings-bars__bar">
-		<a href="<?php echo esc_url( get_support_url( $attributes['slug'] . '/reviews/?filter=' . $stars ) ); ?>">
+		<a href="<?php echo esc_url( $attributes['support_url'] . $attributes['slug'] . '/reviews/?filter=' . $stars ); ?>">
 			<span class="screen-reader-text">
 			<?php
 				// translators: %1$d: count of reviews. %2$d: level of star rating (ex, 5-star).
