@@ -2,6 +2,10 @@
 
 $attributes = apply_filters( 'wporg_block_ratings_stars', $attributes );
 
+if ( ! isset( $attributes['rating'] ) ) {
+	return;
+}
+
 ?>
 <div <?php echo get_block_wrapper_attributes(); // phpcs:ignore ?>>
 	<?php if ( ! $attributes['rating'] ) : ?>

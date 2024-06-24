@@ -2,6 +2,8 @@
  * WordPress dependencies
  */
 import { registerBlockType } from '@wordpress/blocks';
+import ServerSideRender from '@wordpress/server-side-render';
+import { useBlockProps } from '@wordpress/block-editor';
 
 /**
  * Internal dependencies

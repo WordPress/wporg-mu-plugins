@@ -2,7 +2,7 @@
 
 $attributes = apply_filters( 'wporg_block_ratings_bars', $attributes );
 
-if ( ! $attributes['num_ratings'] ) {
+if ( ! isset( $attributes['num_ratings'] ) ) {
 	return;
 }
 
