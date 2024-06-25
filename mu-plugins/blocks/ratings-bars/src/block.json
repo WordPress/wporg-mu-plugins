@@ -13,8 +13,7 @@
 	},
 	"attributes": {
 		"num_ratings": {
-			"type": "number",
-			"default": 0
+			"type": "number"
 		},
 		"ratings": {
 			"type": "array",

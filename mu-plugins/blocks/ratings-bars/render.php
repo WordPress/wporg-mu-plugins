@@ -4,6 +4,7 @@ $attributes = apply_filters( 'wporg_block_ratings_bars', $attributes );
 
 if (
 	! isset( $attributes['num_ratings'] ) ||
+	! $attributes['num_ratings'] ||
 	! isset( $attributes['ratings'] ) ||
 	! isset( $attributes['support_url'] ) ||
 	! isset( $attributes['slug'] )
