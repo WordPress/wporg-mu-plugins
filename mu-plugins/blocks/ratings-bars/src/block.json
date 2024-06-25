@@ -25,9 +25,6 @@
 		},
 		"support_url": {
 			"type": "string"
-		},
-		"type": {
-			"type": "string"
 		}
 	},
 	"editorScript": "file:./index.js",
