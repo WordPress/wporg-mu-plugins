@@ -8,8 +8,8 @@ if ( ! $current_post_id ) {
 $attributes = apply_filters( 'wporg_ratings_bars_attributes', $attributes, $current_post_id );
 
 if (
-	! isset( $attributes['numRatings'] ) ||
-	! $attributes['numRatings'] ||
+	! isset( $attributes['ratingsCount'] ) ||
+	! $attributes['ratingsCount'] ||
 	! isset( $attributes['ratings'] ) ||
 	! isset( $attributes['supportUrl'] ) ||
 	! isset( $attributes['slug'] )
@@ -25,7 +25,7 @@ foreach ( range( 5, 1 ) as $stars ) :
 		continue;
 	}
 	$count = $attributes['ratings'][ $stars ];
-	$rating_bar_width = 100 * $count / $attributes['numRatings'];
+	$rating_bar_width = 100 * $count / $attributes['ratingsCount'];
 	?>
 	<li class="wporg-ratings-bars__bar">
 		<a href="<?php echo esc_url( $attributes['supportUrl'] . $attributes['slug'] . '/reviews/?filter=' . $stars ); ?>">
