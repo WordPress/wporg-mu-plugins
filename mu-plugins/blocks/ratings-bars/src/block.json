@@ -12,7 +12,7 @@
 		"html": false
 	},
 	"attributes": {
-		"num_ratings": {
+		"numRatings": {
 			"type": "number"
 		},
 		"ratings": {
@@ -22,7 +22,7 @@
 		"slug": {
 			"type": "string"
 		},
-		"support_url": {
+		"supportUrl": {
 			"type": "string"
 		}
 	},

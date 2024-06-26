@@ -3,10 +3,10 @@
 $attributes = apply_filters( 'wporg_block_ratings_bars', $attributes );
 
 if (
-	! isset( $attributes['num_ratings'] ) ||
-	! $attributes['num_ratings'] ||
+	! isset( $attributes['numRatings'] ) ||
+	! $attributes['numRatings'] ||
 	! isset( $attributes['ratings'] ) ||
-	! isset( $attributes['support_url'] ) ||
+	! isset( $attributes['supportUrl'] ) ||
 	! isset( $attributes['slug'] )
 	) {
 	return;
@@ -20,10 +20,10 @@ foreach ( range( 5, 1 ) as $stars ) :
 		continue;
 	}
 	$count = $attributes['ratings'][ $stars ];
-	$rating_bar_width = 100 * $count / $attributes['num_ratings'];
+	$rating_bar_width = 100 * $count / $attributes['numRatings'];
 	?>
 	<li class="wporg-ratings-bars__bar">
-		<a href="<?php echo esc_url( $attributes['support_url'] . $attributes['slug'] . '/reviews/?filter=' . $stars ); ?>">
+		<a href="<?php echo esc_url( $attributes['supportUrl'] . $attributes['slug'] . '/reviews/?filter=' . $stars ); ?>">
 			<span class="screen-reader-text">
 			<?php
 				// translators: %1$d: count of reviews. %2$d: level of star rating (ex, 5-star).
