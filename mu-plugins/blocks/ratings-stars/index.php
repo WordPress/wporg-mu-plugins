@@ -1,7 +1,7 @@
 <?php
 /**
  * Block Name: Ratings (stars)
- * Description: The avgerage rating of this theme displayed as stars.
+ * Description: The average rating of this theme displayed as stars.
  *
  * @package wporg
  */
