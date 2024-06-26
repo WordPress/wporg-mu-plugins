@@ -1,6 +1,11 @@
 <?php
 
-$attributes = apply_filters( 'wporg_block_ratings_bars', $attributes );
+$current_post_id = $block->context['postId'];
+if ( ! $current_post_id ) {
+	return;
+}
+
+$attributes = apply_filters( 'wporg_block_ratings_bars', $attributes, $current_post_id );
 
 if (
 	! isset( $attributes['numRatings'] ) ||
