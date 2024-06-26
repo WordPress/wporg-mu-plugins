@@ -5,7 +5,7 @@ if ( ! $current_post_id ) {
 	return;
 }
 
-$attributes = apply_filters( 'wporg_block_ratings_bars', $attributes, $current_post_id );
+$attributes = apply_filters( 'wporg_ratings_bars_attributes', $attributes, $current_post_id );
 
 if (
 	! isset( $attributes['numRatings'] ) ||
