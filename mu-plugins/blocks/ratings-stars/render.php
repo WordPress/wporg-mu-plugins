@@ -5,15 +5,22 @@ if ( ! $current_post_id ) {
 	return;
 }
 
-$attributes = apply_filters( 'wporg_ratings_stars_attributes', $attributes, $current_post_id );
+/** This filter is documented in mu-plugins/blocks/ratings-bars/render.php */
+$data = apply_filters( 'wporg_ratings_data', array(), $current_post_id );
 
-if ( ! isset( $attributes['rating'] ) ) {
+$defaults = array(
+	'rating' => 0,
+);
+
+$data = wp_parse_args( $data, $defaults );
+
+if ( empty( $data['rating'] ) ) {
 	return;
 }
 
 ?>
 <div <?php echo get_block_wrapper_attributes(); // phpcs:ignore ?>>
-	<?php if ( ! $attributes['rating'] ) : ?>
+	<?php if ( ! $data['rating'] ) : ?>
 	<!-- Hide the "See all…" link if there are no ratings. -->
 	<style>.wporg-ratings-link{display:none}</style>
 	<div class="wporg-ratings-stars__label-empty">
@@ -23,7 +30,7 @@ if ( ! isset( $attributes['rating'] ) ) {
 	<div class="wporg-ratings-stars__icons">
 		<?php
 
-		$display_rating = round( $attributes['rating'] / 10 ) * 0.5;
+		$display_rating = round( $data['rating'] / 10 ) * 0.5;
 		for ( $i = 0; $i < 5; $i++ ) {
 			if ( $i + 1 <= $display_rating ) {
 				echo '<svg class="is-star-filled" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path d="M11.776 4.454a.25.25 0 01.448 0l2.069 4.192a.25.25 0 00.188.137l4.626.672a.25.25 0 01.139.426l-3.348 3.263a.25.25 0 00-.072.222l.79 4.607a.25.25 0 01-.362.263l-4.138-2.175a.25.25 0 00-.232 0l-4.138 2.175a.25.25 0 01-.363-.263l.79-4.607a.25.25 0 00-.071-.222L4.754 9.881a.25.25 0 01.139-.426l4.626-.672a.25.25 0 00.188-.137l2.069-4.192z"></path></svg>';
