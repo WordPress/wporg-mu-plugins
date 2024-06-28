@@ -15,20 +15,24 @@
 	/* Set this as a custom property so that it can be changed based on container background. */
 	--wp--custom--local-navigation-bar--focus--color: var(--wp--preset--color--white);
 	--wp--custom--local-navigation-bar--border--color: var(--wp--preset--color--white-opacity-15);
+	--wp--custom--local-navigation-bar--separator--color: var(--wp--preset--color--blueberry-3);
 
 	&:where(.has-background) {
 		--wp--custom--local-navigation-bar--focus--color: var(--wp--preset--color--charcoal-5);
 		--wp--custom--local-navigation-bar--border--color: var(--wp--preset--color--black-opacity-15);
+		--wp--custom--local-navigation-bar--separator--color: var(--wp--preset--color--charcoal-5);
 	}
 
 	&:where(.has-white-background-color) {
 		--wp--custom--local-navigation-bar--focus--color: var(--wp--preset--color--blueberry-1);
 		--wp--custom--local-navigation-bar--border--color: var(--wp--preset--color--black-opacity-15);
+		--wp--custom--local-navigation-bar--separator--color: var(--wp--preset--color--charcoal-5);
 	}
 
 	&:where(.has-charcoal-1-background-color),
 	&:where(.has-charcoal-2-background-color) {
 		--wp--custom--local-navigation-bar--focus--color: var(--wp--preset--color--blueberry-2);
+		--wp--custom--local-navigation-bar--separator--color: var(--wp--preset--color--charcoal-4);
 	}
 
 	&:where(.has-charcoal-2-background-color) {
@@ -216,6 +220,19 @@
 				box-shadow: inset 0 0 0 1.5px var(--wp--custom--local-navigation-bar--focus--color);
 			}
 		}
+
+		& .wp-block-navigation-item.has-separator {
+			position: relative;
+			margin-inline-start: calc(-0.5 * var(--wp--preset--spacing--10));
+			padding-inline-start: calc(1.5 * var(--wp--preset--spacing--10));
+
+			&::before {
+				content: "\2022";
+				inset-inline-start: -5px;
+				position: absolute;
+				color: var(--wp--custom--local-navigation-bar--separator--color);
+			}
+		}
 	}
 
 	& .wp-block-navigation.wporg-is-collapsed-nav,
@@ -300,6 +317,20 @@
 						outline: none;
 						border-radius: 2px;
 						box-shadow: inset 0 0 0 1.5px var(--wp--custom--local-navigation-bar--focus--color);
+					}
+				}
+
+				&.has-separator {
+					margin-inline-start: 0;
+					margin-block-start: var(--wp--preset--spacing--10);
+					padding-inline-start: 0;
+					padding-block-start: var(--wp--preset--spacing--10);
+
+					&::before {
+						content: "";
+						inset: 0 calc(var(--wp--preset--spacing--10) * -1) auto;
+						height: 1px;
+						background-color: var(--wp--custom--local-navigation-bar--border--color);
 					}
 				}
 			}
