@@ -113,8 +113,9 @@ function render_menu_item( $item ) {
 
 	if ( isset( $item['submenu'] ) ) {
 		$output = sprintf(
-			'<!-- wp:navigation-submenu {"label":"%1$s","url":"#","kind":"custom"} -->',
-			$item['label']
+			'<!-- wp:navigation-submenu {"label":"%1$s","url":"#","kind":"custom","className":"%2$s"} -->',
+			$item['label'],
+			isset( $item['className'] ) ? esc_attr( $item['className'] ) : '',
 		);
 
 		foreach ( $item['submenu'] as $submenu_item ) {
