@@ -8,11 +8,6 @@
 	"icon": "",
 	"description": "The average rating displayed as stars.",
 	"textdomain": "wporg",
-	"attributes": {
-		"rating": {
-			"type": "number"
-		}
-	},
 	"supports": {
 		"html": false
 	},

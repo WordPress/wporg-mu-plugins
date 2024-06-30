@@ -11,21 +11,6 @@
 	"supports": {
 		"html": false
 	},
-	"attributes": {
-		"ratingsCount": {
-			"type": "number"
-		},
-		"ratings": {
-			"type": "array",
-			"default": []
-		},
-		"slug": {
-			"type": "string"
-		},
-		"supportUrl": {
-			"type": "string"
-		}
-	},
 	"usesContext": [ "postId" ],
 	"editorScript": "file:./index.js",
 	"style": "file:./style-index.css",
