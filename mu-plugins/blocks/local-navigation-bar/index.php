@@ -98,6 +98,7 @@ function update_child_block_attributes( $parsed_block, $source_block, $parent_bl
 			'type' => 'flex',
 			'orientation' => 'horizontal',
 		);
+		$parsed_block['attrs']['ariaLabel'] = _x( 'Section', 'local navigation label', 'wporg' );
 
 		// Add an extra navigation block which is always collapsed, so that it
 		// can be swapped out when the section title + nav menu collide.
