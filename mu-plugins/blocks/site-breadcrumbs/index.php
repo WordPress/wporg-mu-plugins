@@ -69,6 +69,10 @@ function render_block( $attributes, $content, $block ) {
 	 */
 	$breadcrumbs = apply_filters( 'wporg_block_site_breadcrumbs', $breadcrumbs, $attributes, $block );
 
+	if ( empty( $breadcrumbs ) ) {
+		return '';
+	}
+
 	$content = '';
 	foreach ( $breadcrumbs as $i => $crumb ) {
 		// We can assume that the item without a URL is the current page.
