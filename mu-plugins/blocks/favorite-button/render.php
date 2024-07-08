@@ -16,7 +16,7 @@ $user_id = get_current_user_id();
 $show_count = $attributes['showCount'] ?? false;
 $variant = $attributes['variant'] ?? 'default';
 
-if ( ! $user_id && ! $show_count && 'small' !== $variant ) {
+if ( ! $user_id && ! $show_count ) {
 	return '';
 }
 
