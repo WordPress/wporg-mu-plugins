@@ -53,22 +53,8 @@
 			fill: var(--wp--preset--color--charcoal-4);
 		}
 
-		&.is-heart-outline {
-			display: block;
-		}
-
-		&.is-heart-filled {
+		&[hidden] {
 			display: none;
-		}
-	}
-
-	&.is-favorite {
-		svg.is-heart-outline {
-			display: none;
-		}
-
-		svg.is-heart-filled {
-			display: block;
 		}
 	}
 
