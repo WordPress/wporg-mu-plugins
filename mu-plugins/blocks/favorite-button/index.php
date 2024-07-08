@@ -117,9 +117,9 @@ function add_favorite( $request ) {
 	}
 
 	return new \WP_Error(
-		'favorite-failed',
+		'favorite-not-implemented',
 		// Users should never see this error, so we can leave it untranslated.
-		'Unable to favorite this item.',
+		'The `add_callback` function is not set correctly. It should return a wp_error, integer, or true.',
 		array( 'status' => 500 )
 	);
 }
@@ -143,9 +143,9 @@ function delete_favorite( $request ) {
 	}
 
 	return new \WP_Error(
-		'unfavorite-failed',
+		'unfavorite-not-implemented',
 		// Users should never see this error, so we can leave it untranslated.
-		'Unable to remove this item from favorites.',
+		'The `delete_callback` function is not set correctly. It should return a wp_error, integer, or true.',
 		array( 'status' => 500 )
 	);
 }
