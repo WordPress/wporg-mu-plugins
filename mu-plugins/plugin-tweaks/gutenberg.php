@@ -10,6 +10,7 @@ defined( 'WPINC' ) || die();
 add_filter( 'render_block_core/post-title', __NAMESPACE__ . '\swap_h0_for_paragraph', 20 );
 add_filter( 'render_block_core/query-title', __NAMESPACE__ . '\swap_h0_for_paragraph', 20 );
 add_filter( 'wp_script_attributes', __NAMESPACE__ . '\inject_module_cachebuster' );
+add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\fix_rtl_style_includes', 1 );
 
 // Remove duplicate elements generation, can be removed after GB18.3+ is active.
 // See https://github.com/WordPress/wporg-parent-2021/issues/135.
@@ -67,4 +68,25 @@ function inject_module_cachebuster( $attributes ) {
 
 	$attributes['src'] = $source;
 	return $attributes;
+}
+
+/**
+ * Remove the suffix from RTL files.
+ *
+ * CSS registered from block.json are incorrectly configured with a suffix for
+ * RTL sites, but the files don't use a suffix. This prevents the files from
+ * being replaced correctly, causing visual issues on RTL sites.
+ *
+ * See https://core.trac.wordpress.org/ticket/61625.
+ */
+function fix_rtl_style_includes() {
+	$wp_styles = wp_styles();
+
+	foreach ( $wp_styles->registered as $handle => $data ) {
+		// Filter out the wporg-* styles, and only adjust styles with rtl data.
+		if ( \str_starts_with( $handle, 'wporg-' ) && isset( $data->extra['rtl'] ) ) {
+			// Remove the suffix data.
+			wp_style_add_data( $handle, 'suffix', '' );
+		}
+	}
 }
