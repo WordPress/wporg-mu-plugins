@@ -23,12 +23,6 @@ const PLUGINS = [
 		'from'  => 'gutenberg/gutenberg.php',
 		'to'    => 'gutenberg-17.9/gutenberg.php',
 	],
-	[
-		// Pattern Creator: temp fix for breakage, see: https://wordpress.slack.com/archives/C02QB8GMM/p1720180116195859.
-		'check' => 'pattern-creator/pattern-creator.php',
-		'from'  => 'gutenberg/gutenberg.php',
-		'to'    => 'gutenberg-18.6.1/gutenberg.php',
-	],
 ];
 
 /**
