@@ -58,6 +58,11 @@
 		}
 	}
 
+	/* The interactivity API hasn't kicked in yet, so hide one of the hearts. */
+	&:not(.is-loaded) svg.is-heart-filled {
+		display: none;
+	}
+
 	&.is-variant-small {
 		.wporg-favorite-button__button {
 			border: none;
