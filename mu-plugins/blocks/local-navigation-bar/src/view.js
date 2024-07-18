@@ -114,7 +114,6 @@ function init() {
 
 			const usedFullWidth = Math.ceil( fullTitleWidth ) + Math.ceil( navWidth );
 			const usedShortWidth = Math.ceil( soloTitleWidth ) + Math.ceil( navWidth );
-			console.log( { availableWidth, usedFullWidth, usedShortWidth } );
 
 			if ( availableWidth > usedFullWidth ) {
 				// Screen is large enough for everything, show all.
