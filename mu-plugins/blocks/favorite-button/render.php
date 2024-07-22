@@ -53,6 +53,7 @@ $init_state = [
 	'count' => $settings['count'],
 	'isFavorite' => $is_favorite,
 	'label' => $labels,
+	'isLoading' => false,
 ];
 $encoded_state = wp_json_encode( $init_state );
 
@@ -63,6 +64,7 @@ $encoded_state = wp_json_encode( $init_state );
 	data-wp-context="<?php echo esc_attr( $encoded_state ); ?>"
 	data-wp-class--is-favorite="context.isFavorite"
 	data-wp-class--is-loaded="context.id"
+	data-wp-class--is-loading="context.isLoading"
 >
 	<?php if ( $user_id ) : ?>
 	<button

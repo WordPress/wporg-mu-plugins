@@ -63,10 +63,33 @@
 		display: none;
 	}
 
+	/* The interactivity API hasn't kicked in yet, so hide one of the hearts. */
+	&.is-loading {
+		svg {
+			animation-name: favoriteFade;
+			animation-duration: 750ms;
+			animation-iteration-count: infinite;
+		}
+	}
+
 	&.is-variant-small {
 		.wporg-favorite-button__button {
 			border: none;
 			padding: 2px 4px;
 		}
+	}
+}
+
+@keyframes favoriteFade {
+	0% {
+		opacity: 1;
+	}
+
+	50% {
+		opacity: 0.5;
+	}
+
+	100% {
+		opacity: 1;
 	}
 }

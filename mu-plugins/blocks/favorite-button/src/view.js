@@ -21,6 +21,8 @@ store( 'wporg/favorite-button', {
 	actions: {
 		*triggerAction() {
 			const context = getContext();
+			context.isLoading = true;
+
 			if ( context.isFavorite ) {
 				try {
 					const result = yield wp.apiFetch( {
@@ -48,6 +50,8 @@ store( 'wporg/favorite-button', {
 					wp.a11y.speak( context.label.favorited, 'polite' );
 				} catch ( error ) {}
 			}
+
+			context.isLoading = false;
 		},
 	},
 } );
