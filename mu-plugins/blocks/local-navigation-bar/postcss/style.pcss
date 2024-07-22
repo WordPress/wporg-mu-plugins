@@ -185,7 +185,7 @@
 		}
 	}
 
-	@media ( max-width: 550px ) {
+	@media ( max-width: 599px ) {
 		& .wp-block-group p:not(.wp-block-site-title) {
 			display: none;
 		}
@@ -339,6 +339,12 @@
 
 	& .wp-block-navigation.wporg-is-collapsed-nav {
 		display: none;
+	}
+
+	&.wporg-hide-page-title {
+		& .wp-block-group p:not(.wp-block-site-title) {
+			display: none;
+		}
 	}
 
 	&.wporg-show-collapsed-nav {
