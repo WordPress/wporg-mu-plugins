@@ -1,0 +1,29 @@
+.wp-block-wporg-ratings-stars {
+	display: flex;
+	align-items: center;
+}
+
+.wporg-ratings-stars__icons {
+	display: inline-flex;
+
+	svg {
+		height: 32px;
+		width: 32px;
+		margin-inline-start: -6px;
+		fill: var(--wp--custom--wporg-ratings-stars--color--fill, #e26f56);
+	}
+
+	// Flip the half-star for RTL views.
+	.rtl & .is-star-half {
+		transform: rotateY(-180deg);
+	}
+}
+
+.wporg-ratings-stars__label {
+	font-size: var(--wp--preset--font-size--small);
+	color: var(--wp--preset--color--charcoal-4);
+
+	.wporg-ratings-stars__icons + & {
+		margin-inline-start: 0.5em;
+	}
+}
