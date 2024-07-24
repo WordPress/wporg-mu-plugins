@@ -6,6 +6,7 @@
 namespace WordPressdotorg\MU_Plugins\Plugin_Tweaks\Stream;
 use Two_Factor_Core;
 use WP_Stream\Connector;
+use WildWolf\WordPress\TwoFactorWebAuthn\WebAuthn_Credential_Store;
 
 /**
  * Class - Connector_Two_Factor
@@ -31,6 +32,18 @@ class Connector_Two_Factor extends Connector {
 		'two_factor_user_authenticated', // Authenticatd via 2FA
 		'wp_login_failed', // Failed login
 	);
+
+	/**
+	 * Actions that need to be run early.
+	 *
+	 * @var array
+	 */
+	public $actions_early = [
+		// WebAuthN.. Must be run early, see ::register().
+		'wp_ajax_webauthn_register'   => 5,
+		'wp_ajax_webauthn_delete_key' => 5,
+		// 'wp_ajax_webauthn_rename_key' => 5, // WordPress.org doesn't support this.
+	];
 
 	/**
 	 * Tracked option keys
@@ -100,7 +113,12 @@ class Connector_Two_Factor extends Connector {
 	public function register() {
 		parent::register();
 
-		add_filter( 'wp_stream_log_data', array( $this, 'log_override' ) );
+		add_filter( 'wp_stream_log_data', [ $this, 'log_override' ] );
+
+		// Immitate Streams actions, but with added priority.
+		foreach ( $this->actions_early as $hook => $priority ) {
+			add_action( $hook, [ $this, 'callback_' . $hook ], $priority, 99 );
+		}
 	}
 
 	/**
@@ -265,6 +283,63 @@ class Connector_Two_Factor extends Connector {
 				}
 				break;
 		}
+	}
+
+	/**
+	 * Callback to watch for WebAuthN key registrations.
+	 */
+	function callback_wp_ajax_webauthn_register() {
+		ob_start( function( $output ) {
+			$success = json_decode( $output, true )['success'] ?? false;
+
+			if ( $success ) {
+				$this->log(
+					'WebAuthN key registered: %s',
+					array(
+						'key-name' => wp_unslash( $_REQUEST['name'] ),
+					),
+					get_current_user_id(),
+					'webauthn',
+					'added'
+				);
+			}
+
+			return $output;
+		} );
+		
+	}
+
+	/**
+	 * Callback to watch for WebAuthN key deletions.
+	 */
+	function callback_wp_ajax_webauthn_delete_key() {
+		// Fetch the handle now, so that it's available if it's removed.
+		$user = get_user_by( 'ID', $_REQUEST['user_id'] ?? 0 );
+		$keys = $user ? ( new WebAuthn_Credential_Store() )->get_user_keys( $user ) : [];
+
+		ob_start( function( $output ) use( $keys ) {
+			$success = json_decode( $output, true )['success'] ?? false;
+
+			if ( $success ) {
+				$handle = wp_unslash( $_REQUEST['handle'] ?? '' );
+
+				$key  = wp_list_filter( $keys, [ 'credential_id' => $handle ] );
+				$key  = reset( $key );
+				$name = $key->name ?? '';
+
+				$this->log(
+					'WebAuthN key deleted: %s',
+					array(
+						'key-name' => $name,
+					),
+					get_current_user_id(),
+					'two-factor',
+					'removed'
+				);
+			}
+
+			return $output;
+		} );
 	}
 
 }
