@@ -92,6 +92,8 @@ class Connector_Two_Factor extends Connector {
 			'disabled'      => 'Disabled',
 			'recovered'     => 'Recovered',
 			'updated'       => 'Updated',
+			'removed'       => 'Removed',
+			'added'         => 'Added',
 			'authenticated' => 'Authenticated',
 		);
 	}
