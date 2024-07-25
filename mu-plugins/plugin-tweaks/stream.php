@@ -10,6 +10,7 @@ defined( 'WPINC' ) || die();
 add_filter( 'wp_stream_log_data', __NAMESPACE__ . '\include_user_name_in_creation_log' );
 add_filter( 'wp_stream_is_record_excluded', __NAMESPACE__ . '\exclude_profile_updates_as_part_of_user_creation', 10, 2 );
 add_filter( 'bbp_set_user_role', __NAMESPACE__ . '\log_forum_role_change', 10, 3 );
+add_filter( 'wp_stream_connectors', __NAMESPACE__ . '\wp_stream_connectors' );
 
 /**
  * Stream by default logs new user registrations as 'New user registration' which doesn't come up in search-by-username.
@@ -69,6 +70,17 @@ function log_forum_role_change( $new_role, $user_id, $user ) {
 	}
 
 	return $new_role;
+}
+
+/**
+ * Load a connector to record Two Factor related events.
+ */
+function wp_stream_connectors( $connectors ) {
+	require_once __DIR__ . '/stream/class-connector-two-factor.php';
+
+	$connectors[ 'two-factor'] = new Connector_Two_Factor;
+
+	return $connectors;
 }
 
 /**
