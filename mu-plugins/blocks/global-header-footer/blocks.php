@@ -371,7 +371,11 @@ function render_global_header( $attributes = array() ) {
 	if ( is_callable( 'global_fonts_preload' ) ) {
 		/* translators: Subsets can be any of cyrillic, cyrillic-ext, greek, greek-ext, vietnamese, latin, latin-ext.  */
 		$subsets = _x( 'latin', 'Global menu font subsets, comma separated', 'wporg' );
-		global_fonts_preload( 'Inter', $subsets );
+		if ( 'ckb' === get_locale() ) {
+			global_fonts_preload( 'Noto Kufi', 'arabic' );
+		} else {
+			global_fonts_preload( 'Inter', $subsets );
+		}
 	}
 
 	// The mobile Get WordPress button needs to be in both menus.

@@ -1246,3 +1246,16 @@
 	font-display: swap;
 	src: url(./NotoSerif/NotoSerifJP-cjk.woff2) format("woff2");
 }
+
+/*------------------------------*
+ *  Noto Kufi Arabic            *
+ *------------------------------*/
+
+/* cjk */
+@font-face {
+	font-family: "Noto Kufi Arabic";
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+	src: url(./Noto/NotoKufi-arabic.woff2) format("woff2");
+}

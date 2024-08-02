@@ -29,6 +29,26 @@ function get_font_stylesheet_url() {
 }
 
 /**
+ * Helper function to return valid subsets.
+ *
+ * Not all fonts have all subsets, but this list helps safelist the values.
+ */
+function get_valid_subsets() {
+	return array(
+		'arabic',
+		'arrows',
+		'cjk',
+		'cyrillic-ext',
+		'cyrillic',
+		'greek-ext',
+		'greek',
+		'latin-ext',
+		'latin',
+		'vietnamese',
+	);
+}
+
+/**
  * Filter the styles added by editor settings to inject the full URL to the font files.
  *
  * Once inlined in wp-admin, the relative URLs don't match the correct file paths.
@@ -135,7 +155,7 @@ function get_font_url( $font, $subset ) {
 	$lower_font   = strtolower( trim( $font ) );
 	$lower_subset = strtolower( trim( $subset ) );
 
-	$valid_subsets = array( 'arrows', 'cyrillic-ext', 'cyrillic', 'greek-ext', 'greek', 'latin-ext', 'latin', 'vietnamese', 'cjk' );
+	$valid_subsets = get_valid_subsets();
 	if ( ! in_array( $lower_subset, $valid_subsets ) ) {
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 			trigger_error( sprintf( 'Requested font subset %s does not exist.', esc_html( $lower_subset ) ), E_USER_WARNING );
@@ -215,6 +235,10 @@ function get_font_url( $font, $subset ) {
 		case 'noto serif jp':
 			$font_folder    = 'NotoSerif/';
 			$font_file_name = 'NotoSerifJP-';
+			break;
+		case 'noto kufi':
+			$font_folder    = 'Noto/';
+			$font_file_name = 'NotoKufi-';
 			break;
 	}
 
