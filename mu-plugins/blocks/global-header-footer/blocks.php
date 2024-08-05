@@ -369,11 +369,15 @@ function render_global_header( $attributes = array() ) {
 
 	// Preload the menu font.
 	if ( is_callable( 'global_fonts_preload' ) ) {
-		/* translators: Subsets can be any of cyrillic, cyrillic-ext, greek, greek-ext, vietnamese, latin, latin-ext.  */
-		$subsets = _x( 'latin', 'Global menu font subsets, comma separated', 'wporg' );
 		if ( 'ckb' === get_locale() ) {
 			global_fonts_preload( 'Noto Kufi', 'arabic' );
 		} else {
+			/*
+			 * translators: Font subset for your locale. Can be any of cyrillic,
+			 * cyrillic-ext, greek, greek-ext, vietnamese, latin, latin-ext.
+			 * Do not translate into your own language.
+			 */
+			$subsets = _x( 'latin', 'Inter subsets, comma separated', 'wporg' );
 			global_fonts_preload( 'Inter', $subsets );
 		}
 	}
