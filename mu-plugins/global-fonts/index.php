@@ -96,6 +96,27 @@ function preload_font( $fonts, $subsets ) {
 	$fonts = explode( ',', $fonts );
 	$subsets = explode( ',', $subsets );
 
+	$valid_subsets = get_valid_subsets();
+	$subsets = array_intersect( $subsets, $valid_subsets );
+	if ( empty( $subsets ) ) {
+		// No valid subsets, don't preload anything.
+		return;
+	}
+
+	// something-ext is found, check that the corresponding base subset exists.
+	// The -ext subset only has the extra characters, so the base font still needs to be loaded.
+	if ( false !== strpos( implode( ', ', $subsets ), '-ext' ) ) {
+		if ( in_array( 'latin-ext', $subsets ) && ! in_array( 'latin', $subsets ) ) {
+			$subsets[] = 'latin';
+		}
+		if ( in_array( 'greek-ext', $subsets ) && ! in_array( 'greek', $subsets ) ) {
+			$subsets[] = 'greek';
+		}
+		if ( in_array( 'cyrillic-ext', $subsets ) && ! in_array( 'cyrillic', $subsets ) ) {
+			$subsets[] = 'cyrillic';
+		}
+	}
+
 	$preload = $style->extra['preload'] ?? [];
 
 	foreach ( $fonts as $font ) {
@@ -154,14 +175,6 @@ function maybe_preload_font( $preload ) {
 function get_font_url( $font, $subset ) {
 	$lower_font   = strtolower( trim( $font ) );
 	$lower_subset = strtolower( trim( $subset ) );
-
-	$valid_subsets = get_valid_subsets();
-	if ( ! in_array( $lower_subset, $valid_subsets ) ) {
-		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			trigger_error( sprintf( 'Requested font subset %s does not exist.', esc_html( $lower_subset ) ), E_USER_WARNING );
-		}
-		return false;
-	}
 
 	switch ( $lower_font ) {
 		case 'newsreader':
