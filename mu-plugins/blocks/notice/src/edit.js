@@ -12,6 +12,7 @@ import Icon from './icon';
 
 export const typeOptions = [
 	{ label: __( 'Tip', 'wporg' ), value: 'tip' },
+	{ label: __( 'Success', 'wporg' ), value: 'success' },
 	{ label: __( 'Information', 'wporg' ), value: 'info' },
 	{ label: __( 'Alert', 'wporg' ), value: 'alert' },
 	{ label: __( 'Warning', 'wporg' ), value: 'warning' },

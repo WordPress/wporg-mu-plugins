@@ -21,6 +21,7 @@
 	color: var(--wp--custom--wporg-notice--color--text);
 	background-color: var(--wp--custom--wporg-notice--color--background);
 	border-radius: 2px;
+	font-size: var(--wp--preset--font-size--small);
 
 	& > * {
 		align-self: start;
@@ -59,6 +60,10 @@
 	margin-top: 1px;
 }
 
+.is-success-notice .wp-block-wporg-notice__icon {
+	background-image: url(../src/icon/library/success.svg);
+}
+
 .is-info-notice .wp-block-wporg-notice__icon {
 	background-image: url(../src/icon/library/info.svg);
 }
@@ -73,5 +78,4 @@
 
 .wp-block-wporg-notice__content {
 	align-self: center;
-	font-size: var(--wp--preset--font-size--small);
 }
