@@ -7,7 +7,7 @@ use Rosetta_Sites, WP_Post, WP_REST_Server, WP_Theme_JSON_Resolver;
 defined( 'WPINC' ) || die();
 
 /* Actions & filters */
-add_action( 'admin_bar_menu', __NAMESPACE__ . '\filter_admin_bar_links', 500 ); // 500 to run after all items are added to the menu.
+add_action( 'admin_bar_menu', __NAMESPACE__ . '\filter_admin_bar_links', 10000 ); // 10000 to run after all items are added to the menu.
 add_filter( 'show_admin_bar', __NAMESPACE__ . '\should_show_admin_bar' );
 
 /**
