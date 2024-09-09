@@ -19,7 +19,7 @@ add_filter( 'show_admin_bar', __NAMESPACE__ . '\should_show_admin_bar' );
  * @return bool
  */
 function should_show_admin_bar( $show_admin_bar ) {
-	return is_super_admin() || current_user_can( 'read' );
+	return is_super_admin() || is_user_logged_in();
 }
 
 /**
