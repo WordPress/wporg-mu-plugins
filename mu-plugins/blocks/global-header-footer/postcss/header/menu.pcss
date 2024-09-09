@@ -147,10 +147,10 @@
 			}
 
 			@media (--tablet) {
-				padding-bottom: calc(33px - var(--active-menu-item-border-height, 0px));
-				padding-top: 33px;
-				padding-left: calc(var(--wp--style--block-gap) / 2);
+				padding-top: calc((var(--wp-global-header-height) - 24px) / 2);
 				padding-right: calc(var(--wp--style--block-gap) / 2);
+				padding-bottom: calc((var(--wp-global-header-height) - 24px) / 2 - var(--active-menu-item-border-height, 0px));
+				padding-left: calc(var(--wp--style--block-gap) / 2);
 			}
 
 			@media (--short-screen) {

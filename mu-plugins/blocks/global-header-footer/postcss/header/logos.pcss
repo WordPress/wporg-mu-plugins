@@ -26,19 +26,9 @@
 	& .wp-block-image > a {
 		display: inline-flex;
 		box-sizing: content-box;
-		height: 27px;
-		padding: 16px var(--wp--style--block-gap);
+		height: 30px;
+		padding: calc((var(--wp-global-header-height) - 30px) / 2) var(--wp--style--block-gap);
 		color: var(--wp-global-header--text-color);
-
-		@media (--tablet) {
-			padding-top: 31px;
-			padding-bottom: 32px;
-		}
-
-		@media (--short-screen) {
-			padding-bottom: 16px;
-			padding-top: 16px;
-		}
 
 		&:hover {
 			background-color: var(--wp-global-header--background-color--hover);

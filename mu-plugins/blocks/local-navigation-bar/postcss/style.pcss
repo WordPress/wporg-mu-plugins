@@ -69,9 +69,12 @@
 			top: -5px;
 			left: 0;
 			opacity: 0;
-			padding: 16px var(--wp--style--block-gap);
+			padding: calc(var(--wp--custom--local-navigation-bar--spacing--height) / 2 - 15px) var(--wp--style--block-gap);
+			padding-left: calc(var(--wp--style--block-gap) + 5px);
 			transition: all 0.2s ease-in-out;
 			visibility: hidden;
+			box-sizing: content-box;
+			width: 30px;
 
 			& a {
 				display: block;
@@ -81,6 +84,9 @@
 
 			& svg {
 				fill: currentcolor;
+				display: block;
+				height: auto;
+				width: 100%;
 			}
 		}
 
