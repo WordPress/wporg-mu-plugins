@@ -19,11 +19,10 @@ add_shortcode( 'youtube-nocookie', __NAMESPACE__ . '\render' );
  *
  * @param array  $attr    Shortcode attributes array, can be empty if the original arguments string cannot be parsed.
  * @param string $content Content inside shortcode tags.
- * @param string $tag     Shortcode name.
  *
  * @return string HTML code for iframe embed.
  */
-function render( $attr, $content, $tag ) {
+function render( $attr, $content ) {
 	// Short out early if the content is not a valid URL.
 	// Returns null if content is not a URL at all.
 	$host = wp_parse_url( $content, PHP_URL_HOST );
