@@ -1,0 +1,35 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "wporg/chapter-list",
+	"version": "0.1.0",
+	"title": "Chapter Navigation",
+	"category": "widgets",
+	"icon": "smiley",
+	"description": "",
+	"usesContext": [ "postId" ],
+	"attributes": {
+		"postType": {
+			"type": "string"
+		}
+	},
+	"supports": {
+		"html": false,
+		"spacing": {
+			"margin": [
+				"top",
+				"bottom"
+			],
+			"padding": true,
+			"blockGap": true
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true
+		}
+	},
+	"textdomain": "wporg",
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"viewScript": "file:./view.js"
+}
