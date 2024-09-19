@@ -49,6 +49,9 @@ class Meetup_Client extends API_Client {
 	 * }
 	 */
 	public function __construct( array $settings = array() ) {
+		// Define the OAuth client first, such that it can be used in the parent constructor callbacks.
+		$this->oauth_client = new Meetup_OAuth2_Client;
+
 		parent::__construct( array(
 			/*
 			 * Response codes that should break the request loop.
@@ -88,8 +91,6 @@ class Meetup_Client extends API_Client {
 
 		add_action( 'api_client_tenacious_remote_request_attempt', array( $this, 'maybe_reset_oauth_token' ) );
 		add_action( 'api_client_handle_error_response', array( $this, 'maybe_reset_oauth_token' ) );
-
-		$this->oauth_client = new Meetup_OAuth2_Client;
 
 		if ( ! empty( $this->oauth_client->error->get_error_messages() ) ) {
 			$this->error = $this->merge_errors( $this->error, $this->oauth_client->error );
