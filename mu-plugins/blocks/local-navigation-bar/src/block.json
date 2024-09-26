@@ -13,8 +13,7 @@
 			"default": "full"
 		},
 		"backgroundColor": {
-			"type": "string",
-			"default": "blueberry-1"
+			"type": "string"
 		},
 		"layout": {
 			"type": "object",
