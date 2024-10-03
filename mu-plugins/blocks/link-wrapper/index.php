@@ -35,9 +35,12 @@ function init() {
  * @param string $content    Block content.
  * @return string Rendered block HTML.
  */
-function render( $attributes, $content ) {
+function render( $attributes, $content, $block ) {
+	$post_id   = $block->context['postId'];
+	$post_slug = get_post_field( 'post_name', $post_id );
+	$link  = isset( $attributes['url'] ) ? ' ' . $attributes['url'] : site_url( $post_slug );
+
 	$wrapper_attributes = get_block_wrapper_attributes();
-	$link  = isset( $attributes['url'] ) ? ' ' . $attributes['url'] : get_permalink();
 
 	return sprintf(
 		'<a href="%1$s" %2$s>%3$s</a>',
