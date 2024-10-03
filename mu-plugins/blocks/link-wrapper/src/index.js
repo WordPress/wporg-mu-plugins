@@ -24,6 +24,7 @@ function Edit( { attributes, setAttributes } ) {
 		<>
 			<InspectorControls key="setting">
 				<PanelBody title={ __( 'Link destination', 'wporg' ) }>
+					<p>{ __( 'Defaults to the permalink if not set.', 'wporg' ) }</p>
 					<TextControl
 						label={ __( 'Link destination', 'wporg' ) }
 						hideLabelFromVision
@@ -55,12 +56,7 @@ function Edit( { attributes, setAttributes } ) {
 
 registerBlockType( metadata.name, {
 	edit: Edit,
-	save: ( { attributes } ) => {
-		const blockProps = useBlockProps.save();
-		return (
-			<a { ...blockProps } href={ attributes.url }>
-				<InnerBlocks.Content />
-			</a>
-		);
+	save: () => {
+		return <InnerBlocks.Content />;
 	},
 } );
