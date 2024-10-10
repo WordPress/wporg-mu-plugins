@@ -10,6 +10,8 @@ namespace WordPressdotorg\MU_Plugins\Query_Total_Block;
 
 use WP_Query;
 
+defined( 'WPINC' ) || die();
+
 add_action( 'init', __NAMESPACE__ . '\init' );
 add_filter( 'render_block_data', __NAMESPACE__ . '\update_block_attributes' );
 
