@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "wporg/ratings-bars",
+	"version": "0.1.0-39d9ca08c6d1615c4016bfcdc9e4c627976b2212",
+	"title": "Ratings (bars)",
+	"category": "design",
+	"icon": "",
+	"description": "The breakdown of ratings displayed as bars for each rating value.",
+	"textdomain": "wporg",
+	"supports": {
+		"html": false
+	},
+	"usesContext": [
+		"postId"
+	],
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"render": "file:../render.php"
+}

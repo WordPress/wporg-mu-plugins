@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wporg/query-has-results",
+	"title": "Has results",
+	"category": "theme",
+	"description": "Contains the block elements to display when there are query results.",
+	"parent": [
+		"core/query"
+	],
+	"textdomain": "wporg",
+	"usesContext": [
+		"queryId",
+		"query"
+	],
+	"supports": {
+		"align": true,
+		"reusable": false,
+		"html": false,
+		"color": {
+			"link": true
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true
+		}
+	},
+	"editorScript": "file:./index.js",
+	"version": "25abfcab318ac034be551d6a0506866fb80e2e23"
+}

@@ -1,0 +1,37 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "wporg/table-of-contents",
+	"title": "Dynamic Table of Contents",
+	"category": "layout",
+	"description": "A dynamic list of headings in the current page.",
+	"keywords": [
+		"document outline",
+		"summary"
+	],
+	"textdomain": "wporg",
+	"attributes": {},
+	"usesContext": [
+		"postId"
+	],
+	"supports": {
+		"html": false,
+		"color": {
+			"text": true,
+			"background": true,
+			"link": true
+		},
+		"spacing": {
+			"margin": true,
+			"padding": true
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true
+		}
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style.css",
+	"viewScript": "file:./view.js",
+	"version": "fb856a6a52f4612577a3067fb21815e451033dc0"
+}
