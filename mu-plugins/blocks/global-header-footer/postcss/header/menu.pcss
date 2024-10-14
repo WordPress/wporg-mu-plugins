@@ -75,7 +75,7 @@
 
 	& .wp-block-navigation__container {
 		padding: 0 0 var(--wp--custom--margin--vertical) 0;
-		row-gap: 0;
+		row-gap: calc(var(--wp--style--block-gap) / 4);
 		column-gap: 0;
 		font-size: inherit;
 		line-height: 24px;
@@ -88,6 +88,16 @@
 			}
 		}
 
+
+		@media (max-width: 889px) {
+			.wp-block-navigation-item,
+			.wp-block-navigation-item:not(.global-header__mobile-get-wordpress) a,
+			.wp-block-navigation-submenu__toggle,
+			.wp-block-navigation-submenu {
+				width: 100%;
+			}
+		}
+
 		& .wp-block-navigation-item {
 			&:hover,
 			&:focus-within {
@@ -95,20 +105,15 @@
 			}
 
 			&.current-menu-item:not(.global-header__get-wordpress) {
-				border-left: var(--active-menu-item-border-height) solid var(--wp-global-header--link-color--active);
-				margin-left: calc((var(--wp--style--block-gap) / 2) * -1);
-				padding-left: calc(var(--wp--style--block-gap) / 2 - var(--active-menu-item-border-height));
 
 				@media (--tablet) {
-					margin-left: 0;
-					padding-left: 0;
 					border-bottom: var(--active-menu-item-border-height) solid var(--wp-global-header--link-color--active);
 					border-left: none;
 				}
 
 				& > a {
 					color: var(--wp-global-header--link-color--active);
-					font-weight: 700;
+					font-weight: 400;
 				}
 
 				& > button svg {
@@ -160,6 +165,7 @@
 		}
 
 		& .wp-block-navigation-submenu__toggle {
+			margin-bottom: calc(var(--wp--style--block-gap) / 4);
 
 			@media (--tablet) {
 				margin: 0;
@@ -180,6 +186,10 @@
 					background-color: var(--wp-global-header--text-color);
 				}
 			}
+
+			@media (max-width: 889px) {
+				color: var(--wp-global-header--text-color--light);
+			}
 		}
 
 		& .wp-block-navigation__submenu-icon {
@@ -195,29 +205,24 @@
 	}
 
 	& .wp-block-navigation__container .wp-block-navigation__submenu-container {
-		font-size: 15px;
-		gap: 0.5em;
-		padding-top: calc(var(--wp--style--block-gap) / 2);
-		padding-bottom: calc(var(--wp--style--block-gap) / 2);
+		gap: calc(var(--wp--style--block-gap) / 4) 0;
+		padding: 0 0 0 var(--wp--style--block-gap);
 		border: none;
 		white-space: nowrap;
 
 		@media (--tablet) {
 			font-size: inherit;
 			gap: inherit;
-			padding-top: 0;
+			padding-left: 0;
+			padding-bottom: calc(var(--wp--style--block-gap) / 2);
 			left: 0;
 
 			& a:hover,
 			& a:focus {
 				text-decoration: underline;
 			}
-		}
 
-		& .wp-block-navigation-item a {
-			padding: calc(var(--wp--style--block-gap) / 4);
-
-			@media (--tablet) {
+			& .wp-block-navigation-item a {
 				padding: calc(var(--wp--style--block-gap) / 2);
 			}
 		}

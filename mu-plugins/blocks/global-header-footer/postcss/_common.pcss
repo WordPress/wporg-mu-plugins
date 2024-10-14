@@ -71,6 +71,7 @@ html {
 	--wp--preset--color--charcoal-2: #23282d;
 	--wp--preset--color--charcoal-3: #40464d; /* Used only in the admin bar. */
 	--wp--preset--color--charcoal-4: #656a71;
+	--wp--preset--color--charcoal-5: #979aa1;
 	--wp--preset--color--nero: #1c2024; /* Only used in the header (hovers), not in the parent/child themes. */
 	--wp--preset--color--white: #fff;
 	--wp--preset--color--deep-blueberry: #213fd4;
@@ -85,6 +86,7 @@ html {
 
 	--wp-global-header--link-color--active: var(--wp--preset--color--blueberry-2);
 	--wp-global-header--text-color: var(--wp--preset--color--white);
+	--wp-global-header--text-color--light: var(--wp--preset--color--charcoal-5);
 }
 
 .has-charcoal-0-color,
@@ -93,6 +95,7 @@ html {
 	--wp-global-header--link-color: var(--wp--preset--color--charcoal-2);
 	--wp-global-header--link-color--active: var(--wp--preset--color--deep-blueberry);
 	--wp-global-header--text-color: var(--wp--preset--color--charcoal-2);
+	--wp-global-header--text-color--light: var(--wp--preset--color--charcoal-4);
 
 	&.has-background[style*="background-color:"] {
 		--wp-global-header--background-color--hover: var(--wp--preset--color--light-grey-2);
@@ -103,6 +106,7 @@ html {
 	--wp-global-header--background-color: var(--wp--preset--color--blueberry-1);
 	--wp-global-header--background-color--hover: var(--wp--preset--color--deep-blueberry);
 	--wp-global-header--link-color--active: var(--wp--preset--color--white);
+	--wp-global-header--text-color--light: var(--wp--preset--color--white);
 }
 
 .has-charcoal-1-background-color {
@@ -137,7 +141,7 @@ html {
 .wp-block-group.global-header,
 .global-header__alert-banner,
 .wp-block-group.global-footer {
-	--active-menu-item-border-height: 4px;
+	--active-menu-item-border-height: 1px;
 
 	background-color: var(--wp-global-header--background-color);
 	color: var(--wp-global-header--text-color);

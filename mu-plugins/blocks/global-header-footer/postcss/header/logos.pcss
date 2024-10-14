@@ -48,9 +48,11 @@
 	}
 
 	& .global-header__wporg-locale-title {
+
+		/* 1.35em = line height of element. */
+		padding-top: calc((var(--wp-global-header-height) - 1.35em) / 2);
+		padding-bottom: calc((var(--wp-global-header-height) - 1.35em) / 2);
 		padding-left: 0;
-		padding-bottom: 16px;
-		padding-top: 16px;
 		flex-basis: max-content;
 		flex-grow: 1;
 		flex-shrink: 1;
@@ -71,13 +73,6 @@
 			max-width: 15em;
 			flex-basis: min-content;
 			flex-shrink: 0;
-			padding-top: 31px;
-			padding-bottom: 32px;
-		}
-
-		@media (--short-screen) {
-			padding-bottom: 16px;
-			padding-top: 16px;
 		}
 
 		@media (--desktop-wide) {
