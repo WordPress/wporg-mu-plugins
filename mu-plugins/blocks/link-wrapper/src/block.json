@@ -6,6 +6,7 @@
 	"icon": "admin-links",
 	"category": "layout",
 	"description": "Link a set of blocks to a given page.",
+	"usesContext": [ "postId" ],
 	"textdomain": "wporg",
 	"attributes": {
 		"url": {
@@ -29,6 +30,9 @@
 				"margin": true,
 				"padding": true
 			}
+		},
+		"dimensions": {
+			"minHeight": true
 		},
 		"typography": {
 			"fontSize": true,
