@@ -34,7 +34,7 @@ $defaults = array(
 $data = wp_parse_args( $data, $defaults );
 
 if ( empty( $data['ratings'] ) || empty( $data['ratingsCount'] ) ) {
-	echo '<p>' . esc_html__( 'No ratings have been submitted yet.', 'wporg' ) . '</p>';
+	echo '<p>' . esc_html__( 'No reviews have been submitted yet.', 'wporg' ) . '</p>';
 	return;
 }
 
