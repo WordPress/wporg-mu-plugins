@@ -9,8 +9,6 @@ namespace WordPressdotorg\MU_Plugins\Notice;
 // Run after `WPorg_Handbook_Callout_Boxes` registers the shortcodes.
 add_action( 'init', __NAMESPACE__ . '\init', 11 );
 
-add_filter( 'pre_render_block', __NAMESPACE__ . '\render_callout_block_as_notice', 11, 2 );
-
 /**
  * Registers the block using the metadata loaded from the `block.json` file.
  * Behind the scenes, it registers also all assets so they can be enqueued
@@ -23,20 +21,20 @@ function init() {
 
 	foreach ( [ 'info', 'tip', 'alert', 'tutorial', 'warning' ] as $shortcode ) {
 		remove_shortcode( $shortcode );
-		add_shortcode( $shortcode, __NAMESPACE__ . '\render_callout_as_notice' );
+		add_shortcode( $shortcode, __NAMESPACE__ . '\render_shortcode' );
 	}
 }
 
 /**
- * Display a callout using the notice block.
+ * Display the callout shortcodes using the notice block.
  *
- * @param array|string $attr    Callout shortcode attributes array or empty string.
- * @param string       $content Callout content.
- * @param string       $tag     Callout type.
+ * @param array|string $attr    Shortcode attributes array or empty string.
+ * @param string       $content Shortcode content.
+ * @param string       $tag     Shortcode name.
  *
- * @return string Callout output as HTML markup.
+ * @return string Shortcode output as HTML markup.
  */
-function render_callout_as_notice( $attr, $content, $tag ) {
+function render_shortcode( $attr, $content, $tag ) {
 	$shortcode_mapping = array(
 		'info'     => 'info',
 		'tip'      => 'tip',
@@ -51,10 +49,8 @@ function render_callout_as_notice( $attr, $content, $tag ) {
 	$content = wp_kses_post( $content );
 	// Temporarily disable o2 processing while formatting content.
 	add_filter( 'o2_process_the_content', '__return_false', 1 );
-	remove_filter( 'the_content', array( 'o2', 'add_json_data' ), 999999 );
 	$content = apply_filters( 'the_content', $content );
 	remove_filter( 'o2_process_the_content', '__return_false', 1 );
-	add_filter( 'the_content', array( 'o2', 'add_json_data' ), 999999 );
 
 	// Create a unique placeholder for the content.
 	// Directly processing `$content` with `do_blocks` can lead to buggy layouts on make.wp.org.
@@ -73,29 +69,4 @@ EOT;
 	$final_markup = str_replace( $placeholder, $content, $processed_markup );
 
 	return $final_markup;
-}
-
-/**
- * Renders a callout block as a notice.
- *
- * @param string|null $pre_render The pre-rendered content or null.
- * @param array       $parsed_block The parsed block array.
- * @return string|null The rendered notice or the original pre-render value.
- */
-function render_callout_block_as_notice( $pre_render, $parsed_block ) {
-	if ( is_admin() || 'wporg/callout' !== $parsed_block['blockName'] ) {
-		return $pre_render;
-	}
-
-	$callout_wrapper = $parsed_block['innerHTML'];
-	// Extract the specific "callout-*" class and remove the "callout-" prefix
-	preg_match( '/\bcallout-([\w-]+)\b/', $callout_wrapper, $matches );
-	$tag = $matches[1] ?? 'tip';
-
-	$content = '';
-	foreach ( $parsed_block['innerBlocks'] as $inner_block ) {
-		$content .= render_block( $inner_block );
-	}
-
-	return render_callout_as_notice( '', $content, $tag );
 }
