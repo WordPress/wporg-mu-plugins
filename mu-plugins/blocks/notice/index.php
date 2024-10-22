@@ -51,8 +51,10 @@ function render_callout_as_notice( $attr, $content, $tag ) {
 	$content = wp_kses_post( $content );
 	// Temporarily disable o2 processing while formatting content.
 	add_filter( 'o2_process_the_content', '__return_false', 1 );
+	remove_filter( 'the_content', array( 'o2', 'add_json_data' ), 999999 );
 	$content = apply_filters( 'the_content', $content );
 	remove_filter( 'o2_process_the_content', '__return_false', 1 );
+	add_filter( 'the_content', array( 'o2', 'add_json_data' ), 999999 );
 
 	// Create a unique placeholder for the content.
 	// Directly processing `$content` with `do_blocks` can lead to buggy layouts on make.wp.org.
