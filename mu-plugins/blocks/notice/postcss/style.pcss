@@ -67,8 +67,8 @@
 .wp-block-wporg-notice__content {
 	align-self: center;
 
-	& :empty,
-	br:first-child {
+	& :empty:not(br),
+	& br:first-child {
 		display: none;
 	}
 
