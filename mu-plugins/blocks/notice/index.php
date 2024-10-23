@@ -49,19 +49,6 @@ function render_callout_as_notice( $attr, $content, $tag ) {
 
 	// Sanitize message content.
 	$content = wp_kses_post( $content );
-	// Temporarily disable o2 processing while formatting content, if the class exists.
-	$o2_exists = class_exists( 'o2' );
-	if ( $o2_exists ) {
-		add_filter( 'o2_process_the_content', '__return_false', 1 );
-		remove_filter( 'the_content', array( 'o2', 'add_json_data' ), 999999 );
-	}
-
-	$content = apply_filters( 'the_content', $content );
-
-	if ( $o2_exists ) {
-		remove_filter( 'o2_process_the_content', '__return_false', 1 );
-		add_filter( 'the_content', array( 'o2', 'add_json_data' ), 999999 );
-	}
 
 	// Create a unique placeholder for the content.
 	// Directly processing `$content` with `do_blocks` can lead to buggy layouts on make.wp.org.
