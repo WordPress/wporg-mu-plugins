@@ -27,11 +27,20 @@
 		align-self: start;
 	}
 
+	& p:empty {
+		display: none;
+	}
+
 	& p:first-child {
 		margin-block-start: 0;
 	}
 
-	& p:last-child {
+	/* o2 adds a data script tag to the notice content on some Make blogs.
+	 * In this case we need to remove bottom margin from the second to last element instead.
+	 */
+
+	& p:last-child,
+	&:has(.o2-data) :nth-last-child(2) {
 		margin-block-end: 0;
 	}
 
