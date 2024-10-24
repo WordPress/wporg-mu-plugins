@@ -1,0 +1,71 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "wporg/screenshot-preview",
+	"title": "Screenshot Preview",
+	"category": "widgets",
+	"icon": "plugin",
+	"description": "Show a preview of a website.",
+	"textdomain": "wporg",
+	"attributes": {
+		"alt": {
+			"type": "string",
+			"default": ""
+		},
+		"fullPage": {
+			"type": "boolean",
+			"default": true
+		},
+		"href": {
+			"type": "string",
+			"default": ""
+		},
+		"isHidden": {
+			"type": "boolean",
+			"default": false
+		},
+		"src": {
+			"type": "string",
+			"default": ""
+		},
+		"viewportHeight": {
+			"type": "integer",
+			"default": 0
+		},
+		"viewportWidth": {
+			"type": "integer",
+			"default": 1200
+		},
+		"width": {
+			"type": "integer",
+			"default": 800
+		}
+	},
+	"supports": {
+		"align": true,
+		"color": {
+			"text": false,
+			"background": true,
+			"link": false
+		},
+		"spacing": {
+			"margin": true,
+			"padding": true
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true
+		},
+		"__experimentalBorder": {
+			"color": true,
+			"radius": true,
+			"style": true,
+			"width": true
+		}
+	},
+	"editorScript": "file:./index.js",
+	"viewScriptModule": "file:./view.js",
+	"style": "file:./style-index.css",
+	"render": "file:../render.php",
+	"version": "00a4e775ee36d642deac33947934dc45eeeeaa7f"
+}
