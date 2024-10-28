@@ -9,7 +9,6 @@ defined( 'WPINC' ) || die();
 require_once __DIR__ . '/admin-bar.php';
 
 add_action( 'init', __NAMESPACE__ . '\register_block_types' );
-add_action( 'admin_bar_init', __NAMESPACE__ . '\remove_admin_bar_callback', 15 );
 add_action( 'rest_api_init', __NAMESPACE__ . '\register_routes' );
 add_filter( 'wp_enqueue_scripts', __NAMESPACE__ . '\register_block_assets', 200 ); // Always last.
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_compat_wp4_styles', 5 ); // Before any theme CSS.
@@ -81,16 +80,6 @@ function register_block_assets() {
 			'overflowMenuLabel' => __( 'More menu', 'wporg' ),
 		)
 	);
-}
-
-/**
- * Remove the default margin-top added when the admin bar is used.
- *
- * The core handling uses `!important`, which overrides the sticky header offset in `common.pcss`.
- */
-function remove_admin_bar_callback() {
-	remove_action( 'gp_head', '_admin_bar_bump_cb' );
-	remove_action( 'wp_head', '_admin_bar_bump_cb' );
 }
 
 /**
