@@ -52,7 +52,7 @@ if ( empty( $data['rating'] ) ) {
 		printf(
 			// translators: %s is the current rating value.
 			esc_html__( '%s out of 5 stars.', 'wporg' ),
-			'<span>' . esc_html( $display_rating_str ) . '</span>' // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			'<span>' . esc_html( $display_rating_str ) . '</span>'
 		);
 		?>
 	</div>
