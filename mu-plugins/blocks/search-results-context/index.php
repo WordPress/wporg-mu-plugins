@@ -72,7 +72,7 @@ function render( $attributes ) {
  */
 function init() {
 	register_block_type(
-		dirname( dirname( __DIR__ ) ) . '/build',
+		__DIR__ . '/build',
 		array(
 			'render_callback' => __NAMESPACE__ . '\render',
 		)
