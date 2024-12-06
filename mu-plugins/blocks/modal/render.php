@@ -24,7 +24,7 @@ $html_id = wp_unique_id( 'modal-' );
 >
 	<div class="wp-block-buttons">
 		<div class="wp-block-button">
-		<?php if ( isset( $attributes['href'] ) ) : ?>
+		<?php if ( ! empty( $attributes['href'] ) ) : ?>
 			<a
 				href="<?php echo esc_attr( $attributes['href'] ); ?>"
 				download
