@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wporg/modal",
+	"title": "Modal",
+	"icon": "location",
+	"category": "layout",
+	"description": "A modal dialog.",
+	"textdomain": "wporg",
+	"attributes": {
+		"href": {
+			"type": "string"
+		},
+		"label": {
+			"type": "string",
+			"default": "Open modal"
+		}
+	},
+	"supports": {
+		"align": false,
+		"interactivity": true
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"viewScriptModule": "file:./view.js",
+	"render": "file:../render.php"
+}
