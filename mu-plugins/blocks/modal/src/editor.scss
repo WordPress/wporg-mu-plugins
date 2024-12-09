@@ -17,12 +17,13 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: #1e1e1ecc;
+		background: var(--wp--custom--wporg-modal--color--overlay);
 	}
 }
 
 .wporg-modal__modal {
 	position: relative;
 	width: 35rem;
-	background: var(--wp--preset--color--white);
+	background: var(--wp--custom--wporg-modal--color--background);
+	color: var(--wp--custom--wporg-modal--color--text);
 }

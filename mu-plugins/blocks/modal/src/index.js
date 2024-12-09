@@ -2,7 +2,15 @@
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { InspectorControls, InnerBlocks, RichText, useBlockProps } from '@wordpress/block-editor';
+import {
+	__experimentalColorGradientSettingsDropdown as ColorGradientSettingsDropdown,
+	__experimentalUseMultipleOriginColorsAndGradients as useMultipleOriginColorsAndGradients,
+	InspectorControls,
+	InnerBlocks,
+	RichText,
+	useBlockProps,
+	withColors,
+} from '@wordpress/block-editor';
 import { PanelBody, TextControl, ToggleControl } from '@wordpress/components';
 import { registerBlockType } from '@wordpress/blocks';
 import { useState } from 'react';
@@ -11,18 +19,104 @@ import { useState } from 'react';
  * Internal dependencies
  */
 import metadata from './block.json';
-import './editor.scss';
 import './style.scss';
 
-function Edit( { attributes, setAttributes } ) {
+function Edit( {
+	attributes,
+	setAttributes,
+	backgroundColor,
+	setBackgroundColor,
+	textColor,
+	setTextColor,
+	closeButtonColor,
+	setCloseButtonColor,
+	overlayColor,
+	setOverlayColor,
+	clientId,
+} ) {
 	const [ isModalPreview, setIsModalPreview ] = useState( false );
+	const { customBackgroundColor, customCloseButtonColor, customTextColor, customOverlayColor } = attributes;
+	const colorGradientSettings = useMultipleOriginColorsAndGradients();
 	const classes = [];
 	if ( isModalPreview ) {
 		classes.push( 'is-modal-open' );
 	}
+
+	const style = {
+		'--wp--custom--wporg-modal--color--background': backgroundColor.slug
+			? `var( --wp--preset--color--${ backgroundColor.slug } )`
+			: customBackgroundColor,
+		'--wp--custom--wporg-modal--color--text': textColor.slug
+			? `var( --wp--preset--color--${ textColor.slug } )`
+			: customTextColor,
+		'--wp--custom--wporg-modal--color--close-button': closeButtonColor.slug
+			? `var( --wp--preset--color--${ closeButtonColor.slug } )`
+			: customCloseButtonColor,
+		'--wp--custom--wporg-modal--color--overlay': overlayColor.slug
+			? `var( --wp--preset--color--${ overlayColor.slug } )`
+			: customOverlayColor,
+	};
+	console.log( style );
+	const blockProps = useBlockProps( {
+		className: classes,
+		style,
+	} );
+
 	return (
 		<>
-			<InspectorControls key="modal-preview">
+			<InspectorControls group="color">
+				<ColorGradientSettingsDropdown
+					settings={ [
+						{
+							label: __( 'Modal background', 'wporg' ),
+							colorValue: backgroundColor.color || customBackgroundColor,
+							onColorChange: ( value ) => {
+								setBackgroundColor( value );
+								setAttributes( {
+									customBackgroundColor: value,
+								} );
+							},
+						},
+						{
+							label: __( 'Modal text', 'wporg' ),
+							colorValue: textColor.color || customTextColor,
+							onColorChange: ( value ) => {
+								setTextColor( value );
+								setAttributes( {
+									customTextColor: value,
+								} );
+							},
+						},
+						{
+							label: __( 'Close button', 'wporg' ),
+							colorValue: closeButtonColor.color || customCloseButtonColor,
+							onColorChange: ( value ) => {
+								setCloseButtonColor( value );
+								setAttributes( {
+									customCloseButtonColor: value,
+								} );
+							},
+						},
+						{
+							label: __( 'Overlay', 'wporg' ),
+							colorValue: overlayColor.color || customOverlayColor,
+							onColorChange: ( value ) => {
+								setOverlayColor( value );
+								setAttributes( {
+									customOverlayColor: value,
+								} );
+							},
+							enableAlpha: true,
+						},
+					] }
+					panelId={ clientId }
+					hasColorsOrGradients={ false }
+					disableCustomColors={ false }
+					__experimentalIsRenderedInSidebar
+					{ ...colorGradientSettings }
+				/>
+			</InspectorControls>
+			<InspectorControls group="default">
 				<PanelBody title={ __( 'Settings', 'wporg' ) } initialOpen={ true }>
 					<ToggleControl
 						__nextHasNoMarginBottom
@@ -46,7 +140,7 @@ function Edit( { attributes, setAttributes } ) {
 					/>
 				</PanelBody>
 			</InspectorControls>
-			<div { ...useBlockProps( { className: classes } ) }>
+			<div { ...blockProps }>
 				<div className="wp-block-buttons">
 					<div className="wp-block-button">
 						<RichText
@@ -60,6 +154,11 @@ function Edit( { attributes, setAttributes } ) {
 				</div>
 				<div className="wporg-modal__modal-backdrop" hidden={ ! isModalPreview }>
 					<div className="wporg-modal__modal">
+						<button
+							className="wporg-modal__modal-close"
+							onClick={ () => setIsModalPreview( false ) }
+							aria-label={ __( 'Close modal', 'wporg' ) }
+						></button>
 						<InnerBlocks
 							template={ [
 								[
@@ -75,7 +174,6 @@ function Edit( { attributes, setAttributes } ) {
 												},
 											},
 										},
-										layout: { type: 'constrained' },
 									},
 									[ [ 'core/paragraph' ] ],
 								],
@@ -89,7 +187,12 @@ function Edit( { attributes, setAttributes } ) {
 }
 
 registerBlockType( metadata.name, {
-	edit: Edit,
+	edit: withColors( {
+		backgroundColor: 'background-color',
+		textColor: 'text-color',
+		closeButtonColor: 'close-button-color',
+		overlayColor: 'overlay-color',
+	} )( Edit ),
 	save: () => {
 		return <InnerBlocks.Content />;
 	},

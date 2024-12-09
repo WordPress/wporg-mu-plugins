@@ -21,7 +21,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: #1e1e1ecc;
+		background: var(--wp--custom--wporg-modal--color--overlay);
 	}
 }
 
@@ -29,7 +29,8 @@
 	display: none;
 	position: relative;
 	width: 35rem;
-	background: var(--wp--preset--color--white);
+	background: var(--wp--custom--wporg-modal--color--background);
+	color: var(--wp--custom--wporg-modal--color--text);
 }
 
 .wporg-modal__modal-close {
@@ -41,6 +42,7 @@
 	height: 24px;
 	border: none;
 	background: transparent;
+	color: var(--wp--custom--wporg-modal--color--close-button);
 
 	&::before {
 		content: "";
@@ -51,7 +53,7 @@
 		mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' aria-hidden='true' focusable='false'%3E%3Cpath d='m13.06 12 6.47-6.47-1.06-1.06L12 10.94 5.53 4.47 4.47 5.53 10.94 12l-6.47 6.47 1.06 1.06L12 13.06l6.47 6.47 1.06-1.06L13.06 12Z'%3E%3C/path%3E%3C/svg%3E");
 		mask-repeat: no-repeat;
 		mask-position: center;
-		background-color: var(--wp--preset--color--white);
+		background-color: currentcolor;
 	}
 }
 

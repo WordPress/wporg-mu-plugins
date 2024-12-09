@@ -5,6 +5,25 @@
 
 $attributes['label'] = $attributes['label'] ?: __( 'Open modal', 'wporg' );
 
+$background_color = ! empty( $attributes['customBackgroundColor'] ) ? $attributes['customBackgroundColor'] : "var(--wp--preset--color--{$attributes['backgroundColor']})";
+$text_color = ! empty( $attributes['customTextColor'] ) ? $attributes['customTextColor'] : "var(--wp--preset--color--{$attributes['textColor']})";
+$overlay_color = ! empty( $attributes['customOverlayColor'] ) ? $attributes['customOverlayColor'] : "var(--wp--preset--color--{$attributes['overlayColor']})";
+$close_button_color = ! empty( $attributes['customCloseButtonColor'] ) ? $attributes['customCloseButtonColor'] : "var(--wp--preset--color--{$attributes['closeButtonColor']})";
+
+$style = '';
+if ( $background_color ) {
+	$style .= "--wp--custom--wporg-modal--color--background: {$background_color};";
+}
+if ( $text_color ) {
+	$style .= "--wp--custom--wporg-modal--color--text: {$text_color};";
+}
+if ( $overlay_color ) {
+	$style .= "--wp--custom--wporg-modal--color--overlay: {$overlay_color};";
+}
+if ( $close_button_color ) {
+	$style .= "--wp--custom--wporg-modal--color--close-button: {$close_button_color};";
+}
+
 // Initial state to pass to Interactivity API.
 $init_state = [
 	'isOpen' => false,
@@ -15,7 +34,7 @@ $html_id = wp_unique_id( 'modal-' );
 
 ?>
 <div
-	<?php echo get_block_wrapper_attributes(); // phpcs:ignore ?>
+	<?php echo get_block_wrapper_attributes( [ 'style' => $style ]); // phpcs:ignore ?>
 	data-wp-interactive="wporg/modal"
 	data-wp-watch="callbacks.init"
 	data-wp-on--keydown="actions.handleKeydown"
