@@ -1,3 +1,10 @@
+:where(.wp-block-wporg-modal) {
+	--wp--custom--wporg-modal--color--background: var(--wp--preset--color--white);
+	--wp--custom--wporg-modal--color--text: var(--wp--preset--color--charcoal-1);
+	--wp--custom--wporg-modal--color--overlay: #1e1e1ecc;
+	--wp--custom--wporg-modal--color--close-button: var(--wp--preset--color--charcoal-1);
+}
+
 .wp-block-wporg-modal {
 	position: relative;
 

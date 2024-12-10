@@ -3,26 +3,15 @@
  * Render the modal.
  */
 
+use function WordPressdotorg\MU_Plugins\Modal\get_style_decl_from_attr;
+
 $attributes['label'] = $attributes['label'] ?: __( 'Open modal', 'wporg' );
 
-$background_color = ! empty( $attributes['customBackgroundColor'] ) ? $attributes['customBackgroundColor'] : "var(--wp--preset--color--{$attributes['backgroundColor']})";
-$text_color = ! empty( $attributes['customTextColor'] ) ? $attributes['customTextColor'] : "var(--wp--preset--color--{$attributes['textColor']})";
-$overlay_color = ! empty( $attributes['customOverlayColor'] ) ? $attributes['customOverlayColor'] : "var(--wp--preset--color--{$attributes['overlayColor']})";
-$close_button_color = ! empty( $attributes['customCloseButtonColor'] ) ? $attributes['customCloseButtonColor'] : "var(--wp--preset--color--{$attributes['closeButtonColor']})";
-
 $style = '';
-if ( $background_color ) {
-	$style .= "--wp--custom--wporg-modal--color--background: {$background_color};";
-}
-if ( $text_color ) {
-	$style .= "--wp--custom--wporg-modal--color--text: {$text_color};";
-}
-if ( $overlay_color ) {
-	$style .= "--wp--custom--wporg-modal--color--overlay: {$overlay_color};";
-}
-if ( $close_button_color ) {
-	$style .= "--wp--custom--wporg-modal--color--close-button: {$close_button_color};";
-}
+$style .= get_style_decl_from_attr( $attributes, 'backgroundColor' );
+$style .= get_style_decl_from_attr( $attributes, 'textColor' );
+$style .= get_style_decl_from_attr( $attributes, 'overlayColor' );
+$style .= get_style_decl_from_attr( $attributes, 'closeButtonColor' );
 
 // Initial state to pass to Interactivity API.
 $init_state = [
