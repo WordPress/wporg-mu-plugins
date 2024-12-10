@@ -28,7 +28,7 @@
 .wporg-modal__modal {
 	display: none;
 	position: relative;
-	width: 35rem;
+	width: var(--wp--custom--layout--content-size, 680px);
 	background: var(--wp--custom--wporg-modal--color--background);
 	color: var(--wp--custom--wporg-modal--color--text);
 }
