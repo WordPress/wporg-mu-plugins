@@ -144,7 +144,7 @@ function Edit( {
 				<div className="wp-block-buttons">
 					<div className="wp-block-button">
 						<RichText
-							tagName="button"
+							tagName="div"
 							className="wp-block-button__link"
 							value={ attributes.label }
 							onChange={ ( label ) => setAttributes( { label } ) }
