@@ -3,16 +3,19 @@
  */
 import { __ } from '@wordpress/i18n';
 import {
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis -- experimental ok.
 	__experimentalColorGradientSettingsDropdown as ColorGradientSettingsDropdown,
-	__experimentalUseMultipleOriginColorsAndGradients as useMultipleOriginColorsAndGradients,
-	InspectorControls,
 	InnerBlocks,
+	InspectorControls,
 	RichText,
 	useBlockProps,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis -- experimental ok.
+	__experimentalUseMultipleOriginColorsAndGradients as useMultipleOriginColorsAndGradients,
 	withColors,
 } from '@wordpress/block-editor';
 import { PanelBody, TextControl, ToggleControl } from '@wordpress/components';
 import { registerBlockType } from '@wordpress/blocks';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { useState } from 'react';
 
 /**
@@ -56,10 +59,10 @@ function Edit( {
 			? `var( --wp--preset--color--${ overlayColor.slug } )`
 			: customOverlayColor,
 	};
-	console.log( style );
+
 	const blockProps = useBlockProps( {
 		className: classes,
-		style,
+		style: style,
 	} );
 
 	return (

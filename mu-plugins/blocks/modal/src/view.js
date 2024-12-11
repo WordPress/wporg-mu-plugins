@@ -29,7 +29,7 @@ const { actions } = store( 'wporg/modal', {
 		 * Close the modal only if the backdrop is clicked.
 		 * Ignores clicks inside the modal itself.
 		 *
-		 * @param {Event} event 
+		 * @param {Event} event
 		 */
 		clickBackdrop: ( event ) => {
 			if ( event.target.classList.contains( 'wporg-modal__modal-backdrop' ) ) {
