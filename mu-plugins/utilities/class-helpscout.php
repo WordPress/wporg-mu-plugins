@@ -15,7 +15,7 @@ class HelpScout {
 	 *
 	 * @var int
 	 */
-	public $timeout = 15;
+	public $timeout = 30;
 
 	public    $name           = '';
 	protected $app_id         = '';
