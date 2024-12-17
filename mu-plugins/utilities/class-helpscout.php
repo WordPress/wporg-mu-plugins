@@ -22,6 +22,8 @@ class HelpScout {
 	protected $app_secret     = '';
 	protected $webhook_secret = '';
 
+	public $last_api_request = false;
+
 	/**
 	 * Fetch an instance of the HelpScout API.
 	 */
@@ -178,7 +180,7 @@ class HelpScout {
 			$body                    = wp_json_encode( $args );
 		}
 
-		$request = wp_remote_request(
+		$this->last_api_request = wp_remote_request(
 			$url,
 			array(
 				'method'  => $method,
@@ -188,7 +190,7 @@ class HelpScout {
 			)
 		);
 
-		return json_decode( wp_remote_retrieve_body( $request ) );
+		return json_decode( wp_remote_retrieve_body( $this->last_api_request ) );
 	}
 
 	/**
