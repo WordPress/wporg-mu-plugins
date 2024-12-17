@@ -13,8 +13,9 @@ import {
 	__experimentalUseMultipleOriginColorsAndGradients as useMultipleOriginColorsAndGradients,
 	withColors,
 } from '@wordpress/block-editor';
-import { PanelBody, TextControl, ToggleControl } from '@wordpress/components';
-import { registerBlockType } from '@wordpress/blocks';
+import { PanelBody, SelectControl, TextControl, ToggleControl } from '@wordpress/components';
+import { store as blocksStore, registerBlockType } from '@wordpress/blocks';
+import { useSelect } from '@wordpress/data';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { useState } from 'react';
 
@@ -38,8 +39,15 @@ function Edit( {
 	clientId,
 } ) {
 	const [ isModalPreview, setIsModalPreview ] = useState( false );
+	const [ buttonStyles, setButtonStyles ] = useState( [] );
 	const { customBackgroundColor, customCloseButtonColor, customTextColor, customOverlayColor } = attributes;
 	const colorGradientSettings = useMultipleOriginColorsAndGradients();
+
+	useSelect( ( select ) => {
+		const { getBlockStyles } = select( blocksStore );
+		setButtonStyles( getBlockStyles( 'core/button' ) );
+	}, [] );
+
 	const classes = [];
 	if ( isModalPreview ) {
 		classes.push( 'is-modal-open' );
@@ -141,11 +149,22 @@ function Edit( {
 						value={ attributes.href }
 						onChange={ ( href ) => setAttributes( { href } ) }
 					/>
+					<SelectControl
+						__next40pxDefaultSize
+						__nextHasNoMarginBottom
+						label={ __( 'Button style', 'wporg' ) }
+						help={ __( 'Style to use for the toggle button.', 'wporg' ) }
+						onChange={ ( newValue ) => {
+							setAttributes( { buttonStyle: newValue } );
+						} }
+						value={ attributes.buttonStyle }
+						options={ buttonStyles.map( ( item ) => ( { label: item.label, value: item.name } ) ) }
+					/>
 				</PanelBody>
 			</InspectorControls>
 			<div { ...blockProps }>
 				<div className="wp-block-buttons">
-					<div className="wp-block-button">
+					<div className={ `wp-block-button is-style-${ attributes.buttonStyle }` }>
 						<RichText
 							tagName="div"
 							className="wp-block-button__link"

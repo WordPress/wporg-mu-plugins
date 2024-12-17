@@ -13,6 +13,11 @@ $style .= get_style_decl_from_attr( $attributes, 'textColor' );
 $style .= get_style_decl_from_attr( $attributes, 'overlayColor' );
 $style .= get_style_decl_from_attr( $attributes, 'closeButtonColor' );
 
+$button_class = 'wp-block-button';
+if ( ! empty( $attributes['buttonStyle'] ) ) {
+	$button_class .= ' is-style-' . $attributes['buttonStyle'];
+}
+
 // Initial state to pass to Interactivity API.
 $init_state = [
 	'isOpen' => false,
@@ -31,7 +36,7 @@ $html_id = wp_unique_id( 'modal-' );
 	<?php echo wp_interactivity_data_wp_context( $init_state ); // phpcs:ignore ?>
 >
 	<div class="wp-block-buttons">
-		<div class="wp-block-button">
+		<div class="<?php echo esc_attr( $button_class ); ?>">
 		<?php if ( ! empty( $attributes['href'] ) ) : ?>
 			<a
 				href="<?php echo esc_attr( $attributes['href'] ); ?>"

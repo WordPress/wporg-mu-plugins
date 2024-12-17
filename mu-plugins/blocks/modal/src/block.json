@@ -42,6 +42,10 @@
 		"label": {
 			"type": "string",
 			"default": "Open modal"
+		},
+		"buttonStyle": {
+			"type": "string",
+			"default": ""
 		}
 	},
 	"supports": {
