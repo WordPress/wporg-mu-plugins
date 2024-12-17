@@ -39,13 +39,19 @@ function Edit( {
 	clientId,
 } ) {
 	const [ isModalPreview, setIsModalPreview ] = useState( false );
-	const [ buttonStyles, setButtonStyles ] = useState( [] );
+	const [ buttonStyleOptions, setButtonStyleOptions ] = useState( [] );
 	const { customBackgroundColor, customCloseButtonColor, customTextColor, customOverlayColor } = attributes;
 	const colorGradientSettings = useMultipleOriginColorsAndGradients();
 
 	useSelect( ( select ) => {
 		const { getBlockStyles } = select( blocksStore );
-		setButtonStyles( getBlockStyles( 'core/button' ) );
+		const styles = getBlockStyles( 'core/button' );
+		const options = styles.map( ( item ) => ( { label: item.label, value: item.name } ) );
+		// Add the same options with the `is-small` modifier.
+		styles.forEach( ( item ) => {
+			options.push( { label: `${item.label} (small)`, value: `${item.name} is-small` } );
+		} );
+		setButtonStyleOptions( options );
 	}, [] );
 
 	const classes = [];
@@ -158,7 +164,7 @@ function Edit( {
 							setAttributes( { buttonStyle: newValue } );
 						} }
 						value={ attributes.buttonStyle }
-						options={ buttonStyles.map( ( item ) => ( { label: item.label, value: item.name } ) ) }
+						options={ buttonStyleOptions }
 					/>
 				</PanelBody>
 			</InspectorControls>
