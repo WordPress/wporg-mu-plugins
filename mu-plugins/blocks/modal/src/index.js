@@ -49,7 +49,7 @@ function Edit( {
 		const options = styles.map( ( item ) => ( { label: item.label, value: item.name } ) );
 		// Add the same options with the `is-small` modifier.
 		styles.forEach( ( item ) => {
-			options.push( { label: `${item.label} (small)`, value: `${item.name} is-small` } );
+			options.push( { label: `${ item.label } (small)`, value: `${ item.name } is-small` } );
 		} );
 		setButtonStyleOptions( options );
 	}, [] );
