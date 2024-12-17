@@ -44,11 +44,6 @@ class HelpScout {
 			$app_id         = HELPSCOUT_APP_ID;
 			$secret         = HELPSCOUT_APP_SECRET;
 			$webhook_secret = HELPSCOUT_WEBHOOK_SECRET_KEY;
-		} elseif ( 'foundation' === $app_id && defined( 'HELPSCOUT_FOUNDATION_APP_ID' ) ) {
-			$name           = 'foundation';
-			$app_id         = HELPSCOUT_FOUNDATION_APP_ID;
-			$secret         = HELPSCOUT_FOUNDATION_APP_SECRET;
-			$webhook_secret = HELPSCOUT_FOUNDATION_WEBHOOK_SECRET_KEY;
 		}
 
 		$this->name           = $name;
