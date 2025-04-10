@@ -81,10 +81,13 @@
 	}
 }
 
-/* When on the main (non-rosetta) sites, the logo should take over 100% space. */
-html[lang="en-US"] .wp-block-group.global-header .wp-block-image.global-header__wporg-logo-mark {
+/* When on the main (non-rosetta) sites, or the Learn site with any locale selected, the logo should take over 100% space. */
+html[lang="en-US"],
+.wp-child-theme-pubwporg-learn-2024 {
+	.wp-block-group.global-header .wp-block-image.global-header__wporg-logo-mark {
 
-	@media (--mobile-only) {
-		flex-basis: 100%;
+		@media (--mobile-only) {
+			flex-basis: 100%;
+		}
 	}
 }
