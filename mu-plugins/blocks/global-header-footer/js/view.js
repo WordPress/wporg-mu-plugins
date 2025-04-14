@@ -1,3 +1,4 @@
+/* global MutationObserver */
 /**
  * File wporg-global-header-script.js.
  *
@@ -195,7 +196,7 @@
 
 		const openButtons = document.querySelectorAll(
 			'.global-header__navigation [data-wp-on-async--click="actions.openMenuOnClick"],' +
-			'.global-header__search [data-wp-on-async--click="actions.openMenuOnClick"]'
+				'.global-header__search [data-wp-on-async--click="actions.openMenuOnClick"]'
 		);
 		openButtons.forEach( function ( button ) {
 			// When any open menu button is clicked, find any existing close buttons and click them.
@@ -215,15 +216,28 @@
 			} );
 		} );
 
-		const closeButtons = document.querySelectorAll(
-			'.global-header__navigation [data-wp-on-async--click="actions.closeMenuOnClick"],' +
-			'.global-header__search [data-wp-on-async--click="actions.closeMenuOnClick"]'
-		);
-		// When the global menus are closed (close button is clicked), remove the helper class.
-		closeButtons.forEach( function ( button ) {
-			button.addEventListener( 'click', function () {
-				document.documentElement.classList.remove( 'has-global-modal-open' );
+		// Watching for changes to the html element's class, which indicates open/close state of navigation.
+		const observer = new MutationObserver( ( mutations ) => {
+			mutations.forEach( ( mutation ) => {
+				const oldClass = mutation.oldValue || '';
+				const newClass = mutation.target.className || '';
+				if ( oldClass.includes( 'has-modal-open' ) && ! newClass.includes( 'has-modal-open' ) ) {
+					// Menu has closed, remove the helper class if it exists. If the previously
+					// open menu was not the global nav, there will be not effect here.
+					mutation.target.classList.remove( 'has-global-modal-open' );
+				} else if ( ! oldClass.includes( 'has-modal-open' ) && newClass.includes( 'has-modal-open' ) ) {
+					// Any nav menu has opened, scroll to the top of the page to show the
+					// entire menu (and prevent incorrect positioning).
+					window.scrollTo( { top: 0, behavior: 'instant' } );
+				}
 			} );
+		} );
+
+		// Observe the html element for changes only to the class attribute.
+		observer.observe( document.documentElement, {
+			attributes: true,
+			attributeFilter: [ 'class' ],
+			attributeOldValue: true,
 		} );
 	} );
 
