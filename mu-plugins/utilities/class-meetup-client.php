@@ -520,8 +520,10 @@ class Meetup_Client extends API_Client {
 
 		$result = $this->send_paginated_request( $query, $variables );
 
-		if ( is_wp_error( $result ) || ! array_key_exists( 'groupsSearch', $result['proNetworkByUrlname'] ) ) {
+		if ( is_wp_error( $result ) ) {
 			return $result;
+		} elseif ( empty( $result['proNetworkByUrlname'] ) ) {
+			return new WP_Error( 'not_found', 'Invalid API response.' );
 		}
 
 		$groups = array_column(
@@ -600,15 +602,13 @@ class Meetup_Client extends API_Client {
 
 		$result = $this->send_paginated_request( $query, $variables );
 
-		if ( is_wp_error( $result ) || ! array_key_exists( 'event', $result ) ) {
+		if ( is_wp_error( $result ) ) {
 			return $result;
+		} elseif ( empty( $result['event'] ) ) {
+			return false;
 		}
 
-		$event = $result['event'] ?: false;
-
-		if ( $event ) {
-			$event = $this->apply_backcompat_fields( 'event',  $event );
-		}
+		$event = $this->apply_backcompat_fields( 'event',  $result['event'] );
 
 		return $event;
 	}
@@ -705,8 +705,10 @@ class Meetup_Client extends API_Client {
 
 		$result = $this->send_paginated_request( $query, $variables );
 
-		if ( is_wp_error( $result ) || ! isset( $result['groupByUrlname'] ) ) {
+		if ( is_wp_error( $result ) ) {
 			return $result;
+		} elseif ( empty( $result['groupByUrlname'] ) ) {
+			return new WP_Error( 'not_found', 'Invalid API response.' );
 		}
 
 		// Format it similar to previous response payload.
@@ -767,8 +769,10 @@ class Meetup_Client extends API_Client {
 		);
 
 		$results = $this->send_paginated_request( $query, $variables );
-		if ( is_wp_error( $results ) || ! isset( $results['groupByUrlname'] ) ) {
+		if ( is_wp_error( $results ) ) {
 			return $results;
+		} elseif ( empty( $results['groupByUrlname'] ) ) {
+			return new WP_Error( 'not_found', 'Invalid API response.' );
 		}
 
 		// Select memberships.edges[*].node.
@@ -842,11 +846,9 @@ class Meetup_Client extends API_Client {
 
 		$results = $this->send_paginated_request( $query, $variables );
 
-		if ( is_wp_error( $results ) || ! array_key_exists( 'eventsSearch', $results['proNetworkByUrlname'] ) ) {
+		if ( is_wp_error( $results ) ) {
 			return $results;
-		}
-
-		if ( empty( $results['proNetworkByUrlname']['eventsSearch'] ) ) {
+		} elseif ( empty( $results['proNetworkByUrlname']['eventsSearch'] ) ) {
 			return array();
 		}
 
@@ -965,8 +967,10 @@ class Meetup_Client extends API_Client {
 		);
 
 		$results = $this->send_paginated_request( $query, $variables );
-		if ( is_wp_error( $results ) || ! isset( $results['groupByUrlname'] ) ) {
+		if ( is_wp_error( $results ) ) {
 			return $results;
+		} elseif ( empty( $results['groupByUrlname'] ) ) {
+			return new WP_Error( 'not_found', 'Invalid API response.' );
 		}
 
 		// Select {$event_field}.edges[*].node.
@@ -1041,7 +1045,7 @@ class Meetup_Client extends API_Client {
 			return $results;
 		}
 
-		return (int) $results['proNetworkByUrlname']['groupsSearch']['count'];
+		return (int) $results['proNetworkByUrlname']['groupsSearch']['count'] ?? 0;
 	}
 
 	/**
