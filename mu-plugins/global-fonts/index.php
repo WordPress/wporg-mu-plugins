@@ -249,6 +249,10 @@ function get_font_url( $font, $subset ) {
 			$font_folder    = 'NotoSerif/';
 			$font_file_name = 'NotoSerifJP-';
 			break;
+		case 'noto serif sc':
+			$font_folder    = 'NotoSerif/';
+			$font_file_name = 'NotoSerifSC-';
+			break;
 		case 'noto kufi':
 			$font_folder    = 'Noto/';
 			$font_file_name = 'NotoKufi-';
@@ -257,9 +261,6 @@ function get_font_url( $font, $subset ) {
 
 	$filepath = $font_folder . $font_file_name . $lower_subset . '.woff2';
 	if ( ! file_exists( __DIR__ . '/' . $filepath ) ) {
-		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			trigger_error( sprintf( 'Requested font file %s does not exist.', esc_html( $filepath ) ), E_USER_WARNING );
-		}
 		return false;
 	}
 
