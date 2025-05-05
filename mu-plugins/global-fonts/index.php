@@ -249,6 +249,10 @@ function get_font_url( $font, $subset ) {
 			$font_folder    = 'NotoSerif/';
 			$font_file_name = 'NotoSerifJP-';
 			break;
+		case 'noto serif kr':
+			$font_folder    = 'NotoSerif/';
+			$font_file_name = 'NotoSerifKR-';
+			break;
 		case 'noto serif sc':
 			$font_folder    = 'NotoSerif/';
 			$font_file_name = 'NotoSerifSC-';
