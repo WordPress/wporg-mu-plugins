@@ -34,6 +34,7 @@
 		"build": "NODE_ENV=production ./bin/build.js",
 		"build:dev": "NODE_ENV=development ./bin/build.js",
 		"font-subset": "./bin/font-subset.js",
+		"font-subset-cjk": "./bin/font-subset-cjk.js",
 		"prestart": "./bin/build.js",
 		"start": "NODE_ENV=development ./bin/watch.js",
 		"lint:css": "wp-scripts lint-style **/*.pcss",
@@ -64,6 +65,7 @@
 	},
 	"dependencies": {
 		"@googlemaps/markerclusterer": "^2.4.0",
+		"cn-font-split": "^7.2.9",
 		"fast-glob": "^3.3.2",
 		"folder-hash": "^4.0.4",
 		"google-map-react": "^2.2.1",
