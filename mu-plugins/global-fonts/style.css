@@ -1,3 +1,7 @@
+@import "./NotoSerif/NotoSerifJP/style.css";
+@import "./NotoSerif/NotoSerifKR/style.css";
+@import "./NotoSerif/NotoSerifSC/style.css";
+
 /*--------------*
  *  Newsreader  *
  *--------------*/
@@ -1232,45 +1236,6 @@
 	font-display: swap;
 	src: url(./IBMPlexSans/IBMPlexSans-SemiBold-arrows.woff2) format("woff2");
 	unicode-range: U+2190-2199;
-}
-
-/*------------------------------*
- *  Noto Serif Japanese         *
- *------------------------------*/
-
-/* cjk */
-@font-face {
-	font-family: "Noto Serif JP";
-	font-weight: 200 900;
-	font-style: normal;
-	font-display: swap;
-	src: url(./NotoSerif/NotoSerifJP-cjk.woff2) format("woff2");
-}
-
-/*------------------------------*
- *  Noto Serif Korean           *
- *------------------------------*/
-
-/* cjk */
-@font-face {
-	font-family: "Noto Serif KR";
-	font-weight: 200 900;
-	font-style: normal;
-	font-display: swap;
-	src: url(./NotoSerif/NotoSerifKR-cjk.woff2) format("woff2");
-}
-
-/*--------------------------------*
- *  Noto Serif Simplified Chinese *
- *--------------------------------*/
-
-/* cjk */
-@font-face {
-	font-family: "Noto Serif SC";
-	font-weight: 200 900;
-	font-style: normal;
-	font-display: swap;
-	src: url(./NotoSerif/NotoSerifSC-cjk.woff2) format("woff2");
 }
 
 /*------------------------------*
