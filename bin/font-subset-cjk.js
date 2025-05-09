@@ -26,7 +26,7 @@ for ( let i = 0; i < fontNames.length; i++ ) {
 		input: inputBuffer,
 		outDir: outputDir,
 		// This seems to be a maximum, not average. Subset files won't exceed this size.
-		chunkSize: 5 * 1024 * 1024, // 10MB
+		chunkSize: 5 * 1024 * 1024, // 5MB
 		reduceMins: false,
 		renameOutputFont: `${ fontName }-[index].[ext]`,
 		testHtml: false,
