@@ -149,12 +149,16 @@ $code_is_poetry_src = isset( $attributes['textColor'] ) && str_contains( $attrib
 
 	<!-- wp:social-links {"className":"is-style-logos-only"} -->
 	<ul class="wp-block-social-links is-style-logos-only">
-		<!-- wp:social-link {"url":"https://www.facebook.com/WordPress/","service":"facebook","label":"<?php echo esc_html_x( 'Visit our Facebook page', 'Menu item title', 'wporg' ); ?>"} /-->
 		<!-- wp:social-link {"url":"https://www.x.com/WordPress","service":"x","label":"<?php echo esc_html_x( 'Visit our X (formerly Twitter) account', 'Menu item title', 'wporg' ); ?>"} /-->
+		<!-- wp:social-link {"url":"https://bsky.app/profile/wordpress.org","service":"bluesky","label":"<?php echo esc_html_x( 'Visit our Bluesky account', 'Menu item title', 'wporg' ); ?>"} /-->
 		<!-- wp:social-link {"url":"https://mastodon.world/@WordPress","service":"mastodon","rel":"me","label":"<?php echo esc_html_x( 'Visit our Mastodon account', 'Menu item title', 'wporg' ); ?>"} /-->
+		<!-- wp:social-link {"url":"https://www.threads.net/@wordpress","service":"threads","label":"<?php echo esc_html_x( 'Visit our Threads account', 'Menu item title', 'wporg' ); ?>"} /-->
+		<!-- wp:social-link {"url":"https://www.facebook.com/WordPress/","service":"facebook","label":"<?php echo esc_html_x( 'Visit our Facebook page', 'Menu item title', 'wporg' ); ?>"} /-->
 		<!-- wp:social-link {"url":"https://www.instagram.com/wordpress/","service":"instagram","label":"<?php echo esc_html_x( 'Visit our Instagram account', 'Menu item title', 'wporg' ); ?>"} /-->
 		<!-- wp:social-link {"url":"https://www.linkedin.com/company/wordpress","service":"linkedin","label":"<?php echo esc_html_x( 'Visit our LinkedIn account', 'Menu item title', 'wporg' ); ?>"} /-->
+		<!-- wp:social-link {"url":"https://www.tiktok.com/@wordpress","service":"tiktok","label":"<?php echo esc_html_x( 'Visit our TikTok account', 'Menu item title', 'wporg' ); ?>"} /-->
 		<!-- wp:social-link {"url":"https://www.youtube.com/wordpress","service":"youtube","label":"<?php echo esc_html_x( 'Visit our YouTube channel', 'Menu item title', 'wporg' ); ?>"} /-->
+		<!-- wp:social-link {"url":"https://wordpress.tumblr.com/","service":"tumblr","label":"<?php echo esc_html_x( 'Visit our Tumblr account', 'Menu item title', 'wporg' ); ?>"} /-->
 	</ul> <!-- /wp:social-links -->
 
 	<?php if ( str_starts_with( get_locale(), 'en_' ) ) : ?>
