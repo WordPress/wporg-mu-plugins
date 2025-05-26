@@ -7,6 +7,9 @@ use function WordPressdotorg\MU_Plugins\Helpers\Locale\{ get_all_locales_with_su
 
 /**
  * Plugins_Locale_Banner_Controller
+ *
+ * NOTE: This is not used. Please see the below file.
+ * @see https://github.com/WordPress/wordpress.org/blob/trunk/wordpress.org/public_html/wp-content/plugins/plugin-directory/api/routes/class-locale-banner.php
  */
 class Plugins_Locale_Banner_Controller extends Base_Locale_Banner_Controller {
 	/**
