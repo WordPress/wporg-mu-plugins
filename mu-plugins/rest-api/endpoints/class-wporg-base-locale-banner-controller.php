@@ -86,7 +86,7 @@ abstract class Base_Locale_Banner_Controller extends \WP_REST_Controller {
 					// The conjunctions are not translated
 					'%1$s, and %2$s' === __( '%1$s, and %2$s', 'wporg' ) &&
 					// But the available in string is..
-					__( 'WordPress is also available in %s.', 'wporg' ) !== 'WordPress is also available in %s.'
+					'WordPress is also available in %s.' !== __( 'WordPress is also available in %s.', 'wporg' )
 				) {
 					// Then use the core strings as a fallback, hoping they're translated.
 					return $core_strings;
