@@ -34,6 +34,9 @@ class Plugins_Locale_Banner_Controller extends Base_Locale_Banner_Controller {
 
 		require_once GLOTPRESS_LOCALES_PATH;
 
+		// Use localised strings in wp_sprintf_l().
+		$this->namespace_wp_sprintf_l_strings();
+
 		$locale_subdomain_assoc = get_all_locales_with_subdomain();
 		$current_locale = get_locale();
 		$current_gp_locale = \GP_Locales::by_field( 'wp_locale', $current_locale );
@@ -94,6 +97,9 @@ class Plugins_Locale_Banner_Controller extends Base_Locale_Banner_Controller {
 		}
 
 		require_once GLOTPRESS_LOCALES_PATH;
+
+		// Use localised strings in wp_sprintf_l().
+		$this->namespace_wp_sprintf_l_strings();
 
 		$locale_subdomain_assoc = get_all_locales_with_subdomain();
 		$current_locale = get_locale();
