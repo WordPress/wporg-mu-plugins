@@ -84,7 +84,9 @@ abstract class Base_Locale_Banner_Controller extends \WP_REST_Controller {
 
 				if (
 					// The conjunctions are not translated
-					'%1$s, and %2$s' === __( '%1$s, and %2$s', 'wporg' ) &&
+					'%1$s, %2$s'     === __( '%1$s, %2$s', 'wporg' ) &&     // between.
+					'%1$s, and %2$s' === __( '%1$s, and %2$s', 'wporg' ) && // between_last_two.
+					'%1$s and %2$s'  === __( '%1$s and %2$s', 'wporg' ) &&  // between_only_two.
 					// But the available in string is..
 					'WordPress is also available in %s.' !== __( 'WordPress is also available in %s.', 'wporg' )
 				) {
