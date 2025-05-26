@@ -69,7 +69,7 @@ abstract class Base_Locale_Banner_Controller extends \WP_REST_Controller {
 	 *
 	 * Use the Core strings as a fallback in the event of non-translation, if other strings are translated.
 	 */
-	protected function namespace_wp_sprintf_l_strings( $string, $args = array() ) {
+	protected function namespace_wp_sprintf_l_strings() {
 		add_filter(
 			'wp_sprintf_l',
 			static function ( $core_strings ) {
