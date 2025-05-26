@@ -39,3 +39,25 @@ function add_locale_data() {
 	);
 }
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\add_locale_data' );
+
+/**
+ * The strings used within the Language Suggest endpoint, for translation purposes.
+ */
+function strings_for_glotpress() {
+	throw new \Exception( 'This function should not be called. This exists for translation purposes only.' );
+
+	// The Language suggest header strings:
+	__( 'WordPress is also available in %s.', 'wporg' );
+	__( 'Learn WordPress is also available in %s.', 'wporg' );
+	__( 'WordPress support forums are also available in %s.', 'wporg' );
+
+	// The wp_sprintf_l() strings, copied to WordPress.org so the translations are translated in conjunction with the above.
+	array(
+		/* translators: Used to join items in a list with more than 2 items. */
+		'between'          => __( '%1$s, %2$s', 'wporg' ),
+		/* translators: Used to join last two items in a list with more than 2 times. */
+		'between_last_two' => __( '%1$s, and %2$s', 'wporg' ),
+		/* translators: Used to join items in a list with only 2 items. */
+		'between_only_two' => __( '%1$s and %2$s', 'wporg' ),
+	);
+}
