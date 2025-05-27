@@ -65,10 +65,12 @@ abstract class Base_Locale_Banner_Controller extends \WP_REST_Controller {
 	}
 
 	/**
-	 * The strings used within the Language Suggest endpoint. Included here for translation purposes.
+	 * The strings used within the Language Suggest endpoint.
+	 *
+	 * These are used by the wordpress.org/lang-suggest/ endpoint,
+	 * and are included here for translation purposes.
 	 */
 	private function _strings_for_glotpress() {
-		// The Language suggest header strings:
 		__( 'WordPress is also available in %s.', 'wporg' );
 		__( 'Learn WordPress is also available in %s.', 'wporg' );
 		__( 'WordPress support forums are also available in %s.', 'wporg' );
