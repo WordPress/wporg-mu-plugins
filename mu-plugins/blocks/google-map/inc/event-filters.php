@@ -97,7 +97,7 @@ function get_events( string $filter_slug, int $start_timestamp, int $end_timesta
 				break;
 
 			case 'all-past':
-				$events = get_all_past_events( $page );
+				$events = get_all_past_events( $page, $facets );
 				break;
 
 			case 'wp20':
@@ -320,27 +320,31 @@ function get_where_clauses( array $facets ): array {
 /**
  * Get a list of all upcoming events across all sites.
  */
-function get_all_past_events( int $page ): array {
+function get_all_past_events( int $page, array $facets = array() ): array {
 	global $wpdb;
 
 	$limit  = 50;
 	$offset = ( $page - 1 ) * $limit;
+	$where  = get_where_clauses( $facets );
+
+	$limit_sql = $wpdb->prepare( "LIMIT %d, %d", $offset, $limit );
 
 	// wporg_events.status doesn't have a separate value for "completed", it's just scheduled events that have
 	// a date in the past.
-	$query = $wpdb->prepare( '
-		SELECT
+	$query = "SELECT
 			id, `type`, title, url, meetup, location, latitude, longitude, date_utc,
 			date_utc_offset AS tz_offset
 		FROM `wporg_events`
 		WHERE
-			status = "scheduled" AND
-			date_utc < NOW()
+			status = 'scheduled' AND
+			date_utc < NOW() AND
+			{$where['clauses']}
 		ORDER BY date_utc DESC
-		LIMIT %d, %d',
-		$offset,
-		$limit
-	);
+		{$limit_sql}";
+
+	if ( $where['values'] ) {
+		$query = $wpdb->prepare( $query, $where['values'] );
+	}
 
 	if ( 'latin1' === DB_CHARSET ) {
 		$events = $wpdb->get_results( $query );
