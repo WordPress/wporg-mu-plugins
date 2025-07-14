@@ -7,7 +7,7 @@
 
 namespace WordPressdotorg\MU_Plugins\Favorite_Button_Block;
 
-$settings = get_block_settings( $block->context['postId'] );
+$settings = get_block_settings( $block->context['postId'] ?? 0 );
 if ( ! $settings ) {
 	return '';
 }
