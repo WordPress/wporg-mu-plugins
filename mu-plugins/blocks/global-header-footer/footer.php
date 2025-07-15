@@ -138,7 +138,7 @@ $code_is_poetry_src = isset( $attributes['textColor'] ) && str_contains( $attrib
 		<?php if ( ! empty( $locale_title ) ) : ?>
 		<!-- wp:paragraph {"className":"global-footer__wporg-locale-title"} -->
 		<p class="global-footer__wporg-locale-title">
-			<a href="https://make.wordpress.org/polyglots/teams/">
+			<a href="<?php echo esc_url( add_query_arg( 'locale', get_locale(), 'https://make.wordpress.org/polyglots/teams/' ) ); ?>">
 				<?php echo esc_html( $locale_title ); ?>
 			</a>
 		</p>
