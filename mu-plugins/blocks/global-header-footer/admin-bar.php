@@ -9,6 +9,7 @@ defined( 'WPINC' ) || die();
 /* Actions & filters */
 add_action( 'admin_bar_menu', __NAMESPACE__ . '\filter_admin_bar_links', 10000 ); // 10000 to run after all items are added to the menu.
 add_filter( 'show_admin_bar', __NAMESPACE__ . '\should_show_admin_bar' );
+add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_inline_css' );
 
 /**
  * Hide the admin bar for logged out users.
@@ -138,4 +139,11 @@ function filter_admin_bar_links( $wp_admin_bar ) {
 			$wp_admin_bar->add_node( $args );
 		}
 	}
+}
+
+function enqueue_inline_css() {
+	wp_add_inline_style(
+		'admin-bar',
+		'#wpadminbar #wp-admin-bar-edit-actions .ab-item::before { content: "" !important; }'
+	);
 }
