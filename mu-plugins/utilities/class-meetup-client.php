@@ -1129,26 +1129,30 @@ class Meetup_Client extends API_Client {
 				)->getOffset();
 			}
 
-			// Back-compat for the old 'venue' field.
-			if ( ! empty( $result['venues'] ) ) {
+			// Remove Lat/Lon for online events.
+			$result['venues'] ??= [];
+			foreach ( $result['venues'] as &$venue ) {
+				if ( is_numeric( $venue['id'] ) ) {
+					$venue['id'] = (int) $venue['id'];
+				}
+
+				if ( self::ONLINE_VENUE_ID === $venue['id'] ) {
+					$venue['lat'] = '';
+					$venue['lon'] = '';
+				} elseif ( empty( $result['venue'] ) ) {
+					// Default to first non-online venue if there's multiple.
+					$result['venue'] = $venue;
+				}
+			}
+
+			// If we didn't find a venue above, but there's venues, use the first one even if online.
+			if ( empty( $result['venue'] ) && ! empty( $result['venues'] ) ) {
 				$result['venue'] = $result['venues'][0];
 			}
 
 			if ( ! empty( $result['venue'] ) ) {
-				if ( is_numeric( $result['venue']['id'] ) ) {
-					$result['venue']['id'] = (int) $result['venue']['id'];
-				}
-
 				$result['venue']['localized_location']     = $this->localise_location( $result['venue'] );
 				$result['venue']['localized_country_name'] = $this->localised_country_name( $result['venue']['country'] );
-
-				// For online events, disregard the Venue lat/lon. It's not correct. In back-compat methods to allow for BC for existing uses of the class.
-				if ( ! empty( $result['venue']['lng'] ) && self::ONLINE_VENUE_ID == $result['venue']['id'] ) {
-					$result['venue']['lat'] = '';
-					$result['venue']['lng'] = '';
-				}
-
-				$result['venue']['lon'] ??= $result['venue']['lng'];
 			}
 
 			if ( ! empty( $result['group'] ) ) {
