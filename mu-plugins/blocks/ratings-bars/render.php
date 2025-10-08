@@ -53,8 +53,8 @@ foreach ( range( 5, 1 ) as $stars ) :
 		<a href="<?php echo esc_url( $support_url ); ?>">
 			<span class="screen-reader-text">
 			<?php
-				// translators: %1$d: count of reviews. %2$d: level of star rating (ex, 5-star).
-				echo esc_html( sprintf( _n( '%1$d %2$d-star review', '%1$d %2$d-star reviews', $count, 'wporg' ), $count, $stars ) );
+				// translators: %1$s: count of reviews. %2$d: level of star rating (ex, 5-star).
+				echo esc_html( sprintf( _n( '%1$s %2$d-star review', '%1$s %2$d-star reviews', $count, 'wporg' ), number_format_i18n( $count ), $stars ) );
 			?>
 			</span>
 			<span aria-hidden="true" class="wporg-ratings-bars__bar-label">
@@ -66,7 +66,7 @@ foreach ( range( 5, 1 ) as $stars ) :
 			<span aria-hidden="true" class="wporg-ratings-bars__bar-background">
 				<span class="wporg-ratings-bars__bar-foreground" style="width: <?php echo intval( $rating_bar_width ); ?>%;"></span>
 			</span>
-			<span aria-hidden="true" class="wporg-ratings-bars__bar-count"><?php echo intval( $count ); ?></span>
+			<span aria-hidden="true" class="wporg-ratings-bars__bar-count"><?php echo number_format_i18n( $count ); ?></span>
 		</a>
 	</li>
 <?php endforeach; ?>
