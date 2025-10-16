@@ -151,6 +151,7 @@ class Meetup_Client extends API_Client {
 	 */
 	public function send_paginated_request( $query, $variables = null ) {
 		$data = array();
+		$this->error = new WP_Error;
 
 		$has_next_page        = false;
 		$is_paginated_request = ! empty( $variables ) &&
@@ -168,7 +169,7 @@ class Meetup_Client extends API_Client {
 
 			$new_data = json_decode( wp_remote_retrieve_body( $response ), true );
 
-			if ( ! empty( $new_data['error'] ) ) {
+			if ( ! empty( $new_data['error'] ) || ! empty( $new_data['errors'] ) ) {
 				$this->handle_error_response( $response, $this->api_url, $request_args );
 				break;
 			}
@@ -454,7 +455,7 @@ class Meetup_Client extends API_Client {
 		if ( isset( $data['errors'] ) ) {
 			foreach ( $data['errors'] as $details ) {
 				$error->add(
-					$details['extensions']['code'],
+					$details['extensions']['code'] ?? ( $details['extensions']['classification'] ?? 'unknown_error' ),
 					$details['message'],
 					$details['locations'] ?? '' // TODO This isn't being passed through to the final error?
 				);
@@ -533,8 +534,8 @@ class Meetup_Client extends API_Client {
 
 		$result = $this->send_paginated_request( $query, $variables );
 
-		if ( is_wp_error( $result ) || ! array_key_exists( 'groupsSearch', $result['proNetwork'] ) ) {
-			return $result;
+		if ( is_wp_error( $result ) || ! isset( $result['proNetwork']['groupsSearch'] ) ) {
+			return array();
 		}
 
 		$groups = array_column(
@@ -829,6 +830,10 @@ class Meetup_Client extends API_Client {
 			foreach ( $args['filters'] as $key => $filter ) {
 				$filters[ $key ] = "{$key}: {$filter}";
 			}
+		}
+
+		if ( empty( $filters ) ) {
+			throw new Exception( 'At least one filter must be provided when querying network events.' );
 		}
 
 		$query     = '
