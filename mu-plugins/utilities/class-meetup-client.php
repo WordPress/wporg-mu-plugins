@@ -1081,6 +1081,7 @@ class Meetup_Client extends API_Client {
 				'proJoinDate',
 				'lat',
 				'lon',
+				'timezone',
 			);
 		} elseif ( 'venue' === $type || 'venues' == $type ) {
 			return array(
@@ -1130,6 +1131,13 @@ class Meetup_Client extends API_Client {
 						// $result['time'] is back-compat above.
 						gmdate( 'Y-m-d H:i:s', $result['time'] ),
 						new DateTimeZone( $result['timezone'] )
+					)
+				)->getOffset();
+			} elseif ( ! empty( $result['group']['timezone'] ) ) {
+				$result['utc_offset'] = (
+					new DateTimeImmutable(
+						gmdate( 'Y-m-d H:i:s', $result['time'] ),
+						new DateTimeZone( $result['group']['timezone'] )
 					)
 				)->getOffset();
 			}
