@@ -852,7 +852,7 @@ class Meetup_Client extends API_Client {
 
 		$variables = array(
 			'urlname' => 'wordpress',
-			'perPage' => 1000, // More per-page to avoid hitting request limits.
+			'perPage' => 250,
 			'cursor'  => null,
 		);
 
