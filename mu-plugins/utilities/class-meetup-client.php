@@ -858,7 +858,7 @@ class Meetup_Client extends API_Client {
 
 		$results = $this->send_paginated_request( $query, $variables );
 
-		if ( is_wp_error( $results ) || ! array_key_exists( 'eventsSearch', $results['proNetwork'] ) ) {
+		if ( is_wp_error( $results ) || ! isset( $results['proNetwork']['eventsSearch'] ) ) {
 			return $results;
 		}
 
