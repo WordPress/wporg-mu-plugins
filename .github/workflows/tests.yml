@@ -32,7 +32,7 @@ jobs:
             composer install
             yarn wp-env start &
             yarn build
-            yarn wp-env start
+            fg # Bring back the wp-env start
 
       - name: Run PHP unit tests
         run: |
