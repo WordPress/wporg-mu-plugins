@@ -30,10 +30,8 @@ jobs:
         run: |
             yarn
             composer install
-            OUTFILE=`mktemp`
-            yarn wp-env start 2>&1 | tee $OUTFILE &
             yarn build
-            fg || cat $OUTFILE  # Bring back the wp-env start
+            yarn wp-env start
 
       - name: Run PHP unit tests
         run: |
