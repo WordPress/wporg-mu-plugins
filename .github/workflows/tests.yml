@@ -33,7 +33,7 @@ jobs:
             OUTFILE=`mktemp`
             yarn wp-env start 2>&1 | tee $OUTFILE &
             yarn build
-            ( jobs && fg ) || cat $OUTFILE  # Bring back the wp-env start
+            fg || cat $OUTFILE  # Bring back the wp-env start
 
       - name: Run PHP unit tests
         run: |
