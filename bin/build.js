@@ -11,7 +11,7 @@ const path = require( 'path' );
 const postcss = require( 'postcss' );
 const rtlcss = require( 'rtlcss' );
 const { sync: resolveBin } = require( 'resolve-bin' );
-const { sync: spawn } = require( 'cross-spawn' );
+const { spawn } = require( 'cross-spawn' );
 const postCssConfig = require( '../postcss.config.js' );
 
 /**
@@ -28,7 +28,7 @@ async function maybeBuildBlock( inputDir, outputDir ) {
 	const project = path.basename( path.dirname( inputDir ) );
 	if ( fs.existsSync( inputDir ) ) {
 		// Run wp-scripts with a specific input and output directory.
-		const { status, output } = spawn(
+		const build = spawn(
 			resolveBin( '@wordpress/scripts', { executable: 'wp-scripts' } ),
 			[
 				'build',
@@ -41,13 +41,20 @@ async function maybeBuildBlock( inputDir, outputDir ) {
 				stdio: 'pipe',
 			}
 		);
-		// Only output the webpack result if there was an issue.
-		if ( 0 !== status ) {
-			console.log( output.toString() );
-			console.log( chalk.red( `Error in block for ${ project }` ) );
-		} else {
-			console.log( chalk.green( `Block built for ${ project }` ) );
-		}
+		let output = '';		
+		build.stdout.on( 'data', ( data ) => {
+			output += data;
+		} );
+		build.on( 'exit', (status) => {
+			// Only output the webpack result if there was an issue.
+			if ( 0 !== status ) {
+				console.log( output );
+				console.log( chalk.red( `Error in block for ${ project }` ) );
+			} else {
+				console.log( chalk.green( `Block built for ${ project }` ) );
+			}
+		} );
+
 	}
 }
 
@@ -151,11 +158,9 @@ projects.forEach( async ( file ) => {
 
 		// We `await` because JS needs to be built first— the first webpack step deletes the build
 		// directory, and could remove the built CSS if it was truely async.
-		await maybeBuildBlock( path.resolve( path.join( basePath, 'src' ) ), outputDir );
-
-		await maybeBuildPostCSS( path.resolve( path.join( basePath, 'postcss' ) ), outputDir );
-
-		await setBlockVersion( basePath );
+		maybeBuildBlock( path.resolve( path.join( basePath, 'src' ) ), outputDir )
+			.then( maybeBuildPostCSS( path.resolve( path.join( basePath, 'postcss' ) ), outputDir ) )
+			.then( setBlockVersion( basePath ) );
 	} catch ( error ) {
 		console.log( chalk.red( `Error in ${ file }:` ), error.message );
 	}
