@@ -227,17 +227,26 @@ function get_all_upcoming_events( array $facets = array() ): array {
 
 	$where = get_where_clauses( $facets );
 
+	$description_field = '';
+	if ( isset( $facets['include_description'] ) ) {
+		$description_field = ', description';
+	}
+
+	// All facets are converted into an array.
+	$limit = intval( $facets['limit'][0] ?? 500 );
+
 	$query = "
 		SELECT
 			id, `type`, title, url, meetup, location, latitude, longitude, date_utc,
 			date_utc_offset AS tz_offset
+			{$description_field}
 		FROM `wporg_events`
 		WHERE
 			status = 'scheduled' AND
 			date_utc >= NOW() AND
 			{$where['clauses']}
 		ORDER BY date_utc ASC
-		LIMIT 500"
+		LIMIT {$limit}"
 	;
 
 	if ( $where['values'] ) {
@@ -323,17 +332,24 @@ function get_where_clauses( array $facets ): array {
 function get_all_past_events( int $page, array $facets = array() ): array {
 	global $wpdb;
 
-	$limit  = 50;
+	// All facets are converted into an array.
+	$limit  = intval( $facets['limit'][0] ?? 50 );
 	$offset = ( $page - 1 ) * $limit;
 	$where  = get_where_clauses( $facets );
 
 	$limit_sql = $wpdb->prepare( "LIMIT %d, %d", $offset, $limit );
+
+	$description_field = '';
+	if ( isset( $facets['include_description'] ) ) {
+		$description_field = ', description';
+	}
 
 	// wporg_events.status doesn't have a separate value for "completed", it's just scheduled events that have
 	// a date in the past.
 	$query = "SELECT
 			id, `type`, title, url, meetup, location, latitude, longitude, date_utc,
 			date_utc_offset AS tz_offset
+			{$description_field}
 		FROM `wporg_events`
 		WHERE
 			status = 'scheduled' AND
