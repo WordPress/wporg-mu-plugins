@@ -98,7 +98,8 @@ class Export_Context {
 			/*
 			 * Pretend that the post_status is publish in the results.
 			 *
-			 * This is to pass WP_REST_Posts_Controller::check_read_permission()
+			 * - the_posts: This is to pass WP_REST_Posts_Controller::check_read_permission().
+			 * - rest_prepare_*: This is so the resulting response shows the correct status.
 			 */
 			$args['_future_to_publish'] = true;
 			add_filter( 'the_posts', static function( $posts, $wp_query ) use( $args ) {
@@ -109,12 +110,25 @@ class Export_Context {
 					foreach ( $posts as $post ) {
 						if ( 'future' === $post->post_status ) {
 							$post->post_status = 'publish';
+							$post->real_post_status = 'future';
 						}
 					}
 				}
 
 				return $posts;
 			}, 10, 2 );
+			add_filter( 'rest_prepare_' . $args['post_type'], static function( $response, $post ) {
+				$prepared = $response->get_data();
+				if (
+					isset( $post->real_post_status ) &&
+					$post->real_post_status !== $prepared['status']
+				) {
+					$prepared['status'] = $post->real_post_status;
+					$response->set_data( $prepared );
+				}
+
+				return $response;
+			}, 10, 3 );
 		}
 
 		return $args;
