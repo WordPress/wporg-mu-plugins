@@ -21,6 +21,8 @@
  * 		]);
  * })
  *
+ * NOTE: This will also reveal future-scheduled post content! (ie. Release pages)
+ *
  * ⚠️ Be careful to only expose public data!
  */
 
@@ -64,6 +66,7 @@ class Export_Context {
 		);
 
 		add_filter( "rest_{$post_type}_item_schema", array( $this, 'add_export_context_to_schema' ) );
+		add_filter( "rest_{$post_type}_query", array( $this, 'allow_scheduled_posts_in_export' ), 10, 2 );
 	}
 
 	/**
@@ -75,6 +78,46 @@ class Export_Context {
 		$this->update_schema_array_recursive( $schema );
 
 		return $schema;
+	}
+
+	/**
+	 * Allows future-scheduled posts to be visible in the rest-api.
+	 *
+	 * @param array           $args    The REST API query args.
+	 * @param \WP_REST_Request $request The REST API request.
+	 * @return array Modified REST API query args.
+	 */
+	public function allow_scheduled_posts_in_export( $args, $request ) {
+		if (
+			$this->context_name === $request->get_param( 'context' ) &&
+			in_array( 'publish', (array) $args['post_status'], true )
+		) {
+			// Allow future posts to be visible in the export context.
+			$args['post_status'][] = 'future';
+
+			/*
+			 * Pretend that the post_status is publish in the results.
+			 *
+			 * This is to pass WP_REST_Posts_Controller::check_read_permission()
+			 */
+			$args['_future_to_publish'] = true;
+			add_filter( 'the_posts', static function( $posts, $wp_query ) use( $args ) {
+				if (
+					$wp_query->get( '_future_to_publish' ) &&
+					$args['post_type'] === $wp_query->get( 'post_type' )
+				) {
+					foreach ( $posts as $post ) {
+						if ( 'future' === $post->post_status ) {
+							$post->post_status = 'publish';
+						}
+					}
+				}
+
+				return $posts;
+			}, 10, 2 );
+		}
+
+		return $args;
 	}
 
 	/**
