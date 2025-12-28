@@ -35,7 +35,7 @@ export function Edit( { attributes, setAttributes } ) {
 		className: `is-${ type }-notice`,
 	} );
 	const innerBlocksProps = useInnerBlocksProps( blockProps, {
-		allowedBlocks: [ 'core/paragraph' ],
+		allowedBlocks: [ 'core/paragraph', 'core/list' ],
 	} );
 
 	return (
