@@ -15,13 +15,12 @@ import deprecated from './deprecated';
 registerBlockType( metadata.name, {
 	edit: Edit,
 	save: save,
-	deprecated,
+	deprecated: deprecated,
 	variations: typeOptions.map( ( { value, label } ) => ( {
 		name: value,
 		/* translators: %s is the notice type. */
 		title: sprintf( __( 'Notice: %s', 'wporg' ), label ),
-		isActive: ( blockAttributes, variationAttributes ) =>
-			blockAttributes.type === variationAttributes.type,
+		isActive: ( blockAttributes, variationAttributes ) => blockAttributes.type === variationAttributes.type,
 		scope: [ 'transform' ],
 		attributes: { type: value },
 	} ) ),

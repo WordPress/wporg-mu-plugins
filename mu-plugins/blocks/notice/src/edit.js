@@ -2,11 +2,7 @@
  * WordPress dependencies
  */
 import { __, sprintf } from '@wordpress/i18n';
-import {
-	BlockControls,
-	useBlockProps,
-	useInnerBlocksProps,
-} from '@wordpress/block-editor';
+import { BlockControls, useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
 import { ToolbarDropdownMenu } from '@wordpress/components';
 
 /**
@@ -62,9 +58,7 @@ export function Edit( { attributes, setAttributes } ) {
 			</BlockControls>
 			<div { ...blockProps }>
 				<div className="wp-block-wporg-notice__icon" />
-				<div className="wp-block-wporg-notice__content">
-					{ innerBlocksProps.children }
-				</div>
+				<div className="wp-block-wporg-notice__content">{ innerBlocksProps.children }</div>
 			</div>
 		</>
 	);

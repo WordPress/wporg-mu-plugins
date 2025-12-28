@@ -31,6 +31,7 @@ const migrateToInnerBlocks = ( attributes ) => {
 	];
 };
 
+// eslint-disable-next-line id-length
 const v1 = {
 	attributes: {
 		content: {
