@@ -2,7 +2,11 @@
  * WordPress dependencies
  */
 import { __, sprintf } from '@wordpress/i18n';
-import { BlockControls, RichText, useBlockProps } from '@wordpress/block-editor';
+import {
+	BlockControls,
+	useBlockProps,
+	useInnerBlocksProps,
+} from '@wordpress/block-editor';
 import { ToolbarDropdownMenu } from '@wordpress/components';
 
 /**
@@ -30,8 +34,13 @@ function getOptionLabel( type ) {
 }
 
 export function Edit( { attributes, setAttributes } ) {
-	const { content, type } = attributes;
-	const className = `is-${ type }-notice`;
+	const { type } = attributes;
+	const blockProps = useBlockProps( {
+		className: `is-${ type }-notice`,
+	} );
+	const innerBlocksProps = useInnerBlocksProps( blockProps, {
+		allowedBlocks: [ 'core/paragraph' ],
+	} );
 
 	return (
 		<>
@@ -51,15 +60,11 @@ export function Edit( { attributes, setAttributes } ) {
 					} ) ) }
 				/>
 			</BlockControls>
-			<div { ...useBlockProps( { className } ) }>
+			<div { ...blockProps }>
 				<div className="wp-block-wporg-notice__icon" />
-				<RichText
-					tagName="div"
-					multiline="p"
-					className="wp-block-wporg-notice__content"
-					onChange={ ( newContent ) => setAttributes( { content: newContent } ) }
-					value={ content }
-				/>
+				<div className="wp-block-wporg-notice__content">
+					{ innerBlocksProps.children }
+				</div>
 			</div>
 		</>
 	);

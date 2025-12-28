@@ -20,12 +20,6 @@
 		}
 	},
 	"attributes": {
-		"content": {
-			"type": "string",
-			"source": "html",
-			"selector": ".wp-block-wporg-notice__content",
-			"multiline": "p"
-		},
 		"type": {
 			"type": "string",
 			"default": "tip",
@@ -34,9 +28,9 @@
 	},
 	"example": {
 		"attributes": {
-            "type": "alert",
+			"type": "alert",
 			"content": "<p>This is an alert notice.</p>"
-        }
+		}
 	},
 	"textdomain": "wporg",
 	"editorScript": "file:./index.js",

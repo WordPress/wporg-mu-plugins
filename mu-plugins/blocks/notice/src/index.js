@@ -10,15 +10,18 @@ import { registerBlockType } from '@wordpress/blocks';
 import { Edit, typeOptions } from './edit';
 import save from './save';
 import metadata from './block.json';
+import deprecated from './deprecated';
 
 registerBlockType( metadata.name, {
 	edit: Edit,
 	save: save,
+	deprecated,
 	variations: typeOptions.map( ( { value, label } ) => ( {
 		name: value,
 		/* translators: %s is the notice type. */
 		title: sprintf( __( 'Notice: %s', 'wporg' ), label ),
-		isActive: ( blockAttributes, variationAttributes ) => blockAttributes.type === variationAttributes.type,
+		isActive: ( blockAttributes, variationAttributes ) =>
+			blockAttributes.type === variationAttributes.type,
 		scope: [ 'transform' ],
 		attributes: { type: value },
 	} ) ),
