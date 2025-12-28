@@ -21,9 +21,9 @@ function initialize_rest_endpoints() {
 	$users_controller->register_routes();
 
 	// The Site Quality controller is only needed on the main site. Note: domain check is due to this plugin running on multiple networks.
-	if ( 1 === get_current_blog_id() && 'wordpress.org' === get_blog_details()->domain ) {
-		require_once __DIR__ . '/endpoints/class-wporg-site-quality-controller.php';
-	}
+	// if ( 1 === get_current_blog_id() && 'wordpress.org' === get_blog_details()->domain ) {
+	// 	require_once __DIR__ . '/endpoints/class-wporg-site-quality-controller.php';
+	// }
 	
 	if ( defined( 'WPORG_THEME_DIRECTORY_BLOGID' ) && WPORG_THEME_DIRECTORY_BLOGID === get_current_blog_id() ) {
 		require_once __DIR__ . '/endpoints/class-wporg-base-locale-banner-controller.php';
