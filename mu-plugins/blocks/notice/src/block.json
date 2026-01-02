@@ -26,12 +26,6 @@
 			"enum": [ "alert", "info", "warning", "tip", "success" ]
 		}
 	},
-	"example": {
-		"attributes": {
-			"type": "alert",
-			"content": "<p>This is an alert notice.</p>"
-		}
-	},
 	"textdomain": "wporg",
 	"editorScript": "file:./index.js",
 	"style": "file:./style.css"

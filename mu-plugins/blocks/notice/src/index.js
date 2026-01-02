@@ -24,4 +24,15 @@ registerBlockType( metadata.name, {
 		scope: [ 'transform' ],
 		attributes: { type: value },
 	} ) ),
+	example: {
+		attributes: {
+			type: 'alert',
+		},
+		innerBlocks: [
+			{
+				name: 'core/paragraph',
+				attributes: { content: __( '<p>This is an alert notice.</p>', 'wporg' ) },
+			},
+		],
+	},
 } );
