@@ -675,7 +675,7 @@ class Meetup_Client extends API_Client {
 	 * @param string $group_slug The slug/urlname of a group.
 	 * @param array  $args       Optional. 'fields' and 'event_fields' may be defined.
 	 *
-	 * @return array|WP_Error
+	 * @return array|false|WP_Error Array of details, false if the group doesn't exist, WP_Error in the event of an error.
 	 */
 	public function get_group_details( $group_slug, $args = array() ) {
 		$fields = $this->get_default_fields( 'group' );
@@ -715,8 +715,13 @@ class Meetup_Client extends API_Client {
 
 		$result = $this->send_paginated_request( $query, $variables );
 
-		if ( is_wp_error( $result ) || ! isset( $result['groupByUrlname'] ) ) {
+		if ( is_wp_error( $result ) ) {
 			return $result;
+		}
+
+		// Group does not exist returns NULL value.
+		if ( is_array( $result ) && ! isset( $result['groupByUrlname'] ) && array_key_exists( 'groupByUrlname', $result ) ) {
+			return false;
 		}
 
 		// Format it similar to previous response payload.
