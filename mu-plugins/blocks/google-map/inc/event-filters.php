@@ -234,15 +234,16 @@ function get_all_upcoming_events( array $facets = array() ): array {
 		FROM `wporg_events`
 		WHERE
 			status = 'scheduled' AND
-			date_utc >= NOW() AND
 			{$where['clauses']}
+			AND date_utc >= %s
 		ORDER BY date_utc ASC
 		LIMIT 500"
 	;
 
-	if ( $where['values'] ) {
-		$query = $wpdb->prepare( $query, $where['values'] );
-	}
+	$where_values = $where['values'] ?? [];
+	$where_values[] = gmdate( 'Y-m-d' );
+
+	$query = $wpdb->prepare( $query, $where_values );
 
 	if ( 'latin1' === DB_CHARSET ) {
 		$events = $wpdb->get_results( $query );
