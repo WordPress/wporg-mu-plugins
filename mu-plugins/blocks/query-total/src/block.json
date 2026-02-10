@@ -33,5 +33,6 @@
 		}
 	},
 	"usesContext": [ "queryId", "query" ],
+	"style": "file:./style.css",
 	"editorScript": "file:./index.js"
 }
