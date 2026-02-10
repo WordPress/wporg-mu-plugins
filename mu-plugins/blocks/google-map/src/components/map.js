@@ -63,6 +63,11 @@ export default function Map( { apiKey, markers: rawMarkers, icon, blockStyle } )
 			pixelOffset: new maps.Size( icon.markerAnchorXOffset, icon.markerAnchorYOffset ),
 		} );
 
+		// Close the info window when clicking on the map (including clusters).
+		map.addListener( 'click', () => {
+			infoWindow.current.close();
+		} );
+
 		combinedMarkers = combineDuplicateLocations( rawMarkers );
 		combinedMarkers = assignMarkerReferences(
 			map,
