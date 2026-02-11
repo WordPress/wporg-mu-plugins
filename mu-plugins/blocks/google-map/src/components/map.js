@@ -83,7 +83,8 @@ export default function Map( { apiKey, markers: rawMarkers, icon, blockStyle } )
 			maps,
 			combinedMarkers.map( ( marker ) => marker.markerRef ),
 			icon,
-			blockStyle
+			blockStyle,
+			infoWindow.current
 		);
 
 		panToCenter(
