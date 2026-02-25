@@ -19,9 +19,10 @@ const PLUGINS = [
 	[
 		// Blocks Everywhere: Supports up to GB 17.9.
 		// See https://github.com/Automattic/blocks-everywhere/releases/tag/1.23.0
-		'check' => 'blocks-everywhere-1.23/blocks-everywhere.php',
-		'from'  => 'gutenberg/gutenberg.php',
-		'to'    => 'gutenberg-17.9/gutenberg.php',
+		'check'    => 'blocks-everywhere-1.23/blocks-everywhere.php',
+		'from'     => 'gutenberg/gutenberg.php',
+		'to'       => 'gutenberg-17.9/gutenberg.php',
+		'required' => true, // $to needs to be active on the site if $check is present.
 	],
 ];
 
@@ -44,6 +45,7 @@ function filter_the_filters() {
 		$check = $incompatible_plugin['check'];
 		$from  = $incompatible_plugin['from'];
 		$to    = $incompatible_plugin['to'];
+		$req   = $incompatible_plugin['required'] ?? false;
 
 		// Check to see if the incompatible plugin is active first.
 		// Not using the functions that do this, as they're only loaded in wp-admin.
@@ -56,7 +58,7 @@ function filter_the_filters() {
 
 		add_filter(
 			'option_active_plugins',
-			function( $plugins ) use ( $from, $to ) {
+			static function( $plugins ) use ( $from, $to, $req, $active_sitewide_plugins ) {
 				$pos = array_search( $from, $plugins, true );
 				if ( false !== $pos ) {
 					// Splice to retain load order, if it's important.
@@ -66,6 +68,17 @@ function filter_the_filters() {
 						1,
 						$to
 					);
+				} elseif (
+					// If one of the plugins is required for this plugin:
+					$req &&
+					// And neither $from nor $to are included..
+					false === array_search( $to, $plugins, true ) &&
+					// And they're not network-activated either...
+					! isset( $active_sitewide_plugins[ $from ] ) &&
+					! isset( $active_sitewide_plugins[ $to ] )
+				) {
+					// Then load the required plugin on this site..
+					$plugins[] = $to;
 				}
 
 				return $plugins;
@@ -74,7 +87,7 @@ function filter_the_filters() {
 
 		add_filter(
 			'site_option_active_sitewide_plugins',
-			function( $plugins ) use ( $from, $to ) {
+			static function( $plugins ) use ( $from, $to ) {
 				if ( isset( $plugins[ $from ] ) ) {
 					$plugins[ $to ] = $plugins[ $from ];
 					unset( $plugins[ $from ] );
