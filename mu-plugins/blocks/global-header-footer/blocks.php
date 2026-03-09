@@ -426,28 +426,16 @@ function render_global_header( $attributes = array() ) {
 /**
  * Remove `<link rel="alternate" ...>` tags from HTML markup.
  *
- * Uses WP_HTML_Tag_Processor to reliably find and remove `<link>` tags
- * whose `rel` attribute contains "alternate", regardless of which plugin
- * or core function added them.
+ * Uses a regex to match and remove `<link>` tags whose `rel` attribute
+ * contains "alternate", regardless of which plugin or core function
+ * added them.
  *
  * @param string $markup The HTML markup to filter.
  *
  * @return string The markup with alternate link tags removed.
  */
 function remove_head_alternate_links( $markup ) {
-	$p = new \WP_HTML_Tag_Processor( $markup );
-
-	while ( $p->next_tag( 'LINK' ) ) {
-		$rel = $p->get_attribute( 'rel' );
-
-		if ( is_string( $rel ) && in_array( 'alternate', preg_split( '/\s+/', $rel ), true ) ) {
-			$p->set_attribute( 'data-wp-remove', 'true' );
-		}
-	}
-
-	// Remove the marked link tags from the output.
-	// This is safe because <link> is a void element (self-closing, no nested content).
-	return preg_replace( '/<link\b[^>]*\bdata-wp-remove=[^>]*>/i', '', $p->get_updated_html() );
+	return preg_replace( '/<link\b[^>]*\brel=["\'][^"\']*\balternate\b[^"\']*["\'][^>]*\/?>/i', '', $markup );
 }
 
 /**
