@@ -3,6 +3,10 @@
  * Render the query filter.
  */
 
+if ( empty( $attributes['key'] ) ) {
+	return;
+}
+
 /**
  * Get configuration for this filter from a filter, so that child themes can
  * dynamically configure the output without needing to rebuild the HTML.
