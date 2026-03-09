@@ -231,6 +231,11 @@ function restore_inner_group_container() {
  */
 function rest_render_global_header( $request ) {
 
+	// Remove <link rel="alternate"> tags from the head, as they're not relevant for the reusable header.
+	remove_action( 'wp_head', 'feed_links', 2 );
+	remove_action( 'wp_head', 'feed_links_extra', 3 );
+	remove_action( 'wp_head', 'wp_oembed_add_discovery_links' );
+
 	// Remove the theme stylesheet from rest requests.
 	add_filter(
 		'wp_enqueue_scripts',
