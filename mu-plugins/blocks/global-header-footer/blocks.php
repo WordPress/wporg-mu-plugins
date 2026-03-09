@@ -231,11 +231,6 @@ function restore_inner_group_container() {
  */
 function rest_render_global_header( $request ) {
 
-	// Remove <link rel="alternate"> tags from the head, as they're not relevant for the reusable header.
-	remove_action( 'wp_head', 'feed_links', 2 );
-	remove_action( 'wp_head', 'feed_links_extra', 3 );
-	remove_action( 'wp_head', 'wp_oembed_add_discovery_links' );
-
 	// Remove the theme stylesheet from rest requests.
 	add_filter(
 		'wp_enqueue_scripts',
@@ -410,6 +405,12 @@ function render_global_header( $attributes = array() ) {
 		$head_markup = ob_get_clean();
 	}
 
+	// Strip <link rel="alternate"> tags from the head, as they're not relevant for the global header.
+	// This catches tags from core (feed links, oEmbed) and any added by plugins.
+	if ( $is_rest_request ) {
+		$head_markup = remove_head_alternate_links( $head_markup );
+	}
+
 	$wrapper_attributes = get_block_wrapper_attributes(
 		array( 'class' => 'global-header wp-block-group' )
 	);
@@ -420,6 +421,33 @@ function render_global_header( $attributes = array() ) {
 		$markup,
 		wp_kses_post( render_header_alert_banner() )
 	);
+}
+
+/**
+ * Remove `<link rel="alternate" ...>` tags from HTML markup.
+ *
+ * Uses WP_HTML_Tag_Processor to reliably find and remove `<link>` tags
+ * whose `rel` attribute contains "alternate", regardless of which plugin
+ * or core function added them.
+ *
+ * @param string $markup The HTML markup to filter.
+ *
+ * @return string The markup with alternate link tags removed.
+ */
+function remove_head_alternate_links( $markup ) {
+	$p = new \WP_HTML_Tag_Processor( $markup );
+
+	while ( $p->next_tag( 'LINK' ) ) {
+		$rel = $p->get_attribute( 'rel' );
+
+		if ( is_string( $rel ) && in_array( 'alternate', preg_split( '/\s+/', $rel ), true ) ) {
+			$p->set_attribute( 'data-wp-remove', 'true' );
+		}
+	}
+
+	// Remove the marked link tags from the output.
+	// This is safe because <link> is a void element (self-closing, no nested content).
+	return preg_replace( '/<link\b[^>]*\bdata-wp-remove=[^>]*>/i', '', $p->get_updated_html() );
 }
 
 /**
