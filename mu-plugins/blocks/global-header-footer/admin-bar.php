@@ -63,9 +63,9 @@ function filter_admin_bar_links( $wp_admin_bar ) {
 				// Move "Edit Profile" and "Logout" to a new group at the end of the dropdown.
 				$ab_item->parent = 'my-account-actions';
 				$wp_admin_bar->add_node( $ab_item );
-			} else if ( in_array( $ab_item->id, [ 'edit', 'site-editor', 'customize' ] ) ) {
+			} else if ( in_array( $ab_item->id, [ 'edit', 'site-editor', 'customize' ] ) || $ab_item->parent === 'edit' ) {
 				// Move "Edit [object]", "Customize", and "Edit Site" (if exist) to list to be
-				// added to a new dropdown later.
+				// added to a new dropdown later. Includes child-elements of Edit.
 				$ab_item->parent = 'edit-actions';
 				$wp_admin_bar->remove_node( $ab_item->id );
 				$edit_items[] = $ab_item;
