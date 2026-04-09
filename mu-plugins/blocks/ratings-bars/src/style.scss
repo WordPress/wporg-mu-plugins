@@ -35,6 +35,7 @@
 .wporg-ratings-bars__bar-background {
 	display: inline-block;
 	background-color: var(--wp--preset--color--light-grey-2);
+	border-radius: 2px;
 	position: relative;
 	width: 100%;
 	height: var(--wp--preset--spacing--20);
@@ -44,6 +45,7 @@
 	position: absolute;
 	inset: 0;
 	right: auto;
+	border-radius: 2px;
 	background-color: var(--wp--custom--wporg-ratings-stars--color--fill, #e26f56);
 }
 
