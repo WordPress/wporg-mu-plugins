@@ -461,13 +461,18 @@ function is_rosetta_site() {
 function get_global_menu_items() {
 	$global_items = array(
 		array(
-			'title'   => esc_html_x( 'News', 'Menu item title', 'wporg' ),
-			'url'     => 'https://wordpress.org/news/',
-			'type'    => 'custom',
-		),
-		array(
 			'title' => esc_html_x( 'Showcase', 'Menu item title', 'wporg' ),
 			'url'   => 'https://wordpress.org/showcase/',
+			'type'  => 'custom',
+		),
+		array(
+			'title' => esc_html_x( 'Plugins', 'Menu item title', 'wporg' ),
+			'url'   => 'https://wordpress.org/plugins/',
+			'type'  => 'custom',
+		),
+		array(
+			'title' => esc_html_x( 'Themes', 'Menu item title', 'wporg' ),
+			'url'   => 'https://wordpress.org/themes/',
 			'type'  => 'custom',
 		),
 		array(
@@ -476,39 +481,12 @@ function get_global_menu_items() {
 			'type'  => 'custom',
 		),
 		array(
-			'title'   => esc_html_x( 'Extend', 'Menu item title', 'wporg' ),
-			'url'     => '#',
-			'type'    => 'custom',
-			'submenu' => array(
-				array(
-					'title' => esc_html_x( 'Themes', 'Menu item title', 'wporg' ),
-					'url'   => 'https://wordpress.org/themes/',
-					'type'  => 'custom',
-				),
-				array(
-					'title' => esc_html_x( 'Plugins', 'Menu item title', 'wporg' ),
-					'url'   => 'https://wordpress.org/plugins/',
-					'type'  => 'custom',
-				),
-				array(
-					'title' => esc_html_x( 'Patterns', 'Menu item title', 'wporg' ),
-					'url'   => 'https://wordpress.org/patterns/',
-					'type'  => 'custom',
-				),
-				array(
-					'title' => esc_html_x( 'Blocks', 'Menu item title', 'wporg' ),
-					'url'   => 'https://wordpress.org/blocks/',
-					'type'  => 'custom',
-				),
-				array(
-					'title' => esc_html_x( 'Openverse ↗︎', 'Menu item title', 'wporg' ),
-					'url'   => 'https://openverse.org/',
-					'type'  => 'custom',
-				),
-			),
+			'title' => esc_html_x( 'News', 'Menu item title', 'wporg' ),
+			'url'   => 'https://wordpress.org/news/',
+			'type'  => 'custom',
 		),
 		array(
-			'title'   => esc_html_x( 'Learn', 'Menu item title', 'wporg' ),
+			'title'   => esc_html_x( 'Resources', 'Menu item title', 'wporg' ),
 			'url'     => '#',
 			'type'    => 'custom',
 			'submenu' => array(
@@ -523,6 +501,11 @@ function get_global_menu_items() {
 					'type'  => 'custom',
 				),
 				array(
+					'title' => esc_html_x( 'Education', 'Menu item title', 'wporg' ),
+					'url'   => 'https://wordpress.org/education/',
+					'type'  => 'custom',
+				),
+				array(
 					'title' => esc_html_x( 'Forums', 'Menu item title', 'wporg' ),
 					'url'   => 'https://wordpress.org/support/forums/',
 					'type'  => 'custom',
@@ -533,45 +516,28 @@ function get_global_menu_items() {
 					'type'  => 'custom',
 				),
 				array(
-					'title' => esc_html_x( 'WordPress.tv ↗︎', 'Menu item title', 'wporg' ),
-					'url'   => 'https://wordpress.tv/',
-					'type'  => 'custom',
-				),
-			),
-		),
-		array(
-			'title'   => esc_html_x( 'Community', 'Menu item title', 'wporg' ),
-			'url'     => '#',
-			'type'    => 'custom',
-			'submenu' => array(
-				array(
-					'title' => esc_html_x( 'Make WordPress', 'Menu item title', 'wporg' ),
-					'url'   => 'https://make.wordpress.org/',
+					'title' => esc_html_x( 'Blocks', 'Menu item title', 'wporg' ),
+					'url'   => 'https://wordpress.org/blocks/',
 					'type'  => 'custom',
 				),
 				array(
-					'title' => esc_html_x( 'Education', 'Menu item title', 'wporg' ),
-					'url'   => 'https://wordpress.org/education/',
+					'title' => esc_html_x( 'Patterns', 'Menu item title', 'wporg' ),
+					'url'   => 'https://wordpress.org/patterns/',
 					'type'  => 'custom',
 				),
 				array(
-					'title' => esc_html_x( 'Photo Directory', 'Menu item title', 'wporg' ),
+					'title' => esc_html_x( 'Photos', 'Menu item title', 'wporg' ),
 					'url'   => 'https://wordpress.org/photos/',
 					'type'  => 'custom',
 				),
 				array(
-					'title' => esc_html_x( 'Five for the Future', 'Menu item title', 'wporg' ),
-					'url'   => 'https://wordpress.org/five-for-the-future/',
+					'title' => esc_html_x( 'Openverse ↗︎', 'Menu item title', 'wporg' ),
+					'url'   => 'https://openverse.org/',
 					'type'  => 'custom',
 				),
 				array(
-					'title' => esc_html_x( 'Events', 'Menu item title', 'wporg' ),
-					'url'   => 'https://events.wordpress.org/',
-					'type'  => 'custom',
-				),
-				array(
-					'title' => esc_html_x( 'Job Board ↗︎', 'Menu item title', 'wporg' ),
-					'url'   => 'https://jobs.wordpress.net/',
+					'title' => esc_html_x( 'WordPress.tv ↗︎', 'Menu item title', 'wporg' ),
+					'url'   => 'https://wordpress.tv/',
 					'type'  => 'custom',
 				),
 			),
@@ -587,6 +553,21 @@ function get_global_menu_items() {
 					'type'  => 'custom',
 				),
 				array(
+					'title' => esc_html_x( 'Make WordPress', 'Menu item title', 'wporg' ),
+					'url'   => 'https://make.wordpress.org/',
+					'type'  => 'custom',
+				),
+				array(
+					'title' => esc_html_x( 'Events', 'Menu item title', 'wporg' ),
+					'url'   => 'https://events.wordpress.org/',
+					'type'  => 'custom',
+				),
+				array(
+					'title' => esc_html_x( 'Five for the Future', 'Menu item title', 'wporg' ),
+					'url'   => 'https://wordpress.org/five-for-the-future/',
+					'type'  => 'custom',
+				),
+				array(
 					'title' => esc_html_x( 'Enterprise', 'Menu item title', 'wporg' ),
 					'url'   => 'https://wordpress.org/enterprise/',
 					'type'  => 'custom',
@@ -594,6 +575,11 @@ function get_global_menu_items() {
 				array(
 					'title' => esc_html_x( 'Gutenberg ↗︎', 'Menu item title', 'wporg' ),
 					'url'   => 'https://wordpress.org/gutenberg/',
+					'type'  => 'custom',
+				),
+				array(
+					'title' => esc_html_x( 'Job Board ↗︎', 'Menu item title', 'wporg' ),
+					'url'   => 'https://jobs.wordpress.net/',
 					'type'  => 'custom',
 				),
 				array(
