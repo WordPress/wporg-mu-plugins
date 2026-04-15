@@ -156,7 +156,7 @@ function customize_navigation_block_icon( $block_content ) {
 			) &&
 			$tag_processor->next_tag( 'path' )
 		) {
-			$tag_processor->set_attribute( 'd', 'M17.5 11.6L12 16l-5.5-4.4.9-1.2L12 14l4.5-3.6 1 1.2z' );
+			$tag_processor->set_attribute( 'd', 'M5 6.5h14v-1.5H5v1.5z' );
 		}
 
 		if (
