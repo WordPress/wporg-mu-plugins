@@ -147,6 +147,8 @@ function customize_navigation_block_icon( $block_content ) {
 			)
 		)
 	) {
+		$open_icon_replaced = false;
+
 		if (
 			$tag_processor->next_tag(
 				array(
@@ -156,7 +158,8 @@ function customize_navigation_block_icon( $block_content ) {
 			) &&
 			$tag_processor->next_tag( 'path' )
 		) {
-			$tag_processor->set_attribute( 'd', 'M5 6.5h14v-1.5H5v1.5z' );
+			$tag_processor->set_attribute( 'd', 'M17.5 11.6L12 16l-5.5-4.4.9-1.2L12 14l4.5-3.6 1 1.2z' );
+			$open_icon_replaced = true;
 		}
 
 		if (
@@ -171,7 +174,18 @@ function customize_navigation_block_icon( $block_content ) {
 			$tag_processor->set_attribute( 'd', 'M6.5 12.4L12 8l5.5 4.4-.9 1.2L12 10l-4.5 3.6-1-1.2z' );
 		}
 
-		return $tag_processor->get_updated_html();
+		$updated_html = $tag_processor->get_updated_html();
+
+		// If the hamburger icon's top line was replaced with a caret/chevron, remove the bottom 2 lines.
+		if ( $open_icon_replaced ) {
+			$updated_html = preg_replace(
+				'#<path\s+d="M5 (?:12\.8h14v-1\.5H5v1\.5z|19h14v-1\.5H5V19z)"\s*></path>#',
+				'',
+				$updated_html
+			);
+		}
+
+		return $updated_html;
 	}
 
 	return $block_content;
