@@ -17,7 +17,6 @@ Over time, this is intended to become the canonical source repository for all `m
 
 * `npm run start` during development, only builds `style.css`
 * `npm run build` before commit/sync/deploy, builds `style.css` and `style-rtl.css`.
-* `npm run build:rtl` to build `style-rtl.css`
 
 
 ## Sync/Deploy

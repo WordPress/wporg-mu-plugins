@@ -31,6 +31,7 @@
 		"extends @wordpress/browserslist-config"
 	],
 	"scripts": {
+		"preinstall": "npx --yes only-allow npm",
 		"build": "NODE_ENV=production ./bin/build.js",
 		"build:dev": "NODE_ENV=development ./bin/build.js",
 		"font-subset": "./bin/font-subset.js",
@@ -39,7 +40,7 @@
 		"start": "NODE_ENV=development ./bin/watch.js",
 		"lint:css": "wp-scripts lint-style **/*.pcss",
 		"lint:js": "wp-scripts lint-js **/src/**/*.js",
-		"setup:tools": "yarn install && composer install && TEXTDOMAIN=wporg composer exec update-configs",
+		"setup:tools": "npm install && composer install && TEXTDOMAIN=wporg composer exec update-configs",
 		"update:tools": "composer update && TEXTDOMAIN=wporg composer exec update-configs",
 		"wp-env": "wp-env",
 		"test:php": "wp-env run tests-cli --env-cwd=/var/www/html/ phpunit"
