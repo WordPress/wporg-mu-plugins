@@ -24,7 +24,7 @@ jobs:
             - name: Install all dependencies
               run: |
                   composer install --no-dev
-                  npm install
+                  npm ci
 
             - name: Build
               run: npm run build
