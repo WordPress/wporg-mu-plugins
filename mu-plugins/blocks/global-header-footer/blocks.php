@@ -310,6 +310,13 @@ function rest_render_codex_global_header( $request ) {
 	$markup = rest_render_global_header( $request );
 	$markup = preg_replace( '!<html[^>]+>!i', '<!-- [codex head html] -->', $markup );
 
+	// Load wp-content assets (e.g. the Interactivity API script module) from the s.w.org CDN
+	// rather than wordpress.org. wordpress.org doesn't send CORS headers, so loading these
+	// scripts cross-origin from the Codex throws CORS errors, which breaks the menu and search.
+	// The host is the only part swapped, so the per-file `?ver=` cache buster is preserved.
+	// See https://meta.trac.wordpress.org/ticket/8281.
+	$markup = str_replace( content_url(), 'https://s.w.org/wp-content', $markup );
+
 	return $markup;
 }
 
