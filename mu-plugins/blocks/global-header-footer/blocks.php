@@ -282,6 +282,24 @@ function rest_render_global_header( $request ) {
 }
 
 /**
+ * Rewrite wp-content asset URLs to load from the s.w.org CDN.
+ *
+ * The header/footer endpoints are embedded by external software (the Codex, Trac, etc.) and
+ * loaded cross-origin. wordpress.org doesn't send CORS headers, so scripts like the
+ * Interactivity API module throw CORS errors when loaded from there, breaking the menu and
+ * search. s.w.org serves the same files with the required headers. Only the host is swapped,
+ * so each per-file `?ver=` cache buster is preserved.
+ *
+ * @see https://meta.trac.wordpress.org/ticket/8281
+ *
+ * @param string $markup The rendered markup.
+ * @return string The markup with wp-content asset URLs pointed at the CDN.
+ */
+function rewrite_assets_to_cdn( $markup ) {
+	return str_replace( content_url(), 'https://s.w.org/wp-content', $markup );
+}
+
+/**
  * Render the global header via a REST request for the Codex with appropriate tags.
  *
  * @return string
@@ -309,13 +327,7 @@ function rest_render_codex_global_header( $request ) {
 
 	$markup = rest_render_global_header( $request );
 	$markup = preg_replace( '!<html[^>]+>!i', '<!-- [codex head html] -->', $markup );
-
-	// Load wp-content assets (e.g. the Interactivity API script module) from the s.w.org CDN
-	// rather than wordpress.org. wordpress.org doesn't send CORS headers, so loading these
-	// scripts cross-origin from the Codex throws CORS errors, which breaks the menu and search.
-	// The host is the only part swapped, so the per-file `?ver=` cache buster is preserved.
-	// See https://meta.trac.wordpress.org/ticket/8281.
-	$markup = str_replace( content_url(), 'https://s.w.org/wp-content', $markup );
+	$markup = rewrite_assets_to_cdn( $markup );
 
 	return $markup;
 }
@@ -825,7 +837,10 @@ function rest_render_global_footer( $request ) {
 		return true;
 	}, 10, 2 );
 
-	return do_blocks( '<!-- wp:wporg/global-footer /-->' );
+	$markup = do_blocks( '<!-- wp:wporg/global-footer /-->' );
+	$markup = rewrite_assets_to_cdn( $markup );
+
+	return $markup;
 }
 
 /**
