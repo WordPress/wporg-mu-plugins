@@ -278,25 +278,33 @@ function rest_render_global_header( $request ) {
 		}
 	);
 
-	return do_blocks( '<!-- wp:wporg/global-header /-->' );
+	return rewrite_assets_to_cdn( do_blocks( '<!-- wp:wporg/global-header /-->' ) );
 }
 
 /**
- * Rewrite wp-content asset URLs to load from the s.w.org CDN.
+ * Rewrite local asset URLs to load from the s.w.org CDN.
  *
- * The header/footer endpoints are embedded by external software (the Codex, Trac, etc.) and
- * loaded cross-origin. wordpress.org doesn't send CORS headers, so scripts like the
+ * The header/footer endpoints are embedded by external software (the Codex, Trac, Planet, etc.)
+ * and loaded cross-origin. wordpress.org doesn't send CORS headers, so scripts like the
  * Interactivity API module throw CORS errors when loaded from there, breaking the menu and
- * search. s.w.org serves the same files with the required headers. Only the host is swapped,
- * so each per-file `?ver=` cache buster is preserved.
+ * search. s.w.org serves the same files with the required headers.
+ *
+ * Both `wp-content` and `wp-includes` are rewritten, matching the workaround Trac applies in its
+ * own `update-headers.php`. Only the host is swapped, so each asset's existing (content-hashed,
+ * and therefore unique) `?ver=` cache buster is preserved.
  *
  * @see https://meta.trac.wordpress.org/ticket/8281
+ * @see https://github.com/WordPress/wporg-mu-plugins/pull/430
  *
  * @param string $markup The rendered markup.
- * @return string The markup with wp-content asset URLs pointed at the CDN.
+ * @return string The markup with local asset URLs pointed at the CDN.
  */
 function rewrite_assets_to_cdn( $markup ) {
-	return str_replace( content_url(), 'https://s.w.org/wp-content', $markup );
+	return str_replace(
+		array( content_url(), includes_url() ),
+		array( 'https://s.w.org/wp-content', 'https://s.w.org/wp-includes' ),
+		$markup
+	);
 }
 
 /**
@@ -327,7 +335,6 @@ function rest_render_codex_global_header( $request ) {
 
 	$markup = rest_render_global_header( $request );
 	$markup = preg_replace( '!<html[^>]+>!i', '<!-- [codex head html] -->', $markup );
-	$markup = rewrite_assets_to_cdn( $markup );
 
 	return $markup;
 }
