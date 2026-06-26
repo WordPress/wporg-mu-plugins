@@ -102,7 +102,7 @@ function wporg_icons_filepath_shim() {
 	$registry = WP_Icons_Registry::get_instance();
 
 	try {
-    	// `registered_icons` is declared protected on the base class, so reflect the
+		// `registered_icons` is declared protected on the base class, so reflect the
 		// base class even when the live instance is the Gutenberg subclass.
 		// NB: do NOT use $registry->get_registered_i
 		// get_content() and would throw the exact fatal we're fixing.
