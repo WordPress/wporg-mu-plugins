@@ -11,7 +11,6 @@ add_filter( 'render_block_core/post-title', __NAMESPACE__ . '\swap_h0_for_paragr
 add_filter( 'render_block_core/query-title', __NAMESPACE__ . '\swap_h0_for_paragraph', 20 );
 add_filter( 'wp_script_attributes', __NAMESPACE__ . '\inject_module_cachebuster' );
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\fix_rtl_style_includes', 1 );
-add_action( 'init', __NAMESPACE__ . '\wporg_icons_filepath_shim', 9999 );
 
 /**
  * Replace invalid `h0` tags with paragraphs.
@@ -86,49 +85,4 @@ function fix_rtl_style_includes() {
 			wp_style_add_data( $handle, 'suffix', '' );
 		}
 	}
-}
-
-/*
- * Until Gutenberg 23.5.0 is released, this workaround avoids a fatal with incompatible
- * core WP code, where GB expects `filePath`, but core has `file_path`.
- *
- */
-function wporg_icons_filepath_shim() {
-	if ( ! class_exists( 'WP_Icons_Registry', false ) ) {
-		return;
-	}
-
-	// The active singleton may be core's WP_Icons_Registry OR the plugin's
-	// WP_Icons_Registry_Gutenberg (swapped in at init:1). Patch whichever is live.
-	$registry = WP_Icons_Registry::get_instance();
-
-	try {
-		// `registered_icons` is declared protected on the base class, so reflect the
-		// base class even when the live instance is the Gutenberg subclass.
-		// NB: do NOT use $registry->get_registered_i
-		// get_content() and would throw the exact fatal we're fixing.
-		$prop = new ReflectionProperty( 'WP_Icons_Registry', 'registered_icons' );
-	} catch ( ReflectionException $e ) {
-		return; // Core changed shape; nothing to do.
-	}
-
-	$icons   = $prop->getValue( $registry );
-	$patched = 0;
-
-	foreach ( $icons as $name => $icon ) {
-		// THE CONDITIONAL: only bridge entries that still carry the old camelCase key
-		// without the new snake_case one. Once Gutente
-		// `file_path` (core #64847), `file_path` is already set (or `filePath` is gone),
-		// this is false for every icon, and the shim
-		if ( empty( $icon['file_path'] ) && ! empty( $icon['filePath'] ) ) {
-			$icons[ $name ]['file_path'] = $icon['filePath'];
-			++$patched;
-		}
-	}
-
-	if ( 0 === $patched ) {
-		return; // Already compatible: core is live, or the Gutenberg fix has shipped.
-	}
-
-	$prop->setValue( $registry, $icons );
 }
