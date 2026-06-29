@@ -9,7 +9,15 @@ concurrency:
     cancel-in-progress: true
 
 jobs:
+    # Run the linting and test suites first. The build job below depends on both,
+    # so a failing lint/test run prevents the build branch from being updated.
+    lint:
+        uses: ./.github/workflows/linters.yml
+    test:
+        uses: ./.github/workflows/tests.yml
+
     build:
+        needs: [lint, test]
         runs-on: ubuntu-latest
         steps:
             - name: Checkout repository

@@ -1,10 +1,10 @@
 name: Static Analysis (Linting)
 
-# This workflow is triggered on pushes to trunk, and any PRs.
+# Runs on any PR, and is also called by build.yml (on trunk) so the build branch
+# is only updated after linting succeeds.
 on:
-    push:
-        branches: [trunk]
     pull_request:
+    workflow_call:
 
 jobs:
     check:
