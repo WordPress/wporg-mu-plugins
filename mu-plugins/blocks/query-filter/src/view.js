@@ -118,11 +118,12 @@ const { actions } = store( 'wporg/query-filter', {
 		},
 		handleFormSubmit: ( event ) => {
 			const form = event.target;
-			// Submitting a GET form without any data appends a lone `?` to
-			// the URL, so navigate to the clean action URL instead.
+			// Submitting a GET form without any data appends a lone `?` to the URL.
 			if ( ! Array.from( new FormData( form ).keys() ).length ) {
 				event.preventDefault();
-				window.location.href = form.action;
+				const url = new URL( form.getAttribute( 'action' ) || '', window.location.href );
+				url.search = '';
+				window.location.href = url.toString();
 			}
 		},
 		clearSelection: () => {
