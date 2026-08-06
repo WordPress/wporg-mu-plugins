@@ -43,11 +43,6 @@ class Meetup_OAuth2_Client extends API_Client {
 	/**
 	 * @var string
 	 */
-	const PASSWORD = MEETUP_USER_PASSWORD;
-
-	/**
-	 * @var string
-	 */
 	const URL_AUTHORIZE = 'https://secure.meetup.com/oauth2/authorize';
 
 	/**
