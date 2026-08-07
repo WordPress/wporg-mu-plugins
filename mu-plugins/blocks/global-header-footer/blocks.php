@@ -302,7 +302,7 @@ function rest_render_global_header( $request ) {
 function rewrite_assets_to_cdn( $markup ) {
 	return str_replace(
 		array( content_url(), includes_url() ),
-		array( 'https://s.w.org/wp-content', 'https://s.w.org/wp-includes' ),
+		array( 'https://s.w.org/wp-content', 'https://s.w.org/wp-includes/' ),
 		$markup
 	);
 }
