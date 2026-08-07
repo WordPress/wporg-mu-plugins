@@ -92,7 +92,7 @@ $code_is_poetry_src = isset( $attributes['textColor'] ) && str_contains( $attrib
 		<li><a href="https://wordpressfoundation.org/donate/"><?php echo esc_html_x( 'Donate ↗', 'Menu item title', 'wporg' ); ?></a></li>
 		<!-- /wp:list-item -->
 		<!-- wp:list-item -->
-		<li><a href="https://wordpress.org/five-for-the-future/"><?php echo esc_html_x( 'Five for the Future', 'Menu item title', 'wporg' ); ?></a></li>
+		<li><a href="https://mercantile.wordpress.org/"><?php echo esc_html_x( 'Swag ↗', 'Menu item title', 'wporg' ); ?></a></li>
 		<!-- /wp:list-item -->
 	</ul>
 	<!-- /wp:list -->

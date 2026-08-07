@@ -608,12 +608,12 @@ function get_global_menu_items() {
 					'url'   => 'https://jobs.wordpress.net/',
 					'type'  => 'custom',
 				),
-				array(
-					'title' => esc_html_x( 'Swag Store ↗︎', 'Menu item title', 'wporg' ),
-					'url'   => 'https://mercantile.wordpress.org/',
-					'type'  => 'custom',
-				),
 			),
+		),
+		array(
+			'title' => esc_html_x( 'Swag ↗︎', 'Menu item title', 'wporg' ),
+			'url'   => 'https://mercantile.wordpress.org/',
+			'type'  => 'custom',
 		),
 	);
 
