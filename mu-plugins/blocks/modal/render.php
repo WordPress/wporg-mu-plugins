@@ -39,7 +39,7 @@ $html_id = wp_unique_id( 'modal-' );
 		<div class="<?php echo esc_attr( $button_class ); ?>">
 		<?php if ( ! empty( $attributes['href'] ) ) : ?>
 			<a
-				href="<?php echo esc_attr( $attributes['href'] ); ?>"
+				href="<?php echo esc_url( $attributes['href'] ); ?>"
 				download
 				class="wporg-modal__toggle wp-block-button__link"
 				data-wp-on--click="actions.toggle"
