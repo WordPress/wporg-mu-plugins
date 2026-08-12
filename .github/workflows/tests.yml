@@ -37,10 +37,10 @@ jobs:
               id: cache-week
               run: echo "week=$(date +%Y-%U)" >> "$GITHUB_OUTPUT"
 
-            # Caches the WordPress source that wp-env downloads. `.wp-env.json`
-            # pins core to `WordPress/WordPress#master`, a moving target that
-            # wp-env won't re-download while the cache exists, so the key
-            # rotates weekly to avoid testing against stale core.
+            # Caches the WordPress git checkouts that wp-env downloads, saving
+            # a multi-minute clone of WordPress/WordPress. Cache entries are
+            # immutable, so the key rotates weekly to re-snapshot and keep the
+            # `--update` fetch delta small.
             - name: Cache WordPress source
               uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
               with:
@@ -51,8 +51,12 @@ jobs:
                       ~/.wp-env
                   key: wp-env-${{ runner.os }}-${{ steps.cache-week.outputs.week }}-${{ hashFiles('.wp-env.json') }}
 
+            # `--update` is required with the cache: a restored wp-env config
+            # cache would otherwise skip the WordPress/database setup on a
+            # pristine runner. It fetches the cached checkouts incrementally,
+            # which also keeps tests running against current core `master`.
             - name: Start WordPress environment
-              run: npx wp-env start
+              run: npx wp-env start --update
 
             - name: Run PHP unit tests
               run: npm run test:php
