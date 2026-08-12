@@ -27,12 +27,6 @@ jobs:
             - name: Install dependencies
               uses: ./.github/actions/setup
 
-            # The tests load the mu-plugins loader, which needs built block
-            # assets (e.g. global-header-footer calls `filemtime()` on
-            # `build/style.css`), so the build can't be skipped here.
-            - name: Build
-              run: npm run build
-
             - name: Get cache week
               id: cache-week
               run: echo "week=$(date +%Y-%U)" >> "$GITHUB_OUTPUT"
@@ -55,8 +49,24 @@ jobs:
             # cache would otherwise skip the WordPress/database setup on a
             # pristine runner. It fetches the cached checkouts incrementally,
             # which also keeps tests running against current core `master`.
-            - name: Start WordPress environment
-              run: npx wp-env start --update
+            # Runs in the background because the docker pulls and source fetch
+            # don't depend on the block build; the wait step below surfaces
+            # the log and exit status.
+            - name: Start WordPress environment in the background
+              run: |
+                  ( npx wp-env start --update > "$RUNNER_TEMP/wp-env.log" 2>&1; echo $? > "$RUNNER_TEMP/wp-env.status" ) &
+
+            # The tests load the mu-plugins loader, which needs built block
+            # assets (e.g. global-header-footer calls `filemtime()` on
+            # `build/style.css`), so the build can't be skipped here.
+            - name: Build
+              run: npm run build
+
+            - name: Wait for the WordPress environment
+              run: |
+                  while [ ! -f "$RUNNER_TEMP/wp-env.status" ]; do sleep 2; done
+                  cat "$RUNNER_TEMP/wp-env.log"
+                  exit "$(cat "$RUNNER_TEMP/wp-env.status")"
 
             - name: Run PHP unit tests
               run: npm run test:php
