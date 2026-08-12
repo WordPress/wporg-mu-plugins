@@ -64,8 +64,8 @@ function render( $attributes, $content, $block ) {
 			$handle,
 			sprintf(
 				'var wporgGoogleMap = wporgGoogleMap || {};
-				wporgGoogleMap["%s"] = %s;',
-				$attributes['id'],
+				wporgGoogleMap[%s] = %s;',
+				wp_json_encode( (string) $attributes['id'] ),
 				wp_json_encode( $attributes )
 			),
 			'before'
