@@ -1,37 +1,54 @@
 name: CI
 
-# Runs on PRs (and the try/phpunit-tests branch), and is also called by build.yml
-# (on trunk) so the build branch is only updated after tests pass.
+# Runs on PRs, and is also called by build.yml (on trunk) so the build branch
+# is only updated after tests pass.
 on:
-  push:
-    branches: [ try/phpunit-tests ]
-  pull_request:
-    branches: [ trunk ]
+    pull_request:
+        branches: [ trunk ]
 
-  workflow_dispatch:
-  workflow_call:
+    workflow_dispatch:
+    workflow_call:
+
+# Cancel superseded runs when a PR is updated. The `-tests` suffix keeps the
+# group distinct from linters.yml when both are called by build.yml, since
+# called workflows evaluate `github.workflow` to the caller's workflow name.
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}-tests
+    cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  run-tests:
-    runs-on: ubuntu-latest
+    run-tests:
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Install NodeJS
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
-        with:
-            node-version-file: '.nvmrc'
-            cache: npm
+            - name: Install dependencies
+              uses: ./.github/actions/setup
 
-      - name: Install dependencies
-        run: |
-            npm ci
-            composer install
-            npm run build
-            npx wp-env start
+            # The tests load the mu-plugins loader, which needs built block
+            # assets (e.g. global-header-footer calls `filemtime()` on
+            # `build/style.css`), so the build can't be skipped here.
+            - name: Build
+              run: npm run build
 
-      - name: Run PHP unit tests
-        run: |
-            npm run test:php
+            - name: Get cache week
+              id: cache-week
+              run: echo "week=$(date +%Y-%U)" >> "$GITHUB_OUTPUT"
+
+            # Caches the WordPress source that wp-env downloads. `.wp-env.json`
+            # pins core to `WordPress/WordPress#master`, a moving target that
+            # wp-env won't re-download while the cache exists, so the key
+            # rotates weekly to avoid testing against stale core.
+            - name: Cache WordPress source
+              uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+              with:
+                  path: ~/.wp-env
+                  key: wp-env-${{ runner.os }}-${{ steps.cache-week.outputs.week }}-${{ hashFiles('.wp-env.json') }}
+
+            - name: Start WordPress environment
+              run: npx wp-env start
+
+            - name: Run PHP unit tests
+              run: npm run test:php
