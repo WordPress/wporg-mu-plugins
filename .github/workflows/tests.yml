@@ -1,7 +1,6 @@
 name: CI
 
-# Runs on PRs, and is also called by build.yml (on trunk) so the build branch
-# is only updated after tests pass.
+# Also called by build.yml (on trunk) so the build branch only updates after tests pass.
 on:
     pull_request:
         branches: [ trunk ]
@@ -9,9 +8,8 @@ on:
     workflow_dispatch:
     workflow_call:
 
-# Cancel superseded runs when a PR is updated. The `-tests` suffix keeps the
-# group distinct from linters.yml when both are called by build.yml, since
-# called workflows evaluate `github.workflow` to the caller's workflow name.
+# The `-tests` suffix keeps the group distinct from linters.yml under build.yml,
+# since called workflows inherit the caller's `github.workflow`.
 concurrency:
     group: ${{ github.workflow }}-${{ github.ref }}-tests
     cancel-in-progress: ${{ github.event_name == 'pull_request' }}
@@ -32,11 +30,8 @@ jobs:
               id: cache-week
               run: echo "week=$(date +%Y-%U)" >> "$GITHUB_OUTPUT"
 
-            # Caches the WordPress git checkouts that wp-env downloads, saving
-            # a multi-minute clone of WordPress/WordPress. Cache entries are
-            # immutable, so the key rotates weekly to re-snapshot; on a key
-            # miss, `restore-keys` seeds the run from the newest previous
-            # snapshot so `--update` only fetches the delta.
+            # Cache entries are immutable, so the key rotates weekly; `restore-keys`
+            # seeds from the newest snapshot and `--update` fetches only the delta.
             - name: Cache WordPress source
               uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
               with:
@@ -49,16 +44,10 @@ jobs:
                   restore-keys: |
                       wp-env-${{ runner.os }}-
 
-            # `--update` is required with the cache: a restored wp-env config
-            # cache would otherwise skip the WordPress/database setup on a
-            # pristine runner. It fetches the cached checkouts incrementally,
-            # which also keeps tests running against current core `master`.
-            # The environment starts in the background because the docker
-            # pulls and source fetch don't depend on the block build, which
-            # runs in the meantime. The tests load the mu-plugins loader,
-            # which needs built block assets (e.g. global-header-footer calls
-            # `filemtime()` on `build/style.css`), so the build can't be
-            # skipped here.
+            # `--update` is required with the cache: a restored config would otherwise
+            # skip the WordPress setup on a pristine runner. The environment starts in
+            # the background while the blocks build — the tests load the mu-plugins
+            # loader, which needs built block assets.
             - name: Build blocks and start the WordPress environment
               run: |
                   npx wp-env start --update > "$RUNNER_TEMP/wp-env.log" 2>&1 &

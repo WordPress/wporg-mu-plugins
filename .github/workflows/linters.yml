@@ -1,14 +1,12 @@
 name: Static Analysis (Linting)
 
-# Runs on any PR, and is also called by build.yml (on trunk) so the build branch
-# is only updated after linting succeeds.
+# Also called by build.yml (on trunk) so the build branch only updates after linting succeeds.
 on:
     pull_request:
     workflow_call:
 
-# Cancel superseded runs when a PR is updated. The `-linters` suffix keeps the
-# group distinct from tests.yml when both are called by build.yml, since called
-# workflows evaluate `github.workflow` to the caller's workflow name.
+# The `-linters` suffix keeps the group distinct from tests.yml under build.yml,
+# since called workflows inherit the caller's `github.workflow`.
 concurrency:
     group: ${{ github.workflow }}-${{ github.ref }}-linters
     cancel-in-progress: ${{ github.event_name == 'pull_request' }}

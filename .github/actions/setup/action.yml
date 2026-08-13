@@ -23,11 +23,8 @@ runs:
           with:
               composer-options: ${{ inputs.composer-options }}
 
-        # Caches the installed `node_modules` tree so `npm ci` — a full
-        # delete-and-extract of ~1,600 packages that dwarfs the rest of the
-        # setup — can be skipped entirely on a hit. Deliberately no
-        # `restore-keys`: skipping `npm ci` is only safe on an exact
-        # lockfile + Node version match.
+        # Skips `npm ci` on a hit. Deliberately no `restore-keys` — a stale
+        # node_modules is only safe on an exact lockfile + Node match.
         - name: Cache node_modules
           id: node-modules-cache
           uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
