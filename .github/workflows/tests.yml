@@ -50,6 +50,9 @@ jobs:
             # loader, which needs built block assets.
             - name: Build blocks and start the WordPress environment
               run: |
+                  # The trap prints the log on every exit path, including the
+                  # SIGINT a timeout cancellation sends to a hung `wait`.
+                  trap 'cat "$RUNNER_TEMP/wp-env.log"' EXIT
                   npx wp-env start --update > "$RUNNER_TEMP/wp-env.log" 2>&1 &
                   WP_ENV_PID=$!
 
@@ -58,7 +61,6 @@ jobs:
 
                   WP_ENV_STATUS=0
                   wait "$WP_ENV_PID" || WP_ENV_STATUS=$?
-                  cat "$RUNNER_TEMP/wp-env.log"
 
                   exit "$(( BUILD_STATUS ? BUILD_STATUS : WP_ENV_STATUS ))"
 
