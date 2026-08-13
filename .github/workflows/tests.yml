@@ -1,37 +1,68 @@
 name: CI
 
-# Runs on PRs (and the try/phpunit-tests branch), and is also called by build.yml
-# (on trunk) so the build branch is only updated after tests pass.
+# Also called by build.yml (on trunk) so the build branch only updates after tests pass.
 on:
-  push:
-    branches: [ try/phpunit-tests ]
-  pull_request:
-    branches: [ trunk ]
+    pull_request:
+        branches: [ trunk ]
 
-  workflow_dispatch:
-  workflow_call:
+    workflow_dispatch:
+    workflow_call:
+
+# The `-tests` suffix keeps the group distinct from linters.yml under build.yml,
+# since called workflows inherit the caller's `github.workflow`.
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}-tests
+    cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  run-tests:
-    runs-on: ubuntu-latest
+    run-tests:
+        runs-on: ubuntu-latest
+        timeout-minutes: 30
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Install NodeJS
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
-        with:
-            node-version-file: '.nvmrc'
-            cache: npm
+            - name: Install dependencies
+              uses: ./.github/actions/setup
 
-      - name: Install dependencies
-        run: |
-            npm ci
-            composer install
-            npm run build
-            npx wp-env start
+            - name: Get cache week
+              id: cache-week
+              run: echo "week=$(date +%Y-%U)" >> "$GITHUB_OUTPUT"
 
-      - name: Run PHP unit tests
-        run: |
-            npm run test:php
+            # Cache entries are immutable, so the key rotates weekly; `restore-keys`
+            # seeds from the newest snapshot and `--update` fetches only the delta.
+            - name: Cache WordPress source
+              uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+              with:
+                  # wp-env uses `~/wp-env` on hosts with Snap (like Ubuntu
+                  # runners) and `~/.wp-env` elsewhere.
+                  path: |
+                      ~/wp-env
+                      ~/.wp-env
+                  key: wp-env-${{ runner.os }}-${{ steps.cache-week.outputs.week }}-${{ hashFiles('.wp-env.json') }}
+                  restore-keys: |
+                      wp-env-${{ runner.os }}-
+
+            # `--update` is required with the cache: a restored config would otherwise
+            # skip the WordPress setup on a pristine runner. The environment starts in
+            # the background while the blocks build — the tests load the mu-plugins
+            # loader, which needs built block assets.
+            - name: Build blocks and start the WordPress environment
+              run: |
+                  # The trap prints the log on every exit path, including the
+                  # SIGINT a timeout cancellation sends to a hung `wait`.
+                  trap 'cat "$RUNNER_TEMP/wp-env.log"' EXIT
+                  npx wp-env start --update > "$RUNNER_TEMP/wp-env.log" 2>&1 &
+                  WP_ENV_PID=$!
+
+                  BUILD_STATUS=0
+                  npm run build || BUILD_STATUS=$?
+
+                  WP_ENV_STATUS=0
+                  wait "$WP_ENV_PID" || WP_ENV_STATUS=$?
+
+                  exit "$(( BUILD_STATUS ? BUILD_STATUS : WP_ENV_STATUS ))"
+
+            - name: Run PHP unit tests
+              run: npm run test:php

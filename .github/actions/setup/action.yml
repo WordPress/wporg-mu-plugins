@@ -1,0 +1,37 @@
+name: Setup dependencies
+description: Install NodeJS and npm & Composer dependencies (with node_modules and Composer package caches).
+
+inputs:
+    composer-options:
+        description: Additional options to pass to `composer install`.
+        required: false
+        default: ''
+
+runs:
+    using: composite
+    steps:
+        - name: Install NodeJS
+          id: node
+          uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+          with:
+              node-version-file: '.nvmrc'
+
+        - name: Install Composer dependencies
+          # Caches Composer's package cache, keyed on the `composer.lock` hash.
+          uses: ramsey/composer-install@a8d0d959dab41457692a5e2041bd9b757a119e3f # 3.2.1
+          with:
+              composer-options: ${{ inputs.composer-options }}
+
+        # Skips `npm ci` on a hit. Deliberately no `restore-keys` — a stale
+        # node_modules is only safe on an exact lockfile + Node match.
+        - name: Cache node_modules
+          id: node-modules-cache
+          uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+          with:
+              path: node_modules
+              key: node-modules-${{ runner.os }}-${{ steps.node.outputs.node-version }}-${{ hashFiles('package-lock.json') }}
+
+        - name: Install npm dependencies
+          if: steps.node-modules-cache.outputs.cache-hit != 'true'
+          shell: bash
+          run: npm ci
