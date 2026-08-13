@@ -1,5 +1,5 @@
 name: Setup dependencies
-description: Install NodeJS (with npm cache) and npm & Composer dependencies (with vendor cache).
+description: Install NodeJS and npm & Composer dependencies (with node_modules and Composer package caches).
 
 inputs:
     composer-options:
@@ -11,6 +11,7 @@ runs:
     using: composite
     steps:
         - name: Install NodeJS
+          id: node
           uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
           with:
               node-version-file: '.nvmrc'
@@ -22,6 +23,19 @@ runs:
           with:
               composer-options: ${{ inputs.composer-options }}
 
+        # Caches the installed `node_modules` tree so `npm ci` — a full
+        # delete-and-extract of ~1,600 packages that dwarfs the rest of the
+        # setup — can be skipped entirely on a hit. Deliberately no
+        # `restore-keys`: skipping `npm ci` is only safe on an exact
+        # lockfile + Node version match.
+        - name: Cache node_modules
+          id: node-modules-cache
+          uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+          with:
+              path: node_modules
+              key: node-modules-${{ runner.os }}-${{ steps.node.outputs.node-version }}-${{ hashFiles('package-lock.json') }}
+
         - name: Install npm dependencies
+          if: steps.node-modules-cache.outputs.cache-hit != 'true'
           shell: bash
           run: npm ci
