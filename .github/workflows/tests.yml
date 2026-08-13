@@ -19,6 +19,7 @@ concurrency:
 jobs:
     run-tests:
         runs-on: ubuntu-latest
+        timeout-minutes: 30
 
         steps:
             - name: Checkout repository
@@ -33,8 +34,9 @@ jobs:
 
             # Caches the WordPress git checkouts that wp-env downloads, saving
             # a multi-minute clone of WordPress/WordPress. Cache entries are
-            # immutable, so the key rotates weekly to re-snapshot and keep the
-            # `--update` fetch delta small.
+            # immutable, so the key rotates weekly to re-snapshot; on a key
+            # miss, `restore-keys` seeds the run from the newest previous
+            # snapshot so `--update` only fetches the delta.
             - name: Cache WordPress source
               uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
               with:
@@ -44,29 +46,32 @@ jobs:
                       ~/wp-env
                       ~/.wp-env
                   key: wp-env-${{ runner.os }}-${{ steps.cache-week.outputs.week }}-${{ hashFiles('.wp-env.json') }}
+                  restore-keys: |
+                      wp-env-${{ runner.os }}-
 
             # `--update` is required with the cache: a restored wp-env config
             # cache would otherwise skip the WordPress/database setup on a
             # pristine runner. It fetches the cached checkouts incrementally,
             # which also keeps tests running against current core `master`.
-            # Runs in the background because the docker pulls and source fetch
-            # don't depend on the block build; the wait step below surfaces
-            # the log and exit status.
-            - name: Start WordPress environment in the background
+            # The environment starts in the background because the docker
+            # pulls and source fetch don't depend on the block build, which
+            # runs in the meantime. The tests load the mu-plugins loader,
+            # which needs built block assets (e.g. global-header-footer calls
+            # `filemtime()` on `build/style.css`), so the build can't be
+            # skipped here.
+            - name: Build blocks and start the WordPress environment
               run: |
-                  ( npx wp-env start --update > "$RUNNER_TEMP/wp-env.log" 2>&1; echo $? > "$RUNNER_TEMP/wp-env.status" ) &
+                  npx wp-env start --update > "$RUNNER_TEMP/wp-env.log" 2>&1 &
+                  WP_ENV_PID=$!
 
-            # The tests load the mu-plugins loader, which needs built block
-            # assets (e.g. global-header-footer calls `filemtime()` on
-            # `build/style.css`), so the build can't be skipped here.
-            - name: Build
-              run: npm run build
+                  BUILD_STATUS=0
+                  npm run build || BUILD_STATUS=$?
 
-            - name: Wait for the WordPress environment
-              run: |
-                  while [ ! -f "$RUNNER_TEMP/wp-env.status" ]; do sleep 2; done
+                  WP_ENV_STATUS=0
+                  wait "$WP_ENV_PID" || WP_ENV_STATUS=$?
                   cat "$RUNNER_TEMP/wp-env.log"
-                  exit "$(cat "$RUNNER_TEMP/wp-env.status")"
+
+                  exit "$(( BUILD_STATUS ? BUILD_STATUS : WP_ENV_STATUS ))"
 
             - name: Run PHP unit tests
               run: npm run test:php
