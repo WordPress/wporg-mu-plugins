@@ -198,6 +198,7 @@ class Export_Context {
 			'wporg/*',
 			// other allowed blocks:
 			'jetpack/image-compare',
+			'jetpack/subscriptions',
 			'jetpack/tiled-gallery',
 			'syntaxhighlighter/code',
 		) );
