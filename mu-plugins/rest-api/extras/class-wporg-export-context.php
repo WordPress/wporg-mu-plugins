@@ -208,8 +208,12 @@ class Export_Context {
 			$post = get_post();
 		}
 
+		if ( ! $post ) {
+			return '';
+		}
+
 		// Exit early if the post contains any blocks that are not explicitly allowed.
-		if ( $post && has_blocks( $post->post_content ) || true ) {
+		if ( has_blocks( $post->post_content ) ) {
 
 			$regexes = array();
 			foreach ( $allowed_blocks as $allowed_block_name ) {
