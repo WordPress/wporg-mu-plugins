@@ -213,6 +213,11 @@ class Export_Context {
 			return '';
 		}
 
+		// Don't export password-protected content; this context is for public data only.
+		if ( '' !== $post->post_password ) {
+			return '';
+		}
+
 		// Exit early if the post contains any blocks that are not explicitly allowed.
 		if ( has_blocks( $post->post_content ) ) {
 
