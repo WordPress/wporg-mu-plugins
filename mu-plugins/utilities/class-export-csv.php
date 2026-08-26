@@ -250,11 +250,11 @@ class Export_CSV {
 		$csv = fopen( 'php://output', 'w' );
 
 		if ( ! empty( $this->header_row ) ) {
-			fputcsv( $csv, self::esc_csv( $this->header_row ) );
+			fputcsv( $csv, self::esc_csv( $this->header_row ), ',', '"', '\\', "\n" );
 		}
 
 		foreach ( $this->data_rows as $row ) {
-			fputcsv( $csv, self::esc_csv( $row ) );
+			fputcsv( $csv, self::esc_csv( $row ), ',', '"', '\\', "\n" );
 		}
 
 		fclose( $csv );
