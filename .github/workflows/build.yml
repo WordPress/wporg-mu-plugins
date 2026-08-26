@@ -3,6 +3,7 @@ name: Build and push to build branch.
 on:
     push:
         branches: [trunk]
+    workflow_dispatch:
 
 concurrency:
     group: ${{ github.workflow }}
