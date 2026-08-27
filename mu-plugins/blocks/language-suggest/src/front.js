@@ -7,10 +7,9 @@ const init = () => {
 		return;
 	}
 
-	const endpoint = new URL(
-		container.dataset.endpoint || 'https://wordpress.org/lang-guess/lang-guess-ajax.php'
-	);
-	endpoint.searchParams.set( 'uri', encodeURIComponent( window.location.pathname ) );
+	// Fixed first-party URL only: the response lands in innerHTML, so it must come from a trusted endpoint.
+	const endpoint = new URL( 'https://wordpress.org/lang-guess/lang-guess-ajax.php' );
+	endpoint.searchParams.set( 'uri', window.location.pathname );
 	endpoint.searchParams.set( 'locale', languageSuggestData.locale );
 
 	fetch( endpoint )
