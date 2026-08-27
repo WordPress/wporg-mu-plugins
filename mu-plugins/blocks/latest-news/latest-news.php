@@ -34,11 +34,15 @@ function render_block( $attributes ) {
 	$blog_id = isset( $attributes['blogId'] ) ? (int) $attributes['blogId'] : 0;
 
 	/*
-	 * Require an existing site: an unknown id re-points $wpdb at a missing table prefix and blanks the request.
+	 * Fail closed on an unknown id: switching would re-point $wpdb at a missing table
+	 * prefix, and falling through would render the current site's posts as news.
 	 *
 	 * @todo Prevent switch if Rosetta, Rosetta should use local posts.
 	 */
-	if ( should_switch_to_blog() && $blog_id && get_site( $blog_id ) ) {
+	if ( should_switch_to_blog() && $blog_id ) {
+		if ( ! get_site( $blog_id ) ) {
+			return '';
+		}
 		$blog_switched = switch_to_blog( $blog_id );
 	}
 
@@ -53,10 +57,6 @@ function render_block( $attributes ) {
 					'post_status' => 'publish',
 				)
 			);
-
-			if ( is_wp_error( $posts ) ) {
-				return $posts->get_error_message();
-			}
 
 			if ( empty( $posts ) ) {
 				return __( 'No posts found.', 'wporg' );
@@ -129,10 +129,6 @@ function render_block( $attributes ) {
 						'hide_empty' => false,
 					)
 				);
-
-				if ( is_wp_error( $popular_categories_list ) ) {
-					return $popular_categories_list->get_error_message();
-				}
 
 				// Set Cache
 				set_transient( $cache_key, $popular_categories_list, HOUR_IN_SECONDS );
