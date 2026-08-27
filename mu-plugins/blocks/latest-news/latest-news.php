@@ -43,7 +43,8 @@ function render_block( $attributes ) {
 		if ( ! get_site( $blog_id ) ) {
 			return '';
 		}
-		$blog_switched = switch_to_blog( $blog_id );
+		switch_to_blog( $blog_id );
+		$blog_switched = true;
 	}
 
 	// finally guarantees restore; an unrestored switch leaks into the rest of the page's queries and capability checks.
@@ -97,7 +98,8 @@ function render_block( $attributes ) {
 				}
 			}
 
-			$date         = get_post_datetime( $post['ID'] );
+			// Parse the cached date string directly: a stale post ID in the transient must not break rendering.
+			$date         = new \DateTimeImmutable( $post['post_date'], wp_timezone() );
 			$date_element = sprintf(
 				'<time datetime="%1$s">%2$s</time>',
 				esc_attr( $date->format( 'c' ) ),
