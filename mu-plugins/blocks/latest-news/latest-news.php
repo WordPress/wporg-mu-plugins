@@ -97,7 +97,7 @@ function render_block( $attributes ) {
 				}
 			}
 
-			$date         = new \DateTime( $post['post_date'] );
+			$date         = get_post_datetime( $post['ID'] );
 			$date_element = sprintf(
 				'<time datetime="%1$s">%2$s</time>',
 				esc_attr( $date->format( 'c' ) ),

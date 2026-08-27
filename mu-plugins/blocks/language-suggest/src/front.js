@@ -9,7 +9,7 @@ const init = () => {
 
 	// Fixed first-party URL only: the response lands in innerHTML; static block markup is attacker-controllable.
 	const endpoint = new URL( 'https://wordpress.org/lang-guess/lang-guess-ajax.php' );
-	endpoint.searchParams.set( 'uri', encodeURIComponent( window.location.pathname ) );
+	endpoint.searchParams.set( 'uri', window.location.pathname );
 	endpoint.searchParams.set( 'locale', languageSuggestData.locale );
 
 	fetch( endpoint )
