@@ -13,8 +13,8 @@ $style .= get_style_decl_from_attr( $attributes, 'textColor' );
 $style .= get_style_decl_from_attr( $attributes, 'overlayColor' );
 $style .= get_style_decl_from_attr( $attributes, 'closeButtonColor' );
 
-// Expand before escaping; brackets reaching the output would be expanded again, unescaped.
-$href = str_replace( array( '[', ']' ), '', do_shortcode( $attributes['href'] ?? '' ) );
+// Expand first, then drop any shortcode the expansion emitted; it would otherwise expand again later.
+$href = strip_shortcodes( do_shortcode( $attributes['href'] ?? '' ) );
 
 $button_class = 'wp-block-button';
 if ( ! empty( $attributes['buttonStyle'] ) ) {
@@ -40,7 +40,7 @@ $html_id = wp_unique_id( 'modal-' );
 >
 	<div class="wp-block-buttons">
 		<div class="<?php echo esc_attr( $button_class ); ?>">
-		<?php if ( ! empty( $attributes['href'] ) ) : ?>
+		<?php if ( ! empty( $href ) ) : ?>
 			<a
 				href="<?php echo esc_url( $href ); ?>"
 				download

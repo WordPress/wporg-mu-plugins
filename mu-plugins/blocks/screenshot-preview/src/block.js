@@ -90,8 +90,8 @@ function Block( {
 				height: frameHeight,
 				width: width,
 			} }
-			href={ getSafeHref( link ) }
 			{ ...anchorTagProps }
+			href={ getSafeHref( link ) }
 		>
 			<ScreenShot queryString={ queryString } src={ previewLink } isReady={ shouldLoad } alt={ caption } />
 		</a>

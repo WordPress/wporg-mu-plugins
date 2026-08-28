@@ -56,10 +56,12 @@ function get_style_decl_from_attr( $attributes, $name ) {
 		// Get the custom property name.
 		$slug = _wp_to_kebab_case( str_replace( 'Color', '', $name ) );
 
-		// The custom* values are free-form block markup, so drop the declaration if it is unsafe.
-		$filtered = safecss_filter_attr( "--wp--custom--wporg-modal--color--{$slug}: {$value}" );
+		// A semicolon would let a custom* value append declarations of its own.
+		if ( str_contains( $value, ';' ) ) {
+			return '';
+		}
 
-		return $filtered ? $filtered . ';' : '';
+		return "--wp--custom--wporg-modal--color--{$slug}: {$value};";
 	}
 
 	return '';

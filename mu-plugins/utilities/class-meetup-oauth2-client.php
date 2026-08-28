@@ -228,7 +228,7 @@ class Meetup_OAuth2_Client extends API_Client {
 		if ( ! $valid ) {
 			$auth_code = get_site_option( self::SITE_OPTION_KEY_AUTHORIZATION, false );
 
-			// Accept the code only from an admin completing the authorization; state matches wcorg-meetup-oauth.php.
+			// The token is stored network-wide, so binding it is a network administrator's call.
 			if ( isset( $_GET['code'], $_GET['state'] )
 				&& 'meetup-oauth' === $_GET['state']
 				&& is_admin()

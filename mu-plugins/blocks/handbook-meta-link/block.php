@@ -40,9 +40,8 @@ function render( $attributes, $content, $block ) {
 
 	$title = get_the_title( $post_id );
 
-	// Expand before escaping; brackets reaching the output would be expanded again, unescaped.
-	$link_url = do_shortcode( $attributes['linkUrl'] ?? '' );
-	$link_url = str_replace( array( '[', ']' ), '', $link_url );
+	// Expand first, then drop any shortcode the expansion emitted; it would otherwise expand again later.
+	$link_url = strip_shortcodes( do_shortcode( $attributes['linkUrl'] ?? '' ) );
 
 	return sprintf(
 		do_blocks(
