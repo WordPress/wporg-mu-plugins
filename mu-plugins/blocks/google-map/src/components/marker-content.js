@@ -2,28 +2,7 @@
  * Internal dependencies
  */
 import { getEventDateTime } from '../utilities/date-time';
-import { formatLocation } from '../utilities/content';
-
-/**
- * Returns a marker link only when its protocol is safe to render as an href.
- *
- * @param {string} url Candidate link target, which comes from the block's attributes.
- *
- * @return {string|undefined} The url, or undefined to render no href.
- */
-const getSafeHref = ( url ) => {
-	if ( ! url ) {
-		return undefined;
-	}
-
-	try {
-		const { protocol } = new URL( url, window.location.href );
-
-		return 'https:' === protocol || 'http:' === protocol ? url : undefined;
-	} catch ( error ) {
-		return undefined;
-	}
-};
+import { formatLocation, getSafeHref } from '../utilities/content';
 
 /**
  * Render the content for a map marker.

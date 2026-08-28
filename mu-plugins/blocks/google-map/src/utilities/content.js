@@ -26,6 +26,27 @@ export function formatLocation( location ) {
 }
 
 /**
+ * Returns a marker link only when its protocol is safe to render as an href.
+ *
+ * @param {string} url Candidate link target, which comes from the block's attributes.
+ *
+ * @return {string|undefined} The url, or undefined to render no href.
+ */
+export function getSafeHref( url ) {
+	if ( ! url ) {
+		return undefined;
+	}
+
+	try {
+		const { protocol } = new URL( url, window.location.href );
+
+		return 'https:' === protocol || 'http:' === protocol ? url : undefined;
+	} catch ( error ) {
+		return undefined;
+	}
+}
+
+/**
  * Filter the list of markers based on a user's search query.
  *
  * @param {Array}  unfilteredMarkers
