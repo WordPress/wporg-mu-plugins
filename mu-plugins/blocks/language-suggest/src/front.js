@@ -12,9 +12,43 @@ const ALLOWED_TAGS = [ 'P', 'DIV', 'A' ];
  * Elements whose contents are source text rather than prose.
  *
  * These are dropped whole. Recursing into them would paste the script or style
- * body into the page as visible text.
+ * body into the page as visible text. Compared in lower case because foreign
+ * content keeps the authored casing, so `<svg><script>` is not `SCRIPT`.
  */
-const SKIPPED_TAGS = [ 'SCRIPT', 'STYLE', 'TEMPLATE', 'NOSCRIPT', 'TITLE', 'TEXTAREA' ];
+const SKIPPED_TAGS = [
+	'script',
+	'style',
+	'template',
+	'noscript',
+	'title',
+	'textarea',
+	'iframe',
+	'xmp',
+	'plaintext',
+	'noembed',
+	'noframes',
+];
+
+/**
+ * Returns a link target only when it is safe to render as an href.
+ *
+ * @param {string|null} value The parsed anchor's href attribute.
+ *
+ * @return {string|null} The resolved url, or null to drop the anchor.
+ */
+const getSafeHref = ( value ) => {
+	if ( ! value ) {
+		return null;
+	}
+
+	try {
+		const url = new URL( value, window.location.href );
+
+		return 'https:' === url.protocol ? url.toString() : null;
+	} catch ( error ) {
+		return null;
+	}
+};
 
 /**
  * Copies the allowed parts of a parsed node into a node being built.
@@ -36,36 +70,24 @@ const copyAllowed = ( source, target ) => {
 			return;
 		}
 
-		if ( SKIPPED_TAGS.includes( node.tagName ) ) {
+		if ( SKIPPED_TAGS.includes( node.tagName.toLowerCase() ) ) {
 			return;
 		}
 
-		if ( ! ALLOWED_TAGS.includes( node.tagName ) ) {
+		// An anchor is only kept when it carries a usable https link.
+		const href = 'A' === node.tagName ? getSafeHref( node.getAttribute( 'href' ) ) : null;
+		const keep = ALLOWED_TAGS.includes( node.tagName ) && ( 'A' !== node.tagName || href );
+
+		// Anything not kept contributes its text, so a suggestion still reads as a sentence.
+		if ( ! keep ) {
 			copyAllowed( node, target );
 			return;
 		}
 
 		const element = document.createElement( node.tagName );
 
-		if ( 'A' === node.tagName ) {
-			const value = node.getAttribute( 'href' );
-			let href = null;
-
-			if ( value ) {
-				try {
-					href = new URL( value, window.location.href );
-				} catch ( error ) {
-					href = null;
-				}
-			}
-
-			// An anchor without a usable https link contributes its text only.
-			if ( ! href || 'https:' !== href.protocol ) {
-				copyAllowed( node, target );
-				return;
-			}
-
-			element.setAttribute( 'href', href.toString() );
+		if ( href ) {
+			element.setAttribute( 'href', href );
 		}
 
 		// The legacy network endpoint wraps its notice in a separately styled ID.

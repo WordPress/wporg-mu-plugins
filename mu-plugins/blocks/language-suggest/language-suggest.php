@@ -51,14 +51,18 @@ function get_endpoint() {
 	 * @param string $endpoint Endpoint URL. Must be an HTTPS wordpress.org URL.
 	 */
 	$endpoint = apply_filters( 'wporg_language_suggest_endpoint', $default );
-	$host     = wp_parse_url( $endpoint, PHP_URL_HOST );
+	$parts    = wp_parse_url( $endpoint );
 
 	// A backslash is a path separator to the browser, so it and PHP can disagree on the host.
 	if ( str_contains( $endpoint, '\\' ) ) {
 		return $default;
 	}
 
-	if ( 'https' !== wp_parse_url( $endpoint, PHP_URL_SCHEME ) || ! $host ) {
+	// Schemes and hosts are case-insensitive, so compare them in one case.
+	$scheme = strtolower( $parts['scheme'] ?? '' );
+	$host   = strtolower( $parts['host'] ?? '' );
+
+	if ( 'https' !== $scheme || ! $host ) {
 		return $default;
 	}
 
