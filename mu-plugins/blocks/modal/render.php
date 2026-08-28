@@ -13,6 +13,9 @@ $style .= get_style_decl_from_attr( $attributes, 'textColor' );
 $style .= get_style_decl_from_attr( $attributes, 'overlayColor' );
 $style .= get_style_decl_from_attr( $attributes, 'closeButtonColor' );
 
+// Expand before escaping; brackets reaching the output would be expanded again, unescaped.
+$href = str_replace( array( '[', ']' ), '', do_shortcode( $attributes['href'] ?? '' ) );
+
 $button_class = 'wp-block-button';
 if ( ! empty( $attributes['buttonStyle'] ) ) {
 	$button_class .= ' is-style-' . $attributes['buttonStyle'];
@@ -39,7 +42,7 @@ $html_id = wp_unique_id( 'modal-' );
 		<div class="<?php echo esc_attr( $button_class ); ?>">
 		<?php if ( ! empty( $attributes['href'] ) ) : ?>
 			<a
-				href="<?php echo esc_url( do_shortcode( $attributes['href'] ) ); ?>"
+				href="<?php echo esc_url( $href ); ?>"
 				download
 				class="wporg-modal__toggle wp-block-button__link"
 				data-wp-on--click="actions.toggle"

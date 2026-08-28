@@ -39,7 +39,10 @@ function render( $attributes, $content, $block ) {
 	}
 
 	$title = get_the_title( $post_id );
-	$link_url = $attributes['linkURL'];
+
+	// Expand before escaping; brackets reaching the output would be expanded again, unescaped.
+	$link_url = do_shortcode( $attributes['linkUrl'] ?? '' );
+	$link_url = str_replace( array( '[', ']' ), '', $link_url );
 
 	return sprintf(
 		do_blocks(
@@ -58,8 +61,7 @@ function render( $attributes, $content, $block ) {
 			<!-- /wp:group -->'
 		),
 		esc_html( $attributes['heading'] ),
-		// Don't use esc_url for a shortcode.
-		preg_match( '/^\[.*\]$/', $link_url ) ? esc_html( $link_url ) : esc_url( $link_url ),
+		esc_url( $link_url ),
 		sprintf(
 			/* translators: %1$s: call to action, %2$s: article title */
 			__( '%1$s<span class="screen-reader-text">: %2$s"</span>', 'wporg' ),

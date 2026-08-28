@@ -50,7 +50,12 @@ function useInterval( callback, delay ) {
  * @return {Object} React component
  */
 function ScreenShotImg( { alt = '', queryString, src, isReady = false } ) {
-	const fullUrl = `https://s0.wp.com/mshots/v1/${ encodeURIComponent( src ) }${ queryString }`;
+	// queryString comes from a data- attribute, so append it as parsed params rather than raw text.
+	const screenshotUrl = new URL( `https://s0.wp.com/mshots/v1/${ encodeURIComponent( src ) }` );
+	new URLSearchParams( queryString ).forEach( ( value, key ) => {
+		screenshotUrl.searchParams.set( key, value );
+	} );
+	const fullUrl = screenshotUrl.toString();
 
 	const [ attempts, setAttempts ] = useState( 0 );
 	const [ hasLoaded, setHasLoaded ] = useState( false );
