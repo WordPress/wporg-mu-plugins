@@ -31,14 +31,8 @@ add_action( 'init', __NAMESPACE__ . '\language_suggest_block_init' );
 /**
  * Returns the endpoint the front-end script should request.
  *
- * The response is rendered into the block, so the endpoint is resolved here
- * rather than read back out of the DOM: block markup lives in `post_content`,
- * where kses permits arbitrary `data-*` attributes, and any author could
- * otherwise point the fetch wherever they liked.
- *
- * Sites with a context-aware suggestion API -- the plugin directory returns a
- * per-plugin notice -- filter in their own URL. Anything that is not an HTTPS
- * wordpress.org URL falls back to the network-wide default.
+ * Sites with a context-aware suggestion API filter in their own URL. Anything
+ * that is not an HTTPS wordpress.org URL falls back to the network-wide default.
  *
  * @return string The endpoint URL.
  */
