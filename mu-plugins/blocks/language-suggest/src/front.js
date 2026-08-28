@@ -74,11 +74,9 @@ const copyAllowed = ( source, target ) => {
 			return;
 		}
 
-		// An anchor is only kept when it carries a usable https link.
 		const href = 'A' === node.tagName ? getSafeHref( node.getAttribute( 'href' ) ) : null;
 		const keep = ALLOWED_TAGS.includes( node.tagName ) && ( 'A' !== node.tagName || href );
 
-		// Anything not kept contributes its text, so a suggestion still reads as a sentence.
 		if ( ! keep ) {
 			copyAllowed( node, target );
 			return;
