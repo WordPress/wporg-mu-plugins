@@ -55,6 +55,12 @@ function get_style_decl_from_attr( $attributes, $name ) {
 	if ( $value ) {
 		// Get the custom property name.
 		$slug = _wp_to_kebab_case( str_replace( 'Color', '', $name ) );
+
+		// A semicolon would let a custom* value append declarations of its own.
+		if ( str_contains( $value, ';' ) ) {
+			return '';
+		}
+
 		return "--wp--custom--wporg-modal--color--{$slug}: {$value};";
 	}
 

@@ -5,6 +5,27 @@ import { getEventDateTime } from '../utilities/date-time';
 import { formatLocation } from '../utilities/content';
 
 /**
+ * Returns a marker link only when its protocol is safe to render as an href.
+ *
+ * @param {string} url Candidate link target, which comes from the block's attributes.
+ *
+ * @return {string|undefined} The url, or undefined to render no href.
+ */
+const getSafeHref = ( url ) => {
+	if ( ! url ) {
+		return undefined;
+	}
+
+	try {
+		const { protocol } = new URL( url, window.location.href );
+
+		return 'https:' === protocol || 'http:' === protocol ? url : undefined;
+	} catch ( error ) {
+		return undefined;
+	}
+};
+
+/**
  * Render the content for a map marker.
  *
  * @param {Object} props
@@ -43,7 +64,7 @@ function WordCampMarker( { id, title, url, timestamp, location } ) {
 			<h3 className="wporg-map-marker__title">{ title }</h3>
 
 			<p className="wporg-map-marker__url">
-				<a href={ url }>Open event site</a>
+				<a href={ getSafeHref( url ) }>Open event site</a>
 			</p>
 
 			<p className="wporg-map-marker__location">{ formatLocation( location ) }</p>
@@ -70,7 +91,7 @@ function MeetupMarker( { id, title, url, meetup, timestamp, location } ) {
 			<h3 className="wporg-map-marker__title">{ meetup }</h3>
 
 			<p className="wporg-map-marker__url">
-				<a href={ url }>{ title }</a>
+				<a href={ getSafeHref( url ) }>{ title }</a>
 			</p>
 
 			<p className="wporg-map-marker__location">{ formatLocation( location ) }</p>
@@ -107,7 +128,7 @@ function CombinedMarker( { events } ) {
 					return (
 						<li key={ id }>
 							<p className="wporg-map-marker__url">
-								<a href={ url }>{ title }</a>
+								<a href={ getSafeHref( url ) }>{ title }</a>
 							</p>
 
 							<p className="wporg-map-marker__location">{ formatLocation( location ) }</p>

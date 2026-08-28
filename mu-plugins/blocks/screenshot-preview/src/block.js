@@ -11,6 +11,27 @@ import useInView from './in-view';
 import ScreenShot from './screenshot';
 
 /**
+ * Returns a link target only when its protocol is safe to render as an href.
+ *
+ * @param {string} url Candidate link target, which callers build from `data-` attributes.
+ *
+ * @return {string|undefined} The url, or undefined to render no href.
+ */
+const getSafeHref = ( url ) => {
+	if ( ! url ) {
+		return undefined;
+	}
+
+	try {
+		const { protocol } = new URL( url, window.location.href );
+
+		return 'https:' === protocol || 'http:' === protocol ? url : undefined;
+	} catch ( error ) {
+		return undefined;
+	}
+};
+
+/**
  *
  * @param {Object} props
  * @param {string} props.link           Url for anchor tag.
@@ -69,8 +90,8 @@ function Block( {
 				height: frameHeight,
 				width: width,
 			} }
-			href={ link }
 			{ ...anchorTagProps }
+			href={ getSafeHref( link ) }
 		>
 			<ScreenShot queryString={ queryString } src={ previewLink } isReady={ shouldLoad } alt={ caption } />
 		</a>

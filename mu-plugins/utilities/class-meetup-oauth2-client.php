@@ -226,7 +226,16 @@ class Meetup_OAuth2_Client extends API_Client {
 
 		// If it's not a valid token, or the refresh token wasn't valid, check to see if we're able to fetch a new one.
 		if ( ! $valid ) {
-			$auth_code = $_GET['code'] ?? get_site_option( self::SITE_OPTION_KEY_AUTHORIZATION, false );
+			$auth_code = get_site_option( self::SITE_OPTION_KEY_AUTHORIZATION, false );
+
+			// The token is stored network-wide, so binding it is a network administrator's call.
+			if ( isset( $_GET['code'], $_GET['state'] )
+				&& 'meetup-oauth' === $_GET['state']
+				&& is_admin()
+				&& current_user_can( 'manage_network_options' )
+			) {
+				$auth_code = sanitize_text_field( wp_unslash( $_GET['code'] ) );
+			}
 
 			if ( $auth_code ) {
 				$token = $this->request_token( 'access_token', array( 'code' => $auth_code ) );
