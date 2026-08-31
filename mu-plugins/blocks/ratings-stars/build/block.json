@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "wporg/ratings-stars",
+	"version": "0.1.0-62ced2b8d14883c929ed44e6c2325dac78159a60",
+	"title": "Ratings (stars)",
+	"category": "design",
+	"icon": "",
+	"description": "The average rating displayed as stars.",
+	"textdomain": "wporg",
+	"supports": {
+		"html": false
+	},
+	"usesContext": [
+		"postId"
+	],
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"render": "file:../render.php"
+}

@@ -1,0 +1,33 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "wporg/handbook-meta-link",
+	"version": "0.1.0-14bf84c4af505a67e9ee346daf5456c4302f97af",
+	"title": "Handbook Meta Link",
+	"category": "widgets",
+	"icon": "smiley",
+	"description": "",
+	"usesContext": [
+		"postId",
+		"postType"
+	],
+	"attributes": {
+		"heading": {
+			"type": "string",
+			"default": ""
+		},
+		"linkText": {
+			"type": "string",
+			"default": ""
+		},
+		"linkUrl": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"supports": {
+		"inserter": false
+	},
+	"textdomain": "wporg",
+	"editorScript": "file:./index.js"
+}

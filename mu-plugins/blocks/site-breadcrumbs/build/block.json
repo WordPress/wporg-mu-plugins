@@ -1,0 +1,34 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "wporg/site-breadcrumbs",
+	"version": "0.1.0-aae8e2b49ef24fa15314b0a5a5ac25b3d97591fb",
+	"title": "Site Breadcrumbs",
+	"category": "design",
+	"icon": "",
+	"description": "Display breadcrumbs of the site.",
+	"textdomain": "wporg",
+	"attributes": {},
+	"supports": {
+		"align": true,
+		"html": false,
+		"spacing": {
+			"margin": [
+				"top",
+				"bottom"
+			],
+			"padding": true
+		},
+		"color": {
+			"background": true,
+			"text": true,
+			"link": true
+		},
+		"typography": {
+			"fontSize": true
+		},
+		"multiple": false
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style.css"
+}

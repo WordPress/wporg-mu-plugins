@@ -1,0 +1,36 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "wporg/favorite-button",
+	"version": "0.1.0-ae624a93f1273053e4503ab564f5d0100d1fb856",
+	"title": "Favorite Button",
+	"category": "design",
+	"icon": "",
+	"description": "A button to toggle favoriting on the current item.",
+	"textdomain": "wporg",
+	"supports": {
+		"html": false
+	},
+	"attributes": {
+		"showCount": {
+			"type": "boolean",
+			"default": false
+		},
+		"variant": {
+			"type": "string",
+			"enum": [
+				"default",
+				"small"
+			],
+			"default": "default"
+		}
+	},
+	"usesContext": [
+		"postId",
+		"postType"
+	],
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"viewScriptModule": "file:./view.js",
+	"render": "file:../render.php"
+}
