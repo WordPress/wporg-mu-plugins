@@ -84,8 +84,12 @@ const { actions } = store( 'wporg/modal', {
 				const firstFocusableElement = focusableElements[ 0 ];
 				const lastFocusableElement = focusableElements[ focusableElements.length - 1 ];
 
-				// If shift + tab it change the direction.
-				if ( event.shiftKey && window.document.activeElement === firstFocusableElement ) {
+				// The container itself holds focus right after opening; treat it as a boundary too.
+				if (
+					event.shiftKey &&
+					( window.document.activeElement === firstFocusableElement ||
+						window.document.activeElement === modal )
+				) {
 					event.preventDefault();
 					lastFocusableElement.focus();
 				} else if ( ! event.shiftKey && window.document.activeElement === lastFocusableElement ) {
