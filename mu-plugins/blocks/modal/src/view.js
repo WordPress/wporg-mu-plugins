@@ -15,9 +15,9 @@ const focusableSelectors = [
 ];
 
 /*
- * Elements are queried at action time rather than cached: context is a public namespace other
- * markup can read by path (`wporg/modal::context.…`), so element references must not live in it,
- * and the modal content is arbitrary inner blocks that can change while the modal is open.
+ * Context is a public namespace, readable from other markup as `wporg/modal::context.…`, so only
+ * the serializable `isOpen` flag lives there. Focus-trap boundaries are computed per keydown
+ * because the modal content is arbitrary inner blocks that can change while the modal is open.
  */
 
 /**
