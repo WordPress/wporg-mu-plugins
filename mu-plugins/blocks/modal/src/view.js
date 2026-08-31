@@ -25,7 +25,7 @@ const focusableSelectors = [
  *
  * @return {HTMLElement|null} The root element, or null when it can't be resolved.
  */
-const getRoot = () => getElement().ref?.closest( '.wp-block-wporg-modal' ) ?? null;
+const getRoot = () => getElement().ref?.closest( '[data-wp-interactive="wporg/modal"]' ) ?? null;
 
 const { actions } = store( 'wporg/modal', {
 	actions: {
@@ -53,7 +53,6 @@ const { actions } = store( 'wporg/modal', {
 		open: () => {
 			const context = getContext();
 			context.isOpen = true;
-			getRoot()?.querySelector( '.wporg-modal__modal' )?.focus();
 		},
 
 		close: () => {
@@ -93,6 +92,19 @@ const { actions } = store( 'wporg/modal', {
 					event.preventDefault();
 					firstFocusableElement.focus();
 				}
+			}
+		},
+	},
+
+	callbacks: {
+		/**
+		 * Runs after the render that unhides the modal; focusing in `open()` would
+		 * target a still-hidden element and no-op.
+		 */
+		focusModal: () => {
+			const context = getContext();
+			if ( context.isOpen ) {
+				getElement().ref?.focus();
 			}
 		},
 	},

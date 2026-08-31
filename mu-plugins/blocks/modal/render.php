@@ -67,7 +67,9 @@ $html_id = wp_unique_id( 'modal-' );
 		<div
 			class="wporg-modal__modal"
 			id="<?php echo esc_attr( $html_id ); ?>"
+			tabindex="-1"
 			data-wp-bind--hidden="!context.isOpen"
+			data-wp-watch="callbacks.focusModal"
 		>
 			<button
 				class="wporg-modal__modal-close"
