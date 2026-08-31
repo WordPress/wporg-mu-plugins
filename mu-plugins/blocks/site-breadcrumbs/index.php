@@ -8,6 +8,8 @@
 
 namespace WordPressdotorg\MU_Plugins\Site_Breadcrumbs;
 
+defined( 'WPINC' ) || die();
+
 add_action( 'init', __NAMESPACE__ . '\init' );
 
 /**

@@ -2,6 +2,8 @@
 
 namespace WordPressdotorg\MU_Plugins\REST_API;
 
+defined( 'WPINC' ) || die();
+
 /**
  * Actions and filters.
  */

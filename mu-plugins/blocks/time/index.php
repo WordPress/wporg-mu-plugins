@@ -9,6 +9,8 @@
 
 namespace WordPressdotorg\MU_Plugins\Time;
 
+defined( 'WPINC' ) || die();
+
 add_action( 'init', __NAMESPACE__ . '\init' );
 
 /**
