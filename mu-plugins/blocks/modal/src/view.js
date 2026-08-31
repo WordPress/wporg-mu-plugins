@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-import { getContext, getElement, store } from '@wordpress/interactivity';
+import { getContext, getElement, store, withSyncEvent } from '@wordpress/interactivity';
 
 // See https://github.com/WordPress/gutenberg/blob/37f52ae884a40f7cb77ac2484648b4e4ad973b59/packages/block-library/src/navigation/view-interactivity.js
 const focusableSelectors = [
@@ -13,6 +13,19 @@ const focusableSelectors = [
 	'[contenteditable]',
 	'[tabindex]:not([tabindex^="-"])',
 ];
+
+/*
+ * Context is a public namespace, readable from other markup as `wporg/modal::context.…`, so only
+ * the serializable `isOpen` flag lives there. Focus-trap boundaries are computed per keydown
+ * because the modal content is arbitrary inner blocks that can change while the modal is open.
+ */
+
+/**
+ * The block wrapper for whichever element triggered the current action.
+ *
+ * @return {HTMLElement|null} The root element, or null when it can't be resolved.
+ */
+const getRoot = () => getElement().ref?.closest( '[data-wp-interactive="wporg/modal"]' ) ?? null;
 
 const { actions } = store( 'wporg/modal', {
 	actions: {
@@ -40,16 +53,22 @@ const { actions } = store( 'wporg/modal', {
 		open: () => {
 			const context = getContext();
 			context.isOpen = true;
-			context.modal.focus();
 		},
 
 		close: () => {
 			const context = getContext();
 			context.isOpen = false;
-			context.toggleButton.focus();
+			getRoot()?.querySelector( '.wporg-modal__toggle' )?.focus();
 		},
 
-		handleKeydown: ( event ) => {
+		/**
+		 * Handle modal keydown: Escape closes it, Tab traps focus within the dialog.
+		 *
+		 * Wrapped in `withSyncEvent` because the focus trap calls `event.preventDefault()` synchronously.
+		 *
+		 * @param {KeyboardEvent} event
+		 */
+		handleKeydown: withSyncEvent( ( event ) => {
 			const context = getContext();
 			// Only handle key events if the dropdown is open.
 			if ( ! context.isOpen ) {
@@ -64,29 +83,39 @@ const { actions } = store( 'wporg/modal', {
 
 			// Trap focus.
 			if ( event.key === 'Tab' ) {
-				// If shift + tab it change the direction.
-				if ( event.shiftKey && window.document.activeElement === context.firstFocusableElement ) {
+				const modal = getRoot()?.querySelector( '.wporg-modal__modal' );
+				const focusableElements = modal ? modal.querySelectorAll( focusableSelectors ) : [];
+				if ( ! focusableElements.length ) {
+					return;
+				}
+				const firstFocusableElement = focusableElements[ 0 ];
+				const lastFocusableElement = focusableElements[ focusableElements.length - 1 ];
+
+				// The container itself holds focus right after opening; treat it as a boundary too.
+				if (
+					event.shiftKey &&
+					( window.document.activeElement === firstFocusableElement ||
+						window.document.activeElement === modal )
+				) {
 					event.preventDefault();
-					context.lastFocusableElement.focus();
-				} else if ( ! event.shiftKey && window.document.activeElement === context.lastFocusableElement ) {
+					lastFocusableElement.focus();
+				} else if ( ! event.shiftKey && window.document.activeElement === lastFocusableElement ) {
 					event.preventDefault();
-					context.firstFocusableElement.focus();
+					firstFocusableElement.focus();
 				}
 			}
-		},
+		} ),
 	},
 
 	callbacks: {
-		init: () => {
+		/**
+		 * Runs after the render that unhides the modal; focusing in `open()` would
+		 * target a still-hidden element and no-op.
+		 */
+		focusModal: () => {
 			const context = getContext();
-			const { ref } = getElement();
-			context.toggleButton = ref.querySelector( '.wporg-modal__toggle' );
-			context.modal = ref.querySelector( '.wporg-modal__modal' );
-
 			if ( context.isOpen ) {
-				const focusableElements = context.modal.querySelectorAll( focusableSelectors );
-				context.firstFocusableElement = focusableElements[ 0 ];
-				context.lastFocusableElement = focusableElements[ focusableElements.length - 1 ];
+				getElement().ref?.focus();
 			}
 		},
 	},

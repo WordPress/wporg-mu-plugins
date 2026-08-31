@@ -33,7 +33,6 @@ $html_id = wp_unique_id( 'modal-' );
 <div
 	<?php echo get_block_wrapper_attributes( [ 'style' => $style ]); // phpcs:ignore ?>
 	data-wp-interactive="wporg/modal"
-	data-wp-watch="callbacks.init"
 	data-wp-on--keydown="actions.handleKeydown"
 	data-wp-class--is-modal-open="context.isOpen"
 	<?php echo wp_interactivity_data_wp_context( $init_state ); // phpcs:ignore ?>
@@ -68,7 +67,12 @@ $html_id = wp_unique_id( 'modal-' );
 		<div
 			class="wporg-modal__modal"
 			id="<?php echo esc_attr( $html_id ); ?>"
+			role="dialog"
+			aria-modal="true"
+			aria-label="<?php echo esc_attr( wp_strip_all_tags( $attributes['label'] ) ); ?>"
+			tabindex="-1"
 			data-wp-bind--hidden="!context.isOpen"
+			data-wp-watch="callbacks.focusModal"
 		>
 			<button
 				class="wporg-modal__modal-close"
