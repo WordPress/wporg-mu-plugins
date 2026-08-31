@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-import { getContext, getElement, store } from '@wordpress/interactivity';
+import { getContext, getElement, store, withSyncEvent } from '@wordpress/interactivity';
 
 // See https://github.com/WordPress/gutenberg/blob/37f52ae884a40f7cb77ac2484648b4e4ad973b59/packages/block-library/src/navigation/view-interactivity.js
 const focusableSelectors = [
@@ -61,7 +61,8 @@ const { actions } = store( 'wporg/modal', {
 			getRoot()?.querySelector( '.wporg-modal__toggle' )?.focus();
 		},
 
-		handleKeydown: ( event ) => {
+		// Wrapped in `withSyncEvent` because the focus trap calls `event.preventDefault()` synchronously.
+		handleKeydown: withSyncEvent( ( event ) => {
 			const context = getContext();
 			// Only handle key events if the dropdown is open.
 			if ( ! context.isOpen ) {
@@ -97,7 +98,7 @@ const { actions } = store( 'wporg/modal', {
 					firstFocusableElement.focus();
 				}
 			}
-		},
+		} ),
 	},
 
 	callbacks: {
