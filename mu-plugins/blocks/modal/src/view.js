@@ -61,7 +61,13 @@ const { actions } = store( 'wporg/modal', {
 			getRoot()?.querySelector( '.wporg-modal__toggle' )?.focus();
 		},
 
-		// Wrapped in `withSyncEvent` because the focus trap calls `event.preventDefault()` synchronously.
+		/**
+		 * Handle modal keydown: Escape closes it, Tab traps focus within the dialog.
+		 *
+		 * Wrapped in `withSyncEvent` because the focus trap calls `event.preventDefault()` synchronously.
+		 *
+		 * @param {KeyboardEvent} event
+		 */
 		handleKeydown: withSyncEvent( ( event ) => {
 			const context = getContext();
 			// Only handle key events if the dropdown is open.
