@@ -33,7 +33,6 @@ $html_id = wp_unique_id( 'modal-' );
 <div
 	<?php echo get_block_wrapper_attributes( [ 'style' => $style ]); // phpcs:ignore ?>
 	data-wp-interactive="wporg/modal"
-	data-wp-watch="callbacks.init"
 	data-wp-on--keydown="actions.handleKeydown"
 	data-wp-class--is-modal-open="context.isOpen"
 	<?php echo wp_interactivity_data_wp_context( $init_state ); // phpcs:ignore ?>

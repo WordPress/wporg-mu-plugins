@@ -14,20 +14,18 @@ const focusableSelectors = [
 	'[tabindex]:not([tabindex^="-"])',
 ];
 
-/**
- * Per-modal element references, keyed by each modal's interactive root.
- *
- * Kept here rather than in the store context: context is a public namespace other markup can read by
- * path (`wporg/modal::context.…`), so element references must not live in it.
+/*
+ * Elements are queried at action time rather than cached: context is a public namespace other
+ * markup can read by path (`wporg/modal::context.…`), so element references must not live in it,
+ * and the modal content is arbitrary inner blocks that can change while the modal is open.
  */
-const modalRefs = new WeakMap();
 
 /**
- * The interactive modal root for whichever element triggered the current action.
+ * The block wrapper for whichever element triggered the current action.
  *
  * @return {HTMLElement|null} The root element, or null when it can't be resolved.
  */
-const getRoot = () => getElement().ref?.closest( '[data-wp-interactive="wporg/modal"]' ) ?? null;
+const getRoot = () => getElement().ref?.closest( '.wp-block-wporg-modal' ) ?? null;
 
 const { actions } = store( 'wporg/modal', {
 	actions: {
@@ -55,13 +53,13 @@ const { actions } = store( 'wporg/modal', {
 		open: () => {
 			const context = getContext();
 			context.isOpen = true;
-			modalRefs.get( getRoot() )?.modal?.focus();
+			getRoot()?.querySelector( '.wporg-modal__modal' )?.focus();
 		},
 
 		close: () => {
 			const context = getContext();
 			context.isOpen = false;
-			modalRefs.get( getRoot() )?.toggleButton?.focus();
+			getRoot()?.querySelector( '.wporg-modal__toggle' )?.focus();
 		},
 
 		handleKeydown: ( event ) => {
@@ -79,41 +77,23 @@ const { actions } = store( 'wporg/modal', {
 
 			// Trap focus.
 			if ( event.key === 'Tab' ) {
-				const refs = modalRefs.get( getRoot() );
-				if ( ! refs ) {
+				const modal = getRoot()?.querySelector( '.wporg-modal__modal' );
+				const focusableElements = modal ? modal.querySelectorAll( focusableSelectors ) : [];
+				if ( ! focusableElements.length ) {
 					return;
 				}
+				const firstFocusableElement = focusableElements[ 0 ];
+				const lastFocusableElement = focusableElements[ focusableElements.length - 1 ];
 
 				// If shift + tab it change the direction.
-				if ( event.shiftKey && window.document.activeElement === refs.firstFocusableElement ) {
+				if ( event.shiftKey && window.document.activeElement === firstFocusableElement ) {
 					event.preventDefault();
-					refs.lastFocusableElement.focus();
-				} else if ( ! event.shiftKey && window.document.activeElement === refs.lastFocusableElement ) {
+					lastFocusableElement.focus();
+				} else if ( ! event.shiftKey && window.document.activeElement === lastFocusableElement ) {
 					event.preventDefault();
-					refs.firstFocusableElement.focus();
+					firstFocusableElement.focus();
 				}
 			}
-		},
-	},
-
-	callbacks: {
-		init: () => {
-			const context = getContext();
-			const { ref } = getElement();
-			const refs = {
-				toggleButton: ref.querySelector( '.wporg-modal__toggle' ),
-				modal: ref.querySelector( '.wporg-modal__modal' ),
-				firstFocusableElement: null,
-				lastFocusableElement: null,
-			};
-
-			if ( context.isOpen ) {
-				const focusableElements = refs.modal.querySelectorAll( focusableSelectors );
-				refs.firstFocusableElement = focusableElements[ 0 ];
-				refs.lastFocusableElement = focusableElements[ focusableElements.length - 1 ];
-			}
-
-			modalRefs.set( ref, refs );
 		},
 	},
 } );
