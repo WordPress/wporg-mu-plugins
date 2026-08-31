@@ -67,6 +67,9 @@ $html_id = wp_unique_id( 'modal-' );
 		<div
 			class="wporg-modal__modal"
 			id="<?php echo esc_attr( $html_id ); ?>"
+			role="dialog"
+			aria-modal="true"
+			aria-label="<?php echo esc_attr( wp_strip_all_tags( $attributes['label'] ) ); ?>"
 			tabindex="-1"
 			data-wp-bind--hidden="!context.isOpen"
 			data-wp-watch="callbacks.focusModal"
