@@ -207,9 +207,13 @@ class Meetup_OAuth2_Client extends API_Client {
 	 *
 	 * This stores a successfully retrieved token array to the database for repeated use, until it expires.
 	 *
+	 * @param string $auth_code Optional. An authorization code that the caller has already established
+	 *                          belongs to an authorization it started itself. Default empty, which falls
+	 *                          back to the code stored in the site option.
+	 *
 	 * @return string
 	 */
-	public function get_oauth_token() {
+	public function get_oauth_token( $auth_code = '' ) {
 		if ( $this->oauth_token && ! $this->is_expired_token( $this->oauth_token ) ) {
 			return $this->oauth_token['access_token'];
 		}
@@ -226,15 +230,13 @@ class Meetup_OAuth2_Client extends API_Client {
 
 		// If it's not a valid token, or the refresh token wasn't valid, check to see if we're able to fetch a new one.
 		if ( ! $valid ) {
-			$auth_code = get_site_option( self::SITE_OPTION_KEY_AUTHORIZATION, false );
-
-			// The token is stored network-wide, so binding it is a network administrator's call.
-			if ( isset( $_GET['code'], $_GET['state'] )
-				&& 'meetup-oauth' === $_GET['state']
-				&& is_admin()
-				&& current_user_can( 'manage_network_options' )
-			) {
-				$auth_code = sanitize_text_field( wp_unslash( $_GET['code'] ) );
+			/*
+			 * Nothing is read from the request here. An authorization code arrives on a redirect from
+			 * Meetup, which can't carry a nonce, so only a caller that minted and matched a `state` of its
+			 * own is in a position to say the code belongs to an authorization it started.
+			 */
+			if ( ! is_string( $auth_code ) || ! $auth_code ) {
+				$auth_code = get_site_option( self::SITE_OPTION_KEY_AUTHORIZATION, false );
 			}
 
 			if ( $auth_code ) {
@@ -248,15 +250,33 @@ class Meetup_OAuth2_Client extends API_Client {
 
 		// If we're unable to find a valid token, and we're not mid-refresh, throw a Warning & Notice.
 		if ( ! $valid ) {
+			/**
+			 * Filters the URL an operator should visit to start a new Meetup authorization.
+			 *
+			 * The `state` on an authorization request has to be minted and remembered by whoever handles the
+			 * callback, so a host that runs one should point this at the screen that starts its own flow.
+			 * The default carries no `state`, and so is only good for the wp-cli route described below.
+			 *
+			 * @param string $authorize_url
+			 */
+			$authorize_url = apply_filters(
+				'meetup_oauth2_authorize_url',
+				add_query_arg(
+					array(
+						// `add_query_arg()` doesn't encode, so the values are encoded on the way in.
+						'client_id'     => rawurlencode( self::CONSUMER_KEY ),
+						'response_type' => 'code',
+						'redirect_uri'  => rawurlencode( self::REDIRECT_URI ),
+					),
+					self::URL_AUTHORIZE
+				)
+			);
+
 			$message = sprintf(
-				"Meetup.com oAuth expired. Please access the following url while logged into the %s meetup.com account: \n\n%s\n\n" .
+				"Meetup.com oAuth expired. Please start a new authorization at the following url while logged into the %s meetup.com account: \n\n%s\n\n" .
 				"For sites other than WordCamp Central, the ?code=... parameter will need to be stored on this site via wp-cli and this task run again: `wp --url=%s site option update '%s' '...'`",
 				self::EMAIL,
-				sprintf(
-					'https://secure.meetup.com/oauth2/authorize?client_id=%s&response_type=code&redirect_uri=%s&state=meetup-oauth',
-					self::CONSUMER_KEY,
-					self::REDIRECT_URI
-				),
+				$authorize_url,
 				network_site_url('/'),
 				self::SITE_OPTION_KEY_AUTHORIZATION
 			);
