@@ -43,7 +43,7 @@
 		"setup:tools": "npm install && composer install && TEXTDOMAIN=wporg composer exec update-configs",
 		"update:tools": "composer update && TEXTDOMAIN=wporg composer exec update-configs",
 		"wp-env": "wp-env",
-		"test:php": "wp-env run tests-cli --env-cwd=/var/www/html/ phpunit"
+		"test:php": "wp-env run tests-cli --env-cwd=/var/www/html/ ./vendor/bin/phpunit"
 	},
 	"rtlcssConfig": {},
 	"stylelint": {
