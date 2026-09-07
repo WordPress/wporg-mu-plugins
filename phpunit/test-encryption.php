@@ -5,7 +5,7 @@ use function WordPressdotorg\MU_Plugins\Encryption\{encrypt, decrypt, is_encrypt
 
 class Test_WPORG_Encryption extends WP_UnitTestCase {
 
-	public function wpSetUpBeforeClass() {
+	public static function wpSetUpBeforeClass() {
 		self::_wporg_encryption_keys();
 	}
 
