@@ -16,9 +16,12 @@ foreach ( array(
 	defined( $meetup_constant ) || define( $meetup_constant, $meetup_value );
 }
 
-// `utilities/` isn't loaded by the mu-plugin loader, since it isn't used globally.
-require_once dirname( __DIR__ ) . '/mu-plugins/utilities/class-api-client.php';
-require_once dirname( __DIR__ ) . '/mu-plugins/utilities/class-meetup-oauth2-client.php';
+/*
+ * `utilities/` isn't loaded by the mu-plugin loader, since it isn't used globally. `WPMU_PLUGIN_DIR` rather
+ * than a path relative to this file, because wp-env mounts the two directories in different places.
+ */
+require_once WPMU_PLUGIN_DIR . '/utilities/class-api-client.php';
+require_once WPMU_PLUGIN_DIR . '/utilities/class-meetup-oauth2-client.php';
 
 /**
  * Tests for where `Meetup_OAuth2_Client` takes an authorization code from.
