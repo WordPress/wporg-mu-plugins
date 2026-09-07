@@ -230,11 +230,6 @@ class Meetup_OAuth2_Client extends API_Client {
 
 		// If it's not a valid token, or the refresh token wasn't valid, check to see if we're able to fetch a new one.
 		if ( ! $valid ) {
-			/*
-			 * Nothing is read from the request here. An authorization code arrives on a redirect from
-			 * Meetup, which can't carry a nonce, so only a caller that minted and matched a `state` of its
-			 * own is in a position to say the code belongs to an authorization it started.
-			 */
 			if ( ! is_string( $auth_code ) || ! $auth_code ) {
 				$auth_code = get_site_option( self::SITE_OPTION_KEY_AUTHORIZATION, false );
 			}
@@ -250,6 +245,16 @@ class Meetup_OAuth2_Client extends API_Client {
 
 		// If we're unable to find a valid token, and we're not mid-refresh, throw a Warning & Notice.
 		if ( ! $valid ) {
+			$authorize_url = add_query_arg(
+				array(
+					// `add_query_arg()` doesn't encode, so the values are encoded on the way in.
+					'client_id'     => rawurlencode( self::CONSUMER_KEY ),
+					'response_type' => 'code',
+					'redirect_uri'  => rawurlencode( self::REDIRECT_URI ),
+				),
+				self::URL_AUTHORIZE
+			);
+
 			/**
 			 * Filters the URL an operator should visit to start a new Meetup authorization.
 			 *
@@ -259,18 +264,7 @@ class Meetup_OAuth2_Client extends API_Client {
 			 *
 			 * @param string $authorize_url
 			 */
-			$authorize_url = apply_filters(
-				'meetup_oauth2_authorize_url',
-				add_query_arg(
-					array(
-						// `add_query_arg()` doesn't encode, so the values are encoded on the way in.
-						'client_id'     => rawurlencode( self::CONSUMER_KEY ),
-						'response_type' => 'code',
-						'redirect_uri'  => rawurlencode( self::REDIRECT_URI ),
-					),
-					self::URL_AUTHORIZE
-				)
-			);
+			$authorize_url = apply_filters( 'meetup_oauth2_authorize_url', $authorize_url );
 
 			$message = sprintf(
 				"Meetup.com oAuth expired. Please start a new authorization at the following url while logged into the %s meetup.com account: \n\n%s\n\n" .
