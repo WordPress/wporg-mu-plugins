@@ -5,7 +5,7 @@ use function WordPressdotorg\MU_Plugins\Encryption\{encrypt, decrypt, is_encrypt
 
 class Test_WPORG_Encryption extends WP_UnitTestCase {
 
-	public function wpSetUpBeforeClass() {
+	public static function wpSetUpBeforeClass() {
 		self::_wporg_encryption_keys();
 	}
 
@@ -158,8 +158,8 @@ class Test_WPORG_Encryption extends WP_UnitTestCase {
 		try {
 			decrypt( PREFIX . 'TESTSTRINGTESTSTRINGTESTSTRINGTESTSTRINGTESTSTRINGTESTSTRING', $context );
 		} catch( Exception $e ) {
-			// This is thrown by sodium_hex2bin().
-			$this->assertEquals( 'invalid hex string', $e->getMessage() );
+			// This is thrown by sodium_hex2bin(), whose wording varies by PHP version.
+			$this->assertStringContainsStringIgnoringCase( 'hex', $e->getMessage() );
 		} finally {
 			$this->assertNotEmpty( $e, 'No Exception thrown?' );
 			unset( $e );
