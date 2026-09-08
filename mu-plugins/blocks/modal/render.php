@@ -14,7 +14,8 @@ $style .= get_style_decl_from_attr( $attributes, 'overlayColor' );
 $style .= get_style_decl_from_attr( $attributes, 'closeButtonColor' );
 
 // Expand first, then drop any shortcode the expansion emitted; it would otherwise expand again later.
-$href = strip_shortcodes( do_shortcode( $attributes['href'] ?? '' ) );
+$href  = strip_shortcodes( do_shortcode( $attributes['href'] ?? '' ) );
+$label = strip_shortcodes( do_shortcode( $attributes['label'] ) );
 
 $button_class = 'wp-block-button';
 if ( ! empty( $attributes['buttonStyle'] ) ) {
@@ -47,14 +48,14 @@ $html_id = wp_unique_id( 'modal-' );
 				data-wp-on--click="actions.toggle"
 				data-wp-bind--aria-expanded="context.isOpen"
 				aria-controls="<?php echo esc_attr( $html_id ); ?>"
-			><?php echo wp_kses_post( $attributes['label'] ); ?></a>
+			><?php echo wp_kses_post( $label ); ?></a>
 		<?php else : ?>
 			<button
 				class="wporg-modal__toggle wp-block-button__link"
 				data-wp-on--click="actions.toggle"
 				data-wp-bind--aria-expanded="context.isOpen"
 				aria-controls="<?php echo esc_attr( $html_id ); ?>"
-			><?php echo wp_kses_post( $attributes['label'] ); ?></button>
+			><?php echo wp_kses_post( $label ); ?></button>
 		<?php endif; ?>
 		</div>
 	</div>
@@ -69,7 +70,7 @@ $html_id = wp_unique_id( 'modal-' );
 			id="<?php echo esc_attr( $html_id ); ?>"
 			role="dialog"
 			aria-modal="true"
-			aria-label="<?php echo esc_attr( wp_strip_all_tags( $attributes['label'] ) ); ?>"
+			aria-label="<?php echo esc_attr( wp_strip_all_tags( $label ) ); ?>"
 			tabindex="-1"
 			data-wp-bind--hidden="!context.isOpen"
 			data-wp-watch="callbacks.focusModal"
