@@ -53,6 +53,29 @@ abstract class Base_Locale_Banner_Controller extends \WP_REST_Controller {
 	abstract public function check_slug( $param );
 
 	/**
+	 * Wrap a result in a response that caches per language.
+	 *
+	 * The suggestion depends on the Accept-Language header, so the response
+	 * has to vary by it or a shared cache serves one visitor's language to
+	 * everyone requesting the same URL.
+	 *
+	 * @param mixed $data Response data.
+	 * @return \WP_REST_Response
+	 */
+	protected function prepare_response( $data ) {
+		$result = new \WP_REST_Response( $data );
+
+		$result->header( 'Vary', 'Accept-Language' );
+		$result->header( 'Expires', gmdate( 'r', time() + HOUR_IN_SECONDS ) );
+		$result->header( 'Cache-Control', 'max-age=' . HOUR_IN_SECONDS );
+
+		// nginx only honours a single Vary header, and this API is only used by the same origin.
+		remove_filter( 'rest_pre_serve_request', 'rest_send_cors_headers' );
+
+		return $result;
+	}
+
+	/**
 	 * Send the response as plain text so it can be used as-is.
 	 */
 	public function send_plain_text( $result ) {

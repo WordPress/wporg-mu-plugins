@@ -68,7 +68,7 @@ class Themes_Locale_Banner_Controller extends Base_Locale_Banner_Controller {
 
 		// Return more information if this is a debug request.
 		if ( ! empty( $request['debug'] ) ) {
-			return new \WP_REST_Response(
+			return $this->prepare_response(
 				array(
 					'currentLocale' => $current_locale,
 					'suggestions' => $suggest_locales,
@@ -79,7 +79,7 @@ class Themes_Locale_Banner_Controller extends Base_Locale_Banner_Controller {
 
 		// The result should be a raw text response.
 		add_filter( 'rest_pre_echo_response', array( $this, 'send_plain_text' ) );
-		return new \WP_REST_Response( $suggest_string );
+		return $this->prepare_response( $suggest_string );
 	}
 
 	/**
@@ -174,7 +174,7 @@ class Themes_Locale_Banner_Controller extends Base_Locale_Banner_Controller {
 
 		// Return more information if this is a debug request.
 		if ( ! empty( $request['debug'] ) ) {
-			return new \WP_REST_Response(
+			return $this->prepare_response(
 				array(
 					'currentLocale' => $current_locale,
 					'suggestions' => $suggest_locales,
@@ -185,6 +185,6 @@ class Themes_Locale_Banner_Controller extends Base_Locale_Banner_Controller {
 
 		// The result should be a raw text response.
 		add_filter( 'rest_pre_echo_response', array( $this, 'send_plain_text' ) );
-		return new \WP_REST_Response( $suggest_string );
+		return $this->prepare_response( $suggest_string );
 	}
 }
