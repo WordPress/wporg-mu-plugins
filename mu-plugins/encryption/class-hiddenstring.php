@@ -16,6 +16,7 @@ namespace WordPressdotorg\MU_Plugins\Encryption;
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+// phpcs:disable WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase, WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase, WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase -- Preserve upstream property names for serialization and parameter names for named arguments.
 final class HiddenString {
 
 	/**
@@ -44,7 +45,7 @@ final class HiddenString {
 	 * @param bool   $disallowInline
 	 * @param bool   $disallowSerialization
 	 *
-	 * @throws \TypeError
+	 * @throws \TypeError If a supplied value does not match the required type.
 	 */
 	public function __construct(
 		#[\SensitiveParameter]
@@ -60,7 +61,7 @@ final class HiddenString {
 	/**
 	 * @param HiddenString $other
 	 * @return bool
-	 * @throws \TypeError
+	 * @throws \TypeError If a supplied value does not match the required type.
 	 */
 	public function equals( HiddenString $other ) {
 		return \hash_equals(
@@ -94,7 +95,8 @@ final class HiddenString {
 			try {
 				\sodium_memzero( $this->internalStringValue );
 				return;
-			} catch ( \Throwable $ex ) {
+			} catch ( \Throwable $ex ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch -- Destructors must tolerate a failed memory wipe.
+				// Destruction must not throw when the value cannot be wiped.
 			}
 		}
 	}
@@ -103,9 +105,9 @@ final class HiddenString {
 	 * Explicit invocation -- get the raw string value
 	 *
 	 * @return string
-	 * @throws \TypeError
+	 * @throws \TypeError If a supplied value does not match the required type.
 	 */
-	public function getString(): string {
+	public function getString(): string { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid -- Preserve the upstream public API.
 		return self::safeStrcpy( $this->internalStringValue );
 	}
 
@@ -114,7 +116,7 @@ final class HiddenString {
 	 * Optionally, it can return an empty string.
 	 *
 	 * @return string
-	 * @throws \TypeError
+	 * @throws \TypeError If a supplied value does not match the required type.
 	 */
 	public function __toString(): string {
 		if ( ! $this->disallowInline ) {
@@ -143,9 +145,9 @@ final class HiddenString {
 	 *
 	 * @param string $string
 	 * @return string
-	 * @throws \TypeError
+	 * @throws \TypeError If a supplied value does not match the required type.
 	 */
-	public static function safeStrcpy( string $string ): string {
+	public static function safeStrcpy( string $string ): string { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid, Universal.NamingConventions.NoReservedKeywordParameterNames.stringFound -- Preserve the upstream public API and named arguments.
 		$length = mb_strlen( $string, '8bit' );
 		$return = '';
 		/** @var int $chunk */
@@ -159,3 +161,4 @@ final class HiddenString {
 		return $return;
 	}
 }
+// phpcs:enable WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase, WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase, WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
