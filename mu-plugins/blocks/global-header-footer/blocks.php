@@ -988,7 +988,7 @@ function is_wporg_network() {
 		return false;
 	}
 
-	$script_filename = isset( $_SERVER['SCRIPT_FILENAME'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SCRIPT_FILENAME'] ) ) : '';
+	$script_filename = isset( $_SERVER['SCRIPT_FILENAME'] ) && is_string( $_SERVER['SCRIPT_FILENAME'] ) ? wp_unslash( $_SERVER['SCRIPT_FILENAME'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Text sanitization alters filesystem paths used for prefix matching.
 
 	return defined( 'WPORGPATH' ) && 0 === strpos( $script_filename, WPORGPATH );
 }

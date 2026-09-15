@@ -234,7 +234,7 @@ class Meetup_Client extends API_Client {
 
 		$errors = implode( '. ', $this->error->get_error_messages() );
 		if ( ! empty( $errors ) ) {
-			trigger_error( esc_html( "Request error(s): $errors" ), E_USER_WARNING );
+			trigger_error( "Request error(s): $errors", E_USER_WARNING ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Preserve raw GraphQL error text in diagnostics.
 
 			return $this->error;
 		}

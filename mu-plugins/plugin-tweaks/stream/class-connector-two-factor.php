@@ -295,15 +295,15 @@ class Connector_Two_Factor extends Connector {
 				$success = json_decode( $output, true )['success'] ?? false;
 
 				if ( $success ) {
-						$this->log(
-							'WebAuthN key registered: %s',
-							array(
-								'key-name' => sanitize_text_field( wp_unslash( $_REQUEST['name'] ?? '' ) ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Log only after the provider validates its registration nonce and returns success.
-							),
-							get_current_user_id(),
-							'webauthn',
-							'added'
-						);
+					$this->log(
+						'WebAuthN key registered: %s',
+						array(
+							'key-name' => sanitize_text_field( wp_unslash( $_REQUEST['name'] ?? '' ) ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Log only after the provider validates its registration nonce and returns success.
+						),
+						get_current_user_id(),
+						'webauthn',
+						'added'
+					);
 				}
 
 				return $output;
@@ -324,21 +324,21 @@ class Connector_Two_Factor extends Connector {
 				$success = json_decode( $output, true )['success'] ?? false;
 
 				if ( $success ) {
-						$handle = sanitize_text_field( wp_unslash( $_REQUEST['handle'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- The provider validated its deletion nonce before returning success.
+					$handle = sanitize_text_field( wp_unslash( $_REQUEST['handle'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- The provider validated its deletion nonce before returning success.
 
-						$key  = wp_list_filter( $keys, [ 'credential_id' => $handle ] );
-						$key  = reset( $key );
-						$name = $key->name ?? '';
+					$key  = wp_list_filter( $keys, [ 'credential_id' => $handle ] );
+					$key  = reset( $key );
+					$name = $key->name ?? '';
 
-						$this->log(
-							'WebAuthN key deleted: %s',
-							array(
-								'key-name' => $name,
-							),
-							get_current_user_id(),
-							'two-factor',
-							'removed'
-						);
+					$this->log(
+						'WebAuthN key deleted: %s',
+						array(
+							'key-name' => $name,
+						),
+						get_current_user_id(),
+						'two-factor',
+						'removed'
+					);
 				}
 
 				return $output;

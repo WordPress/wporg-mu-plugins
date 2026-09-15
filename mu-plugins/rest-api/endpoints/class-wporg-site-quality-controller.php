@@ -98,7 +98,7 @@ class Site_Quality_Controller extends WP_REST_Controller {
 		$result = $wpdb->insert( $table_name, $data );
 
 		if ( false === $result ) {
-			trigger_error( esc_html( __NAMESPACE__ . $wpdb->last_error ), E_USER_WARNING );
+			trigger_error( __NAMESPACE__ . $wpdb->last_error, E_USER_WARNING ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Preserve raw database error text in diagnostics.
 		}
 
 		return $result;

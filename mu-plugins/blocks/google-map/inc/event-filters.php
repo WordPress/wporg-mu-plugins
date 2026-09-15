@@ -137,7 +137,7 @@ function clean_facets( array $facets ) {
 		if ( is_array( $facet ) ) {
 			$facet = array_filter( $facet ); // Remove empty.
 		} elseif ( 'search' === $key ) {
-				$facet = sanitize_text_field( strval( $facet ) );
+			$facet = sanitize_text_field( strval( $facet ) );
 		} else {
 			$facet = array( $facet );
 		}
