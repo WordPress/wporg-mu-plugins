@@ -127,6 +127,21 @@ class Test_Meetup_OAuth_State extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Recovery URLs and commands remain usable when copied from plain-text logs.
+	 *
+	 * @return void
+	 */
+	public function test_recovery_warning_preserves_url_and_shell_syntax(): void {
+		list( , $warnings ) = $this->run_client();
+		preg_match( '~https://secure\.meetup\.com/oauth2/authorize\?\S+~', $warnings[0], $matches );
+		parse_str( wp_parse_url( $matches[0], PHP_URL_QUERY ), $query );
+		$this->assertSame( 'code', $query['response_type'] ?? null );
+		$this->assertSame( admin_url( '/' ), $query['redirect_uri'] ?? null );
+		$this->assertNotFalse( wp_verify_nonce( $query['state'] ?? '', 'meetup-oauth' ) );
+		$this->assertStringContainsString( "site option update 'meetup_oauth_authorization' '...'", $warnings[0] );
+	}
+
+	/**
 	 * Empty, fixed, expired, and another user's state cannot initiate token exchange.
 	 *
 	 * @return void

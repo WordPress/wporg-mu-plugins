@@ -274,7 +274,7 @@ class Meetup_OAuth2_Client extends API_Client {
 			if ( admin_url( '/' ) === self::REDIRECT_URI ) {
 				printf( '<div class="notice notice-error"><p>%s</p></div>', wp_kses_post( nl2br( make_clickable( esc_html( $message ) ) ) ) );
 			}
-			trigger_error( esc_html( $message ), E_USER_WARNING );
+				trigger_error( $message, E_USER_WARNING ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Preserve URLs and shell commands in plain-text recovery diagnostics.
 
 			return false;
 		}
