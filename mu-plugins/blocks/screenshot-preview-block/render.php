@@ -39,7 +39,7 @@ if ( ! str_contains( $view_url, '&v=' ) && ! str_contains( $view_url, '?v=' ) ) 
 	$view_url   = add_query_arg( 'v', $cache_bust, $view_url );
 }
 
-$url = add_query_arg( $mshots_args, 'https://s0.wp.com/mshots/v1/' . urlencode( $view_url ) );
+$url = add_query_arg( $mshots_args, 'https://s0.wp.com/mshots/v1/' . rawurlencode( $view_url ) );
 
 // Initial state to pass to Interactivity API.
 $init_state    = [

@@ -45,7 +45,7 @@ function register_block_types() {
 function register_block_assets() {
 	// Our custom login screen is technically a front-end page, so the script/style are enqueued by default.
 	// That's unnecessary because the header/footer isn't rendered in there.
-	if ( 'login.wordpress.org' === $_SERVER['SERVER_NAME'] ) {
+	if ( isset( $_SERVER['SERVER_NAME'] ) && 'login.wordpress.org' === $_SERVER['SERVER_NAME'] ) {
 		return;
 	}
 
@@ -221,7 +221,7 @@ function restore_inner_group_container() {
  *
  * @return string
  */
-function rest_render_global_header( $request ) {
+function rest_render_global_header() {
 
 	// Remove the theme stylesheet from rest requests.
 	add_filter(
@@ -247,6 +247,7 @@ function rest_render_global_header( $request ) {
 			header( 'Content-Type: text/html' );
 			header( 'X-Robots-Tag: noindex, follow' );
 
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Rendered block templates and wp_head/wp_footer output must retain their HTML and scripts.
 			echo $result->get_data();
 
 			return true;
@@ -304,7 +305,7 @@ function rewrite_assets_to_cdn( $markup ) {
  *
  * @return string
  */
-function rest_render_codex_global_header( $request ) {
+function rest_render_codex_global_header() {
 	add_action(
 		'wp_head',
 		function () {
@@ -323,7 +324,7 @@ function rest_render_codex_global_header( $request ) {
 
 	add_filter(
 		'body_class',
-		function ( $class ) {
+		function () {
 			return [
 				'wporg-responsive',
 				'wporg-codex',
@@ -336,7 +337,7 @@ function rest_render_codex_global_header( $request ) {
 	// Remove <title> tags.
 	remove_theme_support( 'title-tag' );
 
-	$markup = rest_render_global_header( $request );
+	$markup = rest_render_global_header();
 	$markup = preg_replace( '!<html[^>]+>!i', '<!-- [codex head html] -->', $markup );
 
 	return $markup;
@@ -347,7 +348,7 @@ function rest_render_codex_global_header( $request ) {
  *
  * @return string
  */
-function rest_render_planet_global_header( $request ) {
+function rest_render_planet_global_header() {
 	add_filter(
 		'pre_get_document_title',
 		function () {
@@ -364,7 +365,7 @@ function rest_render_planet_global_header( $request ) {
 
 	add_filter(
 		'body_class',
-		function ( $class ) {
+		function () {
 			return [
 				'wporg-responsive',
 				'wporg-planet',
@@ -372,17 +373,15 @@ function rest_render_planet_global_header( $request ) {
 		}
 	);
 
-	return rest_render_global_header( $request );
+	return rest_render_global_header();
 }
 
 /**
  * Render the global header in a block context.
  *
- * @param array $attributes The block attributes.
- *
  * @return string Returns the block content.
  */
-function render_global_header( $attributes = array() ) {
+function render_global_header() {
 	remove_inner_group_container();
 
 	if ( is_rosetta_site() ) {
@@ -677,7 +676,7 @@ function get_rosetta_name(): string {
  * Some items saved in Rosetta nav menus are redundant, because the global header already includes Download and
  * Home links (via the logo).
  *
- * @param WP_Post $menu_item
+ * @param WP_Post $item The menu item.
  *
  * @return bool
  */
@@ -686,10 +685,11 @@ function is_valid_rosetta_menu_item( $item ) {
 	 * Cover full URLs like `https://ar.wordpress.org/` and `https://ar.wordpress.org/download/`; and relative
 	 * ones like  `/` and `/download/`.
 	 */
-	$redundant_slugs = array( '/download/', '/txt-download/', '/', "/{$_SERVER['HTTP_HOST']}/" );
+	$host            = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+	$redundant_slugs = array( '/download/', '/txt-download/', '/', "/{$host}/" );
 
 	// Not using `basename()` because that would match `/foo/download`
-	$irrelevant_url_parts = array( 'http://', 'https://', $_SERVER['HTTP_HOST'] );
+	$irrelevant_url_parts = array( 'http://', 'https://', $host );
 
 	$item_slug = str_replace( $irrelevant_url_parts, '', $item->url );
 	$item_slug = trailingslashit( $item_slug );
@@ -838,8 +838,7 @@ function render_header_alert_banner() {
  *
  * @return string
  */
-function rest_render_global_footer( $request ) {
-
+function rest_render_global_footer() {
 	/*
 	 * Render the header but discard the markup, so that any header styles/scripts
 	 * required are then available for output in the footer.
@@ -853,6 +852,7 @@ function rest_render_global_footer( $request ) {
 			header( 'Content-Type: text/html' );
 			header( 'X-Robots-Tag: noindex, follow' );
 
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Rendered block templates and wp_head/wp_footer output must retain their HTML and scripts.
 			echo $result->get_data();
 
 			return true;
@@ -870,13 +870,11 @@ function rest_render_global_footer( $request ) {
 /**
  * Render the global footer in a block context.
  *
- * @param array    $attributes Block attributes.
- * @param string   $content    Block default content.
- * @param WP_Block $block      Block instance.
+ * @param array $attributes Block attributes.
  *
  * @return string Returns the block markup.
  */
-function render_global_footer( $attributes, $content, $block ) {
+function render_global_footer( $attributes ) {
 	remove_inner_group_container();
 
 	if ( is_rosetta_site() ) {
@@ -990,7 +988,9 @@ function is_wporg_network() {
 		return false;
 	}
 
-	return defined( 'WPORGPATH' ) && 0 === strpos( $_SERVER['SCRIPT_FILENAME'], WPORGPATH );
+	$script_filename = isset( $_SERVER['SCRIPT_FILENAME'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SCRIPT_FILENAME'] ) ) : '';
+
+	return defined( 'WPORGPATH' ) && 0 === strpos( $script_filename, WPORGPATH );
 }
 
 /**
@@ -1061,7 +1061,7 @@ function get_cip_text() {
 	$translated = __( 'Code is Poetry.', 'wporg' );
 
 	if ( $translated === $english && is_rosetta_site() ) {
-		$translated = __( 'Code is Poetry.', 'rosetta' );
+		$translated = __( 'Code is Poetry.', 'rosetta' ); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Reuse the existing Rosetta translation as a fallback.
 	}
 
 	return $translated;

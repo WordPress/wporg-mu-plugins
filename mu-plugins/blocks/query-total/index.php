@@ -24,7 +24,7 @@ add_filter( 'render_block_data', __NAMESPACE__ . '\update_block_attributes' );
  */
 function render( $attributes, $content, $block ) {
 	$page_key    = isset( $block->context['queryId'] ) ? 'query-' . $block->context['queryId'] . '-page' : 'query-page';
-	$page        = empty( $_GET[ $page_key ] ) ? 1 : (int) $_GET[ $page_key ];
+	$page        = empty( $_GET[ $page_key ] ) ? 1 : (int) $_GET[ $page_key ]; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public pagination only reads posts; it does not mutate user or site data.
 	$found_posts = 0;
 
 	// Check whether this is a custom query or inheriting from global.

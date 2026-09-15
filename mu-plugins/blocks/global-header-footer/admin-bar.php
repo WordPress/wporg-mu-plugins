@@ -16,10 +16,9 @@ add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_inline_css' );
  *
  * The admin bar can be shown to logged out users by activating the Logged Out Admin Bar plugin.
  *
- * @param bool $show_admin_bar Whether the admin bar should be shown.
  * @return bool
  */
-function should_show_admin_bar( $show_admin_bar ) {
+function should_show_admin_bar() {
 	return is_super_admin() || is_user_logged_in();
 }
 
@@ -48,9 +47,9 @@ function filter_admin_bar_links( $wp_admin_bar ) {
 		$edit_items = [];
 
 		foreach ( $wp_admin_bar->get_nodes() as $ab_item ) {
-			if ( in_array( $ab_item->parent, $parent_remove_list ) ) {
+			if ( in_array( $ab_item->parent, $parent_remove_list, true ) ) {
 				$wp_admin_bar->remove_node( $ab_item->id );
-			} elseif ( in_array( $ab_item->id, $remove_list ) ) {
+			} elseif ( in_array( $ab_item->id, $remove_list, true ) ) {
 				$wp_admin_bar->remove_node( $ab_item->id );
 			} elseif ( 'my-sites' === $ab_item->parent ) {
 				// Move items in "My Sites" into user's dropdown.
@@ -59,11 +58,11 @@ function filter_admin_bar_links( $wp_admin_bar ) {
 					$ab_item->meta['class'] = 'ab-sub-secondary';
 				}
 				$wp_admin_bar->add_node( $ab_item );
-			} elseif ( in_array( $ab_item->id, [ 'edit-profile', 'logout' ] ) ) {
+			} elseif ( in_array( $ab_item->id, [ 'edit-profile', 'logout' ], true ) ) {
 				// Move "Edit Profile" and "Logout" to a new group at the end of the dropdown.
 				$ab_item->parent = 'my-account-actions';
 				$wp_admin_bar->add_node( $ab_item );
-			} elseif ( in_array( $ab_item->id, [ 'edit', 'site-editor', 'customize' ] ) || $ab_item->parent === 'edit' ) {
+			} elseif ( in_array( $ab_item->id, [ 'edit', 'site-editor', 'customize' ], true ) || 'edit' === $ab_item->parent ) {
 				// Move "Edit [object]", "Customize", and "Edit Site" (if exist) to list to be
 				// added to a new dropdown later. Includes child-elements of Edit.
 				$ab_item->parent = 'edit-actions';
@@ -110,7 +109,7 @@ function filter_admin_bar_links( $wp_admin_bar ) {
 	} else {
 		// Remove everything but Register & Log In
 		foreach ( $wp_admin_bar->get_nodes() as $ab_item ) {
-			if ( ! in_array( $ab_item->id, array( 'top-secondary', 'register', 'log-in' ) ) ) {
+			if ( ! in_array( $ab_item->id, array( 'top-secondary', 'register', 'log-in' ), true ) ) {
 				$wp_admin_bar->remove_node( $ab_item->id );
 			}
 		}
@@ -141,6 +140,9 @@ function filter_admin_bar_links( $wp_admin_bar ) {
 	}
 }
 
+/**
+ * Hide the icon on the combined edit actions menu.
+ */
 function enqueue_inline_css() {
 	wp_add_inline_style(
 		'admin-bar',

@@ -50,8 +50,9 @@ $encoded_state = wp_json_encode( $init_state );
 // Set up a unique ID for this filter.
 $html_id = wp_unique_id( "filter-{$settings['key']}-" );
 
-$selected_count = count( array_filter( $settings['selected'] ) );
-$button_classes = array_keys(
+$selected_values = array_map( 'strval', $settings['selected'] );
+$selected_count  = count( array_filter( $settings['selected'] ) );
+$button_classes  = array_keys(
 	array_filter(
 		array(
 			'wporg-query-filter__toggle' => true,
@@ -129,7 +130,7 @@ if ( $selected_count && $has_multiple ) {
 						name="<?php echo esc_attr( $settings['key'] ); ?>"
 						value="<?php echo esc_attr( $value ); ?>"
 						id="<?php echo esc_attr( $html_id . '-' . $value ); ?>"
-						<?php checked( in_array( $value, $settings['selected'] ) ); ?>
+						<?php checked( in_array( (string) $value, $selected_values, true ) ); ?>
 					/>
 					<?php else : ?>
 					<input
@@ -137,7 +138,7 @@ if ( $selected_count && $has_multiple ) {
 						name="<?php echo esc_attr( $settings['key'] ); ?>[]"
 						value="<?php echo esc_attr( $value ); ?>"
 						id="<?php echo esc_attr( $html_id . '-' . $value ); ?>"
-						<?php checked( in_array( $value, $settings['selected'] ) ); ?>
+						<?php checked( in_array( (string) $value, $selected_values, true ) ); ?>
 					/>
 					<?php endif; ?>
 					<label for="<?php echo esc_attr( $html_id . '-' . $value ); ?>"><?php echo esc_html( $label ); ?></label>

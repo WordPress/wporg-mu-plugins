@@ -70,7 +70,7 @@ function api_init() {
 	$namespace = 'wporg/v1';
 	$args      = array(
 		'id' => array(
-			'validate_callback' => function ( $param, $request, $key ) {
+			'validate_callback' => function ( $param ) {
 				return is_numeric( $param );
 			},
 			'required'          => true,

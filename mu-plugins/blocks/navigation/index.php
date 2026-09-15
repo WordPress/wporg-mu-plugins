@@ -50,7 +50,7 @@ function init() {
 		'admin_print_styles',
 		function () {
 			global $hook_suffix;
-			if ( ! in_array( $hook_suffix, array( 'post.php', 'post-new.php' ) ) ) {
+			if ( ! in_array( $hook_suffix, array( 'post.php', 'post-new.php' ), true ) ) {
 				return;
 			}
 			echo '<style>.wporg-nav-hide-next-panel + .components-panel__body { display: none; }</style>';

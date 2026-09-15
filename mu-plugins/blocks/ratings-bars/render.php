@@ -66,7 +66,7 @@ foreach ( range( 5, 1 ) as $stars ) :
 			<span aria-hidden="true" class="wporg-ratings-bars__bar-background">
 				<span class="wporg-ratings-bars__bar-foreground" style="width: <?php echo intval( $rating_bar_width ); ?>%;"></span>
 			</span>
-			<span aria-hidden="true" class="wporg-ratings-bars__bar-count"><?php echo number_format_i18n( $count ); ?></span>
+			<span aria-hidden="true" class="wporg-ratings-bars__bar-count"><?php echo esc_html( number_format_i18n( $count ) ); ?></span>
 		</a>
 	</li>
 <?php endforeach; ?>

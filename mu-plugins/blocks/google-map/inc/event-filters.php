@@ -20,7 +20,7 @@ function schedule_filter_cron( string $filter_slug, string $start_date, string $
 	// Some custom filter slugs using `google_map_event_filters_{$filter_slug}` to pass data may need to run their
 	// own cron to prime the cache.
 	// See WordCamp's `themes/wporg-events-2023/inc/city-landing-pages.php` for an example.
-	$register_cron = apply_filters( 'google-map-event-filters-register-cron', true, $filter_slug );
+	$register_cron = apply_filters( 'google-map-event-filters-register-cron', true, $filter_slug ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- Preserve the public hook used by existing event themes.
 
 	if ( $register_cron && ! wp_next_scheduled( 'prime_event_filters', $cron_args ) ) {
 		wp_schedule_event(
@@ -189,7 +189,7 @@ function is_cacheable( array $facets, int $page ): bool {
 	// Search terms vary so much that caching them probably wouldn't result in a significant degree of
 	// cache hits, but it would generate a lot of extra transients. With memcached, that could push
 	// more useful values out of the cache. Old pages and multi-facet requests are similar.
-	if ( ! empty( $facets['search'] ) || count( $facets ) > 1 || $page !== 1 ) {
+	if ( ! empty( $facets['search'] ) || count( $facets ) > 1 || 1 !== $page ) {
 		$cacheable = false;
 	} else {
 		foreach ( $facets as $facet ) {
@@ -242,9 +242,11 @@ function get_all_upcoming_events( array $facets = array() ): array {
 	$where_values   = $where['values'] ?? [];
 	$where_values[] = gmdate( 'Y-m-d' );
 
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- get_where_clauses() supplies static SQL and placeholders; all values are prepared here.
 	$query = $wpdb->prepare( $query, $where_values );
 
 	if ( 'latin1' === DB_CHARSET ) {
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Values are prepared above.
 		$events = $wpdb->get_results( $query );
 	} else {
 		$events = get_latin1_results_with_prepared_query( $query );
@@ -343,10 +345,12 @@ function get_all_past_events( int $page, array $facets = array() ): array {
 		{$limit_sql}";
 
 	if ( $where['values'] ) {
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Clauses contain only static SQL and placeholders; pagination was prepared above.
 		$query = $wpdb->prepare( $query, $where['values'] );
 	}
 
 	if ( 'latin1' === DB_CHARSET ) {
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Values are prepared above.
 		$events = $wpdb->get_results( $query );
 	} else {
 		$events = get_latin1_results_with_prepared_query( $query );
@@ -402,6 +406,7 @@ function get_events_between_dates( int $start_timestamp, int $end_timestamp ): a
 	);
 
 	if ( 'latin1' === DB_CHARSET ) {
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Values are prepared above.
 		$events = $wpdb->get_results( $query );
 	} else {
 		$events = get_latin1_results_with_prepared_query( $query );
@@ -431,7 +436,7 @@ function prepare_events( array $events ): array {
 /**
  * Query a table that's encoded with the `latin1` charset.
  *
- * wordpress.org uses a `DB_CHARSET` of `latin1` for legacy reasons, but wordcamp.org and others use `utf8mb4`.
+ * WordPress.org uses a `DB_CHARSET` of `latin1` for legacy reasons, but wordcamp.org and others use `utf8mb4`.
  * `wporg_events` uses `latin1`, so querying it with `utf8mb4` will produce Mojibake.
  *
  * @param string $prepared_query ⚠️ This must have already be ran through `$wpdb->prepare()` if needed.
@@ -445,7 +450,7 @@ function get_latin1_results_with_prepared_query( string $prepared_query ) {
 	$db_handle = is_a( $wpdb, 'hyperdb' ) ? $wpdb->db_connect( $prepared_query ) : $wpdb->dbh;
 	$wpdb->set_charset( $db_handle, 'latin1', 'latin1_swedish_ci' );
 
-	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- This function doesn't have the context to prepare it, the caller must.
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Callers prepare values and get_events() manages caching for this shared event table.
 	$results = $wpdb->get_results( $prepared_query );
 
 	// Revert to the default charset to avoid affecting other queries.
@@ -540,7 +545,8 @@ function print_results( string $filter, array $matched_events, array $other_even
 	sort( $matched_names );
 	sort( $other_names );
 
-	printf( "\n\n============================== \nResults for $filter: \n==============================\n" );
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The CLI-only guard above excludes HTML output.
+	printf( "\n\n============================== \nResults for %s: \n==============================\n", $filter );
 
 	echo "\nIgnored these events. Double check for false-negatives.\n\n";
 	print_r( $other_names );

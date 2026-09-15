@@ -32,13 +32,12 @@ function init() {
 /**
  * Render the block content.
  *
- * @param array    $attributes Block attributes.
- * @param string   $content    Block default content.
- * @param WP_Block $block      Block instance.
+ * @param array  $attributes Block attributes.
+ * @param string $content    Block default content.
  *
  * @return string Returns the block markup.
  */
-function render( $attributes, $content, $block ) {
+function render( $attributes, $content ) {
 	$wrapper_attributes = get_block_wrapper_attributes();
 	$inline_breakpoint  = $attributes['inlineBreakpoint'];
 	$back_to_top        = $attributes['hasBackToTop']
