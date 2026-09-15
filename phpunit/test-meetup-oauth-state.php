@@ -105,18 +105,14 @@ class Test_Meetup_OAuth_State extends WP_UnitTestCase {
 	}
 
 	/**
-	 * The generated authorization link carries a nonce accepted on return.
+	 * A nonce generated in the administrator browser is accepted on return.
 	 *
 	 * @return void
 	 */
-	public function test_generated_state_allows_authorized_callback(): void {
-		list( $requests, $warnings ) = $this->run_client();
-		$this->assertSame( array(), $requests );
-		preg_match( '/state=([a-z0-9]+)/', $warnings[0], $matches );
-		$this->assertNotEmpty( $matches[1] );
+	public function test_browser_state_allows_authorized_callback(): void {
 		$_GET = array(
 			'code'  => 'returned-code',
-			'state' => $matches[1],
+			'state' => wp_create_nonce( 'meetup-oauth' ),
 		);
 
 		list( $requests, $warnings ) = $this->run_client();
@@ -132,12 +128,15 @@ class Test_Meetup_OAuth_State extends WP_UnitTestCase {
 	 * @return void
 	 */
 	public function test_recovery_warning_preserves_url_and_shell_syntax(): void {
+		wp_set_current_user( 0 );
+		set_current_screen( 'front' );
 		list( , $warnings ) = $this->run_client();
-		preg_match( '~https://secure\.meetup\.com/oauth2/authorize\?\S+~', $warnings[0], $matches );
-		parse_str( wp_parse_url( $matches[0], PHP_URL_QUERY ), $query );
-		$this->assertSame( 'code', $query['response_type'] ?? null );
-		$this->assertSame( admin_url( '/' ), $query['redirect_uri'] ?? null );
-		$this->assertNotFalse( wp_verify_nonce( $query['state'] ?? '', 'meetup-oauth' ) );
+		$expected_url       = add_query_arg( 'action', 'wcorg-meetup-authorize', admin_url( '/' ) );
+		foreach ( array( $warnings[0], sanitize_text_field( $warnings[0] ) ) as $message ) {
+			$this->assertStringContainsString( $expected_url, $message );
+			$this->assertStringNotContainsString( 'state=', $message );
+			$this->assertStringNotContainsString( 'secure.meetup.com', $message );
+		}
 		$this->assertStringContainsString( "site option update 'meetup_oauth_authorization' '...'", $warnings[0] );
 	}
 

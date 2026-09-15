@@ -258,15 +258,10 @@ class Meetup_OAuth2_Client extends API_Client {
 		// If we're unable to find a valid token, and we're not mid-refresh, throw a Warning & Notice.
 		if ( ! $valid ) {
 			$message = sprintf(
-				"Meetup.com oAuth expired. Please access the following url while logged into the %s meetup.com account: \n\n%s\n\n" .
+				"Meetup.com oAuth expired. Open the following URL as a network administrator, then reconnect using the %s meetup.com account: \n\n%s\n\n" .
 				"For sites other than WordCamp Central, the ?code=... parameter will need to be stored on this site via wp-cli and this task run again: `wp --url=%s site option update '%s' '...'`",
 				self::EMAIL,
-				sprintf(
-					'https://secure.meetup.com/oauth2/authorize?client_id=%s&response_type=code&redirect_uri=%s&state=%s',
-					self::CONSUMER_KEY,
-					rawurlencode( self::REDIRECT_URI ),
-					wp_create_nonce( 'meetup-oauth' )
-				),
+				add_query_arg( 'action', 'wcorg-meetup-authorize', self::REDIRECT_URI ),
 				network_site_url( '/' ),
 				self::SITE_OPTION_KEY_AUTHORIZATION
 			);
@@ -274,7 +269,7 @@ class Meetup_OAuth2_Client extends API_Client {
 			if ( admin_url( '/' ) === self::REDIRECT_URI ) {
 				printf( '<div class="notice notice-error"><p>%s</p></div>', wp_kses_post( nl2br( make_clickable( esc_html( $message ) ) ) ) );
 			}
-				trigger_error( $message, E_USER_WARNING ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Preserve URLs and shell commands in plain-text recovery diagnostics.
+			trigger_error( $message, E_USER_WARNING ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Preserve URLs and shell commands in plain-text recovery diagnostics.
 
 			return false;
 		}
