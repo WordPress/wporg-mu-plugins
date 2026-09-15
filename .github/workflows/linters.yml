@@ -24,12 +24,11 @@ jobs:
             - name: Install dependencies
               uses: ./.github/actions/setup
 
+            - name: Lint PHP
+              run: composer run lint
+
             - name: Setup configs
               run: TEXTDOMAIN=wporg composer exec update-configs
-
-            - name: Lint PHP
-              continue-on-error: true
-              run: composer run lint
 
             - name: Lint JavaScript and Styles
               run: |
