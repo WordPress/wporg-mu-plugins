@@ -100,4 +100,4 @@ If the map/list is shown in a context where all of the events fit onto the same 
 
 If there's too many to fit on one page, then it's generally better to submit the search form to the server, so that all of the possible events can be searched, not just the ones on the current page. You can do that by setting the `searchFormAction` attribute to the URL of the page where search results should be displayed. That should be a page that has this block in the post content.
 
-The action has to stay on this site's network, because a block attribute is not always written by someone who can be trusted with where the form submits. A URL on another host is discarded and the block falls back to live search, so if server-side search silently stops working, check the host first.
+The action runs through `wp_validate_redirect()`, because a block attribute is not always written by someone who can be trusted with where the form submits. Anything that does not resolve to this site is discarded and the block falls back to live search, so if server-side search silently stops working, check the host first.

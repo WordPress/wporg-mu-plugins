@@ -31,7 +31,7 @@ class Test_Google_Map extends WP_UnitTestCase {
 	}
 
 	/**
-	 * A form action that cannot leave the network reaches the browser unchanged.
+	 * A form action that cannot leave this site reaches the browser unchanged.
 	 *
 	 * @dataProvider data_allowed_search_form_actions
 	 *
@@ -54,14 +54,9 @@ class Test_Google_Map extends WP_UnitTestCase {
 	 * @return array[]
 	 */
 	public function data_allowed_search_form_actions(): array {
-		$host = wp_parse_url( home_url(), PHP_URL_HOST );
-
 		return array(
-			'this site'       => array( home_url( '/events/' ) ),
-			'relative'        => array( '/events/' ),
-			// A sibling on the network, which the block is configured across.
-			'subdomain'       => array( 'https://sub.' . $host . '/events/' ),
-			'mixed case host' => array( 'https://' . strtoupper( $host ) . '/events/' ),
+			'this site' => array( home_url( '/events/' ) ),
+			'relative'  => array( '/events/' ),
 		);
 	}
 
@@ -82,7 +77,7 @@ class Test_Google_Map extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Active schemes and hosts off the network are dropped.
+	 * Active schemes and hosts off this site are dropped.
 	 *
 	 * @dataProvider data_unsafe_search_form_actions
 	 *
@@ -115,7 +110,7 @@ class Test_Google_Map extends WP_UnitTestCase {
 			'off-site https'           => array( 'https://evil.example/collect' ),
 			'protocol relative'        => array( '//evil.example/collect' ),
 			'escaped protocol slashes' => array( '\/\/evil.example/collect' ),
-			// The host must end at a dot boundary, or a lookalike domain would pass.
+			// A lookalike domain is its own host, not this one with something appended.
 			'suffix lookalike'         => array( 'https://' . $host . '.evil.example/collect' ),
 			// Userinfo before the `@` is not the host, however much it looks like one.
 			'userinfo'                 => array( 'https://' . $host . '@evil.example/collect' ),
@@ -127,23 +122,38 @@ class Test_Google_Map extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Sibling sites on a network reach each other.
+	 * An action on another host falls back to live search, even a harmless one.
 	 *
-	 * The PHPUnit environment is single site, so this drives the host comparison through a
-	 * filtered `home_url()` rather than a real network. The `get_network()` branch that lets a
-	 * subsite accept the network's own domain can only be exercised on a multisite install.
+	 * `wp_validate_redirect()` matches the host exactly, so neither a sibling site on the
+	 * network nor a differently cased spelling of this host is kept. Both are safe places to
+	 * submit to; the block just searches the current page instead of going there.
+	 *
+	 * @dataProvider data_search_form_actions_off_this_host
+	 *
+	 * @param string $action The form action to discard.
 	 */
-	public function test_network_urls_are_recognized(): void {
-		$home_url = fn() => 'https://wordpress.org';
-		add_filter( 'home_url', $home_url );
+	public function test_drops_search_form_actions_off_this_host( string $action ): void {
+		$script = $this->render_map(
+			array(
+				'id'               => 'other-host',
+				'searchFormAction' => $action,
+			)
+		);
 
-		$this->assertTrue( \WordPressdotorg\MU_Plugins\Google_Map\is_network_url( 'https://wordpress.org/events/' ) );
-		$this->assertTrue( \WordPressdotorg\MU_Plugins\Google_Map\is_network_url( 'https://make.wordpress.org/events/' ) );
-		$this->assertTrue( \WordPressdotorg\MU_Plugins\Google_Map\is_network_url( '/events/' ) );
-		$this->assertFalse( \WordPressdotorg\MU_Plugins\Google_Map\is_network_url( 'https://wordpress.org.evil.example/' ) );
-		$this->assertFalse( \WordPressdotorg\MU_Plugins\Google_Map\is_network_url( 'https://notwordpress.org/' ) );
-		$this->assertFalse( \WordPressdotorg\MU_Plugins\Google_Map\is_network_url( '//evil.example/' ) );
+		$this->assertStringContainsString( '"searchFormAction":""', $script, $action );
+	}
 
-		remove_filter( 'home_url', $home_url );
+	/**
+	 * Data provider for test_drops_search_form_actions_off_this_host.
+	 *
+	 * @return array[]
+	 */
+	public function data_search_form_actions_off_this_host(): array {
+		$host = (string) wp_parse_url( home_url(), PHP_URL_HOST );
+
+		return array(
+			'subdomain'       => array( 'https://sub.' . $host . '/events/' ),
+			'mixed case host' => array( 'https://' . strtoupper( $host ) . '/events/' ),
+		);
 	}
 }
