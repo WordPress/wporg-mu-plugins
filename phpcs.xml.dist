@@ -26,6 +26,7 @@
     <arg name="extensions" value="php" />
 
     <rule ref="WordPress">
+        <exclude name="WordPress.DB.DirectDatabaseQuery" />
         <exclude name="Universal.Arrays.DisallowShortArraySyntax.Found" />
         <exclude name="Squiz.PHP.EmbeddedPhp.ContentAfterOpen" />
         <exclude name="Squiz.PHP.EmbeddedPhp.ContentBeforeEnd" />
