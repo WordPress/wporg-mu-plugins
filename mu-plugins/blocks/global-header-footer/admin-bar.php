@@ -50,26 +50,26 @@ function filter_admin_bar_links( $wp_admin_bar ) {
 		foreach ( $wp_admin_bar->get_nodes() as $ab_item ) {
 			if ( in_array( $ab_item->parent, $parent_remove_list ) ) {
 				$wp_admin_bar->remove_node( $ab_item->id );
-			} else if ( in_array( $ab_item->id, $remove_list ) ) {
+			} elseif ( in_array( $ab_item->id, $remove_list ) ) {
 				$wp_admin_bar->remove_node( $ab_item->id );
-			} else if ( 'my-sites' === $ab_item->parent ) {
+			} elseif ( 'my-sites' === $ab_item->parent ) {
 				// Move items in "My Sites" into user's dropdown.
 				$ab_item->parent = 'my-account';
 				if ( empty( $ab_item->meta['class'] ) ) {
 					$ab_item->meta['class'] = 'ab-sub-secondary';
 				}
 				$wp_admin_bar->add_node( $ab_item );
-			} else if ( in_array( $ab_item->id, [ 'edit-profile', 'logout' ] ) ) {
+			} elseif ( in_array( $ab_item->id, [ 'edit-profile', 'logout' ] ) ) {
 				// Move "Edit Profile" and "Logout" to a new group at the end of the dropdown.
 				$ab_item->parent = 'my-account-actions';
 				$wp_admin_bar->add_node( $ab_item );
-			} else if ( in_array( $ab_item->id, [ 'edit', 'site-editor', 'customize' ] ) || $ab_item->parent === 'edit' ) {
+			} elseif ( in_array( $ab_item->id, [ 'edit', 'site-editor', 'customize' ] ) || $ab_item->parent === 'edit' ) {
 				// Move "Edit [object]", "Customize", and "Edit Site" (if exist) to list to be
 				// added to a new dropdown later. Includes child-elements of Edit.
 				$ab_item->parent = 'edit-actions';
 				$wp_admin_bar->remove_node( $ab_item->id );
 				$edit_items[] = $ab_item;
-			} else if ( preg_match( '/blog-\d+/', $ab_item->parent ?? '' ) ) {
+			} elseif ( preg_match( '/blog-\d+/', $ab_item->parent ?? '' ) ) {
 				$wp_admin_bar->remove_node( $ab_item->id );
 			}
 		}
@@ -80,14 +80,14 @@ function filter_admin_bar_links( $wp_admin_bar ) {
 			// Only one item, let it be the top level item.
 			$edit_items[0]->parent = false;
 			$wp_admin_bar->add_node( $edit_items[0] );
-		} else if ( count( $edit_items ) > 1 ) {
+		} elseif ( count( $edit_items ) > 1 ) {
 			// If many, add a new top level "Edit" to hold them.
 			$wp_admin_bar->add_node(
 				array(
-					'id' => 'edit-actions',
-					'title' => $edit_items[0]->title,
+					'id'     => 'edit-actions',
+					'title'  => $edit_items[0]->title,
 					'parent' => false,
-					'href' => $edit_items[0]->href,
+					'href'   => $edit_items[0]->href,
 				)
 			);
 
@@ -99,12 +99,12 @@ function filter_admin_bar_links( $wp_admin_bar ) {
 		// Add this group after all the manipulation so that it's at the end.
 		$wp_admin_bar->add_node(
 			array(
-				'id' => 'my-account-actions',
-				'title' => false,
+				'id'     => 'my-account-actions',
+				'title'  => false,
 				'parent' => 'my-account',
-				'href' => false,
-				'group' => true,
-				'meta' => [ 'class' => 'ab-sub-secondary' ],
+				'href'   => false,
+				'group'  => true,
+				'meta'   => [ 'class' => 'ab-sub-secondary' ],
 			)
 		);
 	} else {
@@ -119,10 +119,10 @@ function filter_admin_bar_links( $wp_admin_bar ) {
 		$log_in = $wp_admin_bar->get_node( 'log-in' );
 		if ( ! $log_in ) {
 			$args = array(
-				'id' => 'log-in',
-				'title' => __( 'Log In', 'wporg' ),
+				'id'     => 'log-in',
+				'title'  => __( 'Log In', 'wporg' ),
 				'parent' => 'top-secondary',
-				'href' => wp_login_url(),
+				'href'   => wp_login_url(),
 			);
 			$wp_admin_bar->add_node( $args );
 		}
@@ -131,10 +131,10 @@ function filter_admin_bar_links( $wp_admin_bar ) {
 		$register = $wp_admin_bar->get_node( 'register' );
 		if ( ! $register ) {
 			$args = array(
-				'id' => 'register',
-				'title' => __( 'Register', 'wporg' ),
+				'id'     => 'register',
+				'title'  => __( 'Register', 'wporg' ),
 				'parent' => 'top-secondary',
-				'href' => wp_registration_url(),
+				'href'   => wp_registration_url(),
 			);
 			$wp_admin_bar->add_node( $args );
 		}

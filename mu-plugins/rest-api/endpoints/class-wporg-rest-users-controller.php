@@ -74,9 +74,9 @@ class Users_Controller extends \WP_REST_Users_Controller {
 
 	/**
 	 * Change the author link for posts to this endpoint.
-	 * 
+	 *
 	 * @param \WP_REST_Response $response Response object for the request.
-	 * 
+	 *
 	 * @return \WP_REST_Response Response object for the request.
 	 */
 	public function alter_post_author_link( $response ) {
@@ -103,7 +103,7 @@ class Users_Controller extends \WP_REST_Users_Controller {
 			'author',
 			rest_url( $this->namespace . '/' . $this->rest_base . '/' . urlencode( $user->user_nicename ) ),
 			array(
-				'embeddable' => true
+				'embeddable' => true,
 			)
 		);
 
@@ -240,7 +240,7 @@ class Users_Controller extends \WP_REST_Users_Controller {
 		$query_params = array_intersect_key( parent::get_collection_params(), $allowed_params );
 
 		if ( isset( $query_params['orderby']['enum'] ) ) {
-			$allowed_orderby = array( 'id', 'name', 'slug', 'include_slugs' );
+			$allowed_orderby                 = array( 'id', 'name', 'slug', 'include_slugs' );
 			$query_params['orderby']['enum'] = array_intersect( $query_params['orderby']['enum'], $allowed_orderby );
 		}
 
@@ -257,7 +257,7 @@ class Users_Controller extends \WP_REST_Users_Controller {
 	 * @return array Context parameter details.
 	 */
 	public function get_context_param( $args = array() ) {
-		$context = parent::get_context_param( $args );
+		$context          = parent::get_context_param( $args );
 		$allowed_contexts = array( 'view', 'embed' );
 
 		$context['enum'] = array_intersect( $context['enum'], $allowed_contexts );

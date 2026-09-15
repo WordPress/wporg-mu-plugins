@@ -58,7 +58,7 @@ function filter_the_filters() {
 
 		add_filter(
 			'option_active_plugins',
-			static function( $plugins ) use ( $from, $to, $req, $active_sitewide_plugins ) {
+			static function ( $plugins ) use ( $from, $to, $req, $active_sitewide_plugins ) {
 				$pos = array_search( $from, $plugins, true );
 				if ( false !== $pos ) {
 					// Splice to retain load order, if it's important.
@@ -87,7 +87,7 @@ function filter_the_filters() {
 
 		add_filter(
 			'site_option_active_sitewide_plugins',
-			static function( $plugins ) use ( $from, $to ) {
+			static function ( $plugins ) use ( $from, $to ) {
 				if ( isset( $plugins[ $from ] ) ) {
 					$plugins[ $to ] = $plugins[ $from ];
 					unset( $plugins[ $from ] );

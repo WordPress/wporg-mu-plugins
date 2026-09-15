@@ -9,6 +9,7 @@ use function WordPressdotorg\MU_Plugins\Helpers\Locale\{ get_all_locales_with_su
  * Plugins_Locale_Banner_Controller
  *
  * NOTE: This is not used. Please see the below file.
+ *
  * @see https://github.com/WordPress/wordpress.org/blob/trunk/wordpress.org/public_html/wp-content/plugins/plugin-directory/api/routes/class-locale-banner.php
  */
 class Plugins_Locale_Banner_Controller extends Base_Locale_Banner_Controller {
@@ -38,15 +39,15 @@ class Plugins_Locale_Banner_Controller extends Base_Locale_Banner_Controller {
 		require_once GLOTPRESS_LOCALES_PATH;
 
 		$locale_subdomain_assoc = get_all_locales_with_subdomain();
-		$current_locale = get_locale();
-		$current_gp_locale = \GP_Locales::by_field( 'wp_locale', $current_locale );
+		$current_locale         = get_locale();
+		$current_gp_locale      = \GP_Locales::by_field( 'wp_locale', $current_locale );
 
 		// Build a list of WordPress locales which we'll suggest to the user.
 		$suggest_locales = array_values( array_intersect( get_locale_from_header(), get_all_valid_locales() ) );
 
 		$suggestion_links = [];
 		foreach ( $suggest_locales as $locale ) {
-			$language = \GP_Locales::by_field( 'wp_locale', $locale )->native_name;
+			$language                    = \GP_Locales::by_field( 'wp_locale', $locale )->native_name;
 			$suggestion_links[ $locale ] = sprintf(
 				'<a href="https://%s.wordpress.org%s">%s</a>',
 				$locale_subdomain_assoc[ $locale ]->subdomain,
@@ -74,8 +75,8 @@ class Plugins_Locale_Banner_Controller extends Base_Locale_Banner_Controller {
 			return $this->prepare_response(
 				array(
 					'currentLocale' => $current_locale,
-					'suggestions' => $suggest_locales,
-					'message' => $suggest_string,
+					'suggestions'   => $suggest_locales,
+					'message'       => $suggest_string,
 				)
 			);
 		}
@@ -99,16 +100,16 @@ class Plugins_Locale_Banner_Controller extends Base_Locale_Banner_Controller {
 		require_once GLOTPRESS_LOCALES_PATH;
 
 		$locale_subdomain_assoc = get_all_locales_with_subdomain();
-		$current_locale = get_locale();
-		$current_gp_locale = \GP_Locales::by_field( 'wp_locale', $current_locale );
-		$translated_locales = get_translated_locales( 'plugin', $plugin_slug );
+		$current_locale         = get_locale();
+		$current_gp_locale      = \GP_Locales::by_field( 'wp_locale', $current_locale );
+		$translated_locales     = get_translated_locales( 'plugin', $plugin_slug );
 
 		// Build a list of WordPress locales which we'll suggest to the user.
 		$suggest_locales = array_values( array_intersect( get_locale_from_header(), $translated_locales ) );
 
 		$suggestion_links = [];
 		foreach ( $suggest_locales as $locale ) {
-			$language = \GP_Locales::by_field( 'wp_locale', $locale )->native_name;
+			$language                    = \GP_Locales::by_field( 'wp_locale', $locale )->native_name;
 			$suggestion_links[ $locale ] = sprintf(
 				'<a href="https://%s.wordpress.org%s">%s</a>',
 				$locale_subdomain_assoc[ $locale ]->subdomain,
@@ -146,7 +147,7 @@ class Plugins_Locale_Banner_Controller extends Base_Locale_Banner_Controller {
 				__( 'Help translate it!', 'wporg' )
 			);
 
-		} else if ( ! empty( $suggestion_links ) ) {
+		} elseif ( ! empty( $suggestion_links ) ) {
 			$output_locale = key( $suggestion_links );
 			switch_to_locale( $output_locale );
 			$suggest_string = sprintf(
@@ -160,7 +161,7 @@ class Plugins_Locale_Banner_Controller extends Base_Locale_Banner_Controller {
 				__( 'Help improve the translation!', 'wporg' )
 			);
 
-		} else if ( ! empty( $locales_from_header ) ) {
+		} elseif ( ! empty( $locales_from_header ) ) {
 			$output_locale = reset( $locales_from_header );
 			switch_to_locale( $output_locale );
 
@@ -181,8 +182,8 @@ class Plugins_Locale_Banner_Controller extends Base_Locale_Banner_Controller {
 			return $this->prepare_response(
 				array(
 					'currentLocale' => $current_locale,
-					'suggestions' => $suggest_locales,
-					'message' => $suggest_string,
+					'suggestions'   => $suggest_locales,
+					'message'       => $suggest_string,
 				)
 			);
 		}

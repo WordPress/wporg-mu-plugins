@@ -53,10 +53,10 @@ function get_block_settings( $post_id ) {
 	$settings = wp_parse_args(
 		$settings,
 		array(
-			'add_callback' => '__return_false',
+			'add_callback'    => '__return_false',
 			'delete_callback' => '__return_false',
-			'count' => 0,
-			'is_favorite' => false,
+			'count'           => 0,
+			'is_favorite'     => false,
 		)
 	);
 
@@ -68,21 +68,21 @@ function get_block_settings( $post_id ) {
  */
 function api_init() {
 	$namespace = 'wporg/v1';
-	$args = array(
+	$args      = array(
 		'id' => array(
-			'validate_callback' => function( $param, $request, $key ) {
+			'validate_callback' => function ( $param, $request, $key ) {
 				return is_numeric( $param );
 			},
-			'required' => true,
+			'required'          => true,
 		),
 	);
 	register_rest_route(
 		$namespace,
 		'/favorite',
 		array(
-			'methods' => \WP_REST_Server::CREATABLE,
-			'callback' => __NAMESPACE__ . '\add_favorite',
-			'args' => $args,
+			'methods'             => \WP_REST_Server::CREATABLE,
+			'callback'            => __NAMESPACE__ . '\add_favorite',
+			'args'                => $args,
 			'permission_callback' => 'is_user_logged_in',
 		)
 	);
@@ -90,9 +90,9 @@ function api_init() {
 		$namespace,
 		'/favorite',
 		array(
-			'methods' => \WP_REST_Server::DELETABLE,
-			'callback' => __NAMESPACE__ . '\delete_favorite',
-			'args' => $args,
+			'methods'             => \WP_REST_Server::DELETABLE,
+			'callback'            => __NAMESPACE__ . '\delete_favorite',
+			'args'                => $args,
 			'permission_callback' => 'is_user_logged_in',
 		)
 	);
@@ -102,13 +102,13 @@ function api_init() {
  * Set the favorite status for a given item.
  */
 function add_favorite( $request ) {
-	$id = intval( $request['id'] );
+	$id       = intval( $request['id'] );
 	$settings = get_block_settings( $id );
-	$result = call_user_func( $settings['add_callback'], $id, $request );
+	$result   = call_user_func( $settings['add_callback'], $id, $request );
 
 	if ( is_wp_error( $result ) ) {
 		return $result;
-	} else if ( false !== $result ) {
+	} elseif ( false !== $result ) {
 		if ( is_numeric( $result ) ) {
 			return new \WP_REST_Response( $result, 200 );
 		} else {
@@ -128,13 +128,13 @@ function add_favorite( $request ) {
  * Remove the favorite status for a given item.
  */
 function delete_favorite( $request ) {
-	$id = intval( $request['id'] );
+	$id       = intval( $request['id'] );
 	$settings = get_block_settings( $id );
-	$result = call_user_func( $settings['delete_callback'], $id, $request );
+	$result   = call_user_func( $settings['delete_callback'], $id, $request );
 
 	if ( is_wp_error( $result ) ) {
 		return $result;
-	} else if ( false !== $result ) {
+	} elseif ( false !== $result ) {
 		if ( is_numeric( $result ) ) {
 			return new \WP_REST_Response( $result, 200 );
 		} else {

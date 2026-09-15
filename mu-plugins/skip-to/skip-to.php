@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Skip-to for classic themes
  * Description: This is a copy of the block theme skip-to functionality for classic themes.
- * 
+ *
  * See: https://github.com/WordPress/wordpress-develop/blob/f7d2a2ee9d003633e6c729c0835cd4addd23f9b3/src/wp-includes/theme-templates.php#L101-L205
  */
 namespace WordPressdotorg\MU_Plugins\Skip_To_Links {
@@ -26,9 +26,13 @@ namespace WordPressdotorg\MU_Plugins\Skip_To_Links {
 			add_action( 'wp_head', __NAMESPACE__ . '\css' );
 		}
 
-		add_action( 'wp_body_open', function() use( $selector ) {
-			skip_tag( $selector );
-		}, -1 );
+		add_action(
+			'wp_body_open',
+			function () use ( $selector ) {
+				skip_tag( $selector );
+			},
+			-1
+		);
 
 		// If a HTML ID is not passed, some JS will be needed.
 		if ( '#' !== substr( $selector, 0, 1 ) ) {
@@ -43,10 +47,10 @@ namespace WordPressdotorg\MU_Plugins\Skip_To_Links {
 	 * Print the skip link.
 	 */
 	function skip_tag( $selector ) {
-		$target = ( '#' === substr( $selector, 0, 1 ) ? $selector : '' );
+		$target   = ( '#' === substr( $selector, 0, 1 ) ? $selector : '' );
 		$tabindex = ( $target ? '' : 'tabindex="-1"' ); // Will be removed once the target is set.
 		printf(
-			'<a id="wporg-skip-link" %s class="skip-link screen-reader-text" href="%s" data-selector="%s">%s</a>'."\n",
+			'<a id="wporg-skip-link" %s class="skip-link screen-reader-text" href="%s" data-selector="%s">%s</a>' . "\n",
 			$tabindex,
 			esc_attr( $target ),
 			esc_attr( $selector ),

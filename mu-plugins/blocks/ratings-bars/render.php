@@ -27,8 +27,8 @@ $data = apply_filters( 'wporg_ratings_data', array(), $current_post_id );
 
 $defaults = array(
 	'ratingsCount' => 0,
-	'ratings' => [],
-	'supportUrl' => '',
+	'ratings'      => [],
+	'supportUrl'   => '',
 );
 
 $data = wp_parse_args( $data, $defaults );
@@ -45,9 +45,9 @@ foreach ( range( 5, 1 ) as $stars ) :
 	if ( ! isset( $data['ratings'][ $stars ] ) ) {
 		continue;
 	}
-	$count = $data['ratings'][ $stars ];
+	$count            = $data['ratings'][ $stars ];
 	$rating_bar_width = 100 * $count / $data['ratingsCount'];
-	$support_url = add_query_arg( 'filter', $stars, $data['supportUrl'] );
+	$support_url      = add_query_arg( 'filter', $stars, $data['supportUrl'] );
 	?>
 	<li class="wporg-ratings-bars__bar">
 		<a href="<?php echo esc_url( $support_url ); ?>">

@@ -182,4 +182,4 @@ $code_is_poetry_src = isset( $attributes['textColor'] ) && str_contains( $attrib
 	<?php endif; ?>
 </div> <!-- /wp:group -->
 
-<?php echo 'The WordPress&reg; trademark is the intellectual property of the WordPress Foundation.';?>
+<?php echo 'The WordPress&reg; trademark is the intellectual property of the WordPress Foundation.'; ?>

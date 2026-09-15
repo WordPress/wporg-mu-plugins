@@ -17,7 +17,7 @@ class HelpScout {
 	 */
 	public $timeout = 30;
 
-	public    $name           = '';
+	public $name              = '';
 	protected $app_id         = '';
 	protected $app_secret     = '';
 	protected $webhook_secret = '';
@@ -31,7 +31,7 @@ class HelpScout {
 		static $instances = [];
 
 		if ( ! $app_id && ! $secret && ! $webhook_secret ) {
-			$app_id = 'wordpress';
+			$app_id = 'wordpress'; // phpcs:ignore WordPress.WP.CapitalPDangit.MisspelledInText -- Application identifiers are case-sensitive.
 		}
 
 		return $instances[ $app_id ] ?? ( $instances[ $app_id ] = new self( $app_id, $secret, $webhook_secret ) );
@@ -39,8 +39,8 @@ class HelpScout {
 
 	protected function __construct( $app_id, $secret = false, $webhook_secret = false ) {
 		$name = '';
-		if ( 'wordpress' === $app_id && defined( 'HELPSCOUT_APP_ID' ) ) {
-			$name           = 'wordpress';
+		if ( 'wordpress' === $app_id && defined( 'HELPSCOUT_APP_ID' ) ) { // phpcs:ignore WordPress.WP.CapitalPDangit.MisspelledInText -- Match the existing application identifier.
+			$name           = 'wordpress'; // phpcs:ignore WordPress.WP.CapitalPDangit.MisspelledInText -- Preserve the application's stored name.
 			$app_id         = HELPSCOUT_APP_ID;
 			$secret         = HELPSCOUT_APP_SECRET;
 			$webhook_secret = HELPSCOUT_WEBHOOK_SECRET_KEY;
@@ -121,7 +121,7 @@ class HelpScout {
 			$api = $this->get( $api->_links->next->href );
 
 			if ( is_array( $api->_embedded ) ) {
-				
+
 			} else {
 				foreach ( $api->_embedded as $field => $value ) {
 					$response->_embedded->$field = array_merge( $response->_embedded->$field, $value );
@@ -206,7 +206,7 @@ class HelpScout {
 					'grant_type'    => 'client_credentials',
 					'client_id'     => $this->app_id,
 					'client_secret' => $this->app_secret,
-				)
+				),
 			)
 		);
 
@@ -223,14 +223,12 @@ class HelpScout {
 		set_site_transient(
 			$cache_key,
 			[
-				'exp' => time() + $expiry,
-				'token' => $token
+				'exp'   => time() + $expiry,
+				'token' => $token,
 			],
 			$expiry
 		);
 
 		return 'BEARER ' . $token;
 	}
-
 }
-

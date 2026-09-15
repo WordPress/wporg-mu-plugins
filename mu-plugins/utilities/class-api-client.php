@@ -112,7 +112,7 @@ class API_Client {
 				break;
 			}
 
-			$attempt_count++;
+			++$attempt_count;
 
 			/**
 			 * Action: Fires when tenacious_remote_request fails a request attempt.

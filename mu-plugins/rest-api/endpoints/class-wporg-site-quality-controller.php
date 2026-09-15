@@ -92,7 +92,7 @@ class Site_Quality_Controller extends WP_REST_Controller {
 			'url'      => $url,
 			'category' => $category,
 			'value'    => $value,
-			'created'   => current_time( 'mysql' ),
+			'created'  => current_time( 'mysql' ),
 		);
 
 		$result = $wpdb->insert( $table_name, $data );

@@ -23,8 +23,8 @@ add_filter( 'render_block_data', __NAMESPACE__ . '\update_block_attributes' );
  * @return string Returns the block markup.
  */
 function render( $attributes, $content, $block ) {
-	$page_key = isset( $block->context['queryId'] ) ? 'query-' . $block->context['queryId'] . '-page' : 'query-page';
-	$page = empty( $_GET[ $page_key ] ) ? 1 : (int) $_GET[ $page_key ];
+	$page_key    = isset( $block->context['queryId'] ) ? 'query-' . $block->context['queryId'] . '-page' : 'query-page';
+	$page        = empty( $_GET[ $page_key ] ) ? 1 : (int) $_GET[ $page_key ];
 	$found_posts = 0;
 
 	// Check whether this is a custom query or inheriting from global.
@@ -33,7 +33,7 @@ function render( $attributes, $content, $block ) {
 		$found_posts = $wp_query->original_found_posts ?? $wp_query->found_posts;
 	} else {
 		$custom_query = new WP_Query( build_query_vars_from_query_block( $block, $page ) );
-		$found_posts = (int) $custom_query->found_posts;
+		$found_posts  = (int) $custom_query->found_posts;
 		wp_reset_postdata();
 	}
 
@@ -89,7 +89,7 @@ function init() {
  */
 function update_block_attributes( $block ) {
 	if ( ! empty( $block['blockName'] ) && 'wporg/query-total' === $block['blockName'] ) {
-		$metadata = wp_json_file_decode( __DIR__ . '/build/block.json' );
+		$metadata   = wp_json_file_decode( __DIR__ . '/build/block.json' );
 		$attributes = $metadata->attributes;
 
 		// phpcs:disable WordPress.NamingConventions.ValidVariableName -- fontSize and textColor are valid.

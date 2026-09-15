@@ -1,10 +1,10 @@
 <?php
 namespace WordPressdotorg\MU_Plugins\Admin\Users\Last_Logged_In;
 
-add_filter( 'manage_users_columns',          __NAMESPACE__ . '\manage_users_columns'              );
-add_filter( 'manage_users_sortable_columns', __NAMESPACE__ . '\manage_users_sortable_columns'     );
-add_action( 'pre_get_users',                 __NAMESPACE__ . '\pre_get_users'                     );
-add_filter( 'manage_users_custom_column',    __NAMESPACE__ . '\manage_users_custom_column', 10, 3 );
+add_filter( 'manage_users_columns', __NAMESPACE__ . '\manage_users_columns' );
+add_filter( 'manage_users_sortable_columns', __NAMESPACE__ . '\manage_users_sortable_columns' );
+add_action( 'pre_get_users', __NAMESPACE__ . '\pre_get_users' );
+add_filter( 'manage_users_custom_column', __NAMESPACE__ . '\manage_users_custom_column', 10, 3 );
 
 function manage_users_columns( $columns ) {
 	$columns['last-logged-in'] = 'Last Logged In';
@@ -30,7 +30,7 @@ function pre_get_users( $query ) {
 			'key'     => 'last_logged_in',
 			'compare' => 'NOT EXISTS',
 		],
-		'last_logged_in'        => [
+		'last_logged_in'       => [
 			'key'  => 'last_logged_in',
 			'type' => 'DATE',
 		],

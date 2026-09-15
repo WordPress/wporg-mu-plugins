@@ -40,9 +40,9 @@ if ( ! isset( $settings['options'] ) || ! count( $settings['options'] ) ) {
 $has_multiple = isset( $attributes['multiple'] ) && $attributes['multiple'];
 
 // Initial state to pass to Interactivity API.
-$init_state = [
-	'isOpen' => false,
-	'hasHover' => false,
+$init_state    = [
+	'isOpen'      => false,
+	'hasHover'    => false,
 	'hasMultiple' => $has_multiple,
 ];
 $encoded_state = wp_json_encode( $init_state );
@@ -55,8 +55,8 @@ $button_classes = array_keys(
 	array_filter(
 		array(
 			'wporg-query-filter__toggle' => true,
-			'has-no-filter-applied' => ! $selected_count,
-			'is-single-select' => ! $has_multiple,
+			'has-no-filter-applied'      => ! $selected_count,
+			'is-single-select'           => ! $has_multiple,
 		)
 	)
 );
@@ -65,7 +65,7 @@ $modal_classes = array_keys(
 	array_filter(
 		array(
 			'wporg-query-filter__modal' => true,
-			'is-single-select' => ! $has_multiple,
+			'is-single-select'          => ! $has_multiple,
 		)
 	)
 );

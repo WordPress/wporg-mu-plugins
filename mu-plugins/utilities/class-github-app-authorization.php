@@ -1,5 +1,6 @@
 <?php
 namespace WordPressdotorg\MU_Plugins\Utilities;
+
 use Exception;
 
 /**
@@ -16,9 +17,9 @@ class Github_App_Authorization {
 	 */
 	public $expiry = 600; // 10 minutes.
 
-	protected $app_id      = '';
-	protected $key         = '';
-	protected $user_agent  = '';
+	protected $app_id     = '';
+	protected $key        = '';
+	protected $user_agent = '';
 
 	public function __construct( $app_id, $key, $user_agent = '' ) {
 		$this->app_id     = (int) $app_id;
@@ -36,7 +37,7 @@ class Github_App_Authorization {
 	 * @see wp_remote_get() for paramters.
 	 */
 	public function request( $url, $args = [] ) {
-		$args['headers'] ??= [];
+		$args['headers']                ??= [];
 		$args['headers']['Authorization'] = $this->get_authorization_header();
 
 		if ( ! str_starts_with( $url, 'https://' ) ) {
@@ -154,15 +155,17 @@ class Github_App_Authorization {
 
 		try {
 			$jwt = new \Ahc\Jwt\JWT( openssl_pkey_get_private( $key ), 'RS256' );
-		} catch( Exception $e ) {
+		} catch ( Exception $e ) {
 			return false;
 		}
 
-		$token = $jwt->encode( array(
-			'iat' => time(),
-			'exp' => time() + $this->expiry,
-			'iss' => $this->app_id,
-		) );
+		$token = $jwt->encode(
+			array(
+				'iat' => time(),
+				'exp' => time() + $this->expiry,
+				'iss' => $this->app_id,
+			)
+		);
 
 		// Cache it for 1 minute less than the expiry.
 		set_site_transient( $transient_name, $token, $this->expiry - MINUTE_IN_SECONDS );

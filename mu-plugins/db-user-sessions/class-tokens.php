@@ -35,7 +35,7 @@ class Tokens extends \WP_Session_Tokens {
 		$all_user_sessions = $this->get_all_user_sessions();
 		$sessions          = [];
 
-		foreach( $all_user_sessions as $session_verifier => $session ) {
+		foreach ( $all_user_sessions as $session_verifier => $session ) {
 			if ( $verifier === $session_verifier ) {
 				continue;
 			}
@@ -47,9 +47,12 @@ class Tokens extends \WP_Session_Tokens {
 			];
 		}
 
-		usort( $sessions, static function( $session_a, $session_b ) {
-			return -( $session_a['login'] <=> $session_b['login'] );
-		} );
+		usort(
+			$sessions,
+			static function ( $session_a, $session_b ) {
+				return -( $session_a['login'] <=> $session_b['login'] );
+			}
+		);
 
 		$session = $sessions[ self::MAX_USER_SESSIONS - 1 ] ?? null;
 		if ( empty( $session ) ) {
@@ -57,7 +60,7 @@ class Tokens extends \WP_Session_Tokens {
 		}
 
 		$sessions_to_delete = array_map(
-			static function( $session ) {
+			static function ( $session ) {
 				return $session['verifier'];
 			},
 			array_slice( $sessions, self::MAX_USER_SESSIONS - 50 )
@@ -105,8 +108,8 @@ class Tokens extends \WP_Session_Tokens {
 				self::TABLE,
 				$new_session,
 				[
-					'user_id' => $this->user_id,
-					'verifier' => $verifier
+					'user_id'  => $this->user_id,
+					'verifier' => $verifier,
 				],
 				[ '%d', '%s', '%d', '%d', '%s', '%s' ]
 			);
@@ -162,11 +165,13 @@ class Tokens extends \WP_Session_Tokens {
 			return $sessions;
 		}
 
-		$num_sessions = $wpdb->query( $wpdb->prepare(
-			'SELECT `verifier`, `expiration`, `ip`, `login`, `session_meta` FROM %i WHERE `user_id` = %d',
-			self::TABLE,
-			(int) $this->user_id
-		) );
+		$num_sessions = $wpdb->query(
+			$wpdb->prepare(
+				'SELECT `verifier`, `expiration`, `ip`, `login`, `session_meta` FROM %i WHERE `user_id` = %d',
+				self::TABLE,
+				(int) $this->user_id
+			)
+		);
 
 		$user_sessions = $wpdb->last_result;
 		if ( false === $num_sessions || ! is_array( $user_sessions ) ) {
@@ -204,7 +209,7 @@ class Tokens extends \WP_Session_Tokens {
 			'expiration'   => $expiration,
 			'login'        => $login,
 			'ip'           => $ip,
-			'session_meta' => json_encode( $session, JSON_UNESCAPED_UNICODE )
+			'session_meta' => json_encode( $session, JSON_UNESCAPED_UNICODE ),
 		);
 	}
 
@@ -212,7 +217,7 @@ class Tokens extends \WP_Session_Tokens {
 		$new_session = (array) json_decode( $session->session_meta );
 
 		foreach ( [ 'expiration', 'login' ] as $column ) {
-			$new_session[$column] = $session->$column;
+			$new_session[ $column ] = $session->$column;
 		}
 
 		if ( ! empty( $session->ip ) ) {
@@ -231,11 +236,13 @@ class Tokens extends \WP_Session_Tokens {
 
 		$verifier_in_sql = implode( "', '", esc_sql( $verifiers ) );
 
-		$wpdb->query( $wpdb->prepare(
-			"DELETE FROM %i WHERE `user_id` = %d AND `verifier` IN ('$verifier_in_sql')",
-			self::TABLE,
-			$this->user_id
-		) );
+		$wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM %i WHERE `user_id` = %d AND `verifier` IN ('$verifier_in_sql')",
+				self::TABLE,
+				$this->user_id
+			)
+		);
 
 		foreach ( $verifiers as $verifier ) {
 			$this->clear_user_session_cache( $verifier );

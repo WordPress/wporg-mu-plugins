@@ -40,8 +40,8 @@ function init() {
  */
 function render( $attributes, $content, $block ) {
 	$wrapper_attributes = get_block_wrapper_attributes();
-	$inline_breakpoint = $attributes['inlineBreakpoint'];
-	$back_to_top = $attributes['hasBackToTop']
+	$inline_breakpoint  = $attributes['inlineBreakpoint'];
+	$back_to_top        = $attributes['hasBackToTop']
 		? sprintf(
 			'<p class="has-small-font-size is-link-to-top"><a href="#wp--skip-link--target">%s</a></p>',
 			esc_html__( '↑ Back to top', 'wporg' )

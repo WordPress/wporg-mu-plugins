@@ -1,5 +1,6 @@
 <?php
 namespace WordPressdotorg\MU_Plugins\Encryption;
+
 use Exception;
 /**
  * Plugin Name: WordPress.org Encryption
@@ -49,7 +50,7 @@ function encrypt( $value, string $context, string $key_name = '' ) {
 		throw new Exception( '$context cannot be empty.' );
 	}
 
-	if ( $value instanceOf HiddenString ) {
+	if ( $value instanceof HiddenString ) {
 		$value = $value->getString();
 	}
 
@@ -69,7 +70,7 @@ function encrypt( $value, string $context, string $key_name = '' ) {
  * @param string $key_name The name of the key to use for decryption. Optional.
  * @return HiddenString Decrypted value.
  */
-function decrypt( string $value, string $context, string $key_name = '' ) : HiddenString {
+function decrypt( string $value, string $context, string $key_name = '' ): HiddenString {
 	if ( ! is_encrypted( $value ) ) {
 		throw new Exception( 'Value is not encrypted.' );
 	}
@@ -104,7 +105,7 @@ function decrypt( string $value, string $context, string $key_name = '' ) : Hidd
  * @return bool True if the value is encrypted, false otherwise.
  */
 function is_encrypted( $value ) {
-	if ( $value instanceOf HiddenString ) {
+	if ( $value instanceof HiddenString ) {
 		$value = $value->getString();
 	}
 

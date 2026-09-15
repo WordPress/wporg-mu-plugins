@@ -11,7 +11,7 @@ require_once __DIR__ . '/locale.php';
  *
  * Based on https://stackoverflow.com/a/25057951/450127, modified to include an Oxford comma.
  */
-function natural_language_join( array $list, $conjunction = 'and' ) : string {
+function natural_language_join( array $list, $conjunction = 'and' ): string {
 	if ( empty( $list ) ) {
 		return '';
 	}

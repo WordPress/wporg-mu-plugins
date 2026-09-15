@@ -74,20 +74,23 @@ class Meetup_OAuth2_Client extends API_Client {
 	 * Meetup_OAuth2_Client constructor.
 	 */
 	public function __construct() {
-		parent::__construct( array(
-			/**
-			 * Response codes that should break the request loop.
-			 *
-			 * `200` (ok) is not in the list, because it needs to be handled conditionally.
-			 *  See API_Client::tenacious_remote_request.
-			 */
-			'breaking_response_codes' => array(
-				400, // Bad request. This happens for invalid_grant during refresh
-				401, // Unauthorized (invalid key).
-				429, // Too many requests (rate-limited).
-				404, // Unable to find group
-			),
-		) );
+		parent::__construct(
+			array(
+
+				/*
+				 * Response codes that should break the request loop.
+				 *
+				 * `200` (ok) is not in the list, because it needs to be handled conditionally.
+				 *  See API_Client::tenacious_remote_request.
+				 */
+				'breaking_response_codes' => array(
+					400, // Bad request. This happens for invalid_grant during refresh
+					401, // Unauthorized (invalid key).
+					429, // Too many requests (rate-limited).
+					404, // Unable to find group
+				),
+			)
+		);
 
 		// Pre-cache the oauth token.
 		$this->get_oauth_token();
@@ -138,9 +141,12 @@ class Meetup_OAuth2_Client extends API_Client {
 
 		switch ( $type ) {
 			case 'access_token': // Request a new access token.
-				$args = wp_parse_args( $args, array(
-					'code' => '',
-				) );
+				$args = wp_parse_args(
+					$args,
+					array(
+						'code' => '',
+					)
+				);
 
 				$request_url                     = self::URL_ACCESS_TOKEN;
 				$request_body                    = array(
@@ -154,9 +160,12 @@ class Meetup_OAuth2_Client extends API_Client {
 				break;
 
 			case 'refresh_token': // Refresh an access token.
-				$args = wp_parse_args( $args, array(
-					'refresh_token' => '',
-				) );
+				$args = wp_parse_args(
+					$args,
+					array(
+						'refresh_token' => '',
+					)
+				);
 
 				$request_url  = self::URL_ACCESS_TOKEN;
 				$request_body = array(
@@ -257,7 +266,7 @@ class Meetup_OAuth2_Client extends API_Client {
 					self::CONSUMER_KEY,
 					self::REDIRECT_URI
 				),
-				network_site_url('/'),
+				network_site_url( '/' ),
 				self::SITE_OPTION_KEY_AUTHORIZATION
 			);
 
@@ -320,7 +329,7 @@ class Meetup_OAuth2_Client extends API_Client {
 			case 'access_token':
 			default:
 				$required_properties = array(
-					'access_token'   => '',
+					'access_token'  => '',
 					'refresh_token' => '',
 					'expires_in'    => '',
 				);

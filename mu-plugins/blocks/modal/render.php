@@ -7,7 +7,7 @@ use function WordPressdotorg\MU_Plugins\Modal\get_style_decl_from_attr;
 
 $attributes['label'] = $attributes['label'] ?: __( 'Open modal', 'wporg' );
 
-$style = '';
+$style  = '';
 $style .= get_style_decl_from_attr( $attributes, 'backgroundColor' );
 $style .= get_style_decl_from_attr( $attributes, 'textColor' );
 $style .= get_style_decl_from_attr( $attributes, 'overlayColor' );

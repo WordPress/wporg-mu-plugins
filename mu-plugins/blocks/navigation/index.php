@@ -31,13 +31,13 @@ function init() {
 		return;
 	}
 
-	$metadata_file = dirname( dirname( __DIR__ ) ) . '/blocks/navigation/build/block.json';
-	$metadata = wp_json_file_decode( $metadata_file, array( 'associative' => true ) );
-	$metadata['file'] = $metadata_file;
+	$metadata_file        = dirname( dirname( __DIR__ ) ) . '/blocks/navigation/build/block.json';
+	$metadata             = wp_json_file_decode( $metadata_file, array( 'associative' => true ) );
+	$metadata['file']     = $metadata_file;
 	$editor_script_handle = register_block_script_handle( $metadata, 'editorScript', 0 );
 	add_action(
 		'enqueue_block_assets',
-		function() use ( $editor_script_handle, $dynamic_menus ) {
+		function () use ( $editor_script_handle, $dynamic_menus ) {
 			if ( is_admin() && wp_should_load_block_editor_scripts_and_styles() ) {
 				wp_localize_script( $editor_script_handle, 'wporgLocalNavigationMenus', $dynamic_menus );
 				wp_enqueue_script( $editor_script_handle );
@@ -48,7 +48,7 @@ function init() {
 	// Hide the menu selection when a dynamic menu is selected.
 	add_action(
 		'admin_print_styles',
-		function() {
+		function () {
 			global $hook_suffix;
 			if ( ! in_array( $hook_suffix, array( 'post.php', 'post-new.php' ) ) ) {
 				return;
@@ -72,10 +72,10 @@ function update_navigation_items( $inner_blocks ) {
 		isset( $block['attrs']['menuSlug'] ) &&
 		$block['attrs']['menuSlug']
 	) {
-		$menu_content = get_menu_content( $block['attrs']['menuSlug'] );
-		$parsed_blocks = parse_blocks( $menu_content );
+		$menu_content     = get_menu_content( $block['attrs']['menuSlug'] );
+		$parsed_blocks    = parse_blocks( $menu_content );
 		$compacted_blocks = block_core_navigation_filter_out_empty_blocks( $parsed_blocks );
-		$inner_blocks = new WP_Block_List( $compacted_blocks, $block['attrs'] );
+		$inner_blocks     = new WP_Block_List( $compacted_blocks, $block['attrs'] );
 	}
 	return $inner_blocks;
 }
@@ -134,10 +134,10 @@ function render_menu_item( $item ) {
 
 		// If a term is provided, use the term type link.
 		if ( ! empty( $item['term'] ) ) {
-			$item['id']    ??= $item['term']->term_id;
-			$item['url']   ??= get_term_link( $item['term'] );
-			$label           = $item['term']->name ?? '';
-			$kind            = 'taxonomy';
+			$item['id']  ??= $item['term']->term_id;
+			$item['url'] ??= get_term_link( $item['term'] );
+			$label         = $item['term']->name ?? '';
+			$kind          = 'taxonomy';
 		}
 
 		// If this is a relative link, convert it to absolute and try to find
@@ -147,7 +147,7 @@ function render_menu_item( $item ) {
 			$item['url'] = home_url( $item['url'] );
 			if ( $page_obj ) {
 				// A page was found, so use the post-type link.
-				$kind = 'post-type';
+				$kind       = 'post-type';
 				$item['id'] = $page_obj->ID;
 			}
 		}

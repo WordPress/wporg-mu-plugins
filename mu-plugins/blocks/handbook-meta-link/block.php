@@ -30,7 +30,7 @@ function init() {
  */
 function render( $attributes, $content, $block ) {
 	$post_type = $block->context['postType'];
-	$post_id = $block->context['postId'];
+	$post_id   = $block->context['postId'];
 
 	if (
 		! isset( $post_id ) || ! isset( $post_type )

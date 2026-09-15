@@ -7,18 +7,18 @@
  * This class is available globally but only activated on specific sites as needed. To enable it:
  *
  * add_filter( 'wporg_export_context_post_types', function( $types ) {
- * 		return array_merge( $types, [
- * 			'my-post-type',
- * 		]);
+ *      return array_merge( $types, [
+ *          'my-post-type',
+ *      ]);
  * } );
  *
  * Optionally, to allow more block types in exported posts:
  *
  * add_filter( 'allow_raw_block_export', function( $block_names ) {
- * 		return array_merge( $block_names, [
- * 			'my/block-name',
- * 			'myblocks/*',
- * 		]);
+ *      return array_merge( $block_names, [
+ *          'my/block-name',
+ *          'myblocks/*',
+ *      ]);
  * })
  *
  * NOTE: This will also reveal future-scheduled post content! (ie. Release pages)
@@ -59,7 +59,7 @@ class Export_Context {
 			array(
 				'get_callback' => array( $this, 'show_post_content_raw' ),
 				'schema'       => array(
-					'type' => 'string',
+					'type'    => 'string',
 					'context' => array( $this->context_name ),
 				),
 			)
@@ -83,7 +83,7 @@ class Export_Context {
 	/**
 	 * Allows future-scheduled posts to be visible in the rest-api.
 	 *
-	 * @param array           $args    The REST API query args.
+	 * @param array            $args    The REST API query args.
 	 * @param \WP_REST_Request $request The REST API request.
 	 * @return array Modified REST API query args.
 	 */
@@ -102,33 +102,43 @@ class Export_Context {
 			 * - rest_prepare_*: This is so the resulting response shows the correct status.
 			 */
 			$args['_future_to_publish'] = true;
-			add_filter( 'the_posts', static function( $posts, $wp_query ) use( $args ) {
-				if (
+			add_filter(
+				'the_posts',
+				static function ( $posts, $wp_query ) use ( $args ) {
+					if (
 					$wp_query->get( '_future_to_publish' ) &&
 					$args['post_type'] === $wp_query->get( 'post_type' )
-				) {
-					foreach ( $posts as $post ) {
-						if ( 'future' === $post->post_status ) {
-							$post->post_status = 'publish';
-							$post->real_post_status = 'future';
+					) {
+						foreach ( $posts as $post ) {
+							if ( 'future' === $post->post_status ) {
+								$post->post_status      = 'publish';
+								$post->real_post_status = 'future';
+							}
 						}
 					}
-				}
 
-				return $posts;
-			}, 10, 2 );
-			add_filter( 'rest_prepare_' . $args['post_type'], static function( $response, $post ) {
-				$prepared = $response->get_data();
-				if (
+					return $posts;
+				},
+				10,
+				2
+			);
+			add_filter(
+				'rest_prepare_' . $args['post_type'],
+				static function ( $response, $post ) {
+					$prepared = $response->get_data();
+					if (
 					isset( $post->real_post_status ) &&
 					$post->real_post_status !== $prepared['status']
-				) {
-					$prepared['status'] = $post->real_post_status;
-					$response->set_data( $prepared );
-				}
+					) {
+						$prepared['status'] = $post->real_post_status;
+						$response->set_data( $prepared );
+					}
 
-				return $response;
-			}, 10, 3 );
+					return $response;
+				},
+				10,
+				3
+			);
 		}
 
 		return $args;
@@ -193,15 +203,18 @@ class Export_Context {
 		 *
 		 * @param array $allowed_blocks An array of allowed block names. Simple wildcards are permitted, like 'core/*'.
 		 */
-		$allowed_blocks = apply_filters( 'allow_raw_block_export', array(
-			'core/*',
-			'wporg/*',
-			// other allowed blocks:
-			'jetpack/image-compare',
-			'jetpack/subscriptions',
-			'jetpack/tiled-gallery',
-			'syntaxhighlighter/code',
-		) );
+		$allowed_blocks = apply_filters(
+			'allow_raw_block_export',
+			array(
+				'core/*',
+				'wporg/*',
+				// other allowed blocks:
+				'jetpack/image-compare',
+				'jetpack/subscriptions',
+				'jetpack/tiled-gallery',
+				'syntaxhighlighter/code',
+			)
+		);
 
 		if ( ! empty( $object['id'] ) ) {
 			$post = get_post( $object['id'] );
@@ -228,7 +241,7 @@ class Export_Context {
 
 			$regex = '#^(' . implode( '|', $regexes ) . ')$#';
 
-			$blocks = parse_blocks( $post->post_content );
+			$blocks      = parse_blocks( $post->post_content );
 			$block_names = $this->get_all_block_names( $blocks );
 
 			foreach ( $block_names as $block_name ) {

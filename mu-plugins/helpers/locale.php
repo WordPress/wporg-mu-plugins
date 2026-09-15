@@ -29,7 +29,7 @@ function get_all_valid_locales() {
 
 	return array_filter(
 		$all_locales,
-		function( $locale ) {
+		function ( $locale ) {
 			return \GP_Locales::by_field( 'wp_locale', $locale );
 		}
 	);
@@ -172,7 +172,7 @@ function get_translated_locales( $type, $slug ) {
 	// Validate the list of locales can be found by `wp_locale`.
 	return array_filter(
 		$translated_locales,
-		function( $locale ) {
+		function ( $locale ) {
 			return \GP_Locales::by_field( 'wp_locale', $locale );
 		}
 	);
