@@ -5,12 +5,23 @@ class Tokens extends \WP_Session_Tokens {
 	const MAX_USER_SESSIONS = 100;
 	const TABLE             = 'wporg_user_sessions';
 
+	/**
+	 * Get the unexpired sessions for this user.
+	 *
+	 * @return array Sessions keyed by verifier.
+	 */
 	protected function get_sessions() {
 		$user_sessions = $this->get_all_user_sessions();
 
 		return array_filter( $user_sessions, [ $this, 'is_still_valid' ] );
 	}
 
+	/**
+	 * Get one unexpired session.
+	 *
+	 * @param string $verifier Session verifier.
+	 * @return array|null Session data, or null when unavailable.
+	 */
 	protected function get_session( $verifier ) {
 		$cache_key = $this->user_id . '__' . $verifier;
 		$session   = wp_cache_get( $cache_key, 'user_sessions' );
@@ -31,6 +42,12 @@ class Tokens extends \WP_Session_Tokens {
 		return $all_sessions[ $verifier ];
 	}
 
+	/**
+	 * Remove older sessions when the per-user limit is exceeded.
+	 *
+	 * @param string|null $verifier Session to preserve.
+	 * @return void
+	 */
 	protected function limit_user_sessions( $verifier = null ) {
 		$all_user_sessions = $this->get_all_user_sessions();
 		$sessions          = [];
@@ -69,11 +86,19 @@ class Tokens extends \WP_Session_Tokens {
 		$this->delete_sessions_by_verifiers( $sessions_to_delete );
 	}
 
+	/**
+	 * Save a session and remove expired sessions.
+	 *
+	 * @param string     $verifier Session verifier.
+	 * @param array|null $session  Session data, or null to delete it.
+	 * @return void
+	 */
 	protected function update_session( $verifier, $session = null ) {
 		global $wpdb;
 
 		if ( ! $session ) {
-			return $this->delete_sessions_by_verifiers( [ $verifier ] );
+			$this->delete_sessions_by_verifiers( [ $verifier ] );
+			return;
 		}
 
 		// Delete expired sessions
@@ -84,7 +109,7 @@ class Tokens extends \WP_Session_Tokens {
 			if ( $this->is_still_valid( $session_data ) ) {
 				continue;
 			}
-			if ( $verifier == $session_verifier ) {
+			if ( $verifier === $session_verifier ) {
 				continue;
 			}
 
@@ -120,6 +145,12 @@ class Tokens extends \WP_Session_Tokens {
 		$this->clear_user_session_cache( $verifier );
 	}
 
+	/**
+	 * Delete all sessions except the given verifier.
+	 *
+	 * @param string $verifier Session to preserve.
+	 * @return void
+	 */
 	protected function destroy_other_sessions( $verifier ) {
 		global $wpdb;
 
@@ -127,7 +158,7 @@ class Tokens extends \WP_Session_Tokens {
 		$all_user_sessions  = $this->get_all_user_sessions();
 
 		foreach ( $all_user_sessions as $session_verifier => $session_data ) {
-			if ( $verifier == $session_verifier ) {
+			if ( $verifier === $session_verifier ) {
 				continue;
 			}
 
@@ -141,6 +172,11 @@ class Tokens extends \WP_Session_Tokens {
 		$this->delete_sessions_by_verifiers( $sessions_to_delete );
 	}
 
+	/**
+	 * Delete all sessions for this user.
+	 *
+	 * @return void
+	 */
 	protected function destroy_all_sessions() {
 		$sessions_to_delete = array_keys( $this->get_all_user_sessions() );
 		if ( empty( $sessions_to_delete ) ) {
@@ -150,12 +186,20 @@ class Tokens extends \WP_Session_Tokens {
 		$this->delete_sessions_by_verifiers( $sessions_to_delete );
 	}
 
+	/**
+	 * Leave network-wide session removal unsupported.
+	 *
+	 * @return void
+	 */
 	public static function drop_sessions() {
-		return; // Not supported.
+		// Network-wide session destruction is intentionally unsupported.
 	}
 
-	// Internal functions
-
+	/**
+	 * Read all user sessions through the shared session cache.
+	 *
+	 * @return array Sessions keyed by verifier.
+	 */
 	protected function get_all_user_sessions() {
 		global $wpdb;
 
@@ -188,6 +232,13 @@ class Tokens extends \WP_Session_Tokens {
 		return $sessions;
 	}
 
+	/**
+	 * Encode session metadata for database storage.
+	 *
+	 * @param string $verifier Session verifier.
+	 * @param array  $session  Session data.
+	 * @return array Database column values.
+	 */
 	protected function convert_session_to_db_format( $verifier, $session ) {
 		$ip = null;
 		if ( isset( $session['ip'] ) ) {
@@ -196,7 +247,7 @@ class Tokens extends \WP_Session_Tokens {
 		}
 
 		if ( ! empty( $_SERVER['HTTP_HOST'] ) && ! isset( $session['host'] ) ) {
-			$session['host'] = $_SERVER['HTTP_HOST'];
+			$session['host'] = sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) );
 		}
 
 		$expiration = $session['expiration'];
@@ -209,10 +260,16 @@ class Tokens extends \WP_Session_Tokens {
 			'expiration'   => $expiration,
 			'login'        => $login,
 			'ip'           => $ip,
-			'session_meta' => json_encode( $session, JSON_UNESCAPED_UNICODE ),
+			'session_meta' => wp_json_encode( $session, JSON_UNESCAPED_UNICODE ),
 		);
 	}
 
+	/**
+	 * Decode session metadata from a database row.
+	 *
+	 * @param object $session Database row.
+	 * @return array Session data.
+	 */
 	protected function convert_session_from_db_format( $session ) {
 		$new_session = (array) json_decode( $session->session_meta );
 
@@ -227,6 +284,12 @@ class Tokens extends \WP_Session_Tokens {
 		return $new_session;
 	}
 
+	/**
+	 * Delete selected sessions and invalidate their cache entries.
+	 *
+	 * @param string[] $verifiers Session verifiers.
+	 * @return void
+	 */
 	protected function delete_sessions_by_verifiers( $verifiers ) {
 		global $wpdb;
 
@@ -234,13 +297,13 @@ class Tokens extends \WP_Session_Tokens {
 			return;
 		}
 
-		$verifier_in_sql = implode( "', '", esc_sql( $verifiers ) );
+		$placeholders = implode( ', ', array_fill( 0, count( $verifiers ), '%s' ) );
+		$query_values = array_merge( array( self::TABLE, $this->user_id ), array_values( $verifiers ) );
 
 		$wpdb->query(
-			$wpdb->prepare(
-				"DELETE FROM %i WHERE `user_id` = %d AND `verifier` IN ('$verifier_in_sql')",
-				self::TABLE,
-				$this->user_id
+			$wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- Values include the table, user ID, and every generated verifier placeholder.
+				"DELETE FROM %i WHERE `user_id` = %d AND `verifier` IN ($placeholders)", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Only generated %s placeholders are interpolated.
+				$query_values
 			)
 		);
 
@@ -249,7 +312,14 @@ class Tokens extends \WP_Session_Tokens {
 		}
 	}
 
-	function clear_user_session_cache( $verifier = false, $clear_all = false ) {
+	/**
+	 * Invalidate one session or all cached sessions for this user.
+	 *
+	 * @param string|false $verifier  Session verifier, or false to skip its cache entry.
+	 * @param bool         $clear_all Whether to clear every individual entry.
+	 * @return void
+	 */
+	public function clear_user_session_cache( $verifier = false, $clear_all = false ) {
 		if ( $verifier ) {
 			wp_cache_delete( $this->user_id . '__' . $verifier, 'user_sessions' );
 		}

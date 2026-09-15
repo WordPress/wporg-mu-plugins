@@ -15,6 +15,8 @@ add_filter(
 	}
 );
 
+/* phpcs:disable Squiz.PHP.CommentedOutCode.Found -- This documents the externally provisioned session table. */
+
 /*
 Database schema:
 CREATE TABLE `wporg_user_sessions` (
@@ -31,3 +33,5 @@ CREATE TABLE `wporg_user_sessions` (
 	KEY `login` (`login`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 */
+
+/* phpcs:enable Squiz.PHP.CommentedOutCode.Found */
