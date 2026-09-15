@@ -106,13 +106,13 @@ function preload_font( $fonts, $subsets ) {
 	// something-ext is found, check that the corresponding base subset exists.
 	// The -ext subset only has the extra characters, so the base font still needs to be loaded.
 	if ( false !== strpos( implode( ', ', $subsets ), '-ext' ) ) {
-		if ( in_array( 'latin-ext', $subsets ) && ! in_array( 'latin', $subsets ) ) {
+		if ( in_array( 'latin-ext', $subsets, true ) && ! in_array( 'latin', $subsets, true ) ) {
 			$subsets[] = 'latin';
 		}
-		if ( in_array( 'greek-ext', $subsets ) && ! in_array( 'greek', $subsets ) ) {
+		if ( in_array( 'greek-ext', $subsets, true ) && ! in_array( 'greek', $subsets, true ) ) {
 			$subsets[] = 'greek';
 		}
-		if ( in_array( 'cyrillic-ext', $subsets ) && ! in_array( 'cyrillic', $subsets ) ) {
+		if ( in_array( 'cyrillic-ext', $subsets, true ) && ! in_array( 'cyrillic', $subsets, true ) ) {
 			$subsets[] = 'cyrillic';
 		}
 	}

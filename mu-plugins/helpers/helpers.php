@@ -11,16 +11,16 @@ require_once __DIR__ . '/locale.php';
  *
  * Based on https://stackoverflow.com/a/25057951/450127, modified to include an Oxford comma.
  */
-function natural_language_join( array $list, $conjunction = 'and' ): string {
-	if ( empty( $list ) ) {
+function natural_language_join( array $items, $conjunction = 'and' ): string {
+	if ( empty( $items ) ) {
 		return '';
 	}
 
-	$oxford_separator = 2 === count( $list ) ? ' ' : ', ';
-	$last             = array_pop( $list );
+	$oxford_separator = 2 === count( $items ) ? ' ' : ', ';
+	$last             = array_pop( $items );
 
-	if ( $list ) {
-		return implode( ', ', $list ) . $oxford_separator . $conjunction . ' ' . $last;
+	if ( $items ) {
+		return implode( ', ', $items ) . $oxford_separator . $conjunction . ' ' . $last;
 	}
 
 	return $last;

@@ -101,7 +101,7 @@ class Users_Controller extends \WP_REST_Users_Controller {
 		// Add a link to our endpoint instead
 		$response->add_link(
 			'author',
-			rest_url( $this->namespace . '/' . $this->rest_base . '/' . urlencode( $user->user_nicename ) ),
+			rest_url( $this->namespace . '/' . $this->rest_base . '/' . rawurlencode( $user->user_nicename ) ),
 			array(
 				'embeddable' => true,
 			)

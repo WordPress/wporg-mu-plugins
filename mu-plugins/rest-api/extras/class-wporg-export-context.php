@@ -32,6 +32,11 @@ class Export_Context {
 
 	public $context_name = 'wporg_export';
 
+	/**
+	 * Register the export context for opted-in post types.
+	 *
+	 * @return void
+	 */
 	public function init() {
 		/**
 		 * Filter: Modify the list of post types that will have the `wporg_export` context.
@@ -51,7 +56,7 @@ class Export_Context {
 	 *
 	 * @param string $post_type Post type to allow for export.
 	 */
-	function register_raw_content_for_post_type( $post_type ) {
+	public function register_raw_content_for_post_type( $post_type ) {
 
 		register_rest_field(
 			$post_type,
@@ -156,7 +161,7 @@ class Export_Context {
 			if ( is_array( $value ) ) {
 				$this->update_schema_array_recursive( $value );
 			}
-			if ( 'context' === $key && in_array( 'view', $value ) ) {
+			if ( 'context' === $key && in_array( 'view', $value, true ) ) {
 				$value[] = $this->context_name;
 			}
 		}
@@ -168,7 +173,7 @@ class Export_Context {
 	 * @param array $blocks An array of blocks.
 	 * @return array An array of block names.
 	 */
-	function get_all_block_names( $blocks ) {
+	public function get_all_block_names( $blocks ) {
 		$block_names = array();
 		if ( ! $blocks ) {
 			return array();
@@ -189,13 +194,13 @@ class Export_Context {
 	/**
 	 * Callback: If a post contains only allowed blocks, then return the raw block markup for the post.
 	 *
-	 * @param array  $object The post object relating to the REST request.
+	 * @param array  $post_data  The post object relating to the REST request.
 	 * @param string $field_name The field name.
-	 * @param array  $request The request object.
+	 * @param array  $request    The request object.
 	 *
 	 * @return string The raw post content, if it contains only allowed blocks; a placeholder string otherwise.
 	 */
-	function show_post_content_raw( $object, $field_name, $request ) {
+	public function show_post_content_raw( $post_data, $field_name, $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- Preserve the REST field callback signature.
 
 		/**
 		 * Filter: Modify the list of blocks permitted in posts available via the 'export' context.
@@ -216,8 +221,8 @@ class Export_Context {
 			)
 		);
 
-		if ( ! empty( $object['id'] ) ) {
-			$post = get_post( $object['id'] );
+		if ( ! empty( $post_data['id'] ) ) {
+			$post = get_post( $post_data['id'] );
 		} else {
 			$post = get_post();
 		}

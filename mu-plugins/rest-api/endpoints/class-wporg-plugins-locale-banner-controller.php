@@ -123,7 +123,7 @@ class Plugins_Locale_Banner_Controller extends Base_Locale_Banner_Controller {
 		unset( $suggestion_links[ $current_locale ] );
 
 		// If we're on a rosetta site, and the plugin is not translated, the message should ask for help.
-		if ( 'en_US' !== $current_locale && $current_gp_locale && ! in_array( $current_locale, $translated_locales ) ) {
+		if ( 'en_US' !== $current_locale && $current_gp_locale && ! in_array( $current_locale, $translated_locales, true ) ) {
 			$output_locale = $current_locale;
 			switch_to_locale( $output_locale );
 

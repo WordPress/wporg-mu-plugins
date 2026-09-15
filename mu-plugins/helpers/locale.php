@@ -124,7 +124,7 @@ function map_locale( $lang, $region, $available_locales ) {
 	);
 
 	foreach ( $variants as $variant ) {
-		if ( in_array( $variant, $available_locales ) ) {
+		if ( in_array( $variant, $available_locales, true ) ) {
 			return $variant;
 		}
 	}
