@@ -18,6 +18,19 @@ Over time, this is intended to become the canonical source repository for all `m
 * `npm run start` during development, only builds `style.css`
 * `npm run build` before commit/sync/deploy, builds `style.css` and `style-rtl.css`.
 
+### PHP coding standards
+
+Run `composer install` to install the lint tools. `composer run lint` reports all
+PHP errors and warnings, including the existing backlog.
+
+CI runs the full PHP scan on pull requests and before building trunk. PHP findings
+are reported without blocking the build while the existing backlog is addressed.
+The host tooling runs on PHP 8.4; WordPress unit tests remain on PHP 8.2.
+
+PHPCompatibility packages are pinned to prereleases until compatible stable
+versions are available. The PHPCS configuration is maintained in this repository;
+keep it when `update-configs` asks whether to replace it.
+
 
 ## Sync/Deploy
 

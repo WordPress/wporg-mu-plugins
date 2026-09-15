@@ -27,6 +27,10 @@ jobs:
             - name: Setup configs
               run: TEXTDOMAIN=wporg composer exec update-configs
 
+            - name: Lint PHP
+              continue-on-error: true
+              run: composer run lint
+
             - name: Lint JavaScript and Styles
               run: |
                   npm run lint:css
