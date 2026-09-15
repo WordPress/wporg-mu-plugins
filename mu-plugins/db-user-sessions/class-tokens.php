@@ -1,6 +1,9 @@
 <?php
 namespace WordPressdotorg\MU_Plugins\DB_User_Sessions;
 
+/**
+ * Stores user sessions in a dedicated database table.
+ */
 class Tokens extends \WP_Session_Tokens {
 	const MAX_USER_SESSIONS = 100;
 	const TABLE             = 'wporg_user_sessions';

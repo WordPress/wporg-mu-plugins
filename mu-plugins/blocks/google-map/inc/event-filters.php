@@ -549,8 +549,8 @@ function print_results( string $filter, array $matched_events, array $other_even
 	printf( "\n\n============================== \nResults for %s: \n==============================\n", $filter );
 
 	echo "\nIgnored these events. Double check for false-negatives.\n\n";
-	print_r( $other_names );
+	print_r( $other_names ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r -- Intentional CLI-only output for reviewing event matches.
 
 	echo "\nIncluded these events. Double check for false-positives.\n\n";
-	print_r( $matched_names );
+	print_r( $matched_names ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r -- Intentional CLI-only output for reviewing event matches.
 }

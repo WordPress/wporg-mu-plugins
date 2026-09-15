@@ -8,6 +8,9 @@
 
 namespace WordPressdotorg\MU_Plugins\Chapter_List;
 
+/**
+ * Renders a page hierarchy without orphaned pages.
+ */
 class Chapter_Walker extends \Walker_Page {
 
 	/**

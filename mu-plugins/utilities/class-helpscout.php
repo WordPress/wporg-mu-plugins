@@ -17,11 +17,39 @@ class HelpScout {
 	 */
 	public $timeout = 30;
 
-	public $name              = '';
-	protected $app_id         = '';
-	protected $app_secret     = '';
+	/**
+	 * Name of the configured HelpScout application.
+	 *
+	 * @var string
+	 */
+	public $name = '';
+
+	/**
+	 * HelpScout application identifier.
+	 *
+	 * @var string|false
+	 */
+	protected $app_id = '';
+
+	/**
+	 * HelpScout application secret.
+	 *
+	 * @var string|false
+	 */
+	protected $app_secret = '';
+
+	/**
+	 * Webhook signing secret.
+	 *
+	 * @var string|false
+	 */
 	protected $webhook_secret = '';
 
+	/**
+	 * Most recent HTTP response, or false before the first request.
+	 *
+	 * @var array|\WP_Error|false
+	 */
 	public $last_api_request = false;
 
 	/**

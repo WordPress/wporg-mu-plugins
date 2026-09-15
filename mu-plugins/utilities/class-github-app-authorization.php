@@ -17,8 +17,25 @@ class Github_App_Authorization {
 	 */
 	public $expiry = 600;
 
-	protected $app_id     = '';
-	protected $key        = '';
+	/**
+	 * GitHub application ID.
+	 *
+	 * @var int|string
+	 */
+	protected $app_id = '';
+
+	/**
+	 * Private key or the name of a constant containing it.
+	 *
+	 * @var string
+	 */
+	protected $key = '';
+
+	/**
+	 * User agent sent with API requests.
+	 *
+	 * @var string
+	 */
 	protected $user_agent = '';
 
 	/**

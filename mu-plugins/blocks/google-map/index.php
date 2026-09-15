@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Block Name: WordPress.org Google Map
  * Description: Renders a Google Map in a block template (no editor UI).

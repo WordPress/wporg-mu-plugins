@@ -3,6 +3,9 @@ use WordPressdotorg\MU_Plugins\Encryption\HiddenString;
 use function WordPressdotorg\MU_Plugins\Encryption\{encrypt, decrypt, is_encrypted, get_encryption_key, generate_encryption_key };
 use const WordPressdotorg\MU_Plugins\Encryption\{ PREFIX, NONCE_LENGTH, KEY_LENGTH };
 
+/**
+ * Tests encryption, decryption, and hidden string handling.
+ */
 class Test_WPORG_Encryption extends WP_UnitTestCase {
 
 	/**

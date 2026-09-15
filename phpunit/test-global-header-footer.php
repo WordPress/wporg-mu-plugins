@@ -2,6 +2,9 @@
 
 use function WordPressdotorg\MU_Plugins\Global_Header_Footer\remove_head_alternate_links;
 
+/**
+ * Tests global header and footer feed-link filtering.
+ */
 class Test_Global_Header_Footer extends WP_UnitTestCase {
 
 	/**

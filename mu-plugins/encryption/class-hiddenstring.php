@@ -1,6 +1,8 @@
 <?php
 namespace WordPressdotorg\MU_Plugins\Encryption;
 
+// phpcs:disable WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase, WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase, WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase -- Preserve upstream property names for serialization and parameter names for named arguments.
+
 /**
  * Class HiddenString. This is a copy of https://github.com/paragonie/hidden-string without the additional dependencies.
  *
@@ -16,7 +18,6 @@ namespace WordPressdotorg\MU_Plugins\Encryption;
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-// phpcs:disable WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase, WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase, WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase -- Preserve upstream property names for serialization and parameter names for named arguments.
 final class HiddenString {
 
 	/**

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Allow some raw data to be exposed in the REST API for certain post types, so that developers can import
  * a copy of production data for local testing.
@@ -28,8 +27,16 @@
 
 namespace WordPressdotorg\MU_Plugins\REST_API;
 
+/**
+ * Exposes raw post data through an opt-in REST API context.
+ */
 class Export_Context {
 
+	/**
+	 * REST API context used for raw post exports.
+	 *
+	 * @var string
+	 */
 	public $context_name = 'wporg_export';
 
 	/**

@@ -28,26 +28,15 @@
     <rule ref="WordPress">
         <exclude name="WordPress.DB.DirectDatabaseQuery" />
         <exclude name="Universal.Arrays.DisallowShortArraySyntax.Found" />
-        <exclude name="Squiz.PHP.EmbeddedPhp.ContentAfterOpen" />
-        <exclude name="Squiz.PHP.EmbeddedPhp.ContentBeforeEnd" />
         <exclude name="WordPress.Files.FileName.InvalidClassFileName" />
-        <exclude name="WordPress.PHP.DevelopmentFunctions.error_log_trigger_error" />
-        <exclude name="WordPress.PHP.DevelopmentFunctions.error_log_print_r" />
         <exclude name="Universal.Operators.DisallowShortTernary.Found" />
 
         <exclude name="Generic.Commenting.DocComment.MissingShort" />
         <exclude name="Squiz.Commenting.FileComment.Missing" />
         <exclude name="Squiz.Commenting.FileComment.MissingPackageTag" />
-        <exclude name="Squiz.Commenting.FileComment.SpacingAfterOpen" />
-        <exclude name="Squiz.Commenting.ClassComment.Missing" />
         <exclude name="Squiz.Commenting.FunctionComment.MissingParamTag" />
         <exclude name="Squiz.Commenting.FunctionComment.MissingParamComment" />
-        <exclude name="Squiz.Commenting.VariableComment.Missing" />
-        <exclude name="Squiz.Commenting.VariableComment.MissingVar" />
         <exclude name="Squiz.Commenting.InlineComment.InvalidEndChar" />
-
-        <!-- The translators comment requires no space after `//` -->
-        <exclude name="Squiz.Commenting.InlineComment.NoSpaceBefore" />
     </rule>
 
     <!-- Verify the translation domain used throughout these mu-plugins. -->
