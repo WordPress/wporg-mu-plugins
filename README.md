@@ -20,12 +20,12 @@ Over time, this is intended to become the canonical source repository for all `m
 
 ### PHP coding standards
 
-Run `composer install` to install the lint tools. `composer run lint` reports all
-PHP errors and warnings, including the existing backlog.
+Run `composer install` to install the lint tools. `composer run lint` reports PHP
+coding-standard errors and warnings and checks compatibility with PHP 8.4 and later.
 
-CI runs the full PHP scan on pull requests and before building trunk. PHP findings
-are reported without blocking the build while the existing backlog is addressed.
-The host tooling runs on PHP 8.4; WordPress unit tests remain on PHP 8.2.
+CI runs the full PHP scan on pull requests and before building trunk. PHP errors
+and warnings fail the build. The host tooling runs on PHP 8.4; WordPress unit tests
+remain on PHP 8.2.
 
 PHPCompatibility packages are pinned to prereleases until compatible stable
 versions are available. The PHPCS configuration is maintained in this repository;
