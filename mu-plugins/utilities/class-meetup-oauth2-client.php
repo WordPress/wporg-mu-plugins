@@ -239,7 +239,7 @@ class Meetup_OAuth2_Client extends API_Client {
 
 			// The token is stored network-wide, so binding it is a network administrator's call.
 			if ( isset( $_GET['code'], $_GET['state'] )
-				&& 'meetup-oauth' === $_GET['state']
+				&& wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['state'] ) ), 'meetup-oauth' )
 				&& is_admin()
 				&& current_user_can( 'manage_network_options' )
 			) {
@@ -262,18 +262,19 @@ class Meetup_OAuth2_Client extends API_Client {
 				"For sites other than WordCamp Central, the ?code=... parameter will need to be stored on this site via wp-cli and this task run again: `wp --url=%s site option update '%s' '...'`",
 				self::EMAIL,
 				sprintf(
-					'https://secure.meetup.com/oauth2/authorize?client_id=%s&response_type=code&redirect_uri=%s&state=meetup-oauth',
+					'https://secure.meetup.com/oauth2/authorize?client_id=%s&response_type=code&redirect_uri=%s&state=%s',
 					self::CONSUMER_KEY,
-					self::REDIRECT_URI
+					rawurlencode( self::REDIRECT_URI ),
+					wp_create_nonce( 'meetup-oauth' )
 				),
 				network_site_url( '/' ),
 				self::SITE_OPTION_KEY_AUTHORIZATION
 			);
 
 			if ( admin_url( '/' ) === self::REDIRECT_URI ) {
-				printf( '<div class="notice notice-error"><p>%s</p></div>', nl2br( make_clickable( $message ) ) );
+				printf( '<div class="notice notice-error"><p>%s</p></div>', wp_kses_post( nl2br( make_clickable( esc_html( $message ) ) ) ) );
 			}
-			trigger_error( $message, E_USER_WARNING );
+			trigger_error( esc_html( $message ), E_USER_WARNING );
 
 			return false;
 		}
