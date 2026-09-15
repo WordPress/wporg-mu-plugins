@@ -25,6 +25,49 @@ function init() {
 }
 
 /**
+ * Determines whether a URL stays within this site's network.
+ *
+ * @param string $url URL to test.
+ *
+ * @return bool True when the URL targets this site or a sibling on its network.
+ */
+function is_network_url( $url ) {
+	$parsed = wp_parse_url( $url );
+
+	// `parse_url()` gives up on `https:///host`, which browsers still resolve to a host.
+	if ( false === $parsed ) {
+		return false;
+	}
+
+	// A scheme with no host parses as a path here, but the browser reads it as an authority.
+	if ( isset( $parsed['scheme'] ) && ! isset( $parsed['host'] ) ) {
+		return false;
+	}
+
+	$host = strtolower( $parsed['host'] ?? '' );
+
+	// Without a host the URL resolves against this page, so it cannot leave.
+	if ( '' === $host ) {
+		return true;
+	}
+
+	$domains = array( strtolower( (string) wp_parse_url( home_url(), PHP_URL_HOST ) ) );
+
+	// Subsites of a network reach each other, so a subsite must also accept the network's domain.
+	if ( is_multisite() && get_network() ) {
+		$domains[] = strtolower( get_network()->domain );
+	}
+
+	foreach ( $domains as $domain ) {
+		if ( '' !== $domain && ( $host === $domain || str_ends_with( $host, '.' . $domain ) ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
  * Render the block content.
  *
  * @param array    $attributes Block attributes.
@@ -39,6 +82,10 @@ function render( $attributes, $content, $block ) {
 
 	$attributes['startDate'] = (int) strtotime( $attributes['startDate'] );
 	$attributes['endDate']   = (int) strtotime( $attributes['endDate'] );
+
+	// Submitting the form navigates here, so an action that comes from a block attribute must not leave the network.
+	$search_form_action             = sanitize_url( (string) ( $attributes['searchFormAction'] ?? '' ), array( 'http', 'https' ) );
+	$attributes['searchFormAction'] = is_network_url( $search_form_action ) ? $search_form_action : '';
 
 	$attributes['searchIcon'] = plugins_url( 'images/search.svg', __FILE__ );
 
