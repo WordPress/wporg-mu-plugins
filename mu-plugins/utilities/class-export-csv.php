@@ -264,7 +264,7 @@ class Export_CSV {
 			fputcsv( $csv, self::esc_csv( $row ), ',', '"', '\\', "\n" );
 		}
 
-		fclose( $csv );
+		fclose( $csv ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Close the php://output stream used by fputcsv().
 
 		return ob_get_clean();
 	}
@@ -334,9 +334,9 @@ class Export_CSV {
 		$full_path = trailingslashit( $location ) . $this->filename;
 		$content   = $this->generate_file_content();
 
-		$file = fopen( $full_path, 'w' );
-		fwrite( $file, $content );
-		fclose( $file );
+		$file = fopen( $full_path, 'w' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- Export to the caller-provided writable local path without interactive filesystem credentials.
+		fwrite( $file, $content ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Write the local export stream.
+		fclose( $file ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Close the local export stream.
 
 		return $full_path;
 	}

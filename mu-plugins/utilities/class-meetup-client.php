@@ -234,7 +234,7 @@ class Meetup_Client extends API_Client {
 
 		$errors = implode( '. ', $this->error->get_error_messages() );
 		if ( ! empty( $errors ) ) {
-			trigger_error( "Request error(s): $errors", E_USER_WARNING );
+			trigger_error( esc_html( "Request error(s): $errors" ), E_USER_WARNING );
 
 			return $this->error;
 		}
@@ -637,8 +637,6 @@ class Meetup_Client extends API_Client {
 	 * @return array Array of Event Statuses if events is found, null values if MeetupID doesn't exist.
 	 */
 	public function get_events_status( $event_ids ) {
-		/* $events = [ id => $meetupID, id2 => $meetupID2 ] */
-
 		$return = array();
 		$chunks = array_chunk( $event_ids, 250, true );
 
@@ -800,6 +798,8 @@ class Meetup_Client extends API_Client {
 
 	/**
 	 * Query all events from the Network.
+	 *
+	 * @throws Exception When no network event filters are provided.
 	 */
 	public function get_network_events( array $args = array() ) {
 		$defaults = array(
@@ -829,7 +829,7 @@ class Meetup_Client extends API_Client {
 		}
 
 		// See https://www.meetup.com/api/schema/#ProNetworkEventStatus.
-		if ( $args['status'] && in_array( $args['status'], array( 'cancelled', 'upcoming', 'past' ) ) ) {
+		if ( $args['status'] && in_array( $args['status'], array( 'cancelled', 'upcoming', 'past' ), true ) ) {
 			// Elsewhere in the API this is a constant enum, and 'upcoming = ACTIVE', but not here.
 			$filters['status'] = 'status: "' . strtoupper( $args['status'] ) . '"';
 		}
@@ -1090,7 +1090,7 @@ class Meetup_Client extends API_Client {
 				'lon',
 				'timezone',
 			);
-		} elseif ( 'venue' === $type || 'venues' == $type ) {
+		} elseif ( 'venue' === $type || 'venues' === $type ) {
 			return array(
 				'id',
 				'lat',
@@ -1180,7 +1180,7 @@ class Meetup_Client extends API_Client {
 			}
 
 			$result['status'] = strtolower( $result['status'] );
-			if ( in_array( $result['status'], array( 'published', 'past', 'active', 'autosched' ) ) ) {
+			if ( in_array( $result['status'], array( 'published', 'past', 'active', 'autosched' ), true ) ) {
 				$result['status'] = 'upcoming'; // Right, past is upcoming in this context.
 			}
 
@@ -1244,7 +1244,7 @@ class Meetup_Client extends API_Client {
 	 */
 	protected function localise_location( $args = array() ) {
 		// Hard-code the Online event location.
-		if ( ! empty( $args['id'] ) && self::ONLINE_VENUE_ID == $args['id'] ) {
+		if ( ! empty( $args['id'] ) && (string) self::ONLINE_VENUE_ID === (string) $args['id'] ) {
 			return 'online';
 		}
 

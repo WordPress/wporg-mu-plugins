@@ -34,9 +34,20 @@ class HelpScout {
 			$app_id = 'wordpress'; // phpcs:ignore WordPress.WP.CapitalPDangit.MisspelledInText -- Application identifiers are case-sensitive.
 		}
 
-		return $instances[ $app_id ] ?? ( $instances[ $app_id ] = new self( $app_id, $secret, $webhook_secret ) );
+		if ( ! isset( $instances[ $app_id ] ) ) {
+			$instances[ $app_id ] = new self( $app_id, $secret, $webhook_secret );
+		}
+
+		return $instances[ $app_id ];
 	}
 
+	/**
+	 * Initialize HelpScout application credentials.
+	 *
+	 * @param string|false $app_id         Application identifier.
+	 * @param string|false $secret         Application secret.
+	 * @param string|false $webhook_secret Webhook signing secret.
+	 */
 	protected function __construct( $app_id, $secret = false, $webhook_secret = false ) {
 		$name = '';
 		if ( 'wordpress' === $app_id && defined( 'HELPSCOUT_APP_ID' ) ) { // phpcs:ignore WordPress.WP.CapitalPDangit.MisspelledInText -- Match the existing application identifier.
@@ -55,8 +66,8 @@ class HelpScout {
 	/**
 	 * Validate whether the webhook payload provided came from Helpscout.
 	 *
-	 * @param $data      string The raw JSON payload.
-	 * @param $signature string The signature provided by Helpscout.
+	 * @param string $data      The raw JSON payload.
+	 * @param string $signature The signature provided by Helpscout.
 	 * @return bool
 	 */
 	public function validate_webhook_signature( $data, $signature ) {
@@ -64,7 +75,7 @@ class HelpScout {
 			return false;
 		}
 
-		$calculated = base64_encode( hash_hmac( 'sha1', $data, $this->webhook_secret, true ) );
+		$calculated = base64_encode( hash_hmac( 'sha1', $data, $this->webhook_secret, true ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- HelpScout signatures use base64-encoded HMAC bytes.
 
 		return hash_equals( $signature, $calculated );
 	}
@@ -120,9 +131,7 @@ class HelpScout {
 		while ( ! empty( $api->_links->next->href ) ) {
 			$api = $this->get( $api->_links->next->href );
 
-			if ( is_array( $api->_embedded ) ) {
-
-			} else {
+			if ( ! is_array( $api->_embedded ) ) {
 				foreach ( $api->_embedded as $field => $value ) {
 					$response->_embedded->$field = array_merge( $response->_embedded->$field, $value );
 				}

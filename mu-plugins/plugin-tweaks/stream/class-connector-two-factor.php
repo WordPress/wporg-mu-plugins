@@ -43,7 +43,6 @@ class Connector_Two_Factor extends Connector {
 		// WebAuthN.. Must be run early, see ::register().
 		'wp_ajax_webauthn_register'   => 5,
 		'wp_ajax_webauthn_delete_key' => 5,
-		// 'wp_ajax_webauthn_rename_key' => 5, // WordPress.org doesn't support this.
 	];
 
 	/**
@@ -106,7 +105,7 @@ class Connector_Two_Factor extends Connector {
 	 */
 	public function get_context_labels() {
 		return array(
-			'settings' => esc_html_x( 'Settings', 'two-factor', 'stream' ),
+			'settings' => esc_html_x( 'Settings', 'two-factor', 'stream' ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Reuse the Stream connector translation catalog.
 		);
 	}
 
@@ -290,7 +289,7 @@ class Connector_Two_Factor extends Connector {
 	/**
 	 * Callback to watch for WebAuthN key registrations.
 	 */
-	function callback_wp_ajax_webauthn_register() {
+	public function callback_wp_ajax_webauthn_register() {
 		ob_start(
 			function ( $output ) {
 				$success = json_decode( $output, true )['success'] ?? false;
@@ -299,7 +298,7 @@ class Connector_Two_Factor extends Connector {
 						$this->log(
 							'WebAuthN key registered: %s',
 							array(
-								'key-name' => wp_unslash( $_REQUEST['name'] ),
+								'key-name' => sanitize_text_field( wp_unslash( $_REQUEST['name'] ?? '' ) ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Log only after the provider validates its registration nonce and returns success.
 							),
 							get_current_user_id(),
 							'webauthn',
@@ -315,9 +314,9 @@ class Connector_Two_Factor extends Connector {
 	/**
 	 * Callback to watch for WebAuthN key deletions.
 	 */
-	function callback_wp_ajax_webauthn_delete_key() {
+	public function callback_wp_ajax_webauthn_delete_key() {
 		// Fetch the handle now, so that it's available if it's removed.
-		$user = get_user_by( 'ID', $_REQUEST['user_id'] ?? 0 );
+		$user = get_user_by( 'ID', absint( wp_unslash( $_REQUEST['user_id'] ?? 0 ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Snapshot keys before deletion; only the provider's nonce-validated success response is logged.
 		$keys = $user ? ( new WebAuthn_Credential_Store() )->get_user_keys( $user ) : [];
 
 		ob_start(
@@ -325,7 +324,7 @@ class Connector_Two_Factor extends Connector {
 				$success = json_decode( $output, true )['success'] ?? false;
 
 				if ( $success ) {
-						$handle = wp_unslash( $_REQUEST['handle'] ?? '' );
+						$handle = sanitize_text_field( wp_unslash( $_REQUEST['handle'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- The provider validated its deletion nonce before returning success.
 
 						$key  = wp_list_filter( $keys, [ 'credential_id' => $handle ] );
 						$key  = reset( $key );
