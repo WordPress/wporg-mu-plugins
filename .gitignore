@@ -8,6 +8,4 @@ build
 
 # Config files added by wporg-repo-tools.
 .stylelintrc
-.prettierrc.js
-.eslintrc.js
 output

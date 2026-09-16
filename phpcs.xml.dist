@@ -25,18 +25,8 @@
     <file>.</file>
     <arg name="extensions" value="php" />
 
-    <rule ref="WordPress">
+    <rule ref="wporg">
         <exclude name="WordPress.DB.DirectDatabaseQuery" />
-        <exclude name="Universal.Arrays.DisallowShortArraySyntax.Found" />
-        <exclude name="WordPress.Files.FileName.InvalidClassFileName" />
-        <exclude name="Universal.Operators.DisallowShortTernary.Found" />
-
-        <exclude name="Generic.Commenting.DocComment.MissingShort" />
-        <exclude name="Squiz.Commenting.FileComment.Missing" />
-        <exclude name="Squiz.Commenting.FileComment.MissingPackageTag" />
-        <exclude name="Squiz.Commenting.FunctionComment.MissingParamTag" />
-        <exclude name="Squiz.Commenting.FunctionComment.MissingParamComment" />
-        <exclude name="Squiz.Commenting.InlineComment.InvalidEndChar" />
     </rule>
 
     <!-- Verify the translation domain used throughout these mu-plugins. -->
@@ -47,8 +37,5 @@
             </property>
         </properties>
     </rule>
-
-    <config name="testVersion" value="8.4-" />
-    <rule ref="PHPCompatibilityWP" />
 
 </ruleset>

@@ -22,12 +22,10 @@
 	},
 	"require-dev": {
 		"composer/installers": "^2.3",
-		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
-		"phpcompatibility/php-compatibility": "10.0.0-alpha2",
-		"phpcompatibility/phpcompatibility-paragonie": "2.0.0-alpha1",
-		"phpcompatibility/phpcompatibility-wp": "3.0.0-alpha2",
+		"phpcompatibility/php-compatibility": "^10.0@alpha",
+		"phpcompatibility/phpcompatibility-paragonie": "^2.0@alpha",
+		"phpcompatibility/phpcompatibility-wp": "^3.0@alpha",
 		"phpunit/phpunit": "^9.5",
-		"wp-coding-standards/wpcs": "^3.4.1",
 		"wp-phpunit/wp-phpunit": "~6.0",
 		"wporg/wporg-repo-tools": "dev-trunk",
 		"yoast/phpunit-polyfills": "^1.1"

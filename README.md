@@ -27,9 +27,19 @@ CI runs the full PHP scan on pull requests and before building trunk. PHP errors
 and warnings fail the build. The host tooling runs on PHP 8.4; WordPress unit tests
 remain on PHP 8.2.
 
-PHPCompatibility packages are pinned to prereleases until compatible stable
-versions are available. The PHPCS configuration is maintained in this repository;
-keep it when `update-configs` asks whether to replace it.
+The tracked PHPCS configuration extends the `wporg` standard supplied by
+`wporg/wporg-repo-tools`, with this repository's text domain and direct-database-query
+exclusion. The shared standard supplies the PHP 8.4 compatibility target. Alpha
+allowances are limited to the three PHPCompatibility packages, without lowering
+the project's global Composer stability setting.
+
+ESLint and Prettier also use tracked wrappers around the shared configurations.
+ESLint uses the legacy configuration for the current `@wordpress/scripts` version;
+Stylelint settings remain in `package.json`. `npm run setup:tools` installs
+dependencies and `npm run update:tools` updates Composer dependencies without
+regenerating configuration files. Treat `update-configs` as an explicit migration:
+its flat ESLint and shared Stylelint configurations require a frontend tooling
+upgrade before they can be used here.
 
 
 ## Sync/Deploy
