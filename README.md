@@ -38,8 +38,8 @@ the project's global Composer stability setting.
 ESLint, Stylelint, and Prettier also use tracked wrappers around the shared
 configurations. ESLint uses the flat configuration supported by
 `@wordpress/scripts` 35. Stylelint uses the CSS preset for the PostCSS sources,
-preserving the existing line-length and duplicate-selector exceptions. Remove
-any old ignored `.stylelintrc` so editors also load `stylelint.config.js`.
+preserving the existing line-length and duplicate-selector exceptions. The tracked
+`.stylelintrc` points to `stylelint.config.js` for both CLI and editor discovery.
 `npm run setup:tools` installs dependencies and
 `npm run update:tools` updates Composer dependencies without regenerating
 configuration files. Treat `update-configs` as an explicit configuration migration.

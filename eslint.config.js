@@ -15,4 +15,10 @@ module.exports = [
 		textDomain: 'wporg',
 		prettierConfig: require( './.prettierrc' ),
 	} ),
+	{
+		settings: {
+			// These imports are externalized to scripts supplied by WordPress.
+			'import/core-modules': [ '@wordpress/element', '@wordpress/hooks', '@wordpress/i18n' ],
+		},
+	},
 ];
