@@ -13,8 +13,8 @@
 	},
 	"devDependencies": {
 		"@wordpress/browserslist-config": "5.34.0",
-		"@wordpress/env": "9.3.0",
-		"@wordpress/scripts": "27.9.0",
+		"@wordpress/env": "11.15.0",
+		"@wordpress/scripts": "35.0.0",
 		"chalk": "4.1.2",
 		"cross-spawn": "7.0.3",
 		"cssnano": "6.0.3",
@@ -38,34 +38,19 @@
 		"font-subset-cjk": "./bin/font-subset-cjk.js",
 		"prestart": "./bin/build.js",
 		"start": "NODE_ENV=development ./bin/watch.js",
-		"lint:css": "wp-scripts lint-style **/*.pcss",
-		"lint:js": "wp-scripts lint-js **/src/**/*.js",
+		"lint:css": "wp-scripts lint-style --config stylelint.config.js \"mu-plugins/**/*.pcss\"",
+		"lint:js": "wp-scripts lint-js \"mu-plugins/**/src/**/*.js\"",
 		"setup:tools": "npm install && composer install",
 		"update:tools": "composer update",
 		"wp-env": "wp-env",
 		"test:php": "wp-env run tests-cli --env-cwd=/var/www/html/ ./vendor/bin/phpunit"
 	},
 	"rtlcssConfig": {},
-	"stylelint": {
-		"extends": "@wordpress/stylelint-config",
-		"rules": {
-			"max-line-length": null,
-			"no-duplicate-selectors": null,
-			"no-descending-specificity": null,
-			"rule-empty-line-before": [
-				"always-multi-line",
-				{
-					"except": [
-						"first-nested",
-						"after-single-line-comment"
-					]
-				}
-			],
-			"selector-class-pattern": null
-		}
-	},
 	"dependencies": {
 		"@googlemaps/markerclusterer": "^2.4.0",
+		"@wordpress/element": "^8.7.0",
+		"@wordpress/hooks": "^4.55.0",
+		"@wordpress/i18n": "^6.28.0",
 		"cn-font-split": "^7.2.9",
 		"fast-glob": "^3.3.2",
 		"folder-hash": "^4.0.4",

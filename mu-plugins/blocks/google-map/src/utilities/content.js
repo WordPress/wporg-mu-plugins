@@ -44,7 +44,7 @@ export function getSafeHref( url ) {
 		const { protocol } = new URL( url, window.location.href );
 
 		return 'https:' === protocol || 'http:' === protocol ? url : undefined;
-	} catch ( error ) {
+	} catch {
 		return undefined;
 	}
 }

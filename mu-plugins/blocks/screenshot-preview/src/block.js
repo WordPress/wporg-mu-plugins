@@ -26,7 +26,7 @@ const getSafeHref = ( url ) => {
 		const { protocol } = new URL( url, window.location.href );
 
 		return 'https:' === protocol || 'http:' === protocol ? url : undefined;
-	} catch ( error ) {
+	} catch {
 		return undefined;
 	}
 };
@@ -64,7 +64,7 @@ function Block( {
 		const handleOnResize = () => {
 			try {
 				setFrameHeight( getCardFrameHeight( wrapperRef.current.clientWidth, aspectRatio ) );
-			} catch ( err ) {}
+			} catch {}
 		};
 
 		handleOnResize();

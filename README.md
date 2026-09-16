@@ -15,6 +15,8 @@ Over time, this is intended to become the canonical source repository for all `m
 
 ## Development
 
+Use Node.js 24 (`nvm use`) and run `npm run setup:tools` to install dependencies.
+
 * `npm run start` during development, only builds `style.css`
 * `npm run build` before commit/sync/deploy, builds `style.css` and `style-rtl.css`.
 
@@ -33,13 +35,14 @@ exclusion. The shared standard supplies the PHP 8.4 compatibility target. Alpha
 allowances are limited to the three PHPCompatibility packages, without lowering
 the project's global Composer stability setting.
 
-ESLint and Prettier also use tracked wrappers around the shared configurations.
-ESLint uses the legacy configuration for the current `@wordpress/scripts` version;
-Stylelint settings remain in `package.json`. `npm run setup:tools` installs
-dependencies and `npm run update:tools` updates Composer dependencies without
-regenerating configuration files. Treat `update-configs` as an explicit migration:
-its flat ESLint and shared Stylelint configurations require a frontend tooling
-upgrade before they can be used here.
+ESLint, Stylelint, and Prettier also use tracked wrappers around the shared
+configurations. ESLint uses the flat configuration supported by
+`@wordpress/scripts` 35. Stylelint uses the CSS preset for the PostCSS sources,
+preserving the existing line-length and duplicate-selector exceptions. Remove
+any old ignored `.stylelintrc` so editors also load `stylelint.config.js`.
+`npm run setup:tools` installs dependencies and
+`npm run update:tools` updates Composer dependencies without regenerating
+configuration files. Treat `update-configs` as an explicit configuration migration.
 
 
 ## Sync/Deploy
