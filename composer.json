@@ -17,14 +17,13 @@
 			"url": "git@github.com:WordPress/wporg-repo-tools.git"
 		}
 	],
+	"minimum-stability": "alpha",
+	"prefer-stable": true,
 	"require": {
 		"adhocore/jwt": "^1.0"
 	},
 	"require-dev": {
 		"composer/installers": "^2.3",
-		"phpcompatibility/php-compatibility": "^10.0@alpha",
-		"phpcompatibility/phpcompatibility-paragonie": "^2.0@alpha",
-		"phpcompatibility/phpcompatibility-wp": "^3.0@alpha",
 		"phpunit/phpunit": "^9.5",
 		"wp-phpunit/wp-phpunit": "~6.0",
 		"wporg/wporg-repo-tools": "dev-trunk",

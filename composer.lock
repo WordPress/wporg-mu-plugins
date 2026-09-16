@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b2bffbd81b05447b4df449ff3e03befc",
+    "content-hash": "7ee2efa5141549309487098cca007c77",
     "packages": [
         {
             "name": "adhocore/jwt",
@@ -2773,14 +2773,11 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "stable",
+    "minimum-stability": "alpha",
     "stability-flags": {
-        "phpcompatibility/php-compatibility": 15,
-        "phpcompatibility/phpcompatibility-paragonie": 15,
-        "phpcompatibility/phpcompatibility-wp": 15,
         "wporg/wporg-repo-tools": 20
     },
-    "prefer-stable": false,
+    "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {},
     "platform-dev": {},
