@@ -21,6 +21,26 @@ $code_is_poetry_src = isset( $attributes['textColor'] ) && str_contains( $attrib
 
 ?>
 
+<?php if ( str_starts_with( get_locale(), 'en_' ) ) : ?>
+	<!-- Use an image so it can have the MrsEaves font. -->
+	<!-- wp:image {"lightbox":{"enabled":false},"width":188,"height":13,"className":"global-footer__code_is_poetry"} -->
+	<figure class="wp-block-image is-resized global-footer__code_is_poetry">
+		<img
+			src="<?php echo esc_url( $code_is_poetry_src ); ?>"
+			alt="<?php echo esc_html_x( 'Code is Poetry', 'Image alt text', 'wporg' ); ?>"
+			width="188"
+			height="13"
+		/>
+	</figure> <!-- /wp:image -->
+
+<?php else : ?>
+	<!-- Use text so it can be translated. -->
+	<span class="global-footer__code_is_poetry">
+		<?php echo esc_html( get_cip_text() ); ?>
+	</span>
+
+<?php endif; ?>
+
 <!-- wp:group {"tagName":"nav","align":"full","style":{"spacing":{"blockGap":"var:preset|spacing|20"}},"className":"global-footer__navigation-container","layout":{"type":"grid","minimumColumnWidth":"150px"}} -->
 <nav class="wp-block-group alignfull global-footer__navigation-container" aria-label="<?php esc_html_e( 'Footer', 'wporg' ); ?>">
 	<!-- wp:list -->
@@ -118,32 +138,35 @@ $code_is_poetry_src = isset( $attributes['textColor'] ) && str_contains( $attrib
 
 <!-- wp:group {"className":"global-footer__logos-container"} -->
 <div class="wp-block-group global-footer__logos-container">
-	<!-- wp:group {"layout":{"type":"flex","allowOrientation":false,"justifyContent":"left","flexWrap":"nowrap"}} -->
-	<div class="wp-block-group">
-		<!-- wp:html -->
-		<!-- The design calls for two logos, a small "mark" on mobile/tablet, and the full logo for desktops. -->
-			<figure class="wp-block-image global-footer__wporg-logo-mark">
-				<a href="<?php echo esc_url( get_home_url() ); ?>">
-					<?php require __DIR__ . '/images/w-mark.svg'; ?>
-				</a>
-			</figure>
-
+	<!-- wp:group {"className":"global-footer__wporg-container"} -->
+	<div class="wp-block-group global-footer__wporg-container">
+		<!-- wp:group {"layout":{"type":"flex","allowOrientation":false,"justifyContent":"left","flexWrap":"nowrap"}} -->
+		<div class="wp-block-group">
+			<!-- wp:html -->
 			<figure class="wp-block-image global-footer__wporg-logo-full">
 				<a href="<?php echo esc_url( get_home_url() ); ?>">
 					<?php require __DIR__ . '/images/wporg-logo.svg'; ?>
 				</a>
 			</figure>
-		<!-- /wp:html -->
+			<!-- /wp:html -->
 
-		<?php if ( ! empty( $locale_title ) ) : ?>
-		<!-- wp:paragraph {"className":"global-footer__wporg-locale-title"} -->
-		<p class="global-footer__wporg-locale-title">
-			<a href="<?php echo esc_url( add_query_arg( 'locale', get_locale(), 'https://make.wordpress.org/polyglots/teams/' ) ); ?>">
-				<?php echo esc_html( $locale_title ); ?>
-			</a>
+			<?php if ( ! empty( $locale_title ) ) : ?>
+			<!-- wp:paragraph {"className":"global-footer__wporg-locale-title"} -->
+			<p class="global-footer__wporg-locale-title">
+				<a href="<?php echo esc_url( add_query_arg( 'locale', get_locale(), 'https://make.wordpress.org/polyglots/teams/' ) ); ?>">
+					<?php echo esc_html( $locale_title ); ?>
+				</a>
+			</p>
+			<!-- /wp:paragraph -->
+			<?php endif; ?>
+		</div>
+		<!-- /wp:group -->
+
+		<!-- wp:paragraph {"className":"global-footer__trademark"} -->
+		<p class="global-footer__trademark">
+			<?php echo 'The WordPress&reg; trademark is the intellectual property of the WordPress Foundation.'; ?>
 		</p>
 		<!-- /wp:paragraph -->
-		<?php endif; ?>
 	</div>
 	<!-- /wp:group -->
 
@@ -161,25 +184,4 @@ $code_is_poetry_src = isset( $attributes['textColor'] ) && str_contains( $attrib
 		<!-- wp:social-link {"url":"https://wordpress.tumblr.com/","service":"tumblr","label":"<?php echo esc_html_x( 'Visit our Tumblr account', 'Menu item title', 'wporg' ); ?>"} /-->
 	</ul> <!-- /wp:social-links -->
 
-	<?php if ( str_starts_with( get_locale(), 'en_' ) ) : ?>
-		<!-- Use an image so it can have the MrsEaves font. -->
-		<!-- wp:image {"lightbox":{"enabled":false},"width":188,"height":13,"className":"global-footer__code_is_poetry"} -->
-		<figure class="wp-block-image is-resized global-footer__code_is_poetry">
-			<img
-				src="<?php echo esc_url( $code_is_poetry_src ); ?>"
-				alt="<?php echo esc_html_x( 'Code is Poetry', 'Image alt text', 'wporg' ); ?>"
-				width="188"
-				height="13"
-			/>
-		</figure> <!-- /wp:image -->
-
-	<?php else : ?>
-		<!-- Use text so it can be translated. -->
-		<span class="global-footer__code_is_poetry">
-			<?php echo esc_html( get_cip_text() ); ?>
-		</span>
-
-	<?php endif; ?>
 </div> <!-- /wp:group -->
-
-<?php echo 'The WordPress&reg; trademark is the intellectual property of the WordPress Foundation.';?>
