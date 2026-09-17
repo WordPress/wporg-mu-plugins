@@ -10,20 +10,31 @@
 }
 
 .wp-block-group.global-footer .wp-block-social-links {
+	--global-footer--social-icon-size: 24px;
+	--global-footer--social-icon-gap: 20px;
+
 	position: relative;
-	justify-content: flex-end;
+	justify-content: flex-start;
 	align-content: flex-start;
+	gap: 10px var(--global-footer--social-icon-gap);
 	min-width: 100px;
 
 	@media (--tablet) {
-		top: -3px; /* Align with W logo. */
+		flex-shrink: 0;
 		justify-content: flex-end;
-		flex-basis: 33%;
 		order: 3;
+
+		/* Between tablet and desktop the ten icons split evenly across two rows of five. */
+		max-width: calc(5 * var(--global-footer--social-icon-size) + 4 * var(--global-footer--social-icon-gap));
+	}
+
+	@media (--desktop) {
+		top: 2px; /* Vertically centre the single row of icons on the 27px WordPress.org logo. */
+		max-width: none;
 	}
 
 	& .wp-social-link svg {
-		width: 28px;
-		height: 28px;
+		width: var(--global-footer--social-icon-size);
+		height: var(--global-footer--social-icon-size);
 	}
 }
