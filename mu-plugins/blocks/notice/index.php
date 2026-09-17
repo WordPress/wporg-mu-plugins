@@ -6,6 +6,8 @@
 
 namespace WordPressdotorg\MU_Plugins\Notice;
 
+defined( 'WPINC' ) || die();
+
 // Run after `WPorg_Handbook_Callout_Boxes` registers the shortcodes.
 add_action( 'init', __NAMESPACE__ . '\init', 11 );
 
