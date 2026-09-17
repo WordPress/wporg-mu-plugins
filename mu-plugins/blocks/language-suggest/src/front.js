@@ -45,7 +45,7 @@ const getSafeHref = ( value ) => {
 		const url = new URL( value, window.location.href );
 
 		return 'https:' === url.protocol ? url.toString() : null;
-	} catch ( error ) {
+	} catch {
 		return null;
 	}
 };

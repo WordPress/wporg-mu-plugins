@@ -35,7 +35,7 @@ store( 'wporg/favorite-button', {
 					}
 					context.isFavorite = false;
 					wp.a11y.speak( context.label.unfavorited, 'polite' );
-				} catch ( error ) {}
+				} catch {}
 			} else {
 				try {
 					const result = yield wp.apiFetch( {
@@ -48,7 +48,7 @@ store( 'wporg/favorite-button', {
 					}
 					context.isFavorite = true;
 					wp.a11y.speak( context.label.favorited, 'polite' );
-				} catch ( error ) {}
+				} catch {}
 			}
 
 			context.isLoading = false;
