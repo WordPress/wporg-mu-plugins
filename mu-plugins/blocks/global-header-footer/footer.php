@@ -15,31 +15,7 @@ defined( 'WPINC' ) || die();
 
 $container_class = 'global-footer';
 
-$code_is_poetry_src = isset( $attributes['textColor'] ) && str_contains( $attributes['textColor'], 'charcoal' ) ?
-	plugins_url( '/images/code-is-poetry-for-light-bg.svg', __FILE__ ) :
-	'https://s.w.org/style/images/code-is-poetry-for-dark-bg.svg';
-
 ?>
-
-<?php if ( str_starts_with( get_locale(), 'en_' ) ) : ?>
-	<!-- Use an image so it can have the MrsEaves font. -->
-	<!-- wp:image {"lightbox":{"enabled":false},"width":188,"height":13,"className":"global-footer__code_is_poetry"} -->
-	<figure class="wp-block-image is-resized global-footer__code_is_poetry">
-		<img
-			src="<?php echo esc_url( $code_is_poetry_src ); ?>"
-			alt="<?php echo esc_html_x( 'Code is Poetry', 'Image alt text', 'wporg' ); ?>"
-			width="188"
-			height="13"
-		/>
-	</figure> <!-- /wp:image -->
-
-<?php else : ?>
-	<!-- Use text so it can be translated. -->
-	<span class="global-footer__code_is_poetry">
-		<?php echo esc_html( get_cip_text() ); ?>
-	</span>
-
-<?php endif; ?>
 
 <!-- wp:group {"tagName":"nav","align":"full","style":{"spacing":{"blockGap":"var:preset|spacing|20"}},"className":"global-footer__navigation-container","layout":{"type":"grid","minimumColumnWidth":"150px"}} -->
 <nav class="wp-block-group alignfull global-footer__navigation-container" aria-label="<?php esc_html_e( 'Footer', 'wporg' ); ?>">
@@ -183,5 +159,18 @@ $code_is_poetry_src = isset( $attributes['textColor'] ) && str_contains( $attrib
 		<!-- wp:social-link {"url":"https://www.youtube.com/wordpress","service":"youtube","label":"<?php echo esc_html_x( 'Visit our YouTube channel', 'Menu item title', 'wporg' ); ?>"} /-->
 		<!-- wp:social-link {"url":"https://wordpress.tumblr.com/","service":"tumblr","label":"<?php echo esc_html_x( 'Visit our Tumblr account', 'Menu item title', 'wporg' ); ?>"} /-->
 	</ul> <!-- /wp:social-links -->
-
 </div> <!-- /wp:group -->
+
+<!-- wp:group {"className":"global-footer__code-is-poetry-container"} -->
+<div class="wp-block-group global-footer__code-is-poetry-container">
+	<?php if ( str_starts_with( get_locale(), 'en_' ) ) : ?>
+		<!-- Inline the graphic so it can use the MrsEaves outlines and inherit the footer colour. -->
+		<?php require __DIR__ . '/images/code-is-poetry.svg'; ?>
+	<?php else : ?>
+		<!-- Use text so it can be translated. -->
+		<span class="global-footer__code_is_poetry">
+			<?php echo esc_html( get_cip_text() ); ?>
+		</span>
+	<?php endif; ?>
+</div>
+<!-- /wp:group -->

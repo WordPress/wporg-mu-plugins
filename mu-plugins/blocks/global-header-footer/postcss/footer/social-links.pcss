@@ -19,13 +19,13 @@
 	gap: 10px var(--global-footer--social-icon-gap);
 	min-width: 100px;
 
-	/* Below desktop the ten icons split evenly across two rows of five. */
-	max-width: calc(5 * var(--global-footer--social-icon-size) + 4 * var(--global-footer--social-icon-gap));
-
 	@media (--tablet) {
 		flex-shrink: 0;
 		justify-content: flex-end;
 		order: 3;
+
+		/* Between tablet and desktop the ten icons split evenly across two rows of five. */
+		max-width: calc(5 * var(--global-footer--social-icon-size) + 4 * var(--global-footer--social-icon-gap));
 	}
 
 	@media (--desktop) {
