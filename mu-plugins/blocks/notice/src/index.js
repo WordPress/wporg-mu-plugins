@@ -10,10 +10,12 @@ import { registerBlockType } from '@wordpress/blocks';
 import { Edit, typeOptions } from './edit';
 import save from './save';
 import metadata from './block.json';
+import deprecated from './deprecated';
 
 registerBlockType( metadata.name, {
 	edit: Edit,
 	save: save,
+	deprecated: deprecated,
 	variations: typeOptions.map( ( { value, label } ) => ( {
 		name: value,
 		/* translators: %s is the notice type. */
@@ -22,4 +24,15 @@ registerBlockType( metadata.name, {
 		scope: [ 'transform' ],
 		attributes: { type: value },
 	} ) ),
+	example: {
+		attributes: {
+			type: 'alert',
+		},
+		innerBlocks: [
+			{
+				name: 'core/paragraph',
+				attributes: { content: __( '<p>This is an alert notice.</p>', 'wporg' ) },
+			},
+		],
+	},
 } );
