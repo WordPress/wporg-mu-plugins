@@ -84,11 +84,13 @@ class Test_Meetup_OAuth2_Client extends WP_UnitTestCase {
 				'code'    => 200,
 				'message' => 'OK',
 			),
-			'body'     => wp_json_encode( array(
-				'access_token'  => 'ACCESS',
-				'refresh_token' => 'REFRESH',
-				'expires_in'    => HOUR_IN_SECONDS,
-			) ),
+			'body'     => wp_json_encode(
+				array(
+					'access_token'  => 'ACCESS',
+					'refresh_token' => 'REFRESH',
+					'expires_in'    => HOUR_IN_SECONDS,
+				)
+			),
 		);
 	}
 
