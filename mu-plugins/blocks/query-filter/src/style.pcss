@@ -149,6 +149,7 @@
 
 .wporg-query-filter__option input[type] {
 	border: 0;
+	/* stylelint-disable-next-line property-no-deprecated -- Fallback for browsers without clip-path. */
 	clip: rect(1px, 1px, 1px, 1px);
 	clip-path: inset(50%);
 	height: 1px;
@@ -159,7 +160,7 @@
 	top: 0;
 	left: 0;
 	width: 1px;
-	word-wrap: normal !important;
+	overflow-wrap: normal !important;
 
 	& + label {
 		display: block;

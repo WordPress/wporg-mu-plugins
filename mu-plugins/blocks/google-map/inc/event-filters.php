@@ -20,7 +20,7 @@ function schedule_filter_cron( string $filter_slug, string $start_date, string $
 	// Some custom filter slugs using `google_map_event_filters_{$filter_slug}` to pass data may need to run their
 	// own cron to prime the cache.
 	// See WordCamp's `themes/wporg-events-2023/inc/city-landing-pages.php` for an example.
-	$register_cron = apply_filters( 'google-map-event-filters-register-cron', true, $filter_slug );
+	$register_cron = apply_filters( 'google-map-event-filters-register-cron', true, $filter_slug ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- Preserve the public hook used by existing event themes.
 
 	if ( $register_cron && ! wp_next_scheduled( 'prime_event_filters', $cron_args ) ) {
 		wp_schedule_event(
@@ -63,10 +63,10 @@ function purge_event_filter_jobs(): void {
 /**
  * Get events matching the provider filter during the given timeframe.
  */
-function get_events( string $filter_slug, int $start_timestamp, int $end_timestamp, array $facets = array(), bool $force_refresh = false ) : array {
-	$events    = array();
-	$page      = get_query_var( 'paged' ) ? absint( get_query_var( 'paged' ) ) : 1;
-	$facets    = clean_facets( $facets );
+function get_events( string $filter_slug, int $start_timestamp, int $end_timestamp, array $facets = array(), bool $force_refresh = false ): array {
+	$events = array();
+	$page   = get_query_var( 'paged' ) ? absint( get_query_var( 'paged' ) ) : 1;
+	$facets = clean_facets( $facets );
 
 	// Short circuit query to avoid unnecessary delay, and make it obvious that the invalid arguments don't work.
 	if ( false === $facets ) {
@@ -76,10 +76,12 @@ function get_events( string $filter_slug, int $start_timestamp, int $end_timesta
 	$cacheable = is_cacheable( $facets, $page );
 
 	if ( $cacheable ) {
-		$cache_key = get_cache_key( array_merge(
-			compact( 'filter_slug', 'start_timestamp', 'end_timestamp' ),
-			$facets // It's safe to include this because of the logic around `$cacheable`.
-		) );
+		$cache_key = get_cache_key(
+			array_merge(
+				compact( 'filter_slug', 'start_timestamp', 'end_timestamp' ),
+				$facets // It's safe to include this because of the logic around `$cacheable`.
+			)
+		);
 
 		if ( ! $force_refresh ) {
 			$cached_events = get_transient( $cache_key );
@@ -134,12 +136,10 @@ function clean_facets( array $facets ) {
 	foreach ( $facets as $key => & $facet ) {
 		if ( is_array( $facet ) ) {
 			$facet = array_filter( $facet ); // Remove empty.
+		} elseif ( 'search' === $key ) {
+			$facet = sanitize_text_field( strval( $facet ) );
 		} else {
-			if ( 'search' === $key ) {
-				$facet = sanitize_text_field( strval( $facet ) );
-			} else {
-				$facet = array( $facet );
-			}
+			$facet = array( $facet );
 		}
 	}
 
@@ -157,7 +157,7 @@ function clean_facets( array $facets ) {
 		return false;
 	}
 
-	if ( isset ( $facets['month'] ) ) {
+	if ( isset( $facets['month'] ) ) {
 		$facets['month'] = array_map( 'absint', $facets['month'] );
 
 		if ( array_diff( $facets['month'], $valid_months ) ) {
@@ -189,7 +189,7 @@ function is_cacheable( array $facets, int $page ): bool {
 	// Search terms vary so much that caching them probably wouldn't result in a significant degree of
 	// cache hits, but it would generate a lot of extra transients. With memcached, that could push
 	// more useful values out of the cache. Old pages and multi-facet requests are similar.
-	if ( ! empty( $facets['search'] ) || count( $facets ) > 1 || $page !== 1 ) {
+	if ( ! empty( $facets['search'] ) || count( $facets ) > 1 || 1 !== $page ) {
 		$cacheable = false;
 	} else {
 		foreach ( $facets as $facet ) {
@@ -237,15 +237,16 @@ function get_all_upcoming_events( array $facets = array() ): array {
 			{$where['clauses']}
 			AND date_utc >= %s
 		ORDER BY date_utc ASC
-		LIMIT 500"
-	;
+		LIMIT 500";
 
-	$where_values = $where['values'] ?? [];
+	$where_values   = $where['values'] ?? [];
 	$where_values[] = gmdate( 'Y-m-d' );
 
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- get_where_clauses() supplies static SQL and placeholders; all values are prepared here.
 	$query = $wpdb->prepare( $query, $where_values );
 
 	if ( 'latin1' === DB_CHARSET ) {
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Values are prepared above.
 		$events = $wpdb->get_results( $query );
 	} else {
 		$events = get_latin1_results_with_prepared_query( $query );
@@ -281,7 +282,7 @@ function get_where_clauses( array $facets ): array {
 
 				// NextGen WordCamps are hosted on events.wordpress.org.
 				case 'other':
-					$type_clauses[] = " ( 'wordcamp' = type AND url REGEXP 'https?://events\.wordpress\.org' ) ";
+					$type_clauses[] = " ( 'wordcamp' = type AND url REGEXP 'https?://events\.wordpress\.org' ) "; // phpcs:ignore WordPress.WP.CapitalPDangit.MisspelledInText -- Match the literal hostname.
 					break;
 
 				case 'meetup':
@@ -297,23 +298,23 @@ function get_where_clauses( array $facets ): array {
 
 	if ( ! empty( $facets['month'] ) ) {
 		$placeholders = implode( ', ', array_fill( 0, count( $facets['month'] ), '%d' ) );
-		$clauses .= " AND MONTH( date_utc ) IN ( $placeholders )";
-		$values = array_merge( $values, $facets['month'] );
+		$clauses     .= " AND MONTH( date_utc ) IN ( $placeholders )";
+		$values       = array_merge( $values, $facets['month'] );
 	}
 
 	// If both valid formats are selected, don't filter by format at all.
 	if ( ! empty( $facets['format'] ) && 1 === count( $facets['format'] ) ) {
 		if ( 'online' === $facets['format'][0] ) {
 			$clauses .= ' AND location = "online" ';
-		} else if ( 'in-person' === $facets['format'][0] ) {
+		} elseif ( 'in-person' === $facets['format'][0] ) {
 			$clauses .= ' AND location != "online" ';
 		}
 	}
 
 	if ( ! empty( $facets['country'] ) ) {
 		$placeholders = implode( ', ', array_fill( 0, count( $facets['country'] ), '%s' ) );
-		$clauses .= " AND LOWER( country ) IN ( $placeholders )";
-		$values = array_merge( $values, array_map( 'strtolower', $facets['country'] ) );
+		$clauses     .= " AND LOWER( country ) IN ( $placeholders )";
+		$values       = array_merge( $values, array_map( 'strtolower', $facets['country'] ) );
 	}
 
 	return compact( 'clauses', 'values' );
@@ -328,7 +329,7 @@ function get_all_past_events( int $page, array $facets = array() ): array {
 	$offset = ( $page - 1 ) * $limit;
 	$where  = get_where_clauses( $facets );
 
-	$limit_sql = $wpdb->prepare( "LIMIT %d, %d", $offset, $limit );
+	$limit_sql = $wpdb->prepare( 'LIMIT %d, %d', $offset, $limit );
 
 	// wporg_events.status doesn't have a separate value for "completed", it's just scheduled events that have
 	// a date in the past.
@@ -344,10 +345,12 @@ function get_all_past_events( int $page, array $facets = array() ): array {
 		{$limit_sql}";
 
 	if ( $where['values'] ) {
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Clauses contain only static SQL and placeholders; pagination was prepared above.
 		$query = $wpdb->prepare( $query, $where['values'] );
 	}
 
 	if ( 'latin1' === DB_CHARSET ) {
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Values are prepared above.
 		$events = $wpdb->get_results( $query );
 	} else {
 		$events = get_latin1_results_with_prepared_query( $query );
@@ -366,7 +369,8 @@ function get_all_past_events_count(): int {
 	$count         = get_transient( $transient_key );
 
 	if ( ! $count ) {
-		$count = $wpdb->get_var( '
+		$count = $wpdb->get_var(
+			'
 			SELECT COUNT( id ) as found_events
 			FROM `wporg_events`
 			WHERE
@@ -383,10 +387,11 @@ function get_all_past_events_count(): int {
 /**
  * Get a list of all events during a given timeframe.
  */
-function get_events_between_dates( int $start_timestamp, int $end_timestamp ) : array {
+function get_events_between_dates( int $start_timestamp, int $end_timestamp ): array {
 	global $wpdb;
 
-	$query = $wpdb->prepare( '
+	$query = $wpdb->prepare(
+		'
 		SELECT
 			id, `type`, source_id, title, url, description, meetup, location, latitude, longitude, date_utc,
 			date_utc_offset AS tz_offset
@@ -401,6 +406,7 @@ function get_events_between_dates( int $start_timestamp, int $end_timestamp ) : 
 	);
 
 	if ( 'latin1' === DB_CHARSET ) {
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Values are prepared above.
 		$events = $wpdb->get_results( $query );
 	} else {
 		$events = get_latin1_results_with_prepared_query( $query );
@@ -415,7 +421,7 @@ function get_events_between_dates( int $start_timestamp, int $end_timestamp ) : 
 function prepare_events( array $events ): array {
 	foreach ( $events as $event ) {
 		// `capital_P_dangit()` won't work here because the current filter isn't `the_title` and there isn't a safelisted prefix before `$text`.
-		$event->title = str_replace( 'Wordpress', 'WordPress', $event->title );
+		$event->title = str_replace( 'Wordpress', 'WordPress', $event->title ); // phpcs:ignore WordPress.WP.CapitalPDangit.MisspelledInText -- The search string must match the incorrect spelling.
 
 		// `date_utc` is a misnomer, the value is actually in the local timezone of the event. So, convert to a true Unix timestamp (UTC).
 		// Can't do this reliably in the query because MySQL converts it to the server timezone.
@@ -430,7 +436,7 @@ function prepare_events( array $events ): array {
 /**
  * Query a table that's encoded with the `latin1` charset.
  *
- * wordpress.org uses a `DB_CHARSET` of `latin1` for legacy reasons, but wordcamp.org and others use `utf8mb4`.
+ * WordPress.org uses a `DB_CHARSET` of `latin1` for legacy reasons, but wordcamp.org and others use `utf8mb4`.
  * `wporg_events` uses `latin1`, so querying it with `utf8mb4` will produce Mojibake.
  *
  * @param string $prepared_query ⚠️ This must have already be ran through `$wpdb->prepare()` if needed.
@@ -444,7 +450,7 @@ function get_latin1_results_with_prepared_query( string $prepared_query ) {
 	$db_handle = is_a( $wpdb, 'hyperdb' ) ? $wpdb->db_connect( $prepared_query ) : $wpdb->dbh;
 	$wpdb->set_charset( $db_handle, 'latin1', 'latin1_swedish_ci' );
 
-	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- This function doesn't have the context to prepare it, the caller must.
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Callers prepare values and get_events() manages caching for this shared event table.
 	$results = $wpdb->get_results( $prepared_query );
 
 	// Revert to the default charset to avoid affecting other queries.
@@ -456,7 +462,7 @@ function get_latin1_results_with_prepared_query( string $prepared_query ) {
 /**
  * Extract the desired events from an array of potential events.
  */
-function filter_potential_events( string $filter_slug, array $potential_events ) : array {
+function filter_potential_events( string $filter_slug, array $potential_events ): array {
 	$matched_events = array();
 	$other_events   = array();
 
@@ -464,15 +470,28 @@ function filter_potential_events( string $filter_slug, array $potential_events )
 		case 'sotw':
 			$false_positives = array();
 			$keywords        = array(
-				'sotw', 'state of the word',
+				'sotw',
+				'state of the word',
 			);
 			break;
 
 		case 'wp20':
-			$false_positives = array( "292525625", "293437294" );
+			$false_positives = array( '292525625', '293437294' );
 			$keywords        = array(
-				'wp20', '20 year', '20 ano', '20 año', '20 candeline', '20 jaar', 'wordt 20', '20 yaşında',
-				'anniversary', 'aniversário', 'aniversario', 'birthday', 'cumpleaños', 'celebrate',
+				'wp20',
+				'20 year',
+				'20 ano',
+				'20 año',
+				'20 candeline',
+				'20 jaar',
+				'wordt 20',
+				'20 yaşında',
+				'anniversary',
+				'aniversário',
+				'aniversario',
+				'birthday',
+				'cumpleaños',
+				'celebrate',
 				'Tanti auguri',
 			);
 			break;
@@ -515,7 +534,7 @@ function filter_potential_events( string $filter_slug, array $potential_events )
  *
  * Run `wp cron event run prime_event_filters` to see this.
  */
-function print_results( string $filter, array $matched_events, array $other_events ) : void {
+function print_results( string $filter, array $matched_events, array $other_events ): void {
 	if ( 'cli' !== php_sapi_name() ) {
 		return;
 	}
@@ -526,11 +545,12 @@ function print_results( string $filter, array $matched_events, array $other_even
 	sort( $matched_names );
 	sort( $other_names );
 
-	printf( "\n\n============================== \nResults for $filter: \n==============================\n" );
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The CLI-only guard above excludes HTML output.
+	printf( "\n\n============================== \nResults for %s: \n==============================\n", $filter );
 
 	echo "\nIgnored these events. Double check for false-negatives.\n\n";
-	print_r( $other_names );
+	print_r( $other_names ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r -- Intentional CLI-only output for reviewing event matches.
 
 	echo "\nIncluded these events. Double check for false-positives.\n\n";
-	print_r( $matched_names );
+	print_r( $matched_names ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r -- Intentional CLI-only output for reviewing event matches.
 }

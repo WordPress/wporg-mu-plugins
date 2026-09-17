@@ -27,8 +27,8 @@ function init() {
 	register_block_style(
 		'wporg/local-navigation-bar',
 		array(
-			'name'         => 'brush-stroke',
-			'label'        => __( 'Brush Stroke', 'wporg' ),
+			'name'  => 'brush-stroke',
+			'label' => __( 'Brush Stroke', 'wporg' ),
 		)
 	);
 }
@@ -48,8 +48,8 @@ function update_block_attributes( $block ) {
 
 		// Set layout values if they don't exist.
 		$default_layout = array(
-			'type' => 'flex',
-			'flexWrap' => 'nowrap',
+			'type'           => 'flex',
+			'flexWrap'       => 'nowrap',
 			'justifyContent' => 'space-between',
 		);
 		if ( ! empty( $block['attrs']['layout'] ) ) {
@@ -91,14 +91,14 @@ function update_child_block_attributes( $parsed_block, $source_block, $parent_bl
 			return $parsed_block;
 		}
 		// set the values we need.
-		$parsed_block['attrs']['icon'] = 'menu';
-		$parsed_block['attrs']['fontSize'] = 'small';
+		$parsed_block['attrs']['icon']                = 'menu';
+		$parsed_block['attrs']['fontSize']            = 'small';
 		$parsed_block['attrs']['openSubmenusOnClick'] = true;
-		$parsed_block['attrs']['layout'] = array(
-			'type' => 'flex',
+		$parsed_block['attrs']['layout']              = array(
+			'type'        => 'flex',
 			'orientation' => 'horizontal',
 		);
-		$parsed_block['attrs']['ariaLabel'] = _x( 'Section', 'local navigation label', 'wporg' );
+		$parsed_block['attrs']['ariaLabel']           = _x( 'Section', 'local navigation label', 'wporg' );
 
 		// Add an extra navigation block which is always collapsed, so that it
 		// can be swapped out when the section title + nav menu collide.
@@ -142,7 +142,7 @@ function customize_navigation_block_icon( $block_content ) {
 	if (
 		$tag_processor->next_tag(
 			array(
-				'tag_name' => 'nav',
+				'tag_name'   => 'nav',
 				'class_name' => 'wp-block-navigation',
 			)
 		)
@@ -152,7 +152,7 @@ function customize_navigation_block_icon( $block_content ) {
 		if (
 			$tag_processor->next_tag(
 				array(
-					'tag_name' => 'button',
+					'tag_name'   => 'button',
 					'class_name' => 'wp-block-navigation__responsive-container-open',
 				)
 			) &&
@@ -165,7 +165,7 @@ function customize_navigation_block_icon( $block_content ) {
 		if (
 			$tag_processor->next_tag(
 				array(
-					'tag_name' => 'button',
+					'tag_name'   => 'button',
 					'class_name' => 'wp-block-navigation__responsive-container-close',
 				)
 			) &&

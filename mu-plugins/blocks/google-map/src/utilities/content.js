@@ -26,11 +26,14 @@ export function formatLocation( location ) {
 }
 
 /**
- * Returns a marker link only when its protocol is safe to render as an href.
+ * Returns a URL only when its protocol is safe to navigate to.
  *
- * @param {string} url Candidate link target, which comes from the block's attributes.
+ * Guards both the marker links and the search form's action, which the browser navigates to on
+ * submit. Both come from block attributes.
  *
- * @return {string|undefined} The url, or undefined to render no href.
+ * @param {string} url Candidate navigation target.
+ *
+ * @return {string|undefined} The url, or undefined to render no target.
  */
 export function getSafeHref( url ) {
 	if ( ! url ) {
@@ -41,7 +44,7 @@ export function getSafeHref( url ) {
 		const { protocol } = new URL( url, window.location.href );
 
 		return 'https:' === protocol || 'http:' === protocol ? url : undefined;
-	} catch ( error ) {
+	} catch {
 		return undefined;
 	}
 }

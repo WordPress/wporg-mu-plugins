@@ -1,5 +1,8 @@
 <?php
 namespace WordPressdotorg\MU_Plugins\Encryption;
+
+// phpcs:disable WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase, WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase, WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase -- Preserve upstream property names for serialization and parameter names for named arguments.
+
 /**
  * Class HiddenString. This is a copy of https://github.com/paragonie/hidden-string without the additional dependencies.
  *
@@ -15,8 +18,8 @@ namespace WordPressdotorg\MU_Plugins\Encryption;
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-final class HiddenString
-{
+final class HiddenString {
+
 	/**
 	 * @var string
 	 */
@@ -38,11 +41,12 @@ final class HiddenString
 
 	/**
 	 * HiddenString constructor.
-	 * @param string $value
-	 * @param bool $disallowInline
-	 * @param bool $disallowSerialization
 	 *
-	 * @throws \TypeError
+	 * @param string $value
+	 * @param bool   $disallowInline
+	 * @param bool   $disallowSerialization
+	 *
+	 * @throws \TypeError If a supplied value does not match the required type.
 	 */
 	public function __construct(
 		#[\SensitiveParameter]
@@ -50,18 +54,17 @@ final class HiddenString
 		bool $disallowInline = true,
 		bool $disallowSerialization = true
 	) {
-		$this->internalStringValue = self::safeStrcpy($value);
-		$this->disallowInline = $disallowInline;
+		$this->internalStringValue   = self::safeStrcpy( $value );
+		$this->disallowInline        = $disallowInline;
 		$this->disallowSerialization = $disallowSerialization;
 	}
 
 	/**
 	 * @param HiddenString $other
 	 * @return bool
-	 * @throws \TypeError
+	 * @throws \TypeError If a supplied value does not match the required type.
 	 */
-	public function equals(HiddenString $other)
-	{
+	public function equals( HiddenString $other ) {
 		return \hash_equals(
 			$this->getString(),
 			$other->getString()
@@ -73,28 +76,28 @@ final class HiddenString
 	 *
 	 * @return array
 	 */
-	public function __debugInfo()
-	{
+	public function __debugInfo() {
 		return [
 			'internalStringValue' =>
 				'*',
-			'attention' =>
+			'attention'           =>
 				'If you need the value of a HiddenString, ' .
-				'invoke getString() instead of dumping it.'
+				'invoke getString() instead of dumping it.',
 		];
 	}
 
 	/**
 	 * Wipe it from memory after it's been used.
+	 *
 	 * @return void
 	 */
-	public function __destruct()
-	{
-		if (\is_callable('\sodium_memzero')) {
+	public function __destruct() {
+		if ( \is_callable( '\sodium_memzero' ) ) {
 			try {
-				\sodium_memzero($this->internalStringValue);
+				\sodium_memzero( $this->internalStringValue );
 				return;
-			} catch (\Throwable $ex) {
+			} catch ( \Throwable $ex ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch -- Destructors must tolerate a failed memory wipe.
+				// Destruction must not throw when the value cannot be wiped.
 			}
 		}
 	}
@@ -103,11 +106,10 @@ final class HiddenString
 	 * Explicit invocation -- get the raw string value
 	 *
 	 * @return string
-	 * @throws \TypeError
+	 * @throws \TypeError If a supplied value does not match the required type.
 	 */
-	public function getString(): string
-	{
-		return self::safeStrcpy($this->internalStringValue);
+	public function getString(): string { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid -- Preserve the upstream public API.
+		return self::safeStrcpy( $this->internalStringValue );
 	}
 
 	/**
@@ -115,12 +117,11 @@ final class HiddenString
 	 * Optionally, it can return an empty string.
 	 *
 	 * @return string
-	 * @throws \TypeError
+	 * @throws \TypeError If a supplied value does not match the required type.
 	 */
-	public function __toString(): string
-	{
-		if (!$this->disallowInline) {
-			return self::safeStrcpy($this->internalStringValue);
+	public function __toString(): string {
+		if ( ! $this->disallowInline ) {
+			return self::safeStrcpy( $this->internalStringValue );
 		}
 		return '';
 	}
@@ -128,13 +129,12 @@ final class HiddenString
 	/**
 	 * @return array
 	 */
-	public function __sleep(): array
-	{
-		if (!$this->disallowSerialization) {
+	public function __sleep(): array {
+		if ( ! $this->disallowSerialization ) {
 			return [
 				'internalStringValue',
 				'disallowInline',
-				'disallowSerialization'
+				'disallowSerialization',
 			];
 		}
 		return [];
@@ -146,20 +146,20 @@ final class HiddenString
 	 *
 	 * @param string $string
 	 * @return string
-	 * @throws \TypeError
+	 * @throws \TypeError If a supplied value does not match the required type.
 	 */
-	public static function safeStrcpy(string $string): string
-	{
-		$length = mb_strlen($string, '8bit');
+	public static function safeStrcpy( string $string ): string { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid, Universal.NamingConventions.NoReservedKeywordParameterNames.stringFound -- Preserve the upstream public API and named arguments.
+		$length = mb_strlen( $string, '8bit' );
 		$return = '';
 		/** @var int $chunk */
 		$chunk = $length >> 1;
-		if ($chunk < 1) {
+		if ( $chunk < 1 ) {
 			$chunk = 1;
 		}
-		for ($i = 0; $i < $length; $i += $chunk) {
-			$return .= mb_substr($string, $i, $chunk, '8bit');
+		for ( $i = 0; $i < $length; $i += $chunk ) {
+			$return .= mb_substr( $string, $i, $chunk, '8bit' );
 		}
 		return $return;
 	}
 }
+// phpcs:enable WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase, WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase, WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase

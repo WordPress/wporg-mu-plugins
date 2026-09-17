@@ -1,19 +1,33 @@
 <?php
 use WordPressdotorg\MU_Plugins\Encryption\HiddenString;
-use const WordPressdotorg\MU_Plugins\Encryption\{ PREFIX, NONCE_LENGTH, KEY_LENGTH };
 use function WordPressdotorg\MU_Plugins\Encryption\{encrypt, decrypt, is_encrypted, get_encryption_key, generate_encryption_key };
+use const WordPressdotorg\MU_Plugins\Encryption\{ PREFIX, NONCE_LENGTH, KEY_LENGTH };
 
+/**
+ * Tests encryption, decryption, and hidden string handling.
+ */
 class Test_WPORG_Encryption extends WP_UnitTestCase {
 
+	/**
+	 * Register encryption keys before the tests run.
+	 */
 	public static function wpSetUpBeforeClass() {
-		self::_wporg_encryption_keys();
+		self::register_encryption_keys();
 	}
 
-	public static function _wporg_encryption_keys() {
+	/**
+	 * Define the test key provider when one is not already available.
+	 */
+	public static function register_encryption_keys() {
 		if ( function_exists( 'wporg_encryption_keys' ) ) {
 			return;
 		}
 
+		/**
+		 * Supply stable encryption keys for this test run.
+		 *
+		 * @return HiddenString[] The default and secondary keys.
+		 */
 		function wporg_encryption_keys() {
 			static $keys = false;
 
@@ -28,6 +42,9 @@ class Test_WPORG_Encryption extends WP_UnitTestCase {
 		}
 	}
 
+	/**
+	 * Verify encryption round trips and rejects incorrect contexts and keys.
+	 */
 	public function test_encrypt_decrypt() {
 		$input     = 'This is a plaintext string. It contains no sensitive data.';
 		$context   = 'USER1';
@@ -39,7 +56,7 @@ class Test_WPORG_Encryption extends WP_UnitTestCase {
 		// Decrypt without $context.
 		try {
 			decrypt( $encrypted, '' );
-		} catch( Exception $e ) {
+		} catch ( Exception $e ) {
 			$this->assertEquals( 'Invalid cipher text.', $e->getMessage() );
 		} finally {
 			$this->assertNotEmpty( $e, 'No Exception thrown?' );
@@ -49,7 +66,7 @@ class Test_WPORG_Encryption extends WP_UnitTestCase {
 		// Decrypt with incorrect $context.
 		try {
 			decrypt( $encrypted, 'USER2' );
-		} catch( Exception $e ) {
+		} catch ( Exception $e ) {
 			$this->assertEquals( 'Invalid cipher text.', $e->getMessage() );
 		} finally {
 			$this->assertNotEmpty( $e, 'No Exception thrown?' );
@@ -59,7 +76,7 @@ class Test_WPORG_Encryption extends WP_UnitTestCase {
 		// Decrypt with incorrect key specified.
 		try {
 			decrypt( $encrypted, $context, 'secondary' );
-		} catch( Exception $e ) {
+		} catch ( Exception $e ) {
 			$this->assertEquals( 'Invalid cipher text.', $e->getMessage() );
 		} finally {
 			$this->assertNotEmpty( $e, 'No Exception thrown?' );
@@ -69,7 +86,7 @@ class Test_WPORG_Encryption extends WP_UnitTestCase {
 		// Decrypt with unknown key specified.
 		try {
 			decrypt( $encrypted, $context, 'unknown-key' );
-		} catch( Exception $e ) {
+		} catch ( Exception $e ) {
 			$this->assertEquals( 'Encryption key "unknown-key" not defined.', $e->getMessage() );
 		} finally {
 			$this->assertNotEmpty( $e, 'No Exception thrown?' );
@@ -78,12 +95,15 @@ class Test_WPORG_Encryption extends WP_UnitTestCase {
 
 		$decrypted = decrypt( $encrypted, $context );
 
-		$this->assertTrue( $decrypted instanceOf HiddenString );
+		$this->assertTrue( $decrypted instanceof HiddenString );
 
 		$this->assertNotEquals( $input, $decrypted );
 		$this->assertEquals( $input, $decrypted->getString() );
 	}
 
+	/**
+	 * Verify encrypted-value detection.
+	 */
 	public function test_is_encrypted() {
 		$this->assertFalse( is_encrypted( 'TEST STRING' ) );
 		$this->assertFalse( is_encrypted( PREFIX ) );
@@ -102,6 +122,9 @@ class Test_WPORG_Encryption extends WP_UnitTestCase {
 		$this->assertTrue( is_encrypted( encrypt( $test_string, 'context' ) ) );
 	}
 
+	/**
+	 * Verify generated keys have the expected length and differ.
+	 */
 	public function test_generate_key_different() {
 		$one_key = generate_encryption_key();
 
@@ -112,6 +135,9 @@ class Test_WPORG_Encryption extends WP_UnitTestCase {
 		$this->assertNotEquals( $one_key->getString(), $two_key->getString() );
 	}
 
+	/**
+	 * Verify default, named, and missing key lookups.
+	 */
 	public function test_get_encryption_key() {
 		$this->assertSame( wporg_encryption_keys()['default']->getString(), get_encryption_key()->getString() );
 		$this->assertSame( wporg_encryption_keys()['default']->getString(), get_encryption_key( '' )->getString() );
@@ -122,7 +148,7 @@ class Test_WPORG_Encryption extends WP_UnitTestCase {
 		// Get an unknown key.
 		try {
 			get_encryption_key( 'unknown-key' );
-		} catch( Exception $e ) {
+		} catch ( Exception $e ) {
 			$this->assertEquals( 'Encryption key "unknown-key" not defined.', $e->getMessage() );
 		} finally {
 			$this->assertNotEmpty( $e, 'No Exception thrown?' );
@@ -130,8 +156,11 @@ class Test_WPORG_Encryption extends WP_UnitTestCase {
 		}
 	}
 
+	/**
+	 * Verify encryption accepts a HiddenString value.
+	 */
 	public function test_can_encrypt_hiddenstring() {
-		$hidden_string = new HiddenString( "TEST STRING" );
+		$hidden_string = new HiddenString( 'TEST STRING' );
 		$context       = 'test-context';
 
 		$encrypted = encrypt( $hidden_string, $context );
@@ -141,13 +170,16 @@ class Test_WPORG_Encryption extends WP_UnitTestCase {
 		$this->assertSame( $hidden_string->getString(), decrypt( $encrypted, $context )->getString() );
 	}
 
+	/**
+	 * Verify encryption and decryption reject invalid inputs.
+	 */
 	public function test_encrypt_decrypt_invalid_inputs() {
 		$context = 'test-context';
 
 		// Invalid key specified.
 		try {
 			encrypt( 'TEST STRING', $context, 'unknown-key' );
-		} catch( Exception $e ) {
+		} catch ( Exception $e ) {
 			$this->assertEquals( 'Encryption key "unknown-key" not defined.', $e->getMessage() );
 		} finally {
 			$this->assertNotEmpty( $e, 'No Exception thrown?' );
@@ -157,7 +189,7 @@ class Test_WPORG_Encryption extends WP_UnitTestCase {
 		// Not-encrypted Invalid data that.
 		try {
 			decrypt( PREFIX . 'TESTSTRINGTESTSTRINGTESTSTRINGTESTSTRINGTESTSTRINGTESTSTRING', $context );
-		} catch( Exception $e ) {
+		} catch ( Exception $e ) {
 			// This is thrown by sodium_hex2bin(), whose wording varies by PHP version.
 			$this->assertStringContainsStringIgnoringCase( 'hex', $e->getMessage() );
 		} finally {
@@ -168,7 +200,7 @@ class Test_WPORG_Encryption extends WP_UnitTestCase {
 		// Not-encrypted Possibly-valid data.
 		try {
 			decrypt( PREFIX . '012345678901234567890123456789012345678901234567890123456789', $context );
-		} catch( Exception $e ) {
+		} catch ( Exception $e ) {
 			$this->assertEquals( 'Invalid cipher text.', $e->getMessage() );
 		} finally {
 			$this->assertNotEmpty( $e, 'No Exception thrown?' );
@@ -178,7 +210,7 @@ class Test_WPORG_Encryption extends WP_UnitTestCase {
 		// Invalid key specified, not-encrypted data that's not long enough.
 		try {
 			decrypt( 'TEST STRING', $context, 'unknown-key' );
-		} catch( Exception $e ) {
+		} catch ( Exception $e ) {
 			$this->assertEquals( 'Value is not encrypted.', $e->getMessage() );
 		} finally {
 			$this->assertNotEmpty( $e, 'No Exception thrown?' );
@@ -188,15 +220,17 @@ class Test_WPORG_Encryption extends WP_UnitTestCase {
 		// Not-encrypted data that's not long enough.
 		try {
 			decrypt( 'TEST STRING', $context );
-		} catch( Exception $e ) {
+		} catch ( Exception $e ) {
 			$this->assertEquals( 'Value is not encrypted.', $e->getMessage() );
 		} finally {
 			$this->assertNotEmpty( $e, 'No Exception thrown?' );
 			unset( $e );
 		}
-
 	}
 
+	/**
+	 * Verify the global wrappers expose plaintext and return false on errors.
+	 */
 	public function test_exported_functions() {
 		// This only tests the behavioural functions, not the encryption/decryption.
 
@@ -209,15 +243,14 @@ class Test_WPORG_Encryption extends WP_UnitTestCase {
 
 		$decrypted = wporg_decrypt( $encrypted, $context );
 
-		$this->assertTrue( $decrypted instanceOf HiddenString );
+		$this->assertTrue( $decrypted instanceof HiddenString );
 
 		$this->assertNotSame( $input, $decrypted );
 		$this->assertEquals( $input, $decrypted->getString() );
 		$this->assertEquals( $input, (string) $decrypted );
 
-		$this->assertFalse( wporg_encrypt( '', $context,  'unknown-key' ) );
+		$this->assertFalse( wporg_encrypt( '', $context, 'unknown-key' ) );
 		$this->assertFalse( wporg_decrypt( '', $context, 'unknown-key' ) );
 		$this->assertFalse( wporg_decrypt( 'TEST STRING', $context ) );
 	}
-
 }

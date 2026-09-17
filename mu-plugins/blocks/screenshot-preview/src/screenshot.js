@@ -98,7 +98,7 @@ function ScreenShotImg( { alt = '', queryString, src, isReady = false } ) {
 			} else {
 				setAttempts( attempts + 1 );
 			}
-		} catch ( error ) {
+		} catch {
 			setHasError( true );
 			setShouldRetry( false );
 		}
