@@ -21,8 +21,8 @@ function language_suggest_block_init() {
 	register_block_style(
 		'wporg/language-suggest',
 		array(
-			'name'         => 'prominent',
-			'label'        => _x( 'Prominent', 'block style name', 'wporg' ),
+			'name'  => 'prominent',
+			'label' => _x( 'Prominent', 'block style name', 'wporg' ),
 		)
 	);
 }

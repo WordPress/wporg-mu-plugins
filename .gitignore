@@ -7,8 +7,5 @@ build
 **/vendor
 
 # Config files added by wporg-repo-tools.
-phpcs.xml.dist
 .stylelintrc
-.prettierrc.js
-.eslintrc.js
 output

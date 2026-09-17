@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Block Name: WordPress.org Google Map
  * Description: Renders a Google Map in a block template (no editor UI).
@@ -119,11 +118,13 @@ function render( $attributes, $content, $block ) {
 		);
 	}
 
-	$wrapper_attributes = get_block_wrapper_attributes( array(
-		'id'          => 'wp-block-wporg-google-map-' . $attributes['id'],
-		'class'       => isset( $attributes['align'] ) ? 'align' . $attributes['align'] : '',
-		'data-map-id' => $attributes['id'],
-	) );
+	$wrapper_attributes = get_block_wrapper_attributes(
+		array(
+			'id'          => 'wp-block-wporg-google-map-' . $attributes['id'],
+			'class'       => isset( $attributes['align'] ) ? 'align' . $attributes['align'] : '',
+			'data-map-id' => $attributes['id'],
+		)
+	);
 
 	ob_start();
 

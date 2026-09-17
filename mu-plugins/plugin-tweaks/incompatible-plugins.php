@@ -5,7 +5,7 @@ namespace WordPressdotorg\MU_Plugins\Plugin_Tweaks\IncompatiblePlugins;
 defined( 'WPINC' ) || die();
 
 // Don't run this on the plugins.php page, as we don't want to operate on filtered options.
-if ( defined( 'WP_ADMIN' ) && WP_ADMIN && str_contains( $_SERVER['REQUEST_URI'] ?? '', '/plugins.php' ) ) {
+if ( defined( 'WP_ADMIN' ) && WP_ADMIN && str_contains( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ?? '' ) ), '/plugins.php' ) ) {
 	return;
 }
 
@@ -58,7 +58,7 @@ function filter_the_filters() {
 
 		add_filter(
 			'option_active_plugins',
-			static function( $plugins ) use ( $from, $to, $req, $active_sitewide_plugins ) {
+			static function ( $plugins ) use ( $from, $to, $req, $active_sitewide_plugins ) {
 				$pos = array_search( $from, $plugins, true );
 				if ( false !== $pos ) {
 					// Splice to retain load order, if it's important.
@@ -87,7 +87,7 @@ function filter_the_filters() {
 
 		add_filter(
 			'site_option_active_sitewide_plugins',
-			static function( $plugins ) use ( $from, $to ) {
+			static function ( $plugins ) use ( $from, $to ) {
 				if ( isset( $plugins[ $from ] ) ) {
 					$plugins[ $to ] = $plugins[ $from ];
 					unset( $plugins[ $from ] );

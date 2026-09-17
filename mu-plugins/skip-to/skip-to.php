@@ -2,10 +2,19 @@
 /**
  * Plugin Name: Skip-to for classic themes
  * Description: This is a copy of the block theme skip-to functionality for classic themes.
- * 
+ *
  * See: https://github.com/WordPress/wordpress-develop/blob/f7d2a2ee9d003633e6c729c0835cd4addd23f9b3/src/wp-includes/theme-templates.php#L101-L205
  */
+
+// phpcs:disable Universal.Namespaces.DisallowCurlyBraceSyntax, Universal.Namespaces.OneDeclarationPerFile.MultipleFound -- Preserve the public wrapper namespace alongside its implementation.
 namespace WordPressdotorg\MU_Plugins\Skip_To_Links {
+	/**
+	 * Register a skip link for the selected content region.
+	 *
+	 * @param string $selector Target selector.
+	 * @param bool   $css      Whether to print the default styles.
+	 * @return void
+	 */
 	function skip_to( $selector = 'main', $css = false ) {
 
 		$selector = apply_filters( 'wporg_skip_link_target', $selector );
@@ -26,9 +35,13 @@ namespace WordPressdotorg\MU_Plugins\Skip_To_Links {
 			add_action( 'wp_head', __NAMESPACE__ . '\css' );
 		}
 
-		add_action( 'wp_body_open', function() use( $selector ) {
-			skip_tag( $selector );
-		}, -1 );
+		add_action(
+			'wp_body_open',
+			function () use ( $selector ) {
+				skip_tag( $selector );
+			},
+			-1
+		);
 
 		// If a HTML ID is not passed, some JS will be needed.
 		if ( '#' !== substr( $selector, 0, 1 ) ) {
@@ -43,14 +56,14 @@ namespace WordPressdotorg\MU_Plugins\Skip_To_Links {
 	 * Print the skip link.
 	 */
 	function skip_tag( $selector ) {
-		$target = ( '#' === substr( $selector, 0, 1 ) ? $selector : '' );
+		$target   = ( '#' === substr( $selector, 0, 1 ) ? $selector : '' );
 		$tabindex = ( $target ? '' : 'tabindex="-1"' ); // Will be removed once the target is set.
 		printf(
-			'<a id="wporg-skip-link" %s class="skip-link screen-reader-text" href="%s" data-selector="%s">%s</a>'."\n",
-			$tabindex,
+			'<a id="wporg-skip-link" %s class="skip-link screen-reader-text" href="%s" data-selector="%s">%s</a>' . "\n",
+			$tabindex, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- This is either an empty string or the literal tabindex attribute above.
 			esc_attr( $target ),
 			esc_attr( $selector ),
-			__( 'Skip to content', 'wporg' )
+			esc_html__( 'Skip to content', 'wporg' )
 		);
 	}
 
@@ -93,6 +106,11 @@ namespace WordPressdotorg\MU_Plugins\Skip_To_Links {
 		<?php
 	}
 
+	/**
+	 * Print the script that resolves a selector to the skip-link target.
+	 *
+	 * @return void
+	 */
 	function js() {
 		?>
 		<script>
@@ -126,12 +144,23 @@ namespace WordPressdotorg\MU_Plugins\Skip_To_Links {
 
 // Allow importing as `WordPressdotorg\skip_to()` or `WordPressdotorg\skip_to_styled()`.
 namespace WordPressdotorg {
+	/**
+	 * Forward the public skip-link helper to its implementation.
+	 *
+	 * @param string $selector Target selector.
+	 * @param bool   $css      Whether to print default styles.
+	 * @return void
+	 */
 	function skip_to( $selector = 'main', $css = false ) {
-		return MU_Plugins\Skip_To_Links\skip_to( $selector, $css );
+		MU_Plugins\Skip_To_Links\skip_to( $selector, $css );
 	}
 
-	// Exists to be added as an action directly to `wp_head` which will pass the first param.
+	/**
+	 * Register the default skip link without accepting the wp_head action argument.
+	 *
+	 * @return void
+	 */
 	function skip_to_main() {
-		return MU_Plugins\Skip_To_Links\skip_to( 'main', false );
+		MU_Plugins\Skip_To_Links\skip_to( 'main', false );
 	}
 }

@@ -74,20 +74,23 @@ class Meetup_OAuth2_Client extends API_Client {
 	 * Meetup_OAuth2_Client constructor.
 	 */
 	public function __construct() {
-		parent::__construct( array(
-			/**
-			 * Response codes that should break the request loop.
-			 *
-			 * `200` (ok) is not in the list, because it needs to be handled conditionally.
-			 *  See API_Client::tenacious_remote_request.
-			 */
-			'breaking_response_codes' => array(
-				400, // Bad request. This happens for invalid_grant during refresh
-				401, // Unauthorized (invalid key).
-				429, // Too many requests (rate-limited).
-				404, // Unable to find group
-			),
-		) );
+		parent::__construct(
+			array(
+
+				/*
+				 * Response codes that should break the request loop.
+				 *
+				 * `200` (ok) is not in the list, because it needs to be handled conditionally.
+				 *  See API_Client::tenacious_remote_request.
+				 */
+				'breaking_response_codes' => array(
+					400, // Bad request. This happens for invalid_grant during refresh
+					401, // Unauthorized (invalid key).
+					429, // Too many requests (rate-limited).
+					404, // Unable to find group
+				),
+			)
+		);
 
 		// Pre-cache the oauth token.
 		$this->get_oauth_token();
@@ -138,9 +141,12 @@ class Meetup_OAuth2_Client extends API_Client {
 
 		switch ( $type ) {
 			case 'access_token': // Request a new access token.
-				$args = wp_parse_args( $args, array(
-					'code' => '',
-				) );
+				$args = wp_parse_args(
+					$args,
+					array(
+						'code' => '',
+					)
+				);
 
 				$request_url                     = self::URL_ACCESS_TOKEN;
 				$request_body                    = array(
@@ -154,9 +160,12 @@ class Meetup_OAuth2_Client extends API_Client {
 				break;
 
 			case 'refresh_token': // Refresh an access token.
-				$args = wp_parse_args( $args, array(
-					'refresh_token' => '',
-				) );
+				$args = wp_parse_args(
+					$args,
+					array(
+						'refresh_token' => '',
+					)
+				);
 
 				$request_url  = self::URL_ACCESS_TOKEN;
 				$request_body = array(
@@ -229,6 +238,7 @@ class Meetup_OAuth2_Client extends API_Client {
 			$auth_code = get_site_option( self::SITE_OPTION_KEY_AUTHORIZATION, false );
 
 			// The token is stored network-wide, so binding it is a network administrator's call.
+			// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Preserve WordCamp's existing fixed-state callback protocol; nonce hardening requires a separate coordinated change.
 			if ( isset( $_GET['code'], $_GET['state'] )
 				&& 'meetup-oauth' === $_GET['state']
 				&& is_admin()
@@ -236,6 +246,7 @@ class Meetup_OAuth2_Client extends API_Client {
 			) {
 				$auth_code = sanitize_text_field( wp_unslash( $_GET['code'] ) );
 			}
+			// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 			if ( $auth_code ) {
 				$token = $this->request_token( 'access_token', array( 'code' => $auth_code ) );
@@ -257,14 +268,14 @@ class Meetup_OAuth2_Client extends API_Client {
 					self::CONSUMER_KEY,
 					self::REDIRECT_URI
 				),
-				network_site_url('/'),
+				network_site_url( '/' ),
 				self::SITE_OPTION_KEY_AUTHORIZATION
 			);
 
 			if ( admin_url( '/' ) === self::REDIRECT_URI ) {
-				printf( '<div class="notice notice-error"><p>%s</p></div>', nl2br( make_clickable( $message ) ) );
+				printf( '<div class="notice notice-error"><p>%s</p></div>', wp_kses_post( nl2br( make_clickable( esc_html( $message ) ) ) ) );
 			}
-			trigger_error( $message, E_USER_WARNING );
+			trigger_error( $message, E_USER_WARNING ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.PHP.DevelopmentFunctions.error_log_trigger_error -- Preserve URLs and shell commands in plain-text recovery diagnostics.
 
 			return false;
 		}
@@ -320,7 +331,7 @@ class Meetup_OAuth2_Client extends API_Client {
 			case 'access_token':
 			default:
 				$required_properties = array(
-					'access_token'   => '',
+					'access_token'  => '',
 					'refresh_token' => '',
 					'expires_in'    => '',
 				);

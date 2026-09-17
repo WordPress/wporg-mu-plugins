@@ -2,6 +2,9 @@
 
 use function WordPressdotorg\MU_Plugins\Global_Header_Footer\remove_head_alternate_links;
 
+/**
+ * Tests global header and footer feed-link filtering.
+ */
 class Test_Global_Header_Footer extends WP_UnitTestCase {
 
 	/**
@@ -64,6 +67,7 @@ class Test_Global_Header_Footer extends WP_UnitTestCase {
 	 * Test that stylesheet links are preserved.
 	 */
 	public function test_preserves_stylesheet_link() {
+		// phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet -- Literal markup is input to the link-filter test.
 		$input = '<link rel="stylesheet" href="style.css">';
 		$this->assertSame( $input, remove_head_alternate_links( $input ) );
 	}
@@ -96,12 +100,14 @@ class Test_Global_Header_Footer extends WP_UnitTestCase {
 	 * Test that mixed markup keeps non-alternate links and removes alternate ones.
 	 */
 	public function test_mixed_markup() {
+		// phpcs:disable WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet -- Literal markup is input to the link-filter test.
 		$input = '<head>
 <link rel="alternate" type="application/rss+xml" title="Feed" href="/feed/" />
 <link rel="stylesheet" href="style.css">
 <link rel="alternate" type="application/json+oembed" href="/oembed" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 </head>';
+		// phpcs:enable WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet
 
 		$result = remove_head_alternate_links( $input );
 

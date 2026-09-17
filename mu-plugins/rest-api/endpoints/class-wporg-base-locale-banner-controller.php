@@ -16,9 +16,9 @@ abstract class Base_Locale_Banner_Controller extends \WP_REST_Controller {
 			$this->namespace,
 			'/' . $this->rest_base,
 			array(
-				'methods' => \WP_REST_Server::READABLE,
-				'callback' => array( $this, 'get_response' ),
-				'args' => array(
+				'methods'             => \WP_REST_Server::READABLE,
+				'callback'            => array( $this, 'get_response' ),
+				'args'                => array(
 					'debug' => array(
 						'type' => 'boolean',
 					),
@@ -30,13 +30,13 @@ abstract class Base_Locale_Banner_Controller extends \WP_REST_Controller {
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<slug>[^/]+)/',
 			array(
-				'methods' => \WP_REST_Server::READABLE,
-				'callback' => array( $this, 'get_response_for_item' ),
-				'args' => array(
+				'methods'             => \WP_REST_Server::READABLE,
+				'callback'            => array( $this, 'get_response_for_item' ),
+				'args'                => array(
 					'debug' => array(
 						'type' => 'boolean',
 					),
-					'slug' => array(
+					'slug'  => array(
 						'validate_callback' => array( $this, 'check_slug' ),
 					),
 				),
@@ -93,10 +93,12 @@ abstract class Base_Locale_Banner_Controller extends \WP_REST_Controller {
 	 * These are used by the wordpress.org/lang-suggest/ endpoint,
 	 * and are included here for translation purposes.
 	 */
-	private function _strings_for_glotpress() {
+	private function strings_for_glotpress() {
+		/* translators: %s: Language name. */
 		__( 'WordPress is also available in %s.', 'wporg' );
+		/* translators: %s: Language name. */
 		__( 'Learn WordPress is also available in %s.', 'wporg' );
+		/* translators: %s: Language name. */
 		__( 'WordPress support forums are also available in %s.', 'wporg' );
 	}
-
 }
