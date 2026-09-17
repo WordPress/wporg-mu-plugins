@@ -40,8 +40,8 @@
 		"start": "NODE_ENV=development ./bin/watch.js",
 		"lint:css": "wp-scripts lint-style **/*.pcss",
 		"lint:js": "wp-scripts lint-js **/src/**/*.js",
-		"setup:tools": "npm install && composer install && TEXTDOMAIN=wporg composer exec update-configs",
-		"update:tools": "composer update && TEXTDOMAIN=wporg composer exec update-configs",
+		"setup:tools": "npm install && composer install",
+		"update:tools": "composer update",
 		"wp-env": "wp-env",
 		"test:php": "wp-env run tests-cli --env-cwd=/var/www/html/ ./vendor/bin/phpunit"
 	},

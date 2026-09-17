@@ -52,26 +52,27 @@ class Autoloader {
 	/**
 	 * Loads a class if it starts with `$this->prefix`.
 	 *
-	 * @param string $class The class to be loaded.
+	 * @param string $class_name The class to be loaded.
 	 */
-	public function load( $class ) {
-		if ( strpos( $class, $this->prefix . self::NS_SEPARATOR ) !== 0 ) {
+	public function load( $class_name ) {
+		if ( strpos( $class_name, $this->prefix . self::NS_SEPARATOR ) !== 0 ) {
 			return;
 		}
 
 		// Strip prefix from the start (ala PSR-4)
-		$class = substr( $class, $this->prefix_length + 1 );
-		$class = strtolower( $class );
-		$file  = '';
+		$class_name = substr( $class_name, $this->prefix_length + 1 );
+		$class_name = strtolower( $class_name );
+		$file       = '';
 
-		if ( false !== ( $last_ns_pos = strripos( $class, self::NS_SEPARATOR ) ) ) {
-			$namespace = substr( $class, 0, $last_ns_pos );
-			$namespace = str_replace( '_', '-', $namespace );
-			$class     = substr( $class, $last_ns_pos + 1 );
-			$file      = str_replace( self::NS_SEPARATOR, DIRECTORY_SEPARATOR, $namespace ) . DIRECTORY_SEPARATOR;
+		$last_ns_pos = strripos( $class_name, self::NS_SEPARATOR );
+		if ( false !== $last_ns_pos ) {
+			$namespace  = substr( $class_name, 0, $last_ns_pos );
+			$namespace  = str_replace( '_', '-', $namespace );
+			$class_name = substr( $class_name, $last_ns_pos + 1 );
+			$file       = str_replace( self::NS_SEPARATOR, DIRECTORY_SEPARATOR, $namespace ) . DIRECTORY_SEPARATOR;
 		}
 
-		$file .= 'class-' . str_replace( '_', '-', $class ) . '.php';
+		$file .= 'class-' . str_replace( '_', '-', $class_name ) . '.php';
 
 		$path = $this->path . $file;
 
@@ -87,7 +88,7 @@ class Autoloader {
  * @param string $prefix
  * @param string $path
  */
-function register_class_path( $prefix, $path ) {
+function register_class_path( $prefix, $path ) { // phpcs:ignore Universal.Files.SeparateFunctionsFromOO.Mixed -- Keep the existing registration helper alongside its autoloader.
 	$loader = new Autoloader( $prefix, $path );
 	spl_autoload_register( array( $loader, 'load' ) );
 }

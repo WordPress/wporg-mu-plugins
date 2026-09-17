@@ -55,6 +55,6 @@ function wporg_decrypt( string $value, string $context, string $key_name = '' ) 
  * @param HiddenString|string $value The value to check.
  * @return bool True if the value is encrypted, false otherwise.
  */
-function wporg_is_encrypted( string $value ) : bool {
+function wporg_is_encrypted( string $value ): bool {
 	return \WordPressdotorg\MU_Plugins\Encryption\is_encrypted( $value );
 }

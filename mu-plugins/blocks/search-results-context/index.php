@@ -29,9 +29,9 @@ function render( $attributes ) {
 	}
 
 	$posts_per_page = get_query_var( 'posts_per_page' );
-	$current_page = get_query_var( 'paged' ) ?: 1;
-	$first_result = ( $current_page - 1 ) * $posts_per_page + 1;
-	$last_result = min( $current_page * $posts_per_page, $results_count );
+	$current_page   = get_query_var( 'paged' ) ?: 1;
+	$first_result   = ( $current_page - 1 ) * $posts_per_page + 1;
+	$last_result    = min( $current_page * $posts_per_page, $results_count );
 
 	$content = sprintf(
 		/* translators: %1$s number of results; %2$s keyword. */

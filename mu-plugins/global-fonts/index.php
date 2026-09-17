@@ -7,7 +7,7 @@
 namespace WordPressdotorg\MU_Plugins\Global_Fonts;
 
 // Include helper functions that exist in global-scope.
-include __DIR__ . '/helper-functions.php';
+require __DIR__ . '/helper-functions.php';
 
 add_filter( 'init', __NAMESPACE__ . '\register_style', 1 );
 add_filter( 'block_editor_settings_all', __NAMESPACE__ . '\relative_to_absolute_urls' );
@@ -65,8 +65,8 @@ function relative_to_absolute_urls( $editor_settings ) {
 			continue;
 		}
 		if ( str_contains( $style['css'], './Inter' ) || str_contains( $style['css'], './EB-Garamond' ) ) {
-			$url = plugins_url( '', __FILE__ );
-			$style['css'] = str_replace( 'url(./', "url($url/", $style['css'] );
+			$url                             = plugins_url( '', __FILE__ );
+			$style['css']                    = str_replace( 'url(./', "url($url/", $style['css'] );
 			$editor_settings['styles'][ $i ] = $style;
 		}
 	}
@@ -93,11 +93,11 @@ function preload_font( $fonts, $subsets ) {
 		return false;
 	}
 
-	$fonts = explode( ',', $fonts );
+	$fonts   = explode( ',', $fonts );
 	$subsets = explode( ',', $subsets );
 
 	$valid_subsets = get_valid_subsets();
-	$subsets = array_intersect( $subsets, $valid_subsets );
+	$subsets       = array_intersect( $subsets, $valid_subsets );
 	if ( empty( $subsets ) ) {
 		// No valid subsets, don't preload anything.
 		return;
@@ -106,13 +106,13 @@ function preload_font( $fonts, $subsets ) {
 	// something-ext is found, check that the corresponding base subset exists.
 	// The -ext subset only has the extra characters, so the base font still needs to be loaded.
 	if ( false !== strpos( implode( ', ', $subsets ), '-ext' ) ) {
-		if ( in_array( 'latin-ext', $subsets ) && ! in_array( 'latin', $subsets ) ) {
+		if ( in_array( 'latin-ext', $subsets, true ) && ! in_array( 'latin', $subsets, true ) ) {
 			$subsets[] = 'latin';
 		}
-		if ( in_array( 'greek-ext', $subsets ) && ! in_array( 'greek', $subsets ) ) {
+		if ( in_array( 'greek-ext', $subsets, true ) && ! in_array( 'greek', $subsets, true ) ) {
 			$subsets[] = 'greek';
 		}
-		if ( in_array( 'cyrillic-ext', $subsets ) && ! in_array( 'cyrillic', $subsets ) ) {
+		if ( in_array( 'cyrillic-ext', $subsets, true ) && ! in_array( 'cyrillic', $subsets, true ) ) {
 			$subsets[] = 'cyrillic';
 		}
 	}
@@ -123,7 +123,7 @@ function preload_font( $fonts, $subsets ) {
 		$new_preload = [
 			$font => $subsets,
 		];
-		$preload = array_merge_recursive( $preload, $new_preload );
+		$preload     = array_merge_recursive( $preload, $new_preload );
 	}
 
 	wp_style_add_data( 'wporg-global-fonts', 'preload', $preload );
