@@ -3,9 +3,10 @@
 	display: flex;
 	flex-wrap: wrap;
 	gap: var(--wp--style--block-gap) calc(var(--wp--style--block-gap) * 3);
-	margin-top: 60px;
+	margin-top: 44px; /* Matches the footer's top padding on mobile. */
 
 	@media (--tablet) {
+		margin-top: 60px;
 		justify-content: space-between;
 		flex-wrap: nowrap;
 		align-items: center; /* Icons wrap to two rows here, so centre them on the logo block. */
