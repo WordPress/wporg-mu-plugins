@@ -185,6 +185,10 @@ function is_cacheable( array $facets, int $page ): bool {
 	$cacheable = true;
 	$facets    = array_filter( $facets ); // Remove empty so that `count()` below is accurate.
 
+	// These shape the results rather than filter them. They're still part of the cache key, so they don't
+	// collide with other requests, but they shouldn't stop a single-facet page from being cached.
+	unset( $facets['limit'], $facets['include_description'] );
+
 	// Only cache regularly visited pages.
 	// Search terms vary so much that caching them probably wouldn't result in a significant degree of
 	// cache hits, but it would generate a lot of extra transients. With memcached, that could push
@@ -220,6 +224,18 @@ function get_cache_key( array $parts ): string {
 }
 
 /**
+ * Get the number of events to query for.
+ *
+ * The limit can be lowered from the default, but not raised above it.
+ */
+function get_limit( array $facets, int $max ): int {
+	// All facets are converted into an array.
+	$limit = absint( $facets['limit'][0] ?? $max );
+
+	return min( max( $limit, 1 ), $max );
+}
+
+/**
  * Get a list of all upcoming events across all sites.
  */
 function get_all_upcoming_events( array $facets = array() ): array {
@@ -227,20 +243,29 @@ function get_all_upcoming_events( array $facets = array() ): array {
 
 	$where = get_where_clauses( $facets );
 
+	$description_field = '';
+	if ( isset( $facets['include_description'] ) ) {
+		$description_field = ', description';
+	}
+
+	$limit = get_limit( $facets, 500 );
+
 	$query = "
 		SELECT
 			id, `type`, title, url, meetup, location, latitude, longitude, date_utc,
 			date_utc_offset AS tz_offset
+			{$description_field}
 		FROM `wporg_events`
 		WHERE
 			status = 'scheduled' AND
 			{$where['clauses']}
 			AND date_utc >= %s
 		ORDER BY date_utc ASC
-		LIMIT 500";
+		LIMIT %d";
 
 	$where_values   = $where['values'] ?? [];
 	$where_values[] = gmdate( 'Y-m-d' );
+	$where_values[] = $limit;
 
 	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- get_where_clauses() supplies static SQL and placeholders; all values are prepared here.
 	$query = $wpdb->prepare( $query, $where_values );
@@ -325,17 +350,23 @@ function get_where_clauses( array $facets ): array {
 function get_all_past_events( int $page, array $facets = array() ): array {
 	global $wpdb;
 
-	$limit  = 50;
+	$limit  = get_limit( $facets, 50 );
 	$offset = ( $page - 1 ) * $limit;
 	$where  = get_where_clauses( $facets );
 
 	$limit_sql = $wpdb->prepare( 'LIMIT %d, %d', $offset, $limit );
+
+	$description_field = '';
+	if ( isset( $facets['include_description'] ) ) {
+		$description_field = ', description';
+	}
 
 	// wporg_events.status doesn't have a separate value for "completed", it's just scheduled events that have
 	// a date in the past.
 	$query = "SELECT
 			id, `type`, title, url, meetup, location, latitude, longitude, date_utc,
 			date_utc_offset AS tz_offset
+			{$description_field}
 		FROM `wporg_events`
 		WHERE
 			status = 'scheduled' AND
