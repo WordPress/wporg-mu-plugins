@@ -4,6 +4,7 @@
  */
 
 namespace WordPressdotorg\MU_Plugins\Plugin_Tweaks\Stream;
+
 use Two_Factor_Core;
 use WP_Stream\Connector;
 use WildWolf\WordPress\TwoFactorWebAuthn\WebAuthn_Credential_Store;
@@ -42,7 +43,6 @@ class Connector_Two_Factor extends Connector {
 		// WebAuthN.. Must be run early, see ::register().
 		'wp_ajax_webauthn_register'   => 5,
 		'wp_ajax_webauthn_delete_key' => 5,
-		// 'wp_ajax_webauthn_rename_key' => 5, // WordPress.org doesn't support this.
 	];
 
 	/**
@@ -105,7 +105,7 @@ class Connector_Two_Factor extends Connector {
 	 */
 	public function get_context_labels() {
 		return array(
-			'settings' => esc_html_x( 'Settings', 'two-factor', 'stream' ),
+			'settings' => esc_html_x( 'Settings', 'two-factor', 'stream' ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Reuse the Stream connector translation catalog.
 		);
 	}
 
@@ -172,7 +172,7 @@ class Connector_Two_Factor extends Connector {
 	/**
 	 * Callback to watch for failed logins with Two Factor errors.
 	 *
-	 * @param string   $user_login User login.
+	 * @param string    $user_login User login.
 	 * @param \WP_Error $error WP_Error object.
 	 */
 	public function callback_wp_login_failed( $user_login, $error ) {
@@ -210,14 +210,13 @@ class Connector_Two_Factor extends Connector {
 	public function callback_update_user_meta( $meta_id, $user_id, $meta_key, $new_meta_value ) {
 		unset( $meta_id );
 
-		switch( $meta_key ) {
+		switch ( $meta_key ) {
 			case '_two_factor_backup_codes':
 			case '_two_factor_totp_key':
 			case '_two_factor_enabled_providers':
 				$this->user_meta[ $user_id ][ $meta_key ] = get_user_meta( $user_id, $meta_key, true );
 				break;
 		}
-
 	}
 
 	/**
@@ -234,7 +233,7 @@ class Connector_Two_Factor extends Connector {
 		$old_meta_value = $this->user_meta[ $user_id ][ $meta_key ] ?? null;
 		unset( $this->user_meta[ $user_id ][ $meta_key ] );
 
-		switch( $meta_key ) {
+		switch ( $meta_key ) {
 			case '_two_factor_backup_codes':
 				$this->log(
 					'Updated backup codes',
@@ -290,58 +289,60 @@ class Connector_Two_Factor extends Connector {
 	/**
 	 * Callback to watch for WebAuthN key registrations.
 	 */
-	function callback_wp_ajax_webauthn_register() {
-		ob_start( function( $output ) {
-			$success = json_decode( $output, true )['success'] ?? false;
+	public function callback_wp_ajax_webauthn_register() {
+		ob_start(
+			function ( $output ) {
+				$success = json_decode( $output, true )['success'] ?? false;
 
-			if ( $success ) {
-				$this->log(
-					'WebAuthN key registered: %s',
-					array(
-						'key-name' => wp_unslash( $_REQUEST['name'] ),
-					),
-					get_current_user_id(),
-					'webauthn',
-					'added'
-				);
+				if ( $success ) {
+					$this->log(
+						'WebAuthN key registered: %s',
+						array(
+							'key-name' => sanitize_text_field( wp_unslash( $_REQUEST['name'] ?? '' ) ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Log only after the provider validates its registration nonce and returns success.
+						),
+						get_current_user_id(),
+						'webauthn',
+						'added'
+					);
+				}
+
+				return $output;
 			}
-
-			return $output;
-		} );
-		
+		);
 	}
 
 	/**
 	 * Callback to watch for WebAuthN key deletions.
 	 */
-	function callback_wp_ajax_webauthn_delete_key() {
+	public function callback_wp_ajax_webauthn_delete_key() {
 		// Fetch the handle now, so that it's available if it's removed.
-		$user = get_user_by( 'ID', $_REQUEST['user_id'] ?? 0 );
+		$user = get_user_by( 'ID', absint( wp_unslash( $_REQUEST['user_id'] ?? 0 ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Snapshot keys before deletion; only the provider's nonce-validated success response is logged.
 		$keys = $user ? ( new WebAuthn_Credential_Store() )->get_user_keys( $user ) : [];
 
-		ob_start( function( $output ) use( $keys ) {
-			$success = json_decode( $output, true )['success'] ?? false;
+		ob_start(
+			function ( $output ) use ( $keys ) {
+				$success = json_decode( $output, true )['success'] ?? false;
 
-			if ( $success ) {
-				$handle = wp_unslash( $_REQUEST['handle'] ?? '' );
+				if ( $success ) {
+					$handle = sanitize_text_field( wp_unslash( $_REQUEST['handle'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- The provider validated its deletion nonce before returning success.
 
-				$key  = wp_list_filter( $keys, [ 'credential_id' => $handle ] );
-				$key  = reset( $key );
-				$name = $key->name ?? '';
+					$key  = wp_list_filter( $keys, [ 'credential_id' => $handle ] );
+					$key  = reset( $key );
+					$name = $key->name ?? '';
 
-				$this->log(
-					'WebAuthN key deleted: %s',
-					array(
-						'key-name' => $name,
-					),
-					get_current_user_id(),
-					'two-factor',
-					'removed'
-				);
+					$this->log(
+						'WebAuthN key deleted: %s',
+						array(
+							'key-name' => $name,
+						),
+						get_current_user_id(),
+						'two-factor',
+						'removed'
+					);
+				}
+
+				return $output;
 			}
-
-			return $output;
-		} );
+		);
 	}
-
 }

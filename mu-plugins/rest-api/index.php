@@ -1,10 +1,10 @@
 <?php
+/**
+ * Register the network REST API endpoints and filters.
+ */
 
 namespace WordPressdotorg\MU_Plugins\REST_API;
 
-/**
- * Actions and filters.
- */
 add_action( 'rest_api_init', __NAMESPACE__ . '\initialize_rest_endpoints' );
 add_action( 'rest_api_init', __NAMESPACE__ . '\initialize_rest_contexts' );
 add_filter( 'rest_user_query', __NAMESPACE__ . '\modify_user_query_parameters', 10, 2 );
@@ -21,10 +21,10 @@ function initialize_rest_endpoints() {
 	$users_controller->register_routes();
 
 	// The Site Quality controller is only needed on the main site. Note: domain check is due to this plugin running on multiple networks.
-	if ( 1 === get_current_blog_id() && 'wordpress.org' === get_blog_details()->domain ) {
+	if ( 1 === get_current_blog_id() && function_exists( 'get_blog_details' ) && 'wordpress.org' === get_blog_details()->domain ) {
 		require_once __DIR__ . '/endpoints/class-wporg-site-quality-controller.php';
 	}
-	
+
 	if ( defined( 'WPORG_THEME_DIRECTORY_BLOGID' ) && WPORG_THEME_DIRECTORY_BLOGID === get_current_blog_id() ) {
 		require_once __DIR__ . '/endpoints/class-wporg-base-locale-banner-controller.php';
 		require_once __DIR__ . '/endpoints/class-wporg-themes-locale-banner-controller.php';

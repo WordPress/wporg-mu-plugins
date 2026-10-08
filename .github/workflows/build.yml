@@ -3,28 +3,31 @@ name: Build and push to build branch.
 on:
     push:
         branches: [trunk]
+    workflow_dispatch:
 
 concurrency:
     group: ${{ github.workflow }}
     cancel-in-progress: true
 
 jobs:
+    # Run the linting and test suites first. The build job below depends on both,
+    # so a failing lint/test run prevents the build branch from being updated.
+    lint:
+        uses: ./.github/workflows/linters.yml
+    test:
+        uses: ./.github/workflows/tests.yml
+
     build:
+        needs: [lint, test]
         runs-on: ubuntu-latest
         steps:
             - name: Checkout repository
-              uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
+              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-            - name: Install NodeJS
-              uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+            - name: Install dependencies
+              uses: ./.github/actions/setup
               with:
-                  node-version-file: '.nvmrc'
-                  cache: yarn
-
-            - name: Install all dependencies
-              run: |
-                  composer install --no-dev
-                  npm install
+                  composer-options: '--no-dev'
 
             - name: Build
               run: npm run build

@@ -19,7 +19,7 @@ add_action( 'init', __NAMESPACE__ . '\horizontal_slider_block_init' );
  */
 function register_assets() {
 	$deps_path = __DIR__ . '/build/index.asset.php';
-	
+
 	if ( ! file_exists( $deps_path ) ) {
 		return;
 	}
@@ -42,7 +42,7 @@ function register_assets() {
 			filemtime( __DIR__ . '/build/style.css' )
 		);
 
-		wp_style_add_data( 'wporg-horizontal-slider-style', 'rtl', 'replace' ); 
+		wp_style_add_data( 'wporg-horizontal-slider-style', 'rtl', 'replace' );
 	}
 }
 

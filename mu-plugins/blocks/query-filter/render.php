@@ -3,6 +3,10 @@
  * Render the query filter.
  */
 
+if ( empty( $attributes['key'] ) ) {
+	return;
+}
+
 /**
  * Get configuration for this filter from a filter, so that child themes can
  * dynamically configure the output without needing to rebuild the HTML.
@@ -36,9 +40,9 @@ if ( ! isset( $settings['options'] ) || ! count( $settings['options'] ) ) {
 $has_multiple = isset( $attributes['multiple'] ) && $attributes['multiple'];
 
 // Initial state to pass to Interactivity API.
-$init_state = [
-	'isOpen' => false,
-	'hasHover' => false,
+$init_state    = [
+	'isOpen'      => false,
+	'hasHover'    => false,
 	'hasMultiple' => $has_multiple,
 ];
 $encoded_state = wp_json_encode( $init_state );
@@ -51,8 +55,8 @@ $button_classes = array_keys(
 	array_filter(
 		array(
 			'wporg-query-filter__toggle' => true,
-			'has-no-filter-applied' => ! $selected_count,
-			'is-single-select' => ! $has_multiple,
+			'has-no-filter-applied'      => ! $selected_count,
+			'is-single-select'           => ! $has_multiple,
 		)
 	)
 );
@@ -61,7 +65,7 @@ $modal_classes = array_keys(
 	array_filter(
 		array(
 			'wporg-query-filter__modal' => true,
-			'is-single-select' => ! $has_multiple,
+			'is-single-select'          => ! $has_multiple,
 		)
 	)
 );
@@ -99,8 +103,8 @@ if ( $selected_count && $has_multiple ) {
 		class="<?php echo esc_attr( implode( ' ', $modal_classes ) ); ?>"
 		id="<?php echo esc_attr( $html_id ); ?>"
 		data-wp-bind--hidden="!context.isOpen"
-		data-wp-watch--focus="effects.focusFirstElement"
-		data-wp-watch--position="effects.checkPosition"
+		data-wp-watch---focus="effects.focusFirstElement"
+		data-wp-watch---position="effects.checkPosition"
 	>
 		<form
 			action="<?php echo esc_attr( $settings['action'] ); ?>"
@@ -125,7 +129,7 @@ if ( $selected_count && $has_multiple ) {
 						name="<?php echo esc_attr( $settings['key'] ); ?>"
 						value="<?php echo esc_attr( $value ); ?>"
 						id="<?php echo esc_attr( $html_id . '-' . $value ); ?>"
-						<?php checked( in_array( $value, $settings['selected'] ) ); ?>
+							<?php checked( in_array( $value, $settings['selected'] ) ); // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- Numeric option keys and URL values may differ in type or zero padding. ?>
 					/>
 					<?php else : ?>
 					<input
@@ -133,7 +137,7 @@ if ( $selected_count && $has_multiple ) {
 						name="<?php echo esc_attr( $settings['key'] ); ?>[]"
 						value="<?php echo esc_attr( $value ); ?>"
 						id="<?php echo esc_attr( $html_id . '-' . $value ); ?>"
-						<?php checked( in_array( $value, $settings['selected'] ) ); ?>
+							<?php checked( in_array( $value, $settings['selected'] ) ); // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- Numeric option keys and URL values may differ in type or zero padding. ?>
 					/>
 					<?php endif; ?>
 					<label for="<?php echo esc_attr( $html_id . '-' . $value ); ?>"><?php echo esc_html( $label ); ?></label>

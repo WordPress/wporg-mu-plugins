@@ -30,7 +30,7 @@ function include_user_name_in_creation_log( $record ) {
 		$user = get_user_by( 'id', $record['object_id'] );
 		if ( $user && ! str_contains( $record['message'], '%s' ) ) {
 			$record['message'] = 'New user registration: %s';
-			$record['args'] = [ 'user_login' => $user->user_login ];
+			$record['args']    = [ 'user_login' => $user->user_login ];
 		}
 	}
 
@@ -40,7 +40,7 @@ function include_user_name_in_creation_log( $record ) {
 /**
  * Stream records 'profile updated' events during user registration, as we call `wp_update_user(). Avoid these.
  *
- * @param bool $exclude If this record should be excluded.
+ * @param bool  $exclude If this record should be excluded.
  * @param array $record The record to insert.
  * @return bool
  */
@@ -78,7 +78,7 @@ function log_forum_role_change( $new_role, $user_id, $user ) {
 function wp_stream_connectors( $connectors ) {
 	require_once __DIR__ . '/stream/class-connector-two-factor.php';
 
-	$connectors[ 'two-factor'] = new Connector_Two_Factor;
+	$connectors['two-factor'] = new Connector_Two_Factor();
 
 	return $connectors;
 }

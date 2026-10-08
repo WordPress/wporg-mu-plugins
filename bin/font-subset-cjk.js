@@ -2,12 +2,12 @@
 /* eslint-disable no-console */
 /**
  * Prerequisite:
- * 1. `yarn` to make sure you have the current packages.
+ * 1. `npm install` to make sure you have the current packages.
  * Usage:
  * 1. Add {"type": "module"} to package.json.
  * 2. Add the `.ttf` font to /fonts/.
  * 3. Update the fontNames value.
- * 4. Run 'yarn font-subset-cjk'.
+ * 4. Run 'npm run font-subset-cjk'.
  * 5. Remove {"type": "module"} from package.json or the linter would prompt an error.
  */
 import { readFileSync, unlinkSync } from 'node:fs';

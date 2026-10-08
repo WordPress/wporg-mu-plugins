@@ -16,12 +16,12 @@ defined( 'WPINC' ) || die();
  */
 
 $search_args = array(
-	'className' => 'wp-block-navigation-item',
-	'label' => _x( 'Search in WordPress.org', 'button label', 'wporg' ),
-	'placeholder' => _x( 'Type to search…', 'input field placeholder', 'wporg' ),
+	'className'      => 'wp-block-navigation-item',
+	'label'          => _x( 'Search in WordPress.org', 'button label', 'wporg' ),
+	'placeholder'    => _x( 'Type to search…', 'input field placeholder', 'wporg' ),
 	'buttonPosition' => 'button-inside',
-	'buttonUseIcon' => true,
-	'formAction' => 'https://wordpress.org/search/do-search.php',
+	'buttonUseIcon'  => true,
+	'formAction'     => 'https://wordpress.org/search/do-search.php',
 );
 
 /**
@@ -84,8 +84,8 @@ function recursive_menu( $menu_item, $top_level = true ) {
 <!-- wp:navigation {"openSubmenusOnClick":true,"className":"global-header__navigation","ariaLabel":"<?php echo esc_attr_x( 'Main', 'main navigation label', 'wporg' ); ?>","layout":{"type":"flex","orientation":"horizontal"}} -->
 	<?php
 	/*
-	* Loop though menu items and create navigation item blocks. Recurses through any submenu items to output dropdowns.
-	*/
+	 * Loop though menu items and create navigation item blocks. Recurses through any submenu items to output dropdowns.
+	 */
 	foreach ( $menu_items as $item ) {
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo recursive_menu( $item );

@@ -27,8 +27,8 @@ function init() {
 	register_block_style(
 		'wporg/local-navigation-bar',
 		array(
-			'name'         => 'brush-stroke',
-			'label'        => __( 'Brush Stroke', 'wporg' ),
+			'name'  => 'brush-stroke',
+			'label' => __( 'Brush Stroke', 'wporg' ),
 		)
 	);
 }
@@ -48,8 +48,8 @@ function update_block_attributes( $block ) {
 
 		// Set layout values if they don't exist.
 		$default_layout = array(
-			'type' => 'flex',
-			'flexWrap' => 'nowrap',
+			'type'           => 'flex',
+			'flexWrap'       => 'nowrap',
 			'justifyContent' => 'space-between',
 		);
 		if ( ! empty( $block['attrs']['layout'] ) ) {
@@ -91,14 +91,14 @@ function update_child_block_attributes( $parsed_block, $source_block, $parent_bl
 			return $parsed_block;
 		}
 		// set the values we need.
-		$parsed_block['attrs']['icon'] = 'menu';
-		$parsed_block['attrs']['fontSize'] = 'small';
+		$parsed_block['attrs']['icon']                = 'menu';
+		$parsed_block['attrs']['fontSize']            = 'small';
 		$parsed_block['attrs']['openSubmenusOnClick'] = true;
-		$parsed_block['attrs']['layout'] = array(
-			'type' => 'flex',
+		$parsed_block['attrs']['layout']              = array(
+			'type'        => 'flex',
 			'orientation' => 'horizontal',
 		);
-		$parsed_block['attrs']['ariaLabel'] = _x( 'Section', 'local navigation label', 'wporg' );
+		$parsed_block['attrs']['ariaLabel']           = _x( 'Section', 'local navigation label', 'wporg' );
 
 		// Add an extra navigation block which is always collapsed, so that it
 		// can be swapped out when the section title + nav menu collide.
@@ -142,27 +142,30 @@ function customize_navigation_block_icon( $block_content ) {
 	if (
 		$tag_processor->next_tag(
 			array(
-				'tag_name' => 'nav',
+				'tag_name'   => 'nav',
 				'class_name' => 'wp-block-navigation',
 			)
 		)
 	) {
+		$open_icon_replaced = false;
+
 		if (
 			$tag_processor->next_tag(
 				array(
-					'tag_name' => 'button',
+					'tag_name'   => 'button',
 					'class_name' => 'wp-block-navigation__responsive-container-open',
 				)
 			) &&
 			$tag_processor->next_tag( 'path' )
 		) {
 			$tag_processor->set_attribute( 'd', 'M17.5 11.6L12 16l-5.5-4.4.9-1.2L12 14l4.5-3.6 1 1.2z' );
+			$open_icon_replaced = true;
 		}
 
 		if (
 			$tag_processor->next_tag(
 				array(
-					'tag_name' => 'button',
+					'tag_name'   => 'button',
 					'class_name' => 'wp-block-navigation__responsive-container-close',
 				)
 			) &&
@@ -171,7 +174,18 @@ function customize_navigation_block_icon( $block_content ) {
 			$tag_processor->set_attribute( 'd', 'M6.5 12.4L12 8l5.5 4.4-.9 1.2L12 10l-4.5 3.6-1-1.2z' );
 		}
 
-		return $tag_processor->get_updated_html();
+		$updated_html = $tag_processor->get_updated_html();
+
+		// If the hamburger icon's top line was replaced with a caret/chevron, remove the bottom 2 lines.
+		if ( $open_icon_replaced ) {
+			$updated_html = preg_replace(
+				'#<path\s+d="M5 (?:12\.8h14v-1\.5H5v1\.5z|19h14v-1\.5H5V19z)"\s*></path>#',
+				'',
+				$updated_html
+			);
+		}
+
+		return $updated_html;
 	}
 
 	return $block_content;

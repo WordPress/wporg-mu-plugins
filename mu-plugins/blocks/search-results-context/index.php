@@ -29,9 +29,9 @@ function render( $attributes ) {
 	}
 
 	$posts_per_page = get_query_var( 'posts_per_page' );
-	$current_page = get_query_var( 'paged' ) ?: 1;
-	$first_result = ( $current_page - 1 ) * $posts_per_page + 1;
-	$last_result = min( $current_page * $posts_per_page, $results_count );
+	$current_page   = get_query_var( 'paged' ) ?: 1;
+	$first_result   = ( $current_page - 1 ) * $posts_per_page + 1;
+	$last_result    = min( $current_page * $posts_per_page, $results_count );
 
 	$content = sprintf(
 		/* translators: %1$s number of results; %2$s keyword. */
@@ -52,11 +52,16 @@ function render( $attributes ) {
 		number_format_i18n( $last_result ),
 	);
 
+	// tagName is an element name, not an attribute value, so allow-list it instead of esc_attr().
+	$allowed_tags = array( 'p', 'div', 'span' );
+	$tag_name     = isset( $attributes['tagName'] ) ? strtolower( (string) $attributes['tagName'] ) : 'p';
+	$tag_name     = in_array( $tag_name, $allowed_tags, true ) ? $tag_name : 'p';
+
 	$wrapper_attributes = get_block_wrapper_attributes();
 
 	return sprintf(
 		'<%1$s %2$s>%3$s %4$s</%1$s>',
-		esc_attr( $attributes['tagName'] ),
+		$tag_name,
 		$wrapper_attributes,
 		$content,
 		$showing,

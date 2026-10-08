@@ -25,18 +25,18 @@ add_shortcode( 'youtube-nocookie', __NAMESPACE__ . '\render' );
 function render( $attr, $content ) {
 	// Short out early if the content is not a valid URL.
 	// Returns null if content is not a URL at all.
-	$host = wp_parse_url( $content, PHP_URL_HOST );
+	$host        = wp_parse_url( $content, PHP_URL_HOST );
 	$valid_hosts = [ 'www.youtube-nocookie.com', 'youtube-nocookie.com' ];
 	if ( ! in_array( $host, $valid_hosts, true ) ) {
 		return '';
 	}
 
 	$defaults = array(
-		'width' => '100%',
+		'width'  => '100%',
 		'height' => false,
-		'title' => 'YouTube video player',
+		'title'  => 'YouTube video player',
 	);
-	$args = shortcode_atts( $defaults, $attr );
+	$args     = shortcode_atts( $defaults, $attr );
 
 	$html_attrs = '';
 	foreach ( $args as $name => $value ) {

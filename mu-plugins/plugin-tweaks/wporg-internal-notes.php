@@ -21,7 +21,7 @@ add_filter( 'wporg_internal_notes_rest_prepare_response', __NAMESPACE__ . '\wpor
  */
 function wporg_internal_notes_replace_rest_author_link( $response ) {
 	$response_data = $response->get_data();
-	$author = get_user_by( 'id', $response_data['author'] ?? 0 );
+	$author        = get_user_by( 'id', $response_data['author'] ?? 0 );
 
 	if ( ! $author ) {
 		return $response;

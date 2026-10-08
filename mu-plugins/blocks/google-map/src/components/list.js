@@ -7,7 +7,7 @@ import { __ } from '@wordpress/i18n';
  * Internal dependencies
  */
 import { getEventDateTime } from '../utilities/date-time';
-import { formatLocation } from '../utilities/content';
+import { formatLocation, getSafeHref } from '../utilities/content';
 
 /**
  * Render a list of the map markers.
@@ -34,7 +34,7 @@ export default function List( { markers, displayLimit } ) {
 					className="wporg-marker-list-item"
 				>
 					<h3 className="wporg-marker-list-item__title">
-						<a href={ marker.url }>{ marker.title }</a>
+						<a href={ getSafeHref( marker.url ) }>{ marker.title }</a>
 					</h3>
 
 					<p className="wporg-marker-list-item__location">{ formatLocation( marker.location ) }</p>

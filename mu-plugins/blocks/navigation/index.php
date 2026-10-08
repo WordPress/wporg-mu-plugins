@@ -31,13 +31,13 @@ function init() {
 		return;
 	}
 
-	$metadata_file = dirname( dirname( __DIR__ ) ) . '/blocks/navigation/build/block.json';
-	$metadata = wp_json_file_decode( $metadata_file, array( 'associative' => true ) );
-	$metadata['file'] = $metadata_file;
+	$metadata_file        = dirname( dirname( __DIR__ ) ) . '/blocks/navigation/build/block.json';
+	$metadata             = wp_json_file_decode( $metadata_file, array( 'associative' => true ) );
+	$metadata['file']     = $metadata_file;
 	$editor_script_handle = register_block_script_handle( $metadata, 'editorScript', 0 );
 	add_action(
 		'enqueue_block_assets',
-		function() use ( $editor_script_handle, $dynamic_menus ) {
+		function () use ( $editor_script_handle, $dynamic_menus ) {
 			if ( is_admin() && wp_should_load_block_editor_scripts_and_styles() ) {
 				wp_localize_script( $editor_script_handle, 'wporgLocalNavigationMenus', $dynamic_menus );
 				wp_enqueue_script( $editor_script_handle );
@@ -48,9 +48,9 @@ function init() {
 	// Hide the menu selection when a dynamic menu is selected.
 	add_action(
 		'admin_print_styles',
-		function() {
+		function () {
 			global $hook_suffix;
-			if ( ! in_array( $hook_suffix, array( 'post.php', 'post-new.php' ) ) ) {
+			if ( ! in_array( $hook_suffix, array( 'post.php', 'post-new.php' ), true ) ) {
 				return;
 			}
 			echo '<style>.wporg-nav-hide-next-panel + .components-panel__body { display: none; }</style>';
@@ -72,10 +72,10 @@ function update_navigation_items( $inner_blocks ) {
 		isset( $block['attrs']['menuSlug'] ) &&
 		$block['attrs']['menuSlug']
 	) {
-		$menu_content = get_menu_content( $block['attrs']['menuSlug'] );
-		$parsed_blocks = parse_blocks( $menu_content );
+		$menu_content     = get_menu_content( $block['attrs']['menuSlug'] );
+		$parsed_blocks    = parse_blocks( $menu_content );
 		$compacted_blocks = block_core_navigation_filter_out_empty_blocks( $parsed_blocks );
-		$inner_blocks = new WP_Block_List( $compacted_blocks, $block['attrs'] );
+		$inner_blocks     = new WP_Block_List( $compacted_blocks, $block['attrs'] );
 	}
 	return $inner_blocks;
 }
@@ -110,49 +110,60 @@ function get_menu_content( $menu_slug ) {
  */
 function render_menu_item( $item ) {
 	$output = '';
+	$label  = $item['label'] ?? '';
+	$kind   = 'custom';
 
 	if ( isset( $item['submenu'] ) ) {
-		$output = sprintf(
-			'<!-- wp:navigation-submenu {"label":"%1$s","url":"#","kind":"custom","className":"%2$s"} -->',
-			$item['label'],
-			isset( $item['className'] ) ? esc_attr( $item['className'] ) : '',
-		);
+		$attributes = [
+			'className' => $item['className'] ?? '',
+			'kind'      => $kind,
+			'label'     => wp_kses_post( $label ),
+			'url'       => '#',
+		];
+
+		$output = '<!-- wp:navigation-submenu ' . serialize_block_attributes( $attributes ) . ' -->';
 
 		foreach ( $item['submenu'] as $submenu_item ) {
-			$output .= render_menu_item( $submenu_item, false );
+			$output .= render_menu_item( $submenu_item );
 		}
 
 		$output .= '<!-- /wp:navigation-submenu -->';
 	} else {
-		$block_code = '<!-- wp:navigation-link {"label":"%1$s","url":"%2$s","kind":"custom","className":"%4$s"} /-->';
+		// Reset id to ensure it is only included when explicitly set below.
+		$item['id'] = null;
 
 		// If a term is provided, use the term type link.
 		if ( ! empty( $item['term'] ) ) {
-			$block_code      = '<!-- wp:navigation-link {"label":"%1$s","url":"%2$s","kind":"taxonomy","id":"%3$s","className":"%4$s"} /-->';
-			$item['id']    ??= $item['term']->term_id;
-			$item['url']   ??= get_term_link( $item['term'] );
-			$item['label'] ??= $item['term']->name;
+			$item['id']  ??= $item['term']->term_id;
+			$item['url'] ??= get_term_link( $item['term'] );
+			$label         = $item['term']->name ?? '';
+			$kind          = 'taxonomy';
 		}
 
 		// If this is a relative link, convert it to absolute and try to find
 		// the corresponding ID, so that the `current` attributes are used.
-		if ( str_starts_with( $item['url'], '/' ) ) {
+		if ( isset( $item['url'] ) && str_starts_with( $item['url'], '/' ) ) {
 			$page_obj    = get_page_by_path( $item['url'] );
 			$item['url'] = home_url( $item['url'] );
 			if ( $page_obj ) {
 				// A page was found, so use the post-type link.
-				$block_code = '<!-- wp:navigation-link {"label":"%1$s","url":"%2$s","kind":"post-type","id":"%3$s","className":"%4$s"} /-->';
+				$kind       = 'post-type';
 				$item['id'] = $page_obj->ID;
 			}
 		}
 
-		$output .= sprintf(
-			$block_code,
-			wp_kses_post( $item['label'] ),
-			esc_url( $item['url'], ),
-			isset( $item['id'] ) ? intval( $item['id'] ) : '',
-			isset( $item['className'] ) ? esc_attr( $item['className'] ) : '',
-		);
+		$attributes = [
+			'className' => $item['className'] ?? '',
+			'kind'      => $kind,
+			'label'     => wp_kses_post( $label ),
+			'url'       => esc_url_raw( $item['url'] ?? '' ),
+		];
+		// Only include the id attribute if it is explicitly set.
+		if ( ! empty( $item['id'] ) ) {
+			$attributes['id'] = intval( $item['id'] );
+		}
+
+		$output = '<!-- wp:navigation-link ' . serialize_block_attributes( $attributes ) . ' /-->';
 	}
 
 	return $output;

@@ -55,7 +55,7 @@ function render( $attributes, $content, $block ) {
 	 */
 	$title = apply_filters( 'wporg_table_of_contents_heading', __( 'In this article', 'wporg' ), $post->ID );
 
-	$content = '<div class="wporg-table-of-contents__header">';
+	$content  = '<div class="wporg-table-of-contents__header">';
 	$content .= do_blocks(
 		'<!-- wp:heading {"style":{"typography":{"fontStyle":"normal","fontWeight":"400"},"spacing":{"margin":{"top":"0","bottom":"0"}}},"fontSize":"normal","fontFamily":"inter"} -->
 		<h2 class="wp-block-heading has-inter-font-family has-normal-font-size" style="margin-top:0;margin-bottom:0;font-style:normal;font-weight:400">' . esc_html( $title ) . '</h2>
@@ -95,7 +95,7 @@ function render( $attributes, $content, $block ) {
 	// Use the parsed headings & IDs to inject IDs into the post content.
 	add_filter(
 		'the_content',
-		function( $content ) use ( $items ) {
+		function ( $content ) use ( $items ) {
 			return inject_ids_into_headings( $content, $items );
 		},
 		5 // Run early, before special character handling, so the items match.
@@ -187,7 +187,7 @@ function get_id_for_item( $item, $used_ids ) {
 	$orig_id = $id;
 	while ( in_array( $id, $used_ids, true ) && $count < 50 ) {
 		$id = $orig_id . '-' . $count;
-		$count++;
+		++$count;
 	}
 
 	return $id;

@@ -26,6 +26,30 @@ export function formatLocation( location ) {
 }
 
 /**
+ * Returns a URL only when its protocol is safe to navigate to.
+ *
+ * Guards both the marker links and the search form's action, which the browser navigates to on
+ * submit. Both come from block attributes.
+ *
+ * @param {string} url Candidate navigation target.
+ *
+ * @return {string|undefined} The url, or undefined to render no target.
+ */
+export function getSafeHref( url ) {
+	if ( ! url ) {
+		return undefined;
+	}
+
+	try {
+		const { protocol } = new URL( url, window.location.href );
+
+		return 'https:' === protocol || 'http:' === protocol ? url : undefined;
+	} catch {
+		return undefined;
+	}
+}
+
+/**
  * Filter the list of markers based on a user's search query.
  *
  * @param {Array}  unfilteredMarkers

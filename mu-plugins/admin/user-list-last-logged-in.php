@@ -1,23 +1,41 @@
 <?php
 namespace WordPressdotorg\MU_Plugins\Admin\Users\Last_Logged_In;
 
-add_filter( 'manage_users_columns',          __NAMESPACE__ . '\manage_users_columns'              );
-add_filter( 'manage_users_sortable_columns', __NAMESPACE__ . '\manage_users_sortable_columns'     );
-add_action( 'pre_get_users',                 __NAMESPACE__ . '\pre_get_users'                     );
-add_filter( 'manage_users_custom_column',    __NAMESPACE__ . '\manage_users_custom_column', 10, 3 );
+add_filter( 'manage_users_columns', __NAMESPACE__ . '\manage_users_columns' );
+add_filter( 'manage_users_sortable_columns', __NAMESPACE__ . '\manage_users_sortable_columns' );
+add_action( 'pre_get_users', __NAMESPACE__ . '\pre_get_users' );
+add_filter( 'manage_users_custom_column', __NAMESPACE__ . '\manage_users_custom_column', 10, 3 );
 
+/**
+ * Add the last-login column.
+ *
+ * @param array $columns User list columns.
+ * @return array Updated columns.
+ */
 function manage_users_columns( $columns ) {
 	$columns['last-logged-in'] = 'Last Logged In';
 
 	return $columns;
 }
 
+/**
+ * Register the last-login sort key.
+ *
+ * @param array $columns Sortable columns.
+ * @return array Updated sortable columns.
+ */
 function manage_users_sortable_columns( $columns ) {
 	$columns['last-logged-in'] = 'last-logged-in';
 
 	return $columns;
 }
 
+/**
+ * Sort the user list by its recorded last-login date.
+ *
+ * @param \WP_User_Query $query User list query.
+ * @return void
+ */
 function pre_get_users( $query ) {
 	if ( ! is_admin() || 'last-logged-in' !== $query->get( 'orderby' ) || ! current_user_can( 'list_users' ) ) {
 		return;
@@ -30,7 +48,7 @@ function pre_get_users( $query ) {
 			'key'     => 'last_logged_in',
 			'compare' => 'NOT EXISTS',
 		],
-		'last_logged_in'        => [
+		'last_logged_in'       => [
 			'key'  => 'last_logged_in',
 			'type' => 'DATE',
 		],
@@ -40,6 +58,14 @@ function pre_get_users( $query ) {
 	$query->set( 'meta_query', $meta_query );
 }
 
+/**
+ * Render the last-login column.
+ *
+ * @param string $value   Existing column markup.
+ * @param string $column  Column identifier.
+ * @param int    $user_id User identifier.
+ * @return string Column markup.
+ */
 function manage_users_custom_column( $value, $column, $user_id ) {
 	if ( 'last-logged-in' !== $column || ! current_user_can( 'list_users' ) ) {
 		return $value;
@@ -61,7 +87,7 @@ function manage_users_custom_column( $value, $column, $user_id ) {
 			// Login sessions are two weeks.
 			$text = '<em>Within the last month</em>';
 		} else {
-			$text = date( 'F Y', $last_login );
+			$text = gmdate( 'F Y', $last_login );
 		}
 	} elseif ( $user_registered > strtotime( '2021-11-17' ) ) {
 		$text = '<em title="Has never logged in, other than during registration">Never since registering</em>';

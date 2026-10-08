@@ -26,7 +26,7 @@ class API_Client {
 	 */
 	protected $throttle_callback = '';
 
-	/*
+	/**
 	 * @var array A list of integer response codes that should break the "tenacious" remote request loop.
 	 */
 	protected $breaking_response_codes = array();
@@ -112,7 +112,7 @@ class API_Client {
 				break;
 			}
 
-			$attempt_count++;
+			++$attempt_count;
 
 			/**
 			 * Action: Fires when tenacious_remote_request fails a request attempt.
@@ -160,8 +160,8 @@ class API_Client {
 	/**
 	 * Wrapper method for a request using the GET method.
 	 *
-	 * @param $url
-	 * @param array $args
+	 * @param string $url
+	 * @param array  $args
 	 *
 	 * @return array|WP_Error
 	 */
@@ -174,8 +174,8 @@ class API_Client {
 	/**
 	 * Wrapper method for a request using the POST method.
 	 *
-	 * @param $url
-	 * @param array $args
+	 * @param string $url
+	 * @param array  $args
 	 *
 	 * @return array|WP_Error
 	 */
@@ -275,7 +275,7 @@ class API_Client {
 	 */
 	protected static function cli_message( $message ) {
 		if ( 'cli' === php_sapi_name() ) {
-			echo "\n$message";
+			echo "\n$message"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- This branch writes plain text only to the CLI.
 		}
 	}
 }

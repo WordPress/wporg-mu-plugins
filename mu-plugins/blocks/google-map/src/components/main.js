@@ -15,7 +15,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import Search from './search';
 import Map from './map';
 import List from './list';
-import { filterMarkers, speakSearchUpdates } from '../utilities/content';
+import { filterMarkers, getSafeHref, speakSearchUpdates } from '../utilities/content';
 import { getValidMarkers } from '../utilities/google-maps-api';
 
 /**
@@ -50,6 +50,9 @@ export default function Main( {
 	const [ searchQuery, setSearchQuery ] = useState( '' );
 	const searchQueryInitialized = useRef( false );
 
+	// Submitting the form navigates to this, so an unsafe protocol falls back to live search.
+	const formAction = getSafeHref( searchFormAction );
+
 	// This probably shouldn't be state because it can be derived from `markers` and `searchQuery`,
 	// but it also feels wrong to have the map and list components do the filtering when they could
 	// just receive it as props without having to be aware of the business logic. It has to be state
@@ -64,7 +67,7 @@ export default function Main( {
 		setSearchQuery( event.target.value );
 
 		// The form will submit a GET request, so don't do a live search.
-		if ( searchFormAction ) {
+		if ( formAction ) {
 			return;
 		}
 
@@ -114,13 +117,13 @@ export default function Main( {
 	}, [ redrawMap ] );
 
 	const currentURL = new URL( document.location.href );
-	const noEventsFoundQuery = searchFormAction ? currentURL.searchParams.get( 'search' ) : searchQuery;
+	const noEventsFoundQuery = ( formAction ? currentURL.searchParams.get( 'search' ) : searchQuery ) || '';
 
 	return (
 		<>
 			{ showSearch && (
 				<Search
-					formAction={ searchFormAction }
+					formAction={ formAction }
 					searchQuery={ searchQuery }
 					onQueryChange={ onQueryChange }
 					iconURL={ searchIcon }

@@ -43,6 +43,7 @@ function fail_if_died( $message ) {
 		$message = $message->get_error_message();
 	}
 
+	// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Preserve the original error text for CLI test diagnostics.
 	throw new Exception( 'WordPress died: ' . $message );
 }
 tests_add_filter( 'wp_die_handler', 'fail_if_died' );

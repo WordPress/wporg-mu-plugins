@@ -12,9 +12,9 @@ if ( ! $settings ) {
 	return '';
 }
 
-$user_id = get_current_user_id();
+$user_id    = get_current_user_id();
 $show_count = $attributes['showCount'] ?? false;
-$variant = $attributes['variant'] ?? 'default';
+$variant    = $attributes['variant'] ?? 'default';
 
 if ( ! $user_id && ! $show_count ) {
 	return '';
@@ -33,10 +33,10 @@ $classes = array(
 $classes = implode( ' ', array_filter( $classes ) );
 
 $labels = array(
-	'add' => __( 'Add to favorites', 'wporg' ),
-	'remove' => __( 'Remove from favorites', 'wporg' ),
-	'favorited' => __( 'Favorited', 'wporg' ),
-	'unfavorited' => __( 'Removed from favorites', 'wporg' ),
+	'add'          => __( 'Add to favorites', 'wporg' ),
+	'remove'       => __( 'Remove from favorites', 'wporg' ),
+	'favorited'    => __( 'Favorited', 'wporg' ),
+	'unfavorited'  => __( 'Removed from favorites', 'wporg' ),
 	// translators: %s: number of users who favorited this item.
 	'screenReader' => __( 'Favorited %s times', 'wporg' ),
 );
@@ -48,12 +48,12 @@ $sr_label = sprintf(
 );
 
 // Initial state to pass to Interactivity API.
-$init_state = [
-	'id' => $block->context['postId'],
-	'count' => $settings['count'],
+$init_state    = [
+	'id'         => $block->context['postId'],
+	'count'      => $settings['count'],
 	'isFavorite' => $is_favorite,
-	'label' => $labels,
-	'isLoading' => false,
+	'label'      => $labels,
+	'isLoading'  => false,
 ];
 $encoded_state = wp_json_encode( $init_state );
 

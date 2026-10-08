@@ -50,31 +50,34 @@ class Meetup_Client extends API_Client {
 	 */
 	public function __construct( array $settings = array() ) {
 		// Define the OAuth client first, such that it can be used in the parent constructor callbacks.
-		$this->oauth_client = new Meetup_OAuth2_Client;
+		$this->oauth_client = new Meetup_OAuth2_Client();
 
-		parent::__construct( array(
-			/*
-			 * Response codes that should break the request loop.
-			 *
-			 * See https://www.meetup.com/meetup_api/docs/#errors.
-			 *
-			 * `200` (ok) is not in the list, because it needs to be handled conditionally.
-			 *  See API_Client::tenacious_remote_request.
-			 *
-			 * `400` (bad request) is not in the list, even though it seems like it _should_ indicate an unrecoverable
-			 * error. In practice we've observed that it's common for a seemingly valid request to be rejected with
-			 * a `400` response, but then get a `200` response if that exact same request is retried.
-			 */
-			'breaking_response_codes' => array(
-				// TODO: NOTE: These headers are not returned from the GraphQL API, every request is 200 even if throttled.
-				401, // Unauthorized (invalid key).
-				429, // Too many requests (rate-limited).
-				404, // Unable to find group.
-				503, // Timeout between API cache & GraphQL Server.
-			),
-			// NOTE: GraphQL does not expose the Quota Headers.
-			'throttle_callback'       => array( __CLASS__, 'throttle' ),
-		) );
+		parent::__construct(
+			array(
+
+				/*
+				 * Response codes that should break the request loop.
+				 *
+				 * See https://www.meetup.com/meetup_api/docs/#errors.
+				 *
+				 * `200` (ok) is not in the list, because it needs to be handled conditionally.
+				 *  See API_Client::tenacious_remote_request.
+				 *
+				 * `400` (bad request) is not in the list, even though it seems like it _should_ indicate an unrecoverable
+				 * error. In practice we've observed that it's common for a seemingly valid request to be rejected with
+				 * a `400` response, but then get a `200` response if that exact same request is retried.
+				 */
+				'breaking_response_codes' => array(
+					// TODO: NOTE: These headers are not returned from the GraphQL API, every request is 200 even if throttled.
+					401, // Unauthorized (invalid key).
+					429, // Too many requests (rate-limited).
+					404, // Unable to find group.
+					503, // Timeout between API cache & GraphQL Server.
+				),
+				// NOTE: GraphQL does not expose the Quota Headers.
+				'throttle_callback'       => array( __CLASS__, 'throttle' ),
+			)
+		);
 
 		$settings = wp_parse_args(
 			$settings,
@@ -150,8 +153,8 @@ class Meetup_Client extends API_Client {
 	 * @return array|WP_Error The results of the request.
 	 */
 	public function send_paginated_request( $query, $variables = null ) {
-		$data = array();
-		$this->error = new WP_Error;
+		$data        = array();
+		$this->error = new WP_Error();
 
 		$has_next_page        = false;
 		$is_paginated_request = ! empty( $variables ) &&
@@ -231,7 +234,7 @@ class Meetup_Client extends API_Client {
 
 		$errors = implode( '. ', $this->error->get_error_messages() );
 		if ( ! empty( $errors ) ) {
-			trigger_error( "Request error(s): $errors", E_USER_WARNING );
+			trigger_error( "Request error(s): $errors", E_USER_WARNING ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.PHP.DevelopmentFunctions.error_log_trigger_error -- Preserve raw GraphQL error text in diagnostics.
 
 			return $this->error;
 		}
@@ -285,7 +288,7 @@ class Meetup_Client extends API_Client {
 				'Content-Type'  => 'application/json',
 				'Authorization' => "Bearer $oauth_token",
 			),
-			'body' => wp_json_encode( compact( 'query', 'variables' ) ),
+			'body'    => wp_json_encode( compact( 'query', 'variables' ) ),
 		);
 	}
 
@@ -621,7 +624,7 @@ class Meetup_Client extends API_Client {
 		$event = $result['event'] ?: false;
 
 		if ( $event ) {
-			$event = $this->apply_backcompat_fields( 'event',  $event );
+			$event = $this->apply_backcompat_fields( 'event', $event );
 		}
 
 		return $event;
@@ -634,8 +637,6 @@ class Meetup_Client extends API_Client {
 	 * @return array Array of Event Statuses if events is found, null values if MeetupID doesn't exist.
 	 */
 	public function get_events_status( $event_ids ) {
-		/* $events = [ id => $meetupID, id2 => $meetupID2 ] */
-
 		$return = array();
 		$chunks = array_chunk( $event_ids, 250, true );
 
@@ -675,7 +676,7 @@ class Meetup_Client extends API_Client {
 	 * @param string $group_slug The slug/urlname of a group.
 	 * @param array  $args       Optional. 'fields' and 'event_fields' may be defined.
 	 *
-	 * @return array|WP_Error
+	 * @return array|false|WP_Error Array of details, false if the group doesn't exist, WP_Error in the event of an error.
 	 */
 	public function get_group_details( $group_slug, $args = array() ) {
 		$fields = $this->get_default_fields( 'group' );
@@ -694,7 +695,7 @@ class Meetup_Client extends API_Client {
 			$events_fields = array_merge( $events_fields, $this->get_default_fields( 'events' ) );
 		}
 
-		$query     = '
+		$query = '
 		query ( $urlname: String! ) {
 			groupByUrlname( urlname: $urlname ) {
 				' . implode( ' ', $fields ) . '
@@ -715,8 +716,13 @@ class Meetup_Client extends API_Client {
 
 		$result = $this->send_paginated_request( $query, $variables );
 
-		if ( is_wp_error( $result ) || ! isset( $result['groupByUrlname'] ) ) {
+		if ( is_wp_error( $result ) ) {
 			return $result;
+		}
+
+		// Group does not exist returns NULL value.
+		if ( is_array( $result ) && ! isset( $result['groupByUrlname'] ) && array_key_exists( 'groupByUrlname', $result ) ) {
+			return false;
 		}
 
 		// Format it similar to previous response payload.
@@ -792,6 +798,8 @@ class Meetup_Client extends API_Client {
 
 	/**
 	 * Query all events from the Network.
+	 *
+	 * @throws Exception When no network event filters are provided.
 	 */
 	public function get_network_events( array $args = array() ) {
 		$defaults = array(
@@ -821,7 +829,7 @@ class Meetup_Client extends API_Client {
 		}
 
 		// See https://www.meetup.com/api/schema/#ProNetworkEventStatus.
-		if ( $args['status'] && in_array( $args['status'], array( 'cancelled', 'upcoming', 'past' ) ) ) {
+		if ( $args['status'] && in_array( $args['status'], array( 'cancelled', 'upcoming', 'past' ), true ) ) {
 			// Elsewhere in the API this is a constant enum, and 'upcoming = ACTIVE', but not here.
 			$filters['status'] = 'status: "' . strtoupper( $args['status'] ) . '"';
 		}
@@ -836,10 +844,10 @@ class Meetup_Client extends API_Client {
 			throw new Exception( 'At least one filter must be provided when querying network events.' );
 		}
 
-		$query     = '
+		$query = '
 		query ( $urlname: ID, $perPage: Int!, $cursor: String ) {
 			proNetwork( urlname: $urlname ) {
-				eventsSearch ( input: { first: $perPage, after: $cursor, filter: { ' . implode( ', ', $filters )  . ' } } ) {
+				eventsSearch ( input: { first: $perPage, after: $cursor, filter: { ' . implode( ', ', $filters ) . ' } } ) {
 					' . $this->pagination . '
 					edges {
 						node {
@@ -875,7 +883,6 @@ class Meetup_Client extends API_Client {
 		$events = $this->apply_backcompat_fields( 'events', $events );
 
 		return $events;
-
 	}
 
 	/**
@@ -919,7 +926,7 @@ class Meetup_Client extends API_Client {
 		];
 		if ( $args['status'] ) {
 			$statuses         = [];
-			$requested_status = is_array( $args['status'] ) ? $args['status'] : array_map( 'trim', explode(',', $args['status'] ) );
+			$requested_status = is_array( $args['status'] ) ? $args['status'] : array_map( 'trim', explode( ',', $args['status'] ) );
 			foreach ( $requested_status as $s ) {
 				if ( ! isset( $status_map[ $s ] ) ) {
 					return new WP_Error(
@@ -939,7 +946,7 @@ class Meetup_Client extends API_Client {
 			$filters['status'] = 'status: ' . $status;
 		}
 
-		$query     = '
+		$query = '
 		query ( $urlname: String!, $perPage: Int!, $cursor: String ) {
 			groupByUrlname( urlname: $urlname ) {
 				events (
@@ -1014,7 +1021,7 @@ class Meetup_Client extends API_Client {
 		$query = '
 		query {
 			proNetwork( urlname: "WordPress" ) {
-				groupsSearch( input: { filter: { ' .  implode( ', ', $filters ) . ' } } ) {
+				groupsSearch( input: { filter: { ' . implode( ', ', $filters ) . ' } } ) {
 					totalCount
 				}
 			}
@@ -1083,7 +1090,7 @@ class Meetup_Client extends API_Client {
 				'lon',
 				'timezone',
 			);
-		} elseif ( 'venue' === $type || 'venues' == $type ) {
+		} elseif ( 'venue' === $type || 'venues' === $type ) {
 			return array(
 				'id',
 				'lat',
@@ -1173,7 +1180,7 @@ class Meetup_Client extends API_Client {
 			}
 
 			$result['status'] = strtolower( $result['status'] );
-			if ( in_array( $result['status'], array( 'published', 'past', 'active', 'autosched' ) ) ) {
+			if ( in_array( $result['status'], array( 'published', 'past', 'active', 'autosched' ), true ) ) {
 				$result['status'] = 'upcoming'; // Right, past is upcoming in this context.
 			}
 
@@ -1237,13 +1244,13 @@ class Meetup_Client extends API_Client {
 	 */
 	protected function localise_location( $args = array() ) {
 		// Hard-code the Online event location.
-		if ( ! empty( $args['id'] ) && self::ONLINE_VENUE_ID == $args['id'] ) {
+		if ( ! empty( $args['id'] ) && (string) self::ONLINE_VENUE_ID === (string) $args['id'] ) {
 			return 'online';
 		}
 
 		$country = $args['country'] ?? '';
-		$state   = $args['state']   ?? '';
-		$city    = $args['city']    ?? '';
+		$state   = $args['state'] ?? '';
+		$city    = $args['city'] ?? '';
 		$country = strtoupper( $country );
 
 		// Only the USA & Canada have valid states in the response. Others have states, but are incorrect.
@@ -1256,7 +1263,7 @@ class Meetup_Client extends API_Client {
 		// Set countries to USA, AU, or Australia in that order.
 		$country = $this->localised_country_name( $country );
 
-		return implode( ', ',  array_filter( array( $city, $state, $country ) ) ) ?: false;
+		return implode( ', ', array_filter( array( $city, $state, $country ) ) ) ?: false;
 	}
 
 	/**

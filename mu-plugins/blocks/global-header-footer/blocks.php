@@ -45,7 +45,7 @@ function register_block_types() {
 function register_block_assets() {
 	// Our custom login screen is technically a front-end page, so the script/style are enqueued by default.
 	// That's unnecessary because the header/footer isn't rendered in there.
-	if ( 'login.wordpress.org' === $_SERVER['SERVER_NAME'] ) {
+	if ( isset( $_SERVER['SERVER_NAME'] ) && 'login.wordpress.org' === $_SERVER['SERVER_NAME'] ) {
 		return;
 	}
 
@@ -75,8 +75,8 @@ function register_block_assets() {
 		'wporg-global-header-script',
 		'wporgGlobalHeaderI18n',
 		array(
-			'openSearchLabel' => __( 'Open Search', 'wporg' ),
-			'closeSearchLabel' => __( 'Close Search', 'wporg' ),
+			'openSearchLabel'   => __( 'Open Search', 'wporg' ),
+			'closeSearchLabel'  => __( 'Close Search', 'wporg' ),
 			'overflowMenuLabel' => __( 'More menu', 'wporg' ),
 		)
 	);
@@ -91,8 +91,8 @@ function register_routes() {
 		'header',
 		array(
 			array(
-				'methods'  => WP_REST_Server::READABLE,
-				'callback' => __NAMESPACE__ . '\rest_render_global_header',
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => __NAMESPACE__ . '\rest_render_global_header',
 				'permission_callback' => '__return_true',
 			),
 		)
@@ -103,8 +103,8 @@ function register_routes() {
 		'header/codex',
 		array(
 			array(
-				'methods'  => WP_REST_Server::READABLE,
-				'callback' => __NAMESPACE__ . '\rest_render_codex_global_header',
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => __NAMESPACE__ . '\rest_render_codex_global_header',
 				'permission_callback' => '__return_true',
 			),
 		)
@@ -115,8 +115,8 @@ function register_routes() {
 		'header/planet',
 		array(
 			array(
-				'methods'  => WP_REST_Server::READABLE,
-				'callback' => __NAMESPACE__ . '\rest_render_planet_global_header',
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => __NAMESPACE__ . '\rest_render_planet_global_header',
 				'permission_callback' => '__return_true',
 			),
 		)
@@ -127,8 +127,8 @@ function register_routes() {
 		'footer',
 		array(
 			array(
-				'methods'  => WP_REST_Server::READABLE,
-				'callback' => __NAMESPACE__ . '\rest_render_global_footer',
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => __NAMESPACE__ . '\rest_render_global_footer',
 				'permission_callback' => '__return_true',
 			),
 		)
@@ -161,14 +161,6 @@ function preload_google_fonts() {
  * Output styles for themes that don't use `wp4-styles`. This provides compat with the classic header.php.
  */
 function enqueue_compat_wp4_styles() {
-	// See https://wordpress.slack.com/archives/C02QB8GMM/p1642056619063500
-	if (
-		( defined( 'FEATURE_2021_GLOBAL_HEADER_FOOTER' ) && ! FEATURE_2021_GLOBAL_HEADER_FOOTER ) &&
-		( ! defined( 'REST_REQUEST' ) || ! REST_REQUEST )
-	) {
-		return;
-	}
-
 	if ( defined( 'IS_WORDCAMP_NETWORK' ) ) {
 		return;
 	}
@@ -229,12 +221,12 @@ function restore_inner_group_container() {
  *
  * @return string
  */
-function rest_render_global_header( $request ) {
+function rest_render_global_header() {
 
 	// Remove the theme stylesheet from rest requests.
 	add_filter(
 		'wp_enqueue_scripts',
-		function() {
+		function () {
 			remove_theme_support( 'wp4-styles' );
 
 			wp_dequeue_style( 'wporg-parent-2021-style' );
@@ -251,10 +243,11 @@ function rest_render_global_header( $request ) {
 	// Serve the request as HTML.
 	add_filter(
 		'rest_pre_serve_request',
-		function( $served, $result ) {
+		function ( $served, $result ) {
 			header( 'Content-Type: text/html' );
 			header( 'X-Robots-Tag: noindex, follow' );
 
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Rendered block templates and wp_head/wp_footer output must retain their HTML and scripts.
 			echo $result->get_data();
 
 			return true;
@@ -267,10 +260,10 @@ function rest_render_global_header( $request ) {
 	// using this header.
 	add_filter(
 		'wp_theme_json_get_style_nodes',
-		function( $nodes ) {
+		function ( $nodes ) {
 			return array_filter(
 				$nodes,
-				function( $node ) {
+				function ( $node ) {
 					return ! in_array( 'elements', $node['path'], true );
 				},
 				ARRAY_FILTER_USE_BOTH
@@ -278,7 +271,33 @@ function rest_render_global_header( $request ) {
 		}
 	);
 
-	return do_blocks( '<!-- wp:wporg/global-header /-->' );
+	return rewrite_assets_to_cdn( do_blocks( '<!-- wp:wporg/global-header /-->' ) );
+}
+
+/**
+ * Rewrite local asset URLs to load from the s.w.org CDN.
+ *
+ * The header/footer endpoints are embedded by external software (the Codex, Trac, Planet, etc.)
+ * and loaded cross-origin. wordpress.org doesn't send CORS headers, so scripts like the
+ * Interactivity API module throw CORS errors when loaded from there, breaking the menu and
+ * search. s.w.org serves the same files with the required headers.
+ *
+ * Both `wp-content` and `wp-includes` are rewritten, matching the workaround Trac applies in its
+ * own `update-headers.php`. Only the host is swapped, so each asset's existing (content-hashed,
+ * and therefore unique) `?ver=` cache buster is preserved.
+ *
+ * @see https://meta.trac.wordpress.org/ticket/8281
+ * @see https://github.com/WordPress/wporg-mu-plugins/pull/430
+ *
+ * @param string $markup The rendered markup.
+ * @return string The markup with local asset URLs pointed at the CDN.
+ */
+function rewrite_assets_to_cdn( $markup ) {
+	return str_replace(
+		array( content_url(), includes_url() ),
+		array( 'https://s.w.org/wp-content', 'https://s.w.org/wp-includes/' ),
+		$markup
+	);
 }
 
 /**
@@ -286,28 +305,39 @@ function rest_render_global_header( $request ) {
  *
  * @return string
  */
-function rest_render_codex_global_header( $request ) {
-	add_action( 'wp_head', function() {
-		echo '<!-- [codex head meta] -->', "\n";
-	}, 1 );
+function rest_render_codex_global_header() {
+	add_action(
+		'wp_head',
+		function () {
+			echo '<!-- [codex head meta] -->', "\n";
+		},
+		1
+	);
 
-	add_action( 'wp_head', function() {
-		echo '<!-- [codex head scripts] -->', "\n";
-	}, 100 );
+	add_action(
+		'wp_head',
+		function () {
+			echo '<!-- [codex head scripts] -->', "\n";
+		},
+		100
+	);
 
-	add_filter( 'body_class', function( $class ) {
-		return [
-			'wporg-responsive',
-			'wporg-codex'
-		];
-	} );
+	add_filter(
+		'body_class',
+		function () {
+			return [
+				'wporg-responsive',
+				'wporg-codex',
+			];
+		}
+	);
 
 	wp_enqueue_style( 'codex-wp4', 'https://s.w.org/style/codex-wp4.css', array( 'wp4-styles' ), 4 );
 
 	// Remove <title> tags.
 	remove_theme_support( 'title-tag' );
 
-	$markup = rest_render_global_header( $request );
+	$markup = rest_render_global_header();
 	$markup = preg_replace( '!<html[^>]+>!i', '<!-- [codex head html] -->', $markup );
 
 	return $markup;
@@ -318,33 +348,40 @@ function rest_render_codex_global_header( $request ) {
  *
  * @return string
  */
-function rest_render_planet_global_header( $request ) {
-	add_filter( 'pre_get_document_title', function() {
-		return 'Planet &mdash; WordPress.org';
-	} );
+function rest_render_planet_global_header() {
+	add_filter(
+		'pre_get_document_title',
+		function () {
+			return 'Planet &mdash; WordPress.org';
+		}
+	);
 
-	add_filter( 'wporg_canonical_url', function() {
-		return 'https://planet.wordpress.org/';
-	} );
+	add_filter(
+		'wporg_canonical_url',
+		function () {
+			return 'https://planet.wordpress.org/';
+		}
+	);
 
-	add_filter( 'body_class', function( $class ) {
-		return [
-			'wporg-responsive',
-			'wporg-planet'
-		];
-	} );
+	add_filter(
+		'body_class',
+		function () {
+			return [
+				'wporg-responsive',
+				'wporg-planet',
+			];
+		}
+	);
 
-	return rest_render_global_header( $request );
+	return rest_render_global_header();
 }
 
 /**
  * Render the global header in a block context.
  *
- * @param array $attributes The block attributes.
- *
  * @return string Returns the block content.
  */
-function render_global_header( $attributes = array() ) {
+function render_global_header() {
 	remove_inner_group_container();
 
 	if ( is_rosetta_site() ) {
@@ -365,7 +402,7 @@ function render_global_header( $attributes = array() ) {
 		 * Do not translate into your own language. If you don't use Inter
 		 * for body text, you can ignore this.
 		 */
-		$subsets = _x( 'latin', 'Inter subsets, comma separated', 'wporg' );
+		$subsets                = _x( 'latin', 'Inter subsets, comma separated', 'wporg' );
 		list( $font, $subsets ) = apply_filters( 'wporg_preload_body_font', [ 'Inter', $subsets ] );
 		global_fonts_preload( $font, $subsets );
 	}
@@ -405,6 +442,12 @@ function render_global_header( $attributes = array() ) {
 		$head_markup = ob_get_clean();
 	}
 
+	// Strip <link rel="alternate"> tags from the head, as they're not relevant for the global header.
+	// This catches tags from core (feed links, oEmbed) and any added by plugins.
+	if ( $is_rest_request ) {
+		$head_markup = remove_head_alternate_links( $head_markup );
+	}
+
 	$wrapper_attributes = get_block_wrapper_attributes(
 		array( 'class' => 'global-header wp-block-group' )
 	);
@@ -415,6 +458,21 @@ function render_global_header( $attributes = array() ) {
 		$markup,
 		wp_kses_post( render_header_alert_banner() )
 	);
+}
+
+/**
+ * Remove `<link rel="alternate" ...>` tags from HTML markup.
+ *
+ * Uses a regex to match and remove `<link>` tags whose `rel` attribute
+ * contains "alternate", regardless of which plugin or core function
+ * added them.
+ *
+ * @param string $markup The HTML markup to filter.
+ *
+ * @return string The markup with alternate link tags removed.
+ */
+function remove_head_alternate_links( $markup ) {
+	return preg_replace( '/<link\b[^>]*\brel=["\'][^"\']*\balternate\b[^"\']*["\'][^>]*\/?>/i', '', $markup );
 }
 
 /**
@@ -440,13 +498,18 @@ function is_rosetta_site() {
 function get_global_menu_items() {
 	$global_items = array(
 		array(
-			'title'   => esc_html_x( 'News', 'Menu item title', 'wporg' ),
-			'url'     => 'https://wordpress.org/news/',
-			'type'    => 'custom',
-		),
-		array(
 			'title' => esc_html_x( 'Showcase', 'Menu item title', 'wporg' ),
 			'url'   => 'https://wordpress.org/showcase/',
+			'type'  => 'custom',
+		),
+		array(
+			'title' => esc_html_x( 'Plugins', 'Menu item title', 'wporg' ),
+			'url'   => 'https://wordpress.org/plugins/',
+			'type'  => 'custom',
+		),
+		array(
+			'title' => esc_html_x( 'Themes', 'Menu item title', 'wporg' ),
+			'url'   => 'https://wordpress.org/themes/',
 			'type'  => 'custom',
 		),
 		array(
@@ -455,39 +518,12 @@ function get_global_menu_items() {
 			'type'  => 'custom',
 		),
 		array(
-			'title'   => esc_html_x( 'Extend', 'Menu item title', 'wporg' ),
-			'url'     => '#',
-			'type'    => 'custom',
-			'submenu' => array(
-				array(
-					'title' => esc_html_x( 'Themes', 'Menu item title', 'wporg' ),
-					'url'   => 'https://wordpress.org/themes/',
-					'type'  => 'custom',
-				),
-				array(
-					'title' => esc_html_x( 'Plugins', 'Menu item title', 'wporg' ),
-					'url'   => 'https://wordpress.org/plugins/',
-					'type'  => 'custom',
-				),
-				array(
-					'title' => esc_html_x( 'Patterns', 'Menu item title', 'wporg' ),
-					'url'   => 'https://wordpress.org/patterns/',
-					'type'  => 'custom',
-				),
-				array(
-					'title' => esc_html_x( 'Blocks', 'Menu item title', 'wporg' ),
-					'url'   => 'https://wordpress.org/blocks/',
-					'type'  => 'custom',
-				),
-				array(
-					'title' => esc_html_x( 'Openverse ↗︎', 'Menu item title', 'wporg' ),
-					'url'   => 'https://openverse.org/',
-					'type'  => 'custom',
-				),
-			),
+			'title' => esc_html_x( 'News', 'Menu item title', 'wporg' ),
+			'url'   => 'https://wordpress.org/news/',
+			'type'  => 'custom',
 		),
 		array(
-			'title'   => esc_html_x( 'Learn', 'Menu item title', 'wporg' ),
+			'title'   => esc_html_x( 'Resources', 'Menu item title', 'wporg' ),
 			'url'     => '#',
 			'type'    => 'custom',
 			'submenu' => array(
@@ -502,6 +538,11 @@ function get_global_menu_items() {
 					'type'  => 'custom',
 				),
 				array(
+					'title' => esc_html_x( 'Education', 'Menu item title', 'wporg' ),
+					'url'   => 'https://wordpress.org/education/',
+					'type'  => 'custom',
+				),
+				array(
 					'title' => esc_html_x( 'Forums', 'Menu item title', 'wporg' ),
 					'url'   => 'https://wordpress.org/support/forums/',
 					'type'  => 'custom',
@@ -512,40 +553,28 @@ function get_global_menu_items() {
 					'type'  => 'custom',
 				),
 				array(
-					'title' => esc_html_x( 'WordPress.tv ↗︎', 'Menu item title', 'wporg' ),
-					'url'   => 'https://wordpress.tv/',
-					'type'  => 'custom',
-				),
-			),
-		),
-		array(
-			'title'   => esc_html_x( 'Community', 'Menu item title', 'wporg' ),
-			'url'     => '#',
-			'type'    => 'custom',
-			'submenu' => array(
-				array(
-					'title' => esc_html_x( 'Make WordPress', 'Menu item title', 'wporg' ),
-					'url'   => 'https://make.wordpress.org/',
+					'title' => esc_html_x( 'Blocks', 'Menu item title', 'wporg' ),
+					'url'   => 'https://wordpress.org/blocks/',
 					'type'  => 'custom',
 				),
 				array(
-					'title' => esc_html_x( 'Photo Directory', 'Menu item title', 'wporg' ),
+					'title' => esc_html_x( 'Patterns', 'Menu item title', 'wporg' ),
+					'url'   => 'https://wordpress.org/patterns/',
+					'type'  => 'custom',
+				),
+				array(
+					'title' => esc_html_x( 'Photos', 'Menu item title', 'wporg' ),
 					'url'   => 'https://wordpress.org/photos/',
 					'type'  => 'custom',
 				),
 				array(
-					'title' => esc_html_x( 'Five for the Future', 'Menu item title', 'wporg' ),
-					'url'   => 'https://wordpress.org/five-for-the-future/',
+					'title' => esc_html_x( 'Openverse ↗︎', 'Menu item title', 'wporg' ),
+					'url'   => 'https://openverse.org/',
 					'type'  => 'custom',
 				),
 				array(
-					'title' => esc_html_x( 'Events', 'Menu item title', 'wporg' ),
-					'url'   => 'https://events.wordpress.org/',
-					'type'  => 'custom',
-				),
-				array(
-					'title' => esc_html_x( 'Job Board ↗︎', 'Menu item title', 'wporg' ),
-					'url'   => 'https://jobs.wordpress.net/',
+					'title' => esc_html_x( 'WordPress.tv ↗︎', 'Menu item title', 'wporg' ),
+					'url'   => 'https://wordpress.tv/',
 					'type'  => 'custom',
 				),
 			),
@@ -561,6 +590,21 @@ function get_global_menu_items() {
 					'type'  => 'custom',
 				),
 				array(
+					'title' => esc_html_x( 'Make WordPress', 'Menu item title', 'wporg' ),
+					'url'   => 'https://make.wordpress.org/',
+					'type'  => 'custom',
+				),
+				array(
+					'title' => esc_html_x( 'Events', 'Menu item title', 'wporg' ),
+					'url'   => 'https://events.wordpress.org/',
+					'type'  => 'custom',
+				),
+				array(
+					'title' => esc_html_x( 'Five for the Future', 'Menu item title', 'wporg' ),
+					'url'   => 'https://wordpress.org/five-for-the-future/',
+					'type'  => 'custom',
+				),
+				array(
 					'title' => esc_html_x( 'Enterprise', 'Menu item title', 'wporg' ),
 					'url'   => 'https://wordpress.org/enterprise/',
 					'type'  => 'custom',
@@ -571,11 +615,16 @@ function get_global_menu_items() {
 					'type'  => 'custom',
 				),
 				array(
-					'title' => esc_html_x( 'Swag Store ↗︎', 'Menu item title', 'wporg' ),
-					'url'   => 'https://mercantile.wordpress.org/',
+					'title' => esc_html_x( 'Job Board ↗︎', 'Menu item title', 'wporg' ),
+					'url'   => 'https://jobs.wordpress.net/',
 					'type'  => 'custom',
 				),
 			),
+		),
+		array(
+			'title' => esc_html_x( 'Swag ↗︎', 'Menu item title', 'wporg' ),
+			'url'   => 'https://mercantile.wordpress.org/',
+			'type'  => 'custom',
 		),
 	);
 
@@ -590,7 +639,7 @@ function get_global_menu_items() {
  *
  * @return array[]
  */
-function get_rosetta_menu_items() : array {
+function get_rosetta_menu_items(): array {
 	/** @var Rosetta_Sites $rosetta */
 	global $rosetta;
 
@@ -614,7 +663,7 @@ function get_rosetta_menu_items() : array {
  *
  * @return string
  */
-function get_rosetta_name() : string {
+function get_rosetta_name(): string {
 	/** @var Rosetta_Sites $rosetta */
 	global $rosetta;
 
@@ -627,7 +676,7 @@ function get_rosetta_name() : string {
  * Some items saved in Rosetta nav menus are redundant, because the global header already includes Download and
  * Home links (via the logo).
  *
- * @param WP_Post $menu_item
+ * @param WP_Post $item The menu item.
  *
  * @return bool
  */
@@ -636,10 +685,11 @@ function is_valid_rosetta_menu_item( $item ) {
 	 * Cover full URLs like `https://ar.wordpress.org/` and `https://ar.wordpress.org/download/`; and relative
 	 * ones like  `/` and `/download/`.
 	 */
-	$redundant_slugs = array( '/download/', '/txt-download/', '/', "/{$_SERVER['HTTP_HOST']}/" );
+	$host            = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+	$redundant_slugs = array( '/download/', '/txt-download/', '/', "/{$host}/" );
 
 	// Not using `basename()` because that would match `/foo/download`
-	$irrelevant_url_parts = array( 'http://', 'https://', $_SERVER['HTTP_HOST'] );
+	$irrelevant_url_parts = array( 'http://', 'https://', $host );
 
 	$item_slug = str_replace( $irrelevant_url_parts, '', $item->url );
 	$item_slug = trailingslashit( $item_slug );
@@ -660,7 +710,7 @@ function normalize_rosetta_items( $rosetta_items ) {
 
 	// Standardise the menu classes.
 	foreach ( $rosetta_items as $index => $item ) {
-		$rosetta_items[ $index ]->classes  = implode( ' ', (array) $item->classes );
+		$rosetta_items[ $index ]->classes = implode( ' ', (array) $item->classes );
 	}
 
 	// Assign the top-level menu items.
@@ -788,8 +838,7 @@ function render_header_alert_banner() {
  *
  * @return string
  */
-function rest_render_global_footer( $request ) {
-
+function rest_render_global_footer() {
 	/*
 	 * Render the header but discard the markup, so that any header styles/scripts
 	 * required are then available for output in the footer.
@@ -797,28 +846,35 @@ function rest_render_global_footer( $request ) {
 	do_blocks( '<!-- wp:wporg/global-header /-->' );
 
 	// Serve the request as HTML
-	add_filter( 'rest_pre_serve_request', function( $served, $result ) {
-		header( 'Content-Type: text/html' );
-		header( 'X-Robots-Tag: noindex, follow' );
+	add_filter(
+		'rest_pre_serve_request',
+		function ( $served, $result ) {
+			header( 'Content-Type: text/html' );
+			header( 'X-Robots-Tag: noindex, follow' );
 
-		echo $result->get_data();
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Rendered block templates and wp_head/wp_footer output must retain their HTML and scripts.
+			echo $result->get_data();
 
-		return true;
-	}, 10, 2 );
+			return true;
+		},
+		10,
+		2
+	);
 
-	return do_blocks( '<!-- wp:wporg/global-footer /-->' );
+	$markup = do_blocks( '<!-- wp:wporg/global-footer /-->' );
+	$markup = rewrite_assets_to_cdn( $markup );
+
+	return $markup;
 }
 
 /**
  * Render the global footer in a block context.
  *
- * @param array    $attributes Block attributes.
- * @param string   $content    Block default content.
- * @param WP_Block $block      Block instance.
+ * @param array $attributes Block attributes.
  *
  * @return string Returns the block markup.
  */
-function render_global_footer( $attributes, $content, $block ) {
+function render_global_footer( $attributes ) {
 	remove_inner_group_container();
 
 	if ( is_rosetta_site() ) {
@@ -849,7 +905,7 @@ function render_global_footer( $attributes, $content, $block ) {
 		array( 'class' => 'global-footer wp-block-group' )
 	);
 
-	$tag_name = $attributes['tagName'];
+	$tag_name          = $attributes['tagName'];
 	$allowed_tag_names = array( 'footer', 'div', 'section' );
 	if ( ! $tag_name || ! in_array( $tag_name, $allowed_tag_names, true ) ) {
 		$tag_name = 'footer';
@@ -932,7 +988,9 @@ function is_wporg_network() {
 		return false;
 	}
 
-	return defined( 'WPORGPATH' ) && 0 === strpos( $_SERVER['SCRIPT_FILENAME'], WPORGPATH );
+	$script_filename = isset( $_SERVER['SCRIPT_FILENAME'] ) && is_string( $_SERVER['SCRIPT_FILENAME'] ) ? wp_unslash( $_SERVER['SCRIPT_FILENAME'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Text sanitization alters filesystem paths used for prefix matching.
+
+	return defined( 'WPORGPATH' ) && 0 === strpos( $script_filename, WPORGPATH );
 }
 
 /**
@@ -1003,7 +1061,7 @@ function get_cip_text() {
 	$translated = __( 'Code is Poetry.', 'wporg' );
 
 	if ( $translated === $english && is_rosetta_site() ) {
-		$translated = __( 'Code is Poetry.', 'rosetta' );
+		$translated = __( 'Code is Poetry.', 'rosetta' ); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Reuse the existing Rosetta translation as a fallback.
 	}
 
 	return $translated;

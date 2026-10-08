@@ -1,14 +1,13 @@
 <?php
-
-namespace WordPressdotorg\MU_Plugins;
-
-use WordPressdotorg\Autoload;
-
 /**
  * Load mu-plugins.
  *
  * `utilities/` aren't loaded automatically since they're not used globally.
  */
+
+namespace WordPressdotorg\MU_Plugins;
+
+use WordPressdotorg\Autoload;
 
 // Load and register the Autoloader.
 if ( ! class_exists( '\WordPressdotorg\Autoload\Autoloader', false ) ) {

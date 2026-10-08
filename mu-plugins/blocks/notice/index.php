@@ -107,7 +107,7 @@ function render_callout_block_as_notice( $pre_render, $parsed_block ) {
 	$callout_wrapper = $parsed_block['innerHTML'];
 	// Extract the specific "callout-*" class and remove the "callout-" prefix
 	preg_match( '/\bcallout-([\w-]+)\b/', $callout_wrapper, $matches );
-	$tag = $matches[1] ?? 'tip';
+	$tag  = $matches[1] ?? 'tip';
 	$type = map_type( $tag );
 
 	$content = '';

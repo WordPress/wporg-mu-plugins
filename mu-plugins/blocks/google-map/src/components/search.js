@@ -28,14 +28,8 @@ export default function Search( { formAction, searchQuery, onQueryChange, iconUR
 		<img className="wporg-marker-search__icon" src={ iconURL } alt={ __( 'Search', 'wporg' ) } />
 	);
 
-	const formActionURL = formAction ? new URL( formAction ) : undefined;
-
 	return (
-		<form
-			className="wporg-marker-search__container"
-			action={ formAction ? formActionURL.href : undefined }
-			onSubmit={ onFormSubmit }
-		>
+		<form className="wporg-marker-search__container" action={ formAction } onSubmit={ onFormSubmit }>
 			<label htmlFor="wporg-marker-search__input">
 				<span>{ __( 'Search events:', 'wporg' ) }</span>
 

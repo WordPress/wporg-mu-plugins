@@ -8,26 +8,26 @@ if ( ! $view_url ) {
 	return '';
 }
 
-$alt_text = $attributes['alt'] ?? '';
-$has_link = isset( $attributes['href'] ) && $attributes['href'];
+$alt_text  = $attributes['alt'] ?? '';
+$has_link  = isset( $attributes['href'] ) && $attributes['href'];
 $is_hidden = (bool) $attributes['isHidden'];
 
 // Set up the viewport sizes.
-$viewport_width = $attributes['viewportWidth'] ?? 1200;
+$viewport_width  = $attributes['viewportWidth'] ?? 1200;
 $viewport_height = $attributes['viewportHeight'] ?? 0;
-$fullpage = isset( $attributes['fullPage'] ) && $attributes['fullPage'];
+$fullpage        = isset( $attributes['fullPage'] ) && $attributes['fullPage'];
 
 // Multiply by 2 for hiDPI-ready sizes.
 $width = isset( $attributes['width'] ) ? $attributes['width'] * 2 : 800;
 
 $mshots_args = array(
-	'w' => $width,
+	'w'   => $width,
 	'vpw' => $viewport_width,
 );
 if ( $fullpage ) {
 	// `screen_height` is the max height of a screenshot, image can be smaller.
 	$mshots_args['screen_height'] = $viewport_height ? $viewport_height : 3600;
-	$mshots_args['vph'] = 300; // Smaller than the vast majority of patterns to avoid whitespace.
+	$mshots_args['vph']           = 300; // Smaller than the vast majority of patterns to avoid whitespace.
 } else {
 	// `vph` is the fixed height of the screenshot (image size will be scaled by w/vpw).
 	$mshots_args['vph'] = $viewport_height ? $viewport_height : 900;
@@ -36,20 +36,20 @@ if ( $fullpage ) {
 // Add cachebuster only if the existing URL doesn't have one.
 if ( ! str_contains( $view_url, '&v=' ) && ! str_contains( $view_url, '?v=' ) ) {
 	$cache_bust = '20240423'; // To break out of cached image.
-	$view_url = add_query_arg( 'v', $cache_bust, $view_url );
+	$view_url   = add_query_arg( 'v', $cache_bust, $view_url );
 }
 
-$url = add_query_arg( $mshots_args, 'https://s0.wp.com/mshots/v1/' . urlencode( $view_url ) );
+$url = add_query_arg( $mshots_args, 'https://s0.wp.com/mshots/v1/' . rawurlencode( $view_url ) );
 
 // Initial state to pass to Interactivity API.
-$init_state = [
+$init_state    = [
 	'base64Image' => '',
-	'src' => esc_url( $url ),
-	'alt' => $alt_text,
-	'attempts' => 0,
+	'src'         => esc_url( $url ),
+	'alt'         => $alt_text,
+	'attempts'    => 0,
 	'shouldRetry' => true,
-	'hasError' => false,
-	'isHidden' => $is_hidden,
+	'hasError'    => false,
+	'isHidden'    => $is_hidden,
 ];
 $encoded_state = wp_json_encode( $init_state );
 
