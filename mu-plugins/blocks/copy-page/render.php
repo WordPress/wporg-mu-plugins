@@ -33,35 +33,48 @@ $labels = array(
 	'errorA11y'  => __( 'The page could not be copied. Try the View as Markdown link instead.', 'wporg' ),
 );
 
-// Initial state to pass to Interactivity API.
-$init_state    = array(
-	'url'       => $markdown_url,
-	'status'    => 'idle',
-	'isLoading' => false,
-	'isCopied'  => false,
-	'isError'   => false,
-	'labelText' => $labels['copy'],
-	'ariaLabel' => $labels['copyA11y'],
-	'label'     => $labels,
+// Context holds the values that change or differ per block; everything the
+// markup binds to is derived from `status` so the server and client can't disagree.
+$context = array(
+	'url'    => $markdown_url,
+	'status' => 'idle',
+	'label'  => $labels,
 );
-$encoded_state = wp_json_encode( $init_state );
+
+// Server-side derived state, mirrored by the getters in view.js.
+wp_interactivity_state(
+	'wporg/copy-page',
+	array(
+		'isLoading' => fn() => 'loading' === wp_interactivity_get_context()['status'],
+		'isCopied'  => fn() => 'copied' === wp_interactivity_get_context()['status'],
+		'isError'   => fn() => 'error' === wp_interactivity_get_context()['status'],
+		'labelText' => function () {
+			$ctx = wp_interactivity_get_context();
+			return $ctx['label'][ get_label_key( $ctx['status'] ) ];
+		},
+		'ariaLabel' => function () {
+			$ctx = wp_interactivity_get_context();
+			return $ctx['label'][ get_label_key( $ctx['status'] ) . 'A11y' ];
+		},
+	)
+);
 
 ?>
 <div
 	<?php echo get_block_wrapper_attributes(); // phpcs:ignore ?>
 	data-wp-interactive="wporg/copy-page"
-	data-wp-context="<?php echo esc_attr( $encoded_state ); ?>"
-	data-wp-class--is-loading="context.isLoading"
-	data-wp-class--is-copied="context.isCopied"
-	data-wp-class--is-error="context.isError"
+	<?php echo wp_interactivity_data_wp_context( $context ); // phpcs:ignore ?>
+	data-wp-class--is-loading="state.isLoading"
+	data-wp-class--is-copied="state.isCopied"
+	data-wp-class--is-error="state.isError"
 >
 	<button
 		type="button"
 		class="wporg-copy-page__button"
 		aria-label="<?php echo esc_attr( $labels['copyA11y'] ); ?>"
 		data-wp-on--click="actions.copy"
-		data-wp-bind--aria-label="context.ariaLabel"
-		data-wp-bind--aria-busy="context.isLoading"
+		data-wp-bind--aria-label="state.ariaLabel"
+		data-wp-bind--aria-busy="state.isLoading"
 	>
 		<span class="wporg-copy-page__icon" aria-hidden="true">
 			<svg class="is-icon-copy" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" focusable="false">
@@ -72,7 +85,7 @@ $encoded_state = wp_json_encode( $init_state );
 				<path d="M7 12L10 15L17 8" />
 			</svg>
 		</span>
-		<span class="wporg-copy-page__label" data-wp-text="context.labelText"><?php echo esc_html( $labels['copy'] ); ?></span>
+		<span class="wporg-copy-page__label" data-wp-text="state.labelText"><?php echo esc_html( $labels['copy'] ); ?></span>
 	</button>
 	<?php if ( $has_view_link ) : ?>
 	<a class="wporg-copy-page__link" href="<?php echo esc_url( $markdown_url ); ?>">

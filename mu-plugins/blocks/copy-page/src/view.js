@@ -44,18 +44,21 @@ async function fetchMarkdown( url ) {
  * Safari only allows clipboard writes while the user gesture is active, which
  * is over by the time the fetch resolves. Passing a promise to `ClipboardItem`
  * keeps the write tied to the click, so prefer that where it's supported.
- * Browsers that have `ClipboardItem` but don't accept promise values (Chromium
- * before 133) throw synchronously, so fall back to `writeText` in that case.
+ * Chromium 76–97 has `ClipboardItem` but only accepts a `Blob`, not a promise,
+ * and throws synchronously from the constructor; fall back to `writeText` there.
  *
  * @param {Promise<string>} textPromise A promise resolving to the text to copy.
  * @return {Promise<void>}
  */
 function writeToClipboard( textPromise ) {
 	if ( window.ClipboardItem && navigator.clipboard?.write ) {
+		const blobPromise = textPromise.then( ( text ) => new Blob( [ text ], { type: 'text/plain' } ) );
+		// If the constructor throws, nothing consumes this promise; a later fetch failure
+		// is still reported through write() or the writeText fallback.
+		blobPromise.catch( () => {} );
+
 		try {
-			const item = new window.ClipboardItem( {
-				'text/plain': textPromise.then( ( text ) => new Blob( [ text ], { type: 'text/plain' } ) ),
-			} );
+			const item = new window.ClipboardItem( { 'text/plain': blobPromise } );
 			return navigator.clipboard.write( [ item ] );
 		} catch {
 			// Fall through to writeText.
@@ -66,57 +69,70 @@ function writeToClipboard( textPromise ) {
 }
 
 /**
- * Update the block state for a given status.
+ * Map a copy status to the key of the label shown for it.
  *
- * Everything bound in the markup lives in context (not derived state) so that
- * the server can render the initial values when it processes the directives.
+ * @param {string} status One of 'idle', 'loading', 'copied' or 'error'.
+ * @return {string} 'copy', 'copied' or 'error'.
+ */
+function getLabelKey( status ) {
+	return [ 'copied', 'error' ].includes( status ) ? status : 'copy';
+}
+
+/**
+ * Set the copy status and schedule the reset to idle.
  *
  * @param {Object} context The block context.
- * @param {string} status  One of 'idle', 'loading', 'copied' or 'error'.
+ * @param {string} status  One of 'copied' or 'error'.
  */
-function setStatus( context, status ) {
-	const { label } = context;
+function finish( context, status ) {
 	context.status = status;
-	context.isLoading = 'loading' === status;
-	context.isCopied = 'copied' === status;
-	context.isError = 'error' === status;
-
-	if ( 'copied' === status ) {
-		context.labelText = label.copied;
-		context.ariaLabel = label.copiedA11y;
-	} else if ( 'error' === status ) {
-		context.labelText = label.error;
-		context.ariaLabel = label.errorA11y;
-	} else {
-		context.labelText = label.copy;
-		context.ariaLabel = label.copyA11y;
-	}
+	resetTimers.set(
+		context,
+		setTimeout( () => {
+			context.status = 'idle';
+		}, RESET_DELAY )
+	);
 }
 
 store( 'wporg/copy-page', {
+	// Derived from `context.status`; the server renders the same values from render.php.
+	state: {
+		get isLoading() {
+			return 'loading' === getContext().status;
+		},
+		get isCopied() {
+			return 'copied' === getContext().status;
+		},
+		get isError() {
+			return 'error' === getContext().status;
+		},
+		get labelText() {
+			const { status, label } = getContext();
+			return label[ getLabelKey( status ) ];
+		},
+		get ariaLabel() {
+			const { status, label } = getContext();
+			return label[ getLabelKey( status ) + 'A11y' ];
+		},
+	},
 	actions: {
 		*copy() {
 			const context = getContext();
-			if ( context.isLoading ) {
+			if ( 'loading' === context.status ) {
 				return;
 			}
 
 			clearTimeout( resetTimers.get( context ) );
-			setStatus( context, 'loading' );
+			context.status = 'loading';
 
 			try {
 				yield writeToClipboard( fetchMarkdown( context.url ) );
-				setStatus( context, 'copied' );
+				finish( context, 'copied' );
 				window.wp?.a11y?.speak( context.label.copiedA11y, 'polite' );
 			} catch {
-				setStatus( context, 'error' );
+				finish( context, 'error' );
 				window.wp?.a11y?.speak( context.label.errorA11y, 'assertive' );
 			}
-
-			resetTimers.set(
-				context,
-				setTimeout( () => setStatus( context, 'idle' ), RESET_DELAY )
-			);
 		},
 	},
 } );

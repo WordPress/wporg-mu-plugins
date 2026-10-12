@@ -29,14 +29,21 @@ function init() {
  *
  * WordPress.org serves a Markdown rendering of any page when `?output_format=md`
  * is appended to its URL (or when the request sends `Accept: text/markdown`).
- * The URL is built from the current request, the same way the site's
- * `<link rel="alternate" type="text/markdown">` tag is, so it also works on
- * archives and other non-singular pages.
+ * The URL is built from the current request, so it also works on archives and
+ * other non-singular pages.
  *
  * @return string The URL.
  */
 function get_markdown_url() {
-	$url = add_query_arg( 'output_format', 'md' );
+	if ( wp_is_serving_rest_request() ) {
+		// Rendered through the block-renderer endpoint (editor preview): the request URL
+		// is the REST route, so point at the home page instead of a JSON endpoint.
+		$url = home_url( '/?output_format=md' );
+	} else {
+		// Built from the request URI, forced to be root-relative so a request like
+		// `//evil.example/x` can't turn it into a protocol-relative URL to another host.
+		$url = '/' . ltrim( add_query_arg( 'output_format', 'md' ), '/\\' );
+	}
 
 	/**
 	 * Filters the URL of the Markdown rendering of the current page.
@@ -44,4 +51,14 @@ function get_markdown_url() {
 	 * @param string $url The Markdown URL.
 	 */
 	return apply_filters( 'wporg_copy_page_markdown_url', $url );
+}
+
+/**
+ * Map a copy status to the key of the label shown for it.
+ *
+ * @param string $status One of 'idle', 'loading', 'copied' or 'error'.
+ * @return string 'copy', 'copied' or 'error'.
+ */
+function get_label_key( $status ) {
+	return in_array( $status, array( 'copied', 'error' ), true ) ? $status : 'copy';
 }
