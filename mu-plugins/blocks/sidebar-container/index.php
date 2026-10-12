@@ -10,6 +10,7 @@
 namespace WordPressdotorg\MU_Plugins\Sidebar_Container_Block;
 
 use function WordPressdotorg\MU_Plugins\Helpers\register_assets_from_metadata;
+use function WordPressdotorg\MU_Plugins\Helpers\is_markdown_request;
 
 add_action( 'init', __NAMESPACE__ . '\init' );
 
@@ -40,10 +41,11 @@ function init() {
 function render( $attributes, $content ) {
 	$wrapper_attributes = get_block_wrapper_attributes();
 	$inline_breakpoint  = $attributes['inlineBreakpoint'];
-	$back_to_top        = $attributes['hasBackToTop']
+	// The link is navigation chrome, so leave it out of the Markdown rendering.
+	$back_to_top = $attributes['hasBackToTop'] && ! is_markdown_request()
 		? sprintf(
-			'<p class="has-small-font-size is-link-to-top"><a href="#wp--skip-link--target">%s</a></p>',
-			esc_html__( '↑ Back to top', 'wporg' )
+			'<p class="has-small-font-size is-link-to-top"><a href="#wp--skip-link--target"><span class="is-link-to-top__icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" focusable="false"><path d="M12 20L12 5M17 10L12 5L7 10" /></svg></span>%s</a></p>',
+			esc_html__( 'Back to top', 'wporg' )
 		)
 		: '';
 
