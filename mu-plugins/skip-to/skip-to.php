@@ -112,8 +112,8 @@ namespace WordPressdotorg\MU_Plugins\Skip_To_Links {
 	 * @return void
 	 */
 	function js() {
-		?>
-		<script>
+		wp_print_inline_script_tag(
+			<<<'JS'
 			( function() {
 				var skipLink = document.getElementById( 'wporg-skip-link' ),
 					skipLinkTarget, skipLinkTargetID;
@@ -137,8 +137,8 @@ namespace WordPressdotorg\MU_Plugins\Skip_To_Links {
 				skipLink.href = '#' + skipLinkTargetID;
 				skipLink.tabIndex = '';
 			}() );
-		</script>
-		<?php
+			JS
+		);
 	}
 }
 
