@@ -109,6 +109,7 @@ if ( $selected_count && $has_multiple ) {
 		<form
 			action="<?php echo esc_attr( $settings['action'] ); ?>"
 			data-wp-on--change="actions.handleFormChange"
+			data-wp-on--submit="actions.handleFormSubmit"
 		>
 			<div class="wporg-query-filter__modal-header">
 				<h2><?php echo wp_kses_post( $settings['title'] ); ?></h2>

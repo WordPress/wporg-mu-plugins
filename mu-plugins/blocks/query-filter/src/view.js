@@ -116,6 +116,16 @@ const { actions } = store( 'wporg/query-filter', {
 			const count = context.form.querySelectorAll( 'input:checked' ).length;
 			actions.updateButtons( count );
 		},
+		handleFormSubmit: ( event ) => {
+			const form = event.target;
+			// Submitting a GET form without any data appends a lone `?` to the URL.
+			if ( ! Array.from( new FormData( form ).keys() ).length ) {
+				event.preventDefault();
+				const url = new URL( form.getAttribute( 'action' ) || '', window.location.href );
+				url.search = '';
+				window.location.href = url.toString();
+			}
+		},
 		clearSelection: () => {
 			const context = getContext();
 			const { ref } = getElement();
