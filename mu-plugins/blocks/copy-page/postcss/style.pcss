@@ -1,0 +1,80 @@
+.wp-block-wporg-copy-page {
+	--local--icon-size: 20px;
+
+	font-size: var(--wp--preset--font-size--small);
+
+	/* Same rhythm as the items in the table of contents list. */
+	line-height: 1.6;
+	color: var(--wp--preset--color--charcoal-4);
+
+	.wporg-copy-page__button,
+	.wporg-copy-page__link {
+		display: flex;
+		align-items: center;
+		gap: calc(var(--wp--preset--spacing--10) / 2);
+		width: fit-content;
+		margin: 0 0 calc(var(--wp--preset--spacing--20) / 4);
+		padding: 0;
+		background: none;
+		border: none;
+		border-radius: 2px;
+		box-shadow: none;
+		font: inherit;
+		text-align: start;
+		text-decoration: none;
+		color: inherit;
+		cursor: pointer;
+
+		/* Match the underline the theme gives regular links. */
+		&:hover .wporg-copy-page__label {
+			text-decoration-line: underline;
+			text-decoration-thickness: 1px;
+			text-underline-offset: 0.15em;
+		}
+
+		&:focus-visible {
+			outline: 1.5px solid var(--wp--preset--color--blueberry-1);
+			outline-offset: 2px;
+			box-shadow: none;
+		}
+	}
+
+	.wporg-copy-page__icon {
+		position: relative;
+		flex-shrink: 0;
+		width: var(--local--icon-size);
+		height: var(--local--icon-size);
+
+		& svg {
+			position: absolute;
+			inset: 0;
+			width: 100%;
+			height: 100%;
+			transition: opacity 0.15s ease, transform 0.15s ease;
+		}
+	}
+
+	/* Cross-fade the copy icon into the check mark once the page has been copied. */
+	.is-icon-copied {
+		opacity: 0;
+		transform: scale(0.6);
+	}
+
+	&.is-copied {
+		.is-icon-copy {
+			opacity: 0;
+			transform: scale(0.6);
+		}
+
+		.is-icon-copied {
+			opacity: 1;
+			transform: scale(1);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.wporg-copy-page__icon svg {
+			transition: none;
+		}
+	}
+}
