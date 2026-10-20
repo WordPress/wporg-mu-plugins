@@ -43,7 +43,7 @@ const Edit = ( { isActive, onChange, value } ) => {
 				type: name,
 			} )
 		);
-	} );
+	}, [ onChange, value ] );
 
 	// If any of the times change, toggle the format off for that time.
 	useEffect( () => {
@@ -75,7 +75,7 @@ const Edit = ( { isActive, onChange, value } ) => {
 		}
 
 		timesRef.current = nextTimes;
-	}, [ content, timesRef ] );
+	}, [ content, onChange, value ] );
 
 	return (
 		<RichTextToolbarButton
