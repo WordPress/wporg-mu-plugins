@@ -30,9 +30,10 @@ const getTimesFromContent = ( content ) => {
 
 const Edit = ( { isActive, onChange, value } ) => {
 	const { date_gmt } = useSelect( ( select ) => select( 'core/editor' ).getCurrentPost() );
-	const {
-		attributes: { content },
-	} = useSelect( ( select ) => select( 'core/block-editor' ).getSelectedBlock() );
+	// No block is selected when the selection spans multiple blocks.
+	const content = useSelect(
+		( select ) => select( 'core/block-editor' ).getSelectedBlock()?.attributes?.content ?? ''
+	);
 
 	const timesRef = useRef( [] );
 
