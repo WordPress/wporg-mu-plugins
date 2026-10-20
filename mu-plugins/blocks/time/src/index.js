@@ -30,9 +30,10 @@ const getTimesFromContent = ( content ) => {
 
 const Edit = ( { isActive, onChange, value } ) => {
 	const { date_gmt } = useSelect( ( select ) => select( 'core/editor' ).getCurrentPost() );
-	const {
-		attributes: { content },
-	} = useSelect( ( select ) => select( 'core/block-editor' ).getSelectedBlock() );
+	// No block is selected when the selection spans multiple blocks.
+	const content = useSelect(
+		( select ) => select( 'core/block-editor' ).getSelectedBlock()?.attributes?.content ?? ''
+	);
 
 	const timesRef = useRef( [] );
 
@@ -42,7 +43,7 @@ const Edit = ( { isActive, onChange, value } ) => {
 				type: name,
 			} )
 		);
-	} );
+	}, [ onChange, value ] );
 
 	// If any of the times change, toggle the format off for that time.
 	useEffect( () => {
@@ -74,7 +75,7 @@ const Edit = ( { isActive, onChange, value } ) => {
 		}
 
 		timesRef.current = nextTimes;
-	}, [ content, timesRef ] );
+	}, [ content, onChange, value ] );
 
 	return (
 		<RichTextToolbarButton
