@@ -1,0 +1,1 @@
+(()=>{"use strict";const e=window.wp.blocks,n=window.wp.blockEditor,o=JSON.parse('{"UU":"wporg/sidebar-container"}'),s=window.ReactJSXRuntime;(0,e.registerBlockType)(o.UU,{edit:function(){return(0,s.jsx)("div",{...(0,n.useBlockProps)(),children:(0,s.jsx)(n.InnerBlocks,{})})},save:()=>(0,s.jsx)(n.InnerBlocks.Content,{})})})();
