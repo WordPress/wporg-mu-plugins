@@ -35,7 +35,8 @@ defined( 'WPINC' ) || die();
  *
  * Conversations are returned as the API sends them, plus `url`, the link to the conversation, and `tags`, its tag
  * names. Messages are sent by the current user's FreeScout agent, which FreeScout links to their WordPress.org
- * account; pass `user` where nobody is logged in, like in cron jobs.
+ * account; pass `user` where nobody is logged in, like in cron jobs. The client doesn't check who may send: callers
+ * check capabilities first.
  *
  * Needs the `WPORG_FREESCOUT_API_KEY` constant.
  *
@@ -314,7 +315,9 @@ final class FreeScout {
 			return $response;
 		}
 
-		$user_id = (int) ( $response['_embedded']['users'][0]['id'] ?? 0 );
+		// Never fall back to another agent if the API ever stops filtering by email.
+		$agent   = $response['_embedded']['users'][0] ?? array();
+		$user_id = 0 === strcasecmp( (string) ( $agent['email'] ?? '' ), $user ) ? (int) $agent['id'] : 0;
 		if ( ! $user_id ) {
 			return new WP_Error( 'freescout_invalid_argument', sprintf( 'No agent `%s`.', $user ) );
 		}
