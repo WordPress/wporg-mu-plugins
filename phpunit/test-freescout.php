@@ -15,6 +15,9 @@ use WordPressdotorg\MU_Plugins\Utilities\FreeScout;
  */
 require_once WPMU_PLUGIN_DIR . '/utilities/class-freescout.php';
 
+// Only needs to be non-empty: no request in this file leaves the process.
+defined( 'WPORG_FREESCOUT_API_KEY' ) || define( 'WPORG_FREESCOUT_API_KEY', 'test-key' );
+
 /**
  * Tests for `FreeScout`.
  *
@@ -46,7 +49,7 @@ class Test_FreeScout extends WP_UnitTestCase {
 
 		$this->requests  = array();
 		$this->responses = array(
-			'GET mailboxes?pageSize=100&page=1' => array(
+			'GET mailboxes?pageSize=100&page=1'   => array(
 				200,
 				array(
 					'_embedded' => array(
@@ -71,15 +74,21 @@ class Test_FreeScout extends WP_UnitTestCase {
 					),
 				),
 			),
-			'GET users/me'                      => array(
+			'GET users?email=agent%40example.org' => array(
 				200,
 				array(
-					'id'    => 33,
-					'type'  => 'user',
-					'email' => 'trademarks-bot@wordpress.org',
+					'_embedded' => array(
+						'users' => array(
+							array(
+								'id'    => 33,
+								'type'  => 'user',
+								'email' => 'agent@example.org',
+							),
+						),
+					),
 				),
 			),
-			'POST conversations'                => array(
+			'POST conversations'                  => array(
 				201,
 				array(
 					'id'        => 131241,
@@ -89,10 +98,12 @@ class Test_FreeScout extends WP_UnitTestCase {
 					'mailboxId' => 19,
 				),
 			),
-			'PUT conversations/131241/tags'     => array( 204, null ),
+			'PUT conversations/131241/tags'       => array( 204, null ),
 		);
 
 		add_filter( 'pre_http_request', array( $this, 'answer_request' ), 10, 3 );
+
+		wp_set_current_user( self::factory()->user->create( array( 'user_email' => 'agent@example.org' ) ) );
 	}
 
 	/**
@@ -144,7 +155,7 @@ class Test_FreeScout extends WP_UnitTestCase {
 	 * @return array|WP_Error
 	 */
 	protected function create_conversation(): array|WP_Error {
-		return ( new FreeScout( 'test-key' ) )->create_conversation(
+		return FreeScout::create_conversation(
 			array(
 				'mailbox' => 'Trademarks@WordPressFoundation.org',
 				'to'      => 'owner@example.org',
@@ -157,10 +168,10 @@ class Test_FreeScout extends WP_UnitTestCase {
 	}
 
 	/**
-	 * The mailbox is found by its address, the message goes out as the key's owner, and the caller gets a
-	 * working link back.
+	 * The mailbox is found by its address, the message goes out as the current user's agent, and the caller gets
+	 * a working link back.
 	 */
-	public function test_create_conversation_sends_from_the_mailbox_as_the_key_owner(): void {
+	public function test_create_conversation_sends_from_the_mailbox_as_the_current_user(): void {
 		$conversation = $this->create_conversation();
 
 		$this->assertSame(
