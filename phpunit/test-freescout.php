@@ -326,14 +326,15 @@ class Test_FreeScout extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Nothing is added when the conversation's CC can't be read, rather than clearing it.
+	 * Nothing is added when the conversation's CC can't be read, rather than clearing it, and the error doesn't
+	 * claim FreeScout may have acted, so the caller can try again.
 	 */
 	public function test_reply_sends_nothing_when_the_cc_cant_be_read(): void {
-		$this->responses['GET conversations/131241'] = array( 404, array( 'message' => 'Not Found' ) );
+		unset( $this->responses['GET conversations/131241'] );
 
 		$thread = FreeScout::reply( 131241, '<p>Thanks!</p>' );
 
-		$this->assertWPError( $thread );
+		$this->assertSame( 'freescout_error', $thread->get_error_code() );
 		$this->assertArrayNotHasKey( 'POST conversations/131241/threads', $this->requests );
 	}
 

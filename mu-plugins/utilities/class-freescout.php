@@ -532,9 +532,9 @@ final class FreeScout {
 			)
 		);
 
-		// FreeScout may have received the request and acted on it.
+		// FreeScout may have received a write and acted on it; a read changes nothing, so it's safe to retry.
 		if ( is_wp_error( $response ) ) {
-			return new \WP_Error( 'freescout_no_response', $response->get_error_message() );
+			return new \WP_Error( 'GET' === $method ? 'freescout_error' : 'freescout_no_response', $response->get_error_message() );
 		}
 
 		$status = (int) wp_remote_retrieve_response_code( $response );
