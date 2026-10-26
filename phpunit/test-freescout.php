@@ -43,14 +43,14 @@ class Test_FreeScout extends WP_UnitTestCase {
 	protected array $requests = array();
 
 	/**
-	 * Answer FreeScout requests from `$responses`.
+	 * Answer FreeScout requests from `$responses`, as a logged-in agent.
 	 */
 	public function set_up(): void {
 		parent::set_up();
 
 		$this->requests  = array();
 		$this->responses = array(
-			'GET users?email=agent%40example.org'         => array(
+			'GET users?email=agent%40example.org' => array(
 				200,
 				array(
 					'_embedded' => array(
@@ -64,7 +64,7 @@ class Test_FreeScout extends WP_UnitTestCase {
 					),
 				),
 			),
-			'POST conversations'                          => array(
+			'POST conversations'                  => array(
 				201,
 				array(
 					'id'        => 131241,
@@ -74,15 +74,12 @@ class Test_FreeScout extends WP_UnitTestCase {
 					'mailboxId' => 19,
 				),
 			),
-			'GET conversations/131241?embed=threads,tags' => array(
+			'GET conversations/131241?embed=tags' => array(
 				200,
 				array(
 					'id'        => 131241,
-					'number'    => 2000123,
-					'status'    => 'active',
 					'_embedded' => array(
-						'threads' => array(),
-						'tags'    => array(
+						'tags' => array(
 							array(
 								'id'   => 57,
 								'name' => 'new-sponsor',
@@ -91,8 +88,8 @@ class Test_FreeScout extends WP_UnitTestCase {
 					),
 				),
 			),
-			'PUT conversations/131241/tags'               => array( 204, null ),
-			'PUT conversations/131241'                    => array( 204, null ),
+			'PUT conversations/131241/tags'       => array( 204, null ),
+			'PUT conversations/131241'            => array( 204, null ),
 		);
 
 		add_filter( 'pre_http_request', array( $this, 'answer_request' ), 10, 3 );
@@ -117,7 +114,7 @@ class Test_FreeScout extends WP_UnitTestCase {
 	 * @param string               $url     Request URL.
 	 * @return false|array|WP_Error
 	 */
-	public function answer_request( $preempt, $args, $url ) {
+	public function answer_request( false|array|WP_Error $preempt, array $args, string $url ): false|array|WP_Error {
 		if ( ! str_starts_with( $url, FreeScout::URL . '/api/' ) ) {
 			return $preempt;
 		}
@@ -144,12 +141,12 @@ class Test_FreeScout extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Starts a conversation the way the trademark letters do.
+	 * Sends a trademark letter.
 	 *
 	 * @return array|WP_Error
 	 */
-	protected function create_conversation(): array|WP_Error {
-		return FreeScout::create_conversation(
+	protected function send(): array|WP_Error {
+		return FreeScout::send(
 			array(
 				'mailbox' => 'trademarks',
 				'to'      => 'owner@example.org',
@@ -162,11 +159,11 @@ class Test_FreeScout extends WP_UnitTestCase {
 	}
 
 	/**
-	 * The mailbox ID comes from its constant, the message goes out as the current user's agent, tags a Workflow added
-	 * are kept, and the caller gets a working link back.
+	 * The mailbox ID comes from its constant, the message goes out as the current user's agent, and the caller gets
+	 * a working link back.
 	 */
-	public function test_create_conversation_sends_from_the_mailbox_as_the_current_user(): void {
-		$conversation = $this->create_conversation();
+	public function test_send_from_the_mailbox_as_the_current_user(): void {
+		$conversation = $this->send();
 
 		$this->assertSame(
 			array(
@@ -185,22 +182,22 @@ class Test_FreeScout extends WP_UnitTestCase {
 			),
 			$this->requests['POST conversations']
 		);
-		$this->assertSame( array( 'tags' => array( 'new-sponsor', 'trademark' ) ), $this->requests['PUT conversations/131241/tags'] );
+		$this->assertSame( array( 'tags' => array( 'trademark' ) ), $this->requests['PUT conversations/131241/tags'] );
 		$this->assertSame( 'https://freescout.wordpress.net/conversation/131241', $conversation['url'] );
-		$this->assertSame( array( 'new-sponsor', 'trademark' ), $conversation['tags'] );
+		$this->assertSame( array( 'trademark' ), $conversation['tags'] );
 	}
 
 	/**
 	 * A conversation that exists is returned even when tagging it fails, so the caller doesn't email the
 	 * recipient again.
 	 */
-	public function test_create_conversation_returns_the_conversation_when_tagging_fails(): void {
+	public function test_send_returns_the_conversation_when_tagging_fails(): void {
 		$this->responses['PUT conversations/131241/tags'] = array(
 			400,
 			array( 'message' => 'Tags module is not installed or not activated' ),
 		);
 
-		$conversation = $this->create_conversation();
+		$conversation = $this->send();
 
 		$this->assertIsArray( $conversation );
 		$this->assertSame( 'https://freescout.wordpress.net/conversation/131241', $conversation['url'] );
@@ -210,7 +207,7 @@ class Test_FreeScout extends WP_UnitTestCase {
 	/**
 	 * A refused request comes back as an error carrying the status and FreeScout's reasons.
 	 */
-	public function test_create_conversation_returns_freescouts_errors(): void {
+	public function test_send_returns_freescouts_errors(): void {
 		$this->responses['POST conversations'] = array(
 			403,
 			array(
@@ -219,7 +216,7 @@ class Test_FreeScout extends WP_UnitTestCase {
 			),
 		);
 
-		$conversation = $this->create_conversation();
+		$conversation = $this->send();
 
 		$this->assertWPError( $conversation );
 		$this->assertSame( 'Forbidden: Provided API key is not permitted to access this mailbox', $conversation->get_error_message() );
@@ -227,14 +224,28 @@ class Test_FreeScout extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Closing and unassigning names the agent making the change, which FreeScout requires, and unassigns with -1.
+	 * Nothing is sent when FreeScout answers with a different agent than the one asked for.
 	 */
-	public function test_update_conversation_closes_and_unassigns_as_the_current_user(): void {
-		$result = FreeScout::update_conversation(
+	public function test_send_refuses_an_agent_with_another_email(): void {
+		$this->responses['GET users?email=agent%40example.org'][1]['_embedded']['users'][0]['email'] = 'admin@example.org';
+
+		$conversation = $this->send();
+
+		$this->assertWPError( $conversation );
+		$this->assertArrayNotHasKey( 'POST conversations', $this->requests );
+	}
+
+	/**
+	 * Closing and unassigning names the agent making the change, which FreeScout requires, and new tags join the
+	 * ones the conversation already has.
+	 */
+	public function test_update_closes_unassigns_and_adds_tags(): void {
+		$result = FreeScout::update(
 			131241,
 			array(
 				'status'    => 'closed',
 				'assign_to' => 0,
+				'tags'      => array( 'approved' ),
 			)
 		);
 
@@ -247,5 +258,6 @@ class Test_FreeScout extends WP_UnitTestCase {
 			),
 			$this->requests['PUT conversations/131241']
 		);
+		$this->assertSame( array( 'tags' => array( 'new-sponsor', 'approved' ) ), $this->requests['PUT conversations/131241/tags'] );
 	}
 }
