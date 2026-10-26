@@ -41,8 +41,8 @@ defined( 'WPINC' ) || die();
  *
  * A `freescout_no_response` error means FreeScout may have acted anyway, so don't simply send again.
  *
- * Needs the `FREESCOUT_API_KEY` constant, and a `FREESCOUT_<MAILBOX>_MAILBOXID` constant for each mailbox named, like
- * `FREESCOUT_PLUGINS_MAILBOXID`.
+ * Needs the `FREESCOUT_API_KEY` constant, and a `FREESCOUT_<MAILBOX>_MAILBOX_ID` constant for each mailbox named, like
+ * `FREESCOUT_PLUGINS_MAILBOX_ID`.
  *
  * ⚠️ This class is used in multiple locations in the WordPress/WordCamp ecosystem. If you make changes to this
  * file, make sure they are tested everywhere.
@@ -288,6 +288,47 @@ final class FreeScout {
 	}
 
 	/**
+	 * Gets one of the Reports module's reports for a mailbox.
+	 *
+	 * @param string     $report  `conversations`, `productivity`, `satisfaction` or `time`.
+	 * @param int|string $mailbox The mailbox's ID, or its name in its constant, like `plugins`.
+	 * @param array      $filters {
+	 *     Optional.
+	 *
+	 *     @type string     $from The first day, as `Y-m-d`. Default: a week before `to`.
+	 *     @type string     $to   The last day, as `Y-m-d`. Default: today.
+	 *     @type string     $type `email`, `phone` or `chat`.
+	 *     @type int|string $user An agent, for the `productivity` report.
+	 *     @type int        $tag  A tag's ID.
+	 * }
+	 * @return array|\WP_Error The report, with its `metrics`.
+	 */
+	public static function report( string $report, int|string $mailbox, array $filters = array() ): array|\WP_Error {
+		if ( ! in_array( $report, array( 'conversations', 'productivity', 'satisfaction', 'time' ), true ) ) {
+			return new \WP_Error( 'freescout_invalid_argument', sprintf( 'No report `%s`.', $report ) );
+		}
+
+		$mailbox_id = self::get_mailbox_id( $mailbox );
+		if ( is_wp_error( $mailbox_id ) ) {
+			return $mailbox_id;
+		}
+
+		$filters = array_intersect_key( $filters, array_flip( array( 'from', 'to', 'type', 'user', 'tag' ) ) );
+
+		if ( ! empty( $filters['user'] ) ) {
+			$filters['user'] = self::get_user_id( $filters['user'] );
+			if ( is_wp_error( $filters['user'] ) ) {
+				return $filters['user'];
+			}
+		}
+
+		// Without a mailbox, FreeScout reports on every mailbox.
+		$filters['mailbox'] = $mailbox_id;
+
+		return self::request( 'GET', 'reports/' . $report . '?' . http_build_query( array( 'filters' => $filters ) ) );
+	}
+
+	/**
 	 * Adds the conversation's link and tag names to what the API returned.
 	 *
 	 * @param array    $conversation The API's conversation.
@@ -337,6 +378,22 @@ final class FreeScout {
 			return $thread;
 		}
 
+		// FreeScout replaces the conversation's CC with every new thread's, notes included.
+		$conversation = self::request( 'GET', 'conversations/' . $conversation_id );
+		if ( is_wp_error( $conversation ) ) {
+			return $conversation;
+		}
+
+		if ( ! isset( $conversation['cc'] ) || ! is_array( $conversation['cc'] ) ) {
+			return new \WP_Error( 'freescout_error', 'FreeScout returned no CC for the conversation, so it would be cleared.' );
+		}
+
+		// FreeScout lowercases and dedupes the addresses.
+		$cc = array_merge( $conversation['cc'], $thread['cc'] ?? array() );
+		if ( $cc ) {
+			$thread['cc'] = $cc;
+		}
+
 		if ( $args['status'] ) {
 			$thread['status'] = $args['status'];
 		}
@@ -371,7 +428,7 @@ final class FreeScout {
 	}
 
 	/**
-	 * Gets a mailbox's ID from its `FREESCOUT_<MAILBOX>_MAILBOXID` constant.
+	 * Gets a mailbox's ID from its `FREESCOUT_<MAILBOX>_MAILBOX_ID` constant.
 	 *
 	 * @param mixed $mailbox The mailbox's ID, or its name in the constant, like `plugins`.
 	 * @return int|\WP_Error
@@ -381,7 +438,7 @@ final class FreeScout {
 			return (int) $mailbox;
 		}
 
-		$constant = is_string( $mailbox ) ? 'FREESCOUT_' . strtoupper( $mailbox ) . '_MAILBOXID' : '';
+		$constant = is_string( $mailbox ) ? 'FREESCOUT_' . strtoupper( $mailbox ) . '_MAILBOX_ID' : '';
 		if ( ! $constant || ! defined( $constant ) ) {
 			return new \WP_Error( 'freescout_not_configured', sprintf( 'No mailbox constant for `%s`.', is_string( $mailbox ) ? $mailbox : gettype( $mailbox ) ) );
 		}
@@ -464,9 +521,9 @@ final class FreeScout {
 			)
 		);
 
-		// FreeScout may have received the request and acted on it.
+		// FreeScout may have received a write and acted on it; a read changes nothing, so it's safe to retry.
 		if ( is_wp_error( $response ) ) {
-			return new \WP_Error( 'freescout_no_response', $response->get_error_message() );
+			return new \WP_Error( 'GET' === $method ? 'freescout_error' : 'freescout_no_response', $response->get_error_message() );
 		}
 
 		$status = (int) wp_remote_retrieve_response_code( $response );
