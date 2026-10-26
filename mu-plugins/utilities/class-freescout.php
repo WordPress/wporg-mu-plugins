@@ -177,7 +177,6 @@ final class FreeScout {
 	 * @param array  $args {
 	 *     Optional.
 	 *
-	 *     @type string[]   $to     Recipients. Default: the conversation's customer.
 	 *     @type string[]   $cc     Addresses to copy.
 	 *     @type string     $status The conversation's status after the reply. Default: FreeScout's, `pending`.
 	 *     @type int|string $user   The sending agent. Default: the current user.
@@ -359,14 +358,13 @@ final class FreeScout {
 	 * @param int    $conversation_id The conversation's ID.
 	 * @param string $type            `message` or `note`.
 	 * @param string $body            The text, as HTML.
-	 * @param array  $args            `to`, `cc`, `status` and `user`, as the public methods take them.
+	 * @param array  $args            `cc`, `status` and `user`, as the public methods take them.
 	 * @return array|\WP_Error The new thread.
 	 */
 	private static function add_thread( int $conversation_id, string $type, string $body, array $args ): array|\WP_Error {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'to'     => array(),
 				'cc'     => array(),
 				'status' => '',
 				'user'   => '',
@@ -390,19 +388,10 @@ final class FreeScout {
 			return new \WP_Error( 'freescout_error', 'FreeScout returned no CC for the conversation, so it would be cleared.' );
 		}
 
-		$cc = $conversation['cc'];
-		foreach ( $thread['cc'] ?? array() as $address ) {
-			if ( ! in_array( strtolower( $address ), array_map( 'strtolower', $cc ), true ) ) {
-				$cc[] = $address;
-			}
-		}
-
+		// FreeScout lowercases and dedupes the addresses.
+		$cc = array_merge( $conversation['cc'], $thread['cc'] ?? array() );
 		if ( $cc ) {
-			$thread['cc'] = array_values( $cc );
-		}
-
-		if ( 'message' === $type && $args['to'] ) {
-			$thread['to'] = array_values( (array) $args['to'] );
+			$thread['cc'] = $cc;
 		}
 
 		if ( $args['status'] ) {

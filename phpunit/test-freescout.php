@@ -282,21 +282,17 @@ class Test_FreeScout extends WP_UnitTestCase {
 	 */
 	public function data_threads(): array {
 		return array(
-			'reply to the author, copying a co-author' => array(
+			'reply, copying a co-author' => array(
 				'reply',
-				array(
-					'to' => array( 'author@example.org' ),
-					'cc' => array( 'Committer@example.org', 'co-author@example.org' ),
-				),
+				array( 'cc' => array( 'co-author@example.org' ) ),
 				array(
 					'type' => 'message',
 					'text' => '<p>Thanks!</p>',
 					'user' => 33,
 					'cc'   => array( 'committer@example.org', 'co-author@example.org' ),
-					'to'   => array( 'author@example.org' ),
 				),
 			),
-			'note'                                     => array(
+			'note'                       => array(
 				'note',
 				array(),
 				array(
