@@ -37,7 +37,8 @@ defined( 'WPINC' ) || die();
  * conversation, and `tags`, its tag names.
  *
  * Agents are named by ID or email address, and messages, notes and changes are made by the current user's agent,
- * which FreeScout links to their WordPress.org account. Pass `user` where nobody is logged in, like in cron jobs.
+ * which FreeScout links to their WordPress.org account. Pass `user` where that isn't an agent: in cron jobs, or when
+ * a visitor's action sends the email, like a form submission.
  * The client doesn't check who may act: callers check capabilities first.
  *
  * Needs the `FREESCOUT_API_KEY` constant, and a `FREESCOUT_<MAILBOX>_MAILBOXID` constant for each mailbox named, like
