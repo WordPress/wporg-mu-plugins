@@ -9,8 +9,6 @@ declare( strict_types = 1 );
 
 namespace WordPressdotorg\MU_Plugins\Utilities;
 
-use WP_Error;
-
 defined( 'WPINC' ) || die();
 
 /**
@@ -86,9 +84,9 @@ final class FreeScout {
 	 *     @type int|string   $assign_to Optional. The agent to assign it to.
 	 *     @type int|string   $user      Optional. The sending agent. Default: the current user.
 	 * }
-	 * @return array|WP_Error The conversation.
+	 * @return array|\WP_Error The conversation.
 	 */
-	public static function send( array $args ): array|WP_Error {
+	public static function send( array $args ): array|\WP_Error {
 		$args = wp_parse_args(
 			$args,
 			array(
@@ -106,13 +104,13 @@ final class FreeScout {
 
 		foreach ( array( 'mailbox', 'to', 'subject', 'body' ) as $required ) {
 			if ( empty( $args[ $required ] ) ) {
-				return new WP_Error( 'freescout_invalid_argument', sprintf( 'Missing `%s`.', $required ) );
+				return new \WP_Error( 'freescout_invalid_argument', sprintf( 'Missing `%s`.', $required ) );
 			}
 		}
 
 		$to = is_array( $args['to'] ) ? $args['to'] : array( 'email' => $args['to'] );
 		if ( empty( $to['email'] ) || ! is_string( $to['email'] ) ) {
-			return new WP_Error( 'freescout_invalid_argument', '`to` needs an `email`.' );
+			return new \WP_Error( 'freescout_invalid_argument', '`to` needs an `email`.' );
 		}
 
 		$mailbox_id = self::get_mailbox_id( $args['mailbox'] );
@@ -158,7 +156,7 @@ final class FreeScout {
 		}
 
 		if ( empty( $conversation['id'] ) ) {
-			return new WP_Error( 'freescout_no_response', 'FreeScout returned no conversation ID.' );
+			return new \WP_Error( 'freescout_no_response', 'FreeScout returned no conversation ID.' );
 		}
 
 		$tags = self::clean_tags( (array) $args['tags'] );
@@ -183,9 +181,9 @@ final class FreeScout {
 	 *     @type string     $status The conversation's status after the reply. Default: FreeScout's, `pending`.
 	 *     @type int|string $user   The sending agent. Default: the current user.
 	 * }
-	 * @return array|WP_Error The new thread.
+	 * @return array|\WP_Error The new thread.
 	 */
-	public static function reply( int $conversation_id, string $body, array $args = array() ): array|WP_Error {
+	public static function reply( int $conversation_id, string $body, array $args = array() ): array|\WP_Error {
 		return self::add_thread( $conversation_id, 'message', $body, $args );
 	}
 
@@ -200,9 +198,9 @@ final class FreeScout {
 	 *     @type string     $status The conversation's status after the note.
 	 *     @type int|string $user   The agent writing it. Default: the current user.
 	 * }
-	 * @return array|WP_Error The new thread.
+	 * @return array|\WP_Error The new thread.
 	 */
-	public static function note( int $conversation_id, string $body, array $args = array() ): array|WP_Error {
+	public static function note( int $conversation_id, string $body, array $args = array() ): array|\WP_Error {
 		return self::add_thread( $conversation_id, 'note', $body, $args );
 	}
 
@@ -221,9 +219,9 @@ final class FreeScout {
 	 *     @type string[]   $tags      Tag names to add.
 	 *     @type int|string $user      The agent making the change. Default: the current user.
 	 * }
-	 * @return true|WP_Error
+	 * @return true|\WP_Error
 	 */
-	public static function update( int $conversation_id, array $changes ): true|WP_Error {
+	public static function update( int $conversation_id, array $changes ): true|\WP_Error {
 		$request = array();
 
 		if ( ! empty( $changes['status'] ) ) {
@@ -278,9 +276,9 @@ final class FreeScout {
 	 * Gets a conversation, with its threads and tags.
 	 *
 	 * @param int $conversation_id The conversation's ID.
-	 * @return array|WP_Error The conversation.
+	 * @return array|\WP_Error The conversation.
 	 */
-	public static function get( int $conversation_id ): array|WP_Error {
+	public static function get( int $conversation_id ): array|\WP_Error {
 		$conversation = self::request( 'GET', 'conversations/' . $conversation_id . '?embed=threads,tags' );
 		if ( is_wp_error( $conversation ) ) {
 			return $conversation;
@@ -320,9 +318,9 @@ final class FreeScout {
 	 * @param string $type            `message` or `note`.
 	 * @param string $body            The text, as HTML.
 	 * @param array  $args            `cc`, `status` and `user`, as the public methods take them.
-	 * @return array|WP_Error The new thread.
+	 * @return array|\WP_Error The new thread.
 	 */
-	private static function add_thread( int $conversation_id, string $type, string $body, array $args ): array|WP_Error {
+	private static function add_thread( int $conversation_id, string $type, string $body, array $args ): array|\WP_Error {
 		$args = wp_parse_args(
 			$args,
 			array(
@@ -351,9 +349,9 @@ final class FreeScout {
 	 *
 	 * @param string $type `message` or `note`.
 	 * @param array  $args `body`, `cc` and `user`, as the public methods take them.
-	 * @return array|WP_Error
+	 * @return array|\WP_Error
 	 */
-	private static function build_thread( string $type, array $args ): array|WP_Error {
+	private static function build_thread( string $type, array $args ): array|\WP_Error {
 		$user_id = self::get_user_id( $args['user'] );
 		if ( is_wp_error( $user_id ) ) {
 			return $user_id;
@@ -376,16 +374,16 @@ final class FreeScout {
 	 * Gets a mailbox's ID from its `FREESCOUT_<MAILBOX>_MAILBOXID` constant.
 	 *
 	 * @param mixed $mailbox The mailbox's ID, or its name in the constant, like `plugins`.
-	 * @return int|WP_Error
+	 * @return int|\WP_Error
 	 */
-	private static function get_mailbox_id( mixed $mailbox ): int|WP_Error {
+	private static function get_mailbox_id( mixed $mailbox ): int|\WP_Error {
 		if ( is_numeric( $mailbox ) ) {
 			return (int) $mailbox;
 		}
 
 		$constant = is_string( $mailbox ) ? 'FREESCOUT_' . strtoupper( $mailbox ) . '_MAILBOXID' : '';
 		if ( ! $constant || ! defined( $constant ) ) {
-			return new WP_Error( 'freescout_not_configured', sprintf( 'No mailbox constant for `%s`.', is_string( $mailbox ) ? $mailbox : gettype( $mailbox ) ) );
+			return new \WP_Error( 'freescout_not_configured', sprintf( 'No mailbox constant for `%s`.', is_string( $mailbox ) ? $mailbox : gettype( $mailbox ) ) );
 		}
 
 		return (int) constant( $constant );
@@ -395,9 +393,9 @@ final class FreeScout {
 	 * Gets an agent's ID.
 	 *
 	 * @param mixed $user The agent's ID or email address. Empty for the current user.
-	 * @return int|WP_Error
+	 * @return int|\WP_Error
 	 */
-	private static function get_user_id( mixed $user ): int|WP_Error {
+	private static function get_user_id( mixed $user ): int|\WP_Error {
 		if ( is_numeric( $user ) ) {
 			return (int) $user;
 		}
@@ -407,7 +405,7 @@ final class FreeScout {
 		}
 
 		if ( ! is_string( $user ) || ! $user ) {
-			return new WP_Error( 'freescout_invalid_argument', '`user` must be an agent ID or email address, or someone must be logged in.' );
+			return new \WP_Error( 'freescout_invalid_argument', '`user` must be an agent ID or email address, or someone must be logged in.' );
 		}
 
 		$cache_key = 'wporg_freescout_user_' . md5( strtolower( $user ) );
@@ -426,7 +424,7 @@ final class FreeScout {
 		$agent   = $response['_embedded']['users'][0] ?? array();
 		$user_id = 0 === strcasecmp( (string) ( $agent['email'] ?? '' ), $user ) ? (int) $agent['id'] : 0;
 		if ( ! $user_id ) {
-			return new WP_Error( 'freescout_invalid_argument', sprintf( 'No agent `%s`.', $user ) );
+			return new \WP_Error( 'freescout_invalid_argument', sprintf( 'No agent `%s`.', $user ) );
 		}
 
 		set_site_transient( $cache_key, $user_id, self::CACHE_TTL );
@@ -440,16 +438,16 @@ final class FreeScout {
 	 * @param string     $method HTTP method.
 	 * @param string     $path   Path after `/api/`, with any query string.
 	 * @param array|null $body   Optional. The JSON body.
-	 * @return array|WP_Error The decoded response, empty when there's none.
+	 * @return array|\WP_Error The decoded response, empty when there's none.
 	 */
-	private static function request( string $method, string $path, ?array $body = null ): array|WP_Error {
+	private static function request( string $method, string $path, ?array $body = null ): array|\WP_Error {
 		if ( ! defined( 'FREESCOUT_API_KEY' ) ) {
-			return new WP_Error( 'freescout_not_configured', 'FREESCOUT_API_KEY is not defined.' );
+			return new \WP_Error( 'freescout_not_configured', 'FREESCOUT_API_KEY is not defined.' );
 		}
 
 		$json = null === $body ? null : wp_json_encode( $body );
 		if ( false === $json ) {
-			return new WP_Error( 'freescout_invalid_argument', 'The request could not be encoded as JSON; check for invalid UTF-8.' );
+			return new \WP_Error( 'freescout_invalid_argument', 'The request could not be encoded as JSON; check for invalid UTF-8.' );
 		}
 
 		$response = wp_remote_request(
@@ -468,7 +466,7 @@ final class FreeScout {
 
 		// FreeScout may have received the request and acted on it.
 		if ( is_wp_error( $response ) ) {
-			return new WP_Error( 'freescout_no_response', $response->get_error_message() );
+			return new \WP_Error( 'freescout_no_response', $response->get_error_message() );
 		}
 
 		$status = (int) wp_remote_retrieve_response_code( $response );
@@ -478,7 +476,7 @@ final class FreeScout {
 			return is_array( $data ) ? $data : array();
 		}
 
-		return new WP_Error(
+		return new \WP_Error(
 			'freescout_error',
 			(string) ( $data['message'] ?? 'FreeScout returned HTTP ' . $status . '.' ),
 			array(
