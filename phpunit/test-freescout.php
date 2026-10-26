@@ -17,7 +17,7 @@ require_once WPMU_PLUGIN_DIR . '/utilities/class-freescout.php';
 
 // The key only needs to be non-empty: no request in this file leaves the process.
 defined( 'FREESCOUT_API_KEY' ) || define( 'FREESCOUT_API_KEY', 'test-key' );
-defined( 'FREESCOUT_TRADEMARKS_MAILBOXID' ) || define( 'FREESCOUT_TRADEMARKS_MAILBOXID', 19 );
+defined( 'FREESCOUT_TRADEMARKS_MAILBOX_ID' ) || define( 'FREESCOUT_TRADEMARKS_MAILBOX_ID', 19 );
 
 /**
  * Tests for `FreeScout`.
@@ -90,6 +90,20 @@ class Test_FreeScout extends WP_UnitTestCase {
 			),
 			'PUT conversations/131241/tags'       => array( 204, null ),
 			'PUT conversations/131241'            => array( 204, null ),
+			'GET conversations/131241'            => array(
+				200,
+				array(
+					'id' => 131241,
+					'cc' => array( 'committer@example.org' ),
+				),
+			),
+			'POST conversations/131241/threads'   => array(
+				201,
+				array(
+					'id'   => 562341,
+					'type' => 'message',
+				),
+			),
 		);
 
 		add_filter( 'pre_http_request', array( $this, 'answer_request' ), 10, 3 );
@@ -259,5 +273,97 @@ class Test_FreeScout extends WP_UnitTestCase {
 			$this->requests['PUT conversations/131241']
 		);
 		$this->assertSame( array( 'tags' => array( 'new-sponsor', 'approved' ) ), $this->requests['PUT conversations/131241/tags'] );
+	}
+
+	/**
+	 * Replies and notes.
+	 *
+	 * @return array
+	 */
+	public function data_threads(): array {
+		return array(
+			'reply to the author, copying a co-author' => array(
+				'reply',
+				array(
+					'to' => array( 'author@example.org' ),
+					'cc' => array( 'Committer@example.org', 'co-author@example.org' ),
+				),
+				array(
+					'type' => 'message',
+					'text' => '<p>Thanks!</p>',
+					'user' => 33,
+					'cc'   => array( 'committer@example.org', 'co-author@example.org' ),
+					'to'   => array( 'author@example.org' ),
+				),
+			),
+			'note'                                     => array(
+				'note',
+				array(),
+				array(
+					'type' => 'note',
+					'text' => '<p>Thanks!</p>',
+					'user' => 33,
+					'cc'   => array( 'committer@example.org' ),
+				),
+			),
+		);
+	}
+
+	/**
+	 * A new thread keeps the conversation's CC, which FreeScout would otherwise replace with the thread's.
+	 *
+	 * @dataProvider data_threads
+	 *
+	 * @param string $method   `reply` or `note`.
+	 * @param array  $args     The method's arguments.
+	 * @param array  $expected The thread FreeScout is sent.
+	 */
+	public function test_thread_keeps_the_conversations_cc( string $method, array $args, array $expected ): void {
+		$thread = FreeScout::$method( 131241, '<p>Thanks!</p>', $args );
+
+		$this->assertSame( 562341, $thread['id'] );
+		$this->assertSame( $expected, $this->requests['POST conversations/131241/threads'] );
+	}
+
+	/**
+	 * Nothing is added when the conversation's CC can't be read, rather than clearing it.
+	 */
+	public function test_reply_sends_nothing_when_the_cc_cant_be_read(): void {
+		$this->responses['GET conversations/131241'] = array( 404, array( 'message' => 'Not Found' ) );
+
+		$thread = FreeScout::reply( 131241, '<p>Thanks!</p>' );
+
+		$this->assertWPError( $thread );
+		$this->assertArrayNotHasKey( 'POST conversations/131241/threads', $this->requests );
+	}
+
+	/**
+	 * A report is always for the mailbox asked for, even when the filters name another, since FreeScout otherwise
+	 * reports on every mailbox.
+	 */
+	public function test_report_is_for_the_mailbox(): void {
+		$this->responses['GET reports/conversations?filters%5Bfrom%5D=2026-10-01&filters%5Bmailbox%5D=19'] = array(
+			200,
+			array(
+				'report'  => 'conversations',
+				'metrics' => array(
+					'total' => array(
+						'value'  => 128,
+						'change' => 12,
+					),
+				),
+			),
+		);
+
+		$report = FreeScout::report(
+			'conversations',
+			'trademarks',
+			array(
+				'from'    => '2026-10-01',
+				'mailbox' => 3,
+			)
+		);
+
+		$this->assertSame( 128, $report['metrics']['total']['value'] );
 	}
 }
