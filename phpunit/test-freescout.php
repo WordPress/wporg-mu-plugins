@@ -15,8 +15,9 @@ use WordPressdotorg\MU_Plugins\Utilities\FreeScout;
  */
 require_once WPMU_PLUGIN_DIR . '/utilities/class-freescout.php';
 
-// Only needs to be non-empty: no request in this file leaves the process.
-defined( 'WPORG_FREESCOUT_API_KEY' ) || define( 'WPORG_FREESCOUT_API_KEY', 'test-key' );
+// The key only needs to be non-empty: no request in this file leaves the process.
+defined( 'FREESCOUT_API_KEY' ) || define( 'FREESCOUT_API_KEY', 'test-key' );
+defined( 'FREESCOUT_TRADEMARKS_MAILBOXID' ) || define( 'FREESCOUT_TRADEMARKS_MAILBOXID', 19 );
 
 /**
  * Tests for `FreeScout`.
@@ -35,7 +36,7 @@ class Test_FreeScout extends WP_UnitTestCase {
 	protected array $responses = array();
 
 	/**
-	 * Requests the client sent, as `array( method, path, decoded body )`.
+	 * Decoded bodies of the requests the client sent, keyed by method and path after `/api/`.
 	 *
 	 * @var array
 	 */
@@ -49,32 +50,7 @@ class Test_FreeScout extends WP_UnitTestCase {
 
 		$this->requests  = array();
 		$this->responses = array(
-			'GET mailboxes?pageSize=100&page=1'   => array(
-				200,
-				array(
-					'_embedded' => array(
-						'mailboxes' => array(
-							array(
-								'id'    => 12,
-								'name'  => 'WordPress Community Team',
-								'email' => 'support@wordcamp.org',
-							),
-							array(
-								'id'    => 19,
-								'name'  => 'WordPress Trademarks',
-								'email' => 'trademarks@wordpressfoundation.org',
-							),
-						),
-					),
-					'page'      => array(
-						'size'          => 100,
-						'totalElements' => 2,
-						'totalPages'    => 1,
-						'number'        => 1,
-					),
-				),
-			),
-			'GET users?email=agent%40example.org' => array(
+			'GET users?email=agent%40example.org'         => array(
 				200,
 				array(
 					'_embedded' => array(
@@ -88,7 +64,7 @@ class Test_FreeScout extends WP_UnitTestCase {
 					),
 				),
 			),
-			'POST conversations'                  => array(
+			'POST conversations'                          => array(
 				201,
 				array(
 					'id'        => 131241,
@@ -98,7 +74,25 @@ class Test_FreeScout extends WP_UnitTestCase {
 					'mailboxId' => 19,
 				),
 			),
-			'PUT conversations/131241/tags'       => array( 204, null ),
+			'GET conversations/131241?embed=threads,tags' => array(
+				200,
+				array(
+					'id'        => 131241,
+					'number'    => 2000123,
+					'status'    => 'active',
+					'_embedded' => array(
+						'threads' => array(),
+						'tags'    => array(
+							array(
+								'id'   => 57,
+								'name' => 'new-sponsor',
+							),
+						),
+					),
+				),
+			),
+			'PUT conversations/131241/tags'               => array( 204, null ),
+			'PUT conversations/131241'                    => array( 204, null ),
 		);
 
 		add_filter( 'pre_http_request', array( $this, 'answer_request' ), 10, 3 );
@@ -128,8 +122,8 @@ class Test_FreeScout extends WP_UnitTestCase {
 			return $preempt;
 		}
 
-		$key              = $args['method'] . ' ' . substr( $url, strlen( FreeScout::URL . '/api/' ) );
-		$this->requests[] = array( $key, json_decode( (string) $args['body'], true ) );
+		$key                    = $args['method'] . ' ' . substr( $url, strlen( FreeScout::URL . '/api/' ) );
+		$this->requests[ $key ] = json_decode( (string) $args['body'], true );
 
 		if ( ! isset( $this->responses[ $key ] ) ) {
 			return new WP_Error( 'unexpected_request', $key );
@@ -157,7 +151,7 @@ class Test_FreeScout extends WP_UnitTestCase {
 	protected function create_conversation(): array|WP_Error {
 		return FreeScout::create_conversation(
 			array(
-				'mailbox' => 'Trademarks@WordPressFoundation.org',
+				'mailbox' => 'trademarks',
 				'to'      => 'owner@example.org',
 				'subject' => 'Trademark Infringement Notification example.org',
 				'body'    => '<p>Hi there,</p>',
@@ -168,8 +162,8 @@ class Test_FreeScout extends WP_UnitTestCase {
 	}
 
 	/**
-	 * The mailbox is found by its address, the message goes out as the current user's agent, and the caller gets
-	 * a working link back.
+	 * The mailbox ID comes from its constant, the message goes out as the current user's agent, tags a Workflow added
+	 * are kept, and the caller gets a working link back.
 	 */
 	public function test_create_conversation_sends_from_the_mailbox_as_the_current_user(): void {
 		$conversation = $this->create_conversation();
@@ -189,11 +183,11 @@ class Test_FreeScout extends WP_UnitTestCase {
 					),
 				),
 			),
-			$this->requests[2][1]
+			$this->requests['POST conversations']
 		);
-		$this->assertSame( array( 'PUT conversations/131241/tags', array( 'tags' => array( 'trademark' ) ) ), $this->requests[3] );
+		$this->assertSame( array( 'tags' => array( 'new-sponsor', 'trademark' ) ), $this->requests['PUT conversations/131241/tags'] );
 		$this->assertSame( 'https://freescout.wordpress.net/conversation/131241', $conversation['url'] );
-		$this->assertSame( array( 'trademark' ), $conversation['tags'] );
+		$this->assertSame( array( 'new-sponsor', 'trademark' ), $conversation['tags'] );
 	}
 
 	/**
@@ -230,5 +224,28 @@ class Test_FreeScout extends WP_UnitTestCase {
 		$this->assertWPError( $conversation );
 		$this->assertSame( 'Forbidden: Provided API key is not permitted to access this mailbox', $conversation->get_error_message() );
 		$this->assertSame( 403, $conversation->get_error_data()['status'] );
+	}
+
+	/**
+	 * Closing and unassigning names the agent making the change, which FreeScout requires, and unassigns with -1.
+	 */
+	public function test_update_conversation_closes_and_unassigns_as_the_current_user(): void {
+		$result = FreeScout::update_conversation(
+			131241,
+			array(
+				'status'    => 'closed',
+				'assign_to' => 0,
+			)
+		);
+
+		$this->assertTrue( $result );
+		$this->assertSame(
+			array(
+				'byUser'   => 33,
+				'status'   => 'closed',
+				'assignTo' => -1,
+			),
+			$this->requests['PUT conversations/131241']
+		);
 	}
 }

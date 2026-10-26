@@ -33,12 +33,15 @@ defined( 'WPINC' ) || die();
  *         update_post_meta( $post_id, '_freescout_url', $conversation['url'] );
  *     }
  *
- * Conversations are returned as the API sends them, plus `url`, the link to the conversation, and `tags`, its tag
- * names. Messages are sent by the current user's FreeScout agent, which FreeScout links to their WordPress.org
- * account; pass `user` where nobody is logged in, like in cron jobs. The client doesn't check who may send: callers
- * check capabilities first.
+ * Conversations and threads are returned as the API sends them; conversations also get `url`, the link to the
+ * conversation, and `tags`, its tag names.
  *
- * Needs the `WPORG_FREESCOUT_API_KEY` constant.
+ * Agents are named by ID or email address, and messages, notes and changes are made by the current user's agent,
+ * which FreeScout links to their WordPress.org account. Pass `user` where nobody is logged in, like in cron jobs.
+ * The client doesn't check who may act: callers check capabilities first.
+ *
+ * Needs the `FREESCOUT_API_KEY` constant, and a `FREESCOUT_<MAILBOX>_MAILBOXID` constant for each mailbox named, like
+ * `FREESCOUT_PLUGINS_MAILBOXID`.
  *
  * ⚠️ This class is used in multiple locations in the WordPress/WordCamp ecosystem. If you make changes to this
  * file, make sure they are tested everywhere.
@@ -54,7 +57,7 @@ final class FreeScout {
 	const URL = 'https://freescout.wordpress.net';
 
 	/**
-	 * How long mailbox and agent IDs are cached, in seconds.
+	 * How long agent IDs are cached, in seconds.
 	 *
 	 * @var int
 	 */
@@ -69,14 +72,16 @@ final class FreeScout {
 	 * @param array $args {
 	 *     The conversation.
 	 *
-	 *     @type int|string $mailbox Required. The mailbox's ID or email address.
-	 *     @type string     $to      Required. The recipient's email address.
-	 *     @type string     $subject Required. The subject.
-	 *     @type string     $body    Required. The message, as HTML.
-	 *     @type string[]   $cc      Optional. Addresses to copy.
-	 *     @type string[]   $tags    Optional. Tag names.
-	 *     @type string     $status  Optional. `active` (default), `pending` or `closed`.
-	 *     @type int|string $user    Optional. The sending agent's ID or email address. Default: the current user.
+	 *     @type int|string   $mailbox   Required. The mailbox's ID, or its name in its constant, like `plugins`.
+	 *     @type string|array $to        Required. The recipient's email address, or an array of `email`,
+	 *                                   `first_name` and `last_name`.
+	 *     @type string       $subject   Required. The subject.
+	 *     @type string       $body      Required. The message, as HTML.
+	 *     @type string[]     $cc        Optional. Addresses to copy.
+	 *     @type string[]     $tags      Optional. Tag names.
+	 *     @type string       $status    Optional. `active` (default), `pending` or `closed`.
+	 *     @type int|string   $assign_to Optional. The agent to assign it to.
+	 *     @type int|string   $user      Optional. The sending agent. Default: the current user.
 	 * }
 	 * @return array|WP_Error The conversation.
 	 */
@@ -84,14 +89,15 @@ final class FreeScout {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'mailbox' => '',
-				'to'      => '',
-				'subject' => '',
-				'body'    => '',
-				'cc'      => array(),
-				'tags'    => array(),
-				'status'  => '',
-				'user'    => '',
+				'mailbox'   => '',
+				'to'        => '',
+				'subject'   => '',
+				'body'      => '',
+				'cc'        => array(),
+				'tags'      => array(),
+				'status'    => '',
+				'assign_to' => '',
+				'user'      => '',
 			)
 		);
 
@@ -106,21 +112,39 @@ final class FreeScout {
 			return $mailbox_id;
 		}
 
-		$thread = self::build_thread( $args );
+		$thread = self::build_thread( 'message', $args );
 		if ( is_wp_error( $thread ) ) {
 			return $thread;
 		}
+
+		$to       = is_array( $args['to'] ) ? $args['to'] : array( 'email' => $args['to'] );
+		$customer = array_filter(
+			array(
+				'email'     => $to['email'] ?? '',
+				'firstName' => $to['first_name'] ?? '',
+				'lastName'  => $to['last_name'] ?? '',
+			)
+		);
 
 		$request = array(
 			'type'      => 'email',
 			'mailboxId' => $mailbox_id,
 			'subject'   => $args['subject'],
-			'customer'  => array( 'email' => $args['to'] ),
+			'customer'  => $customer,
 			'threads'   => array( $thread ),
 		);
 
 		if ( $args['status'] ) {
 			$request['status'] = $args['status'];
+		}
+
+		if ( $args['assign_to'] ) {
+			$assignee = self::get_user_id( $args['assign_to'] );
+			if ( is_wp_error( $assignee ) ) {
+				return $assignee;
+			}
+
+			$request['assignTo'] = $assignee;
 		}
 
 		$conversation = self::request( 'POST', 'conversations', $request );
@@ -130,11 +154,8 @@ final class FreeScout {
 
 		$tags = array();
 		if ( $args['tags'] ) {
-			$tagged = self::request( 'PUT', 'conversations/' . (int) $conversation['id'] . '/tags', array( 'tags' => array_values( $args['tags'] ) ) );
-
-			if ( ! is_wp_error( $tagged ) ) {
-				$tags = array_values( $args['tags'] );
-			}
+			$tags = self::add_tags( (int) $conversation['id'], $args['tags'] );
+			$tags = is_wp_error( $tags ) ? array() : $tags;
 		}
 
 		return self::prepare_conversation( $conversation, $tags );
@@ -150,34 +171,95 @@ final class FreeScout {
 	 *
 	 *     @type string[]   $cc     Addresses to copy.
 	 *     @type string     $status The conversation's status after the reply. Default: FreeScout's, `pending`.
-	 *     @type int|string $user   The sending agent's ID or email address. Default: the current user.
+	 *     @type int|string $user   The sending agent. Default: the current user.
+	 * }
+	 * @return array|WP_Error The new thread.
+	 */
+	public static function reply( int $conversation_id, string $body, array $args = array() ): array|WP_Error {
+		return self::add_thread( $conversation_id, 'message', $body, $args );
+	}
+
+	/**
+	 * Adds a note to a conversation, which only agents see.
+	 *
+	 * @param int    $conversation_id The conversation's ID.
+	 * @param string $body            The note, as HTML.
+	 * @param array  $args {
+	 *     Optional.
+	 *
+	 *     @type string     $status The conversation's status after the note.
+	 *     @type int|string $user   The agent writing it. Default: the current user.
+	 * }
+	 * @return array|WP_Error The new thread.
+	 */
+	public static function add_note( int $conversation_id, string $body, array $args = array() ): array|WP_Error {
+		return self::add_thread( $conversation_id, 'note', $body, $args );
+	}
+
+	/**
+	 * Changes a conversation's status or assignee, without a message.
+	 *
+	 * @param int   $conversation_id The conversation's ID.
+	 * @param array $changes {
+	 *     What to change.
+	 *
+	 *     @type string     $status    `active`, `pending`, `closed` or `spam`.
+	 *     @type int|string $assign_to The agent to assign it to, or `0` for nobody.
+	 *     @type int|string $user      The agent making the change. Default: the current user.
 	 * }
 	 * @return true|WP_Error
 	 */
-	public static function reply( int $conversation_id, string $body, array $args = array() ): true|WP_Error {
-		$args = wp_parse_args(
-			$args,
-			array(
-				'cc'     => array(),
-				'status' => '',
-				'user'   => '',
-			)
-		);
-
-		$args['body'] = $body;
-
-		$thread = self::build_thread( $args );
-		if ( is_wp_error( $thread ) ) {
-			return $thread;
+	public static function update_conversation( int $conversation_id, array $changes ): true|WP_Error {
+		$user_id = self::get_user_id( $changes['user'] ?? '' );
+		if ( is_wp_error( $user_id ) ) {
+			return $user_id;
 		}
 
-		if ( $args['status'] ) {
-			$thread['status'] = $args['status'];
+		$request = array( 'byUser' => $user_id );
+
+		if ( ! empty( $changes['status'] ) ) {
+			$request['status'] = $changes['status'];
 		}
 
-		$result = self::request( 'POST', 'conversations/' . $conversation_id . '/threads', $thread );
+		if ( isset( $changes['assign_to'] ) ) {
+			// FreeScout unassigns with -1.
+			$assignee = in_array( $changes['assign_to'], array( 0, '0', '' ), true ) ? -1 : self::get_user_id( $changes['assign_to'] );
+			if ( is_wp_error( $assignee ) ) {
+				return $assignee;
+			}
+
+			$request['assignTo'] = $assignee;
+		}
+
+		$result = self::request( 'PUT', 'conversations/' . $conversation_id, $request );
 
 		return is_wp_error( $result ) ? $result : true;
+	}
+
+	/**
+	 * Adds tags to a conversation, keeping the ones it has.
+	 *
+	 * @param int      $conversation_id The conversation's ID.
+	 * @param string[] $tags            Tag names.
+	 * @return array|WP_Error All of the conversation's tag names.
+	 */
+	public static function add_tags( int $conversation_id, array $tags ): array|WP_Error {
+		$conversation = self::get_conversation( $conversation_id );
+		if ( is_wp_error( $conversation ) ) {
+			return $conversation;
+		}
+
+		// The API replaces a conversation's tags with the ones it's sent.
+		$all = $conversation['tags'];
+		foreach ( $tags as $tag ) {
+			if ( ! in_array( strtolower( $tag ), array_map( 'strtolower', $all ), true ) ) {
+				$all[] = $tag;
+			}
+		}
+
+		$result = self::request( 'PUT', 'conversations/' . $conversation_id . '/tags', array( 'tags' => $all ) );
+
+		return is_wp_error( $result ) ? $result : $all;
 	}
 
 	/**
@@ -204,30 +286,64 @@ final class FreeScout {
 	 */
 	private static function prepare_conversation( array $conversation, array $tags ): array {
 		$conversation['url']  = self::URL . '/conversation/' . (int) ( $conversation['id'] ?? 0 );
-		$conversation['tags'] = $tags;
+		$conversation['tags'] = array_values( $tags );
 
 		return $conversation;
 	}
 
 	/**
-	 * Builds the agent's message for a new conversation or a reply.
+	 * Adds a reply or note to a conversation.
 	 *
-	 * @param array $args `body`, `cc` and `user`, as the public methods take them.
+	 * @param int    $conversation_id The conversation's ID.
+	 * @param string $type            `message` or `note`.
+	 * @param string $body            The text, as HTML.
+	 * @param array  $args            `cc`, `status` and `user`, as the public methods take them.
+	 * @return array|WP_Error The new thread.
+	 */
+	private static function add_thread( int $conversation_id, string $type, string $body, array $args ): array|WP_Error {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'cc'     => array(),
+				'status' => '',
+				'user'   => '',
+			)
+		);
+
+		$args['body'] = $body;
+
+		$thread = self::build_thread( $type, $args );
+		if ( is_wp_error( $thread ) ) {
+			return $thread;
+		}
+
+		if ( $args['status'] ) {
+			$thread['status'] = $args['status'];
+		}
+
+		return self::request( 'POST', 'conversations/' . $conversation_id . '/threads', $thread );
+	}
+
+	/**
+	 * Builds an agent's message or note.
+	 *
+	 * @param string $type `message` or `note`.
+	 * @param array  $args `body`, `cc` and `user`, as the public methods take them.
 	 * @return array|WP_Error
 	 */
-	private static function build_thread( array $args ): array|WP_Error {
-		$user_id = self::get_user_id( $args['user'] ? $args['user'] : wp_get_current_user()->user_email );
+	private static function build_thread( string $type, array $args ): array|WP_Error {
+		$user_id = self::get_user_id( $args['user'] );
 		if ( is_wp_error( $user_id ) ) {
 			return $user_id;
 		}
 
 		$thread = array(
-			'type' => 'message',
+			'type' => $type,
 			'text' => $args['body'],
 			'user' => $user_id,
 		);
 
-		if ( $args['cc'] ) {
+		if ( $args['cc'] ?? array() ) {
 			$thread['cc'] = array_values( (array) $args['cc'] );
 		}
 
@@ -235,68 +351,37 @@ final class FreeScout {
 	}
 
 	/**
-	 * Gets a mailbox's ID from its email address.
+	 * Gets a mailbox's ID from its `FREESCOUT_<MAILBOX>_MAILBOXID` constant.
 	 *
-	 * @param int|string $mailbox The mailbox's ID or email address.
+	 * @param int|string $mailbox The mailbox's ID, or its name in the constant, like `plugins`.
 	 * @return int|WP_Error
 	 */
 	private static function get_mailbox_id( int|string $mailbox ): int|WP_Error {
-		if ( is_int( $mailbox ) ) {
-			return $mailbox;
+		if ( is_numeric( $mailbox ) ) {
+			return (int) $mailbox;
 		}
 
-		$email     = strtolower( $mailbox );
-		$mailboxes = get_site_transient( 'wporg_freescout_mailboxes' );
-
-		// A mailbox added since the list was cached isn't in it yet.
-		if ( ! is_array( $mailboxes ) || ! isset( $mailboxes[ $email ] ) ) {
-			$mailboxes = self::fetch_mailboxes();
-			if ( is_wp_error( $mailboxes ) ) {
-				return $mailboxes;
-			}
-
-			set_site_transient( 'wporg_freescout_mailboxes', $mailboxes, self::CACHE_TTL );
+		$constant = 'FREESCOUT_' . strtoupper( $mailbox ) . '_MAILBOXID';
+		if ( ! defined( $constant ) ) {
+			return new WP_Error( 'freescout_not_configured', sprintf( '%s is not defined.', $constant ) );
 		}
 
-		if ( ! isset( $mailboxes[ $email ] ) ) {
-			return new WP_Error( 'freescout_invalid_argument', sprintf( 'No mailbox `%s`.', $mailbox ) );
-		}
-
-		return $mailboxes[ $email ];
-	}
-
-	/**
-	 * Lists the mailboxes.
-	 *
-	 * @return array|WP_Error Mailbox IDs, keyed by lowercase email address.
-	 */
-	private static function fetch_mailboxes(): array|WP_Error {
-		$mailboxes = array();
-		$page      = 1;
-
-		do {
-			$response = self::request( 'GET', 'mailboxes?pageSize=100&page=' . $page );
-			if ( is_wp_error( $response ) ) {
-				return $response;
-			}
-
-			foreach ( $response['_embedded']['mailboxes'] ?? array() as $mailbox ) {
-				$mailboxes[ strtolower( (string) $mailbox['email'] ) ] = (int) $mailbox['id'];
-			}
-		} while ( $page++ < (int) ( $response['page']['totalPages'] ?? 1 ) );
-
-		return $mailboxes;
+		return (int) constant( $constant );
 	}
 
 	/**
 	 * Gets an agent's ID.
 	 *
-	 * @param int|string $user The agent's ID or email address.
+	 * @param int|string $user The agent's ID or email address. Empty for the current user.
 	 * @return int|WP_Error
 	 */
 	private static function get_user_id( int|string $user ): int|WP_Error {
-		if ( is_int( $user ) ) {
-			return $user;
+		if ( is_numeric( $user ) ) {
+			return (int) $user;
+		}
+
+		if ( ! $user ) {
+			$user = wp_get_current_user()->user_email;
 		}
 
 		if ( ! $user ) {
@@ -336,8 +421,8 @@ final class FreeScout {
 	 * @return array|WP_Error The decoded response, empty when there's none.
 	 */
 	private static function request( string $method, string $path, ?array $body = null ): array|WP_Error {
-		if ( ! defined( 'WPORG_FREESCOUT_API_KEY' ) ) {
-			return new WP_Error( 'freescout_not_configured', 'WPORG_FREESCOUT_API_KEY is not defined.' );
+		if ( ! defined( 'FREESCOUT_API_KEY' ) ) {
+			return new WP_Error( 'freescout_not_configured', 'FREESCOUT_API_KEY is not defined.' );
 		}
 
 		$response = wp_remote_request(
@@ -346,7 +431,7 @@ final class FreeScout {
 				'method'  => $method,
 				'timeout' => 15,
 				'headers' => array(
-					'X-FreeScout-API-Key' => WPORG_FREESCOUT_API_KEY,
+					'X-FreeScout-API-Key' => FREESCOUT_API_KEY,
 					'Accept'              => 'application/json',
 					'Content-Type'        => 'application/json',
 				),
