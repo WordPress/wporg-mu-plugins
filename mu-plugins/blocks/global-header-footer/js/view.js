@@ -194,16 +194,19 @@
 			closeSearchButton.setAttribute( 'aria-label', labels.closeSearchLabel || 'Close Search' );
 		}
 
+		// Core's navigation block moved from `data-wp-on-async--click` to `data-wp-on--click`; match both.
+		const clickActionSelector = ( action ) =>
+			`:is([data-wp-on--click="actions.${ action }"], [data-wp-on-async--click="actions.${ action }"])`;
+
 		const openButtons = document.querySelectorAll(
-			'.global-header__navigation [data-wp-on-async--click="actions.openMenuOnClick"],' +
-				'.global-header__search [data-wp-on-async--click="actions.openMenuOnClick"]'
+			`:is(.global-header__navigation, .global-header__search) ${ clickActionSelector( 'openMenuOnClick' ) }`
 		);
 		openButtons.forEach( function ( button ) {
 			// When any open menu button is clicked, find any existing close buttons and click them.
 			button.addEventListener( 'click', function ( event ) {
 				const thisModal = event.target.parentNode.querySelector( '[data-wp-class--has-modal-open]' ).id;
 				const closeButtons = Array.from(
-					document.querySelectorAll( '[data-wp-on-async--click="actions.closeMenuOnClick"]' )
+					document.querySelectorAll( clickActionSelector( 'closeMenuOnClick' ) )
 				).filter(
 					// Filter to find visible close buttons that are not for this modal.
 					( _button ) => _button.offsetWidth > 0 && null === _button.closest( `#${ thisModal }` )
