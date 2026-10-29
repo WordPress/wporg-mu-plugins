@@ -83,6 +83,7 @@ function render_block( $attributes ) {
 	$blog_switched = false;
 	// Read before any switch, so dates follow the site the page is on.
 	$date_format = get_option( 'date_format' );
+	$timezone    = wp_timezone();
 
 	$blog_id = isset( $attributes['blogId'] ) ? (int) $attributes['blogId'] : 0;
 
@@ -105,12 +106,11 @@ function render_block( $attributes ) {
 		// A Rosetta site that hasn't posted in a while shows the News blog's posts instead, so its homepage stays current.
 		if (
 			! $blog_switched
+			&& is_rosetta_site()
+			&& is_stale( $posts )
 			&& should_switch_to_blog()
 			&& defined( 'WPORG_NEWS_BLOGID' )
 			&& get_site( WPORG_NEWS_BLOGID )
-			&& function_exists( 'WordPressdotorg\MU_Plugins\Global_Header_Footer\is_rosetta_site' )
-			&& is_rosetta_site()
-			&& is_stale( $posts )
 		) {
 			switch_to_blog( WPORG_NEWS_BLOGID );
 			$blog_switched = true;
@@ -157,7 +157,7 @@ function render_block( $attributes ) {
 			$date_element = sprintf(
 				'<time datetime="%1$s">%2$s</time>',
 				esc_attr( $date->format( 'c' ) ),
-				esc_html( wp_date( $date_format, $date->getTimestamp(), null ) )
+				esc_html( wp_date( $date_format, $date->getTimestamp(), $timezone ) )
 			);
 
 			$list_items .= sprintf(
