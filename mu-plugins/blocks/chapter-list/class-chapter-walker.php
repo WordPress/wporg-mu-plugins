@@ -8,6 +8,8 @@
 
 namespace WordPressdotorg\MU_Plugins\Chapter_List;
 
+defined( 'WPINC' ) || die();
+
 /**
  * Renders a page hierarchy without orphaned pages.
  */

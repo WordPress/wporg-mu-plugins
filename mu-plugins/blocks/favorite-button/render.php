@@ -7,6 +7,8 @@
 
 namespace WordPressdotorg\MU_Plugins\Favorite_Button_Block;
 
+defined( 'WPINC' ) || die();
+
 $settings = get_block_settings( $block->context['postId'] ?? 0 );
 if ( ! $settings ) {
 	return '';

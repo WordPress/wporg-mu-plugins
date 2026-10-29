@@ -10,6 +10,8 @@ use Exception;
 
 require __DIR__ . '/exports.php';
 
+defined( 'WPINC' ) || die();
+
 /**
  * Prefix for encrypted secrets. Contains a version identifier.
  *

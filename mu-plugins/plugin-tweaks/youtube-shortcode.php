@@ -8,6 +8,8 @@
 
 namespace WordPressdotorg\MU_Plugins\Plugin_Tweaks\Youtube_Shortcode;
 
+defined( 'WPINC' ) || die();
+
 add_shortcode( 'youtube-nocookie', __NAMESPACE__ . '\render' );
 
 /**
