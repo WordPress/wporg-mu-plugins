@@ -6,6 +6,8 @@
 
 namespace WordPressdotorg\MU_Plugins\Global_Fonts;
 
+defined( 'WPINC' ) || die();
+
 // Include helper functions that exist in global-scope.
 require __DIR__ . '/helper-functions.php';
 

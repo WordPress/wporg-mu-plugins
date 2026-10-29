@@ -9,6 +9,8 @@ namespace WordPressdotorg\MU_Plugins\Copy_Page_Block;
 
 use function WordPressdotorg\MU_Plugins\Helpers\is_markdown_request;
 
+defined( 'WPINC' ) || die();
+
 // A copy button has no meaning inside the Markdown rendering itself.
 if ( is_markdown_request() ) {
 	return '';

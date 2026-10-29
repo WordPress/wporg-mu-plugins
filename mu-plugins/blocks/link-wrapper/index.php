@@ -10,6 +10,8 @@ namespace WordPressdotorg\MU_Plugins\Link_Wrapper_Block;
 
 use function WordPressdotorg\MU_Plugins\Helpers\register_assets_from_metadata;
 
+defined( 'WPINC' ) || die();
+
 add_action( 'init', __NAMESPACE__ . '\init' );
 
 /**

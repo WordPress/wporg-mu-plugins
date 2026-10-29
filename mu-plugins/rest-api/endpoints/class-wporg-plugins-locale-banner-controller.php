@@ -5,6 +5,8 @@ namespace WordPressdotorg\MU_Plugins\REST_API;
 use WordPressdotorg\Plugin_Directory\Plugin_Directory;
 use function WordPressdotorg\MU_Plugins\Helpers\Locale\{ get_all_locales_with_subdomain, get_all_valid_locales, get_locale_from_header, get_translated_locales };
 
+defined( 'WPINC' ) || die();
+
 /**
  * Plugins_Locale_Banner_Controller
  *

@@ -8,6 +8,8 @@
 
 namespace WordPressdotorg\MU_Plugins\Search_Results_Context;
 
+defined( 'WPINC' ) || die();
+
 add_action( 'init', __NAMESPACE__ . '\init' );
 
 /**

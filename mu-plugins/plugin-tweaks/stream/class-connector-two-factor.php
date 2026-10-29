@@ -9,6 +9,8 @@ use Two_Factor_Core;
 use WP_Stream\Connector;
 use WildWolf\WordPress\TwoFactorWebAuthn\WebAuthn_Credential_Store;
 
+defined( 'WPINC' ) || die();
+
 /**
  * Class - Connector_Two_Factor
  */

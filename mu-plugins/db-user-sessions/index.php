@@ -1,6 +1,8 @@
 <?php
 namespace WordPressdotorg\MU_Plugins\DB_User_Sessions;
 
+defined( 'WPINC' ) || die();
+
 add_filter(
 	'session_token_manager',
 	function ( $manager ) {

@@ -8,6 +8,8 @@
 
 namespace WordPressdotorg\MU_Plugins\wporg;
 
+defined( 'WPINC' ) || die();
+
 /**
  * Actions and filters.
  */

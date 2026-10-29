@@ -1,6 +1,8 @@
 <?php
 namespace WordPressdotorg\MU_Plugins\Admin\Users\Last_Logged_In;
 
+defined( 'WPINC' ) || die();
+
 add_filter( 'manage_users_columns', __NAMESPACE__ . '\manage_users_columns' );
 add_filter( 'manage_users_sortable_columns', __NAMESPACE__ . '\manage_users_sortable_columns' );
 add_action( 'pre_get_users', __NAMESPACE__ . '\pre_get_users' );
