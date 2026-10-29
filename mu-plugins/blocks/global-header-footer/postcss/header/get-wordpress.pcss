@@ -27,7 +27,7 @@
 		&:focus,
 		&:focus-visible,
 		&:focus-within {
-			outline: none;
+			outline: 1.5px solid transparent; /* Visible in forced-colors mode, where box-shadow is dropped. */
 			border-radius: 2px;
 			box-shadow: 0 0 0 1.5px var(--wp-global-header--link-color--active);
 		}
