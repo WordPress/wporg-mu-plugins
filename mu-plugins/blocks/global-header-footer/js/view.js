@@ -214,8 +214,11 @@
 
 				closeButtons.forEach( ( _button ) => _button.click() );
 
-				// Add a helper class when one of the global modals are open.
-				document.documentElement.classList.add( 'has-global-modal-open' );
+				/*
+				 * Closing the other modal removes core's root class even though this one is open. Restore it,
+				 * and add a helper class when one of the global modals is open.
+				 */
+				document.documentElement.classList.add( 'has-modal-open', 'has-global-modal-open' );
 			} );
 		} );
 
@@ -251,7 +254,7 @@
 		);
 		if ( ! mobileViewToggle || ! mobileViewToggle.offsetWidth ) {
 			const closeMenuButton = document.querySelector(
-				'.wp-block-navigation__responsive-container.is-menu-open button[data-micromodal-close]'
+				'.wp-block-navigation__responsive-container.is-menu-open button.wp-block-navigation__responsive-container-close'
 			);
 			if ( closeMenuButton ) {
 				closeMenuButton.click();
