@@ -116,6 +116,11 @@ const { actions } = store( 'wporg/query-filter', {
 			const count = context.form.querySelectorAll( 'input:checked' ).length;
 			actions.updateButtons( count );
 		},
+		/**
+		 * Avoid a trailing `?` when the form is submitted without any filters selected.
+		 *
+		 * @param {Event} event The submit event.
+		 */
 		handleFormSubmit: ( event ) => {
 			const form = event.target;
 			// Submitting a GET form without any data appends a lone `?` to the URL.
