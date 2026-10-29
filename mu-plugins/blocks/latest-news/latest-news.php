@@ -8,6 +8,13 @@
 
 namespace WordPressdotorg\MU_Plugins\Latest_News;
 
+use function WordPressdotorg\MU_Plugins\Global_Header_Footer\is_rosetta_site;
+
+/**
+ * Days after which a Rosetta site's newest post no longer counts as recent news.
+ */
+const ROSETTA_STALE_AFTER_DAYS = 365;
+
 /**
  * Determines whether we can switch blogs.
  *
@@ -15,6 +22,50 @@ namespace WordPressdotorg\MU_Plugins\Latest_News;
  */
 function should_switch_to_blog() {
 	return function_exists( 'is_multisite' ) && is_multisite();
+}
+
+/**
+ * Gets the current site's most recent published posts, cached for an hour.
+ *
+ * @param int $per_page Number of posts.
+ *
+ * @return array[] Posts as arrays, newest first.
+ */
+function get_recent_posts( $per_page ) {
+	$cache_key = 'wporg-latest-news-' . $per_page;
+	$posts     = get_transient( $cache_key );
+	if ( ! $posts ) {
+		$posts = wp_get_recent_posts(
+			array(
+				'numberposts' => $per_page,
+				'post_status' => 'publish',
+			)
+		);
+
+		if ( $posts ) {
+			set_transient( $cache_key, $posts, HOUR_IN_SECONDS );
+		}
+	}
+
+	return $posts;
+}
+
+/**
+ * Determines whether a list of posts is empty or its newest post is older than the Rosetta cutoff.
+ *
+ * @param array[] $posts Posts as arrays, newest first.
+ *
+ * @return bool
+ */
+function is_stale( $posts ) {
+	if ( empty( $posts ) ) {
+		return true;
+	}
+
+	$newest = new \DateTimeImmutable( $posts[0]['post_date'], wp_timezone() );
+	$cutoff = new \DateTimeImmutable( '-' . ROSETTA_STALE_AFTER_DAYS . ' days', wp_timezone() );
+
+	return $newest < $cutoff;
 }
 
 /**
@@ -49,22 +100,24 @@ function render_block( $attributes ) {
 
 	// finally guarantees restore; an unrestored switch leaks into the rest of the page's queries and capability checks.
 	try {
-		$cache_key = 'wporg-latest-news-' . $attributes['perPage'];
-		$posts     = get_transient( $cache_key );
-		if ( ! $posts ) {
-			$posts = wp_get_recent_posts(
-				array(
-					'numberposts' => $attributes['perPage'],
-					'post_status' => 'publish',
-				)
-			);
+		$posts = get_recent_posts( $attributes['perPage'] );
 
-			if ( empty( $posts ) ) {
-				return __( 'No posts found.', 'wporg' );
-			}
+		// A Rosetta site that hasn't posted in a while shows the News blog's posts instead, so its homepage stays current.
+		if (
+			! $blog_switched
+			&& should_switch_to_blog()
+			&& defined( 'WPORG_NEWS_BLOGID' )
+			&& function_exists( 'WordPressdotorg\MU_Plugins\Global_Header_Footer\is_rosetta_site' )
+			&& is_rosetta_site()
+			&& is_stale( $posts )
+		) {
+			switch_to_blog( WPORG_NEWS_BLOGID );
+			$blog_switched = true;
+			$posts         = get_recent_posts( $attributes['perPage'] );
+		}
 
-			// Set Cache
-			set_transient( $cache_key, $posts, HOUR_IN_SECONDS );
+		if ( empty( $posts ) ) {
+			return __( 'No posts found.', 'wporg' );
 		}
 
 		$class_name = '';
