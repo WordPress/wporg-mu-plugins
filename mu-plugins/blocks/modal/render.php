@@ -5,6 +5,8 @@
 
 use function WordPressdotorg\MU_Plugins\Modal\get_style_decl_from_attr;
 
+defined( 'WPINC' ) || die();
+
 $attributes['label'] = $attributes['label'] ?: __( 'Open modal', 'wporg' );
 
 $style  = '';

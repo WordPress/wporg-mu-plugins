@@ -8,6 +8,8 @@
 
 namespace WordPressdotorg\MU_Plugins\Latest_News;
 
+defined( 'WPINC' ) || die();
+
 /**
  * Determines whether we can switch blogs.
  *

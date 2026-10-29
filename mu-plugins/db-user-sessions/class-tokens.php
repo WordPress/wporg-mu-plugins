@@ -1,6 +1,8 @@
 <?php
 namespace WordPressdotorg\MU_Plugins\DB_User_Sessions;
 
+defined( 'WPINC' ) || die();
+
 /**
  * Stores user sessions in a dedicated database table.
  */

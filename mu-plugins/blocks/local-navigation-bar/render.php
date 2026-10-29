@@ -4,6 +4,8 @@
  */
 
 use function WordPressdotorg\MU_Plugins\Global_Header_Footer\get_home_url;
+
+defined( 'WPINC' ) || die();
 ?>
 
 <div <?php echo get_block_wrapper_attributes(); // phpcs:ignore ?> >
