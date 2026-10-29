@@ -35,5 +35,5 @@ function get_rosetta_name(): string {
 	/** @var Rosetta_Sites $rosetta */
 	global $rosetta;
 
-	return get_blog_option( $rosetta->get_root_site_id(), 'blogname' );
+	return (string) get_blog_option( $rosetta->get_root_site_id(), 'blogname' );
 }
