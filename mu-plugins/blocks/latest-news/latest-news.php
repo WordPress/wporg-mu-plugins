@@ -81,14 +81,14 @@ function render_block( $attributes ) {
 	);
 	$attributes    = wp_parse_args( $attributes, $defaults );
 	$blog_switched = false;
+	// Read before any switch, so dates follow the site the page is on.
+	$date_format = get_option( 'date_format' );
 
 	$blog_id = isset( $attributes['blogId'] ) ? (int) $attributes['blogId'] : 0;
 
 	/*
 	 * Fail closed on an unknown id: switching would re-point $wpdb at a missing table
 	 * prefix, and falling through would render the current site's posts as news.
-	 *
-	 * @todo Prevent switch if Rosetta, Rosetta should use local posts.
 	 */
 	if ( should_switch_to_blog() && $blog_id ) {
 		if ( ! get_site( $blog_id ) ) {
@@ -107,6 +107,7 @@ function render_block( $attributes ) {
 			! $blog_switched
 			&& should_switch_to_blog()
 			&& defined( 'WPORG_NEWS_BLOGID' )
+			&& get_site( WPORG_NEWS_BLOGID )
 			&& function_exists( 'WordPressdotorg\MU_Plugins\Global_Header_Footer\is_rosetta_site' )
 			&& is_rosetta_site()
 			&& is_stale( $posts )
@@ -156,7 +157,7 @@ function render_block( $attributes ) {
 			$date_element = sprintf(
 				'<time datetime="%1$s">%2$s</time>',
 				esc_attr( $date->format( 'c' ) ),
-				esc_html( wp_date( get_option( 'date_format' ), $date->getTimestamp(), null ) )
+				esc_html( wp_date( $date_format, $date->getTimestamp(), null ) )
 			);
 
 			$list_items .= sprintf(
