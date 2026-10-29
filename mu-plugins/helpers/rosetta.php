@@ -32,6 +32,10 @@ function is_rosetta_site(): bool {
  * @return string
  */
 function get_rosetta_name(): string {
+	if ( ! is_rosetta_site() ) {
+		return '';
+	}
+
 	/** @var Rosetta_Sites $rosetta */
 	global $rosetta;
 

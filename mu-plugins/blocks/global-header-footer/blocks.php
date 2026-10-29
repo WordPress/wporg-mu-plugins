@@ -485,7 +485,7 @@ function remove_head_alternate_links( $markup ) {
  *
  * @return bool
  */
-function is_rosetta_site() {
+function is_rosetta_site(): bool {
 	return Helpers\is_rosetta_site();
 }
 
