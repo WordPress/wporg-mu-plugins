@@ -47,7 +47,7 @@ class Site_Quality_Controller extends WP_REST_Controller {
 	 * @param \WP_REST_Request $request The Rest API Request.
 	 * @return bool|\WP_Error True if the token exists, WP_Error upon failure.
 	 */
-	function update_item_permissions_check( $request ) {
+	public function update_item_permissions_check( $request ) {
 		return $this->permission_check_api_bearer( $request, 'SITE_QUALITY_STATS_API_GITHUB_BEARER_TOKEN' );
 	}
 
@@ -58,7 +58,7 @@ class Site_Quality_Controller extends WP_REST_Controller {
 	 * @param string           $constant The constant that contains the expected bearer.
 	 * @return bool|\WP_Error True if the token exists, WP_Error upon failure.
 	 */
-	function permission_check_api_bearer( $request, $constant = false ) {
+	public function permission_check_api_bearer( $request, $constant = false ) {
 		$authorization_header = $request->get_header( 'authorization' );
 		$authorization_header = trim( str_ireplace( 'bearer', '', $authorization_header ) );
 
@@ -92,13 +92,13 @@ class Site_Quality_Controller extends WP_REST_Controller {
 			'url'      => $url,
 			'category' => $category,
 			'value'    => $value,
-			'created'   => current_time( 'mysql' ),
+			'created'  => current_time( 'mysql' ),
 		);
 
 		$result = $wpdb->insert( $table_name, $data );
 
 		if ( false === $result ) {
-			trigger_error( __NAMESPACE__ . $wpdb->last_error, E_USER_WARNING );
+			trigger_error( __NAMESPACE__ . $wpdb->last_error, E_USER_WARNING ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.PHP.DevelopmentFunctions.error_log_trigger_error -- Preserve raw database error text in diagnostics.
 		}
 
 		return $result;

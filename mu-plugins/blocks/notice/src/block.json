@@ -29,7 +29,7 @@
 		"type": {
 			"type": "string",
 			"default": "tip",
-			"enum": [ "alert", "info", "warning", "tip" ]
+			"enum": [ "alert", "info", "warning", "tip", "success" ]
 		}
 	},
 	"example": {

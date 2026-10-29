@@ -5,7 +5,7 @@
 	"title": "Sidebar Container",
 	"icon": "align-pull-right",
 	"category": "layout",
-	"description": "A sticky container to be used in 2-column layouts.",
+	"description": "A sticky container to be used in column layouts.",
 	"textdomain": "wporg",
 	"attributes": {
 		"hasBackToTop": {

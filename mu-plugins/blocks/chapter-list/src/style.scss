@@ -1,0 +1,176 @@
+.wp-block-wporg-chapter-list {
+	--local--icon-size: calc(var(--wp--custom--body--small--typography--line-height) * 1em);
+
+	font-size: var(--wp--preset--font-size--small);
+	line-height: var(--wp--custom--body--small--typography--line-height);
+
+	@media (max-width: 767px) {
+		border: 1px solid var(--wp--preset--color--light-grey-1);
+		border-radius: 2px;
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		font-size: var(--wp--preset--font-size--normal) !important;
+	}
+
+	a:where(:not(.wp-element-button)) {
+		color: var(--wp--preset--color--charcoal-4);
+	}
+
+	.wporg-chapter-list__header {
+		position: relative;
+
+		@media (max-width: 767px) {
+			padding: 15px var(--wp--preset--spacing--20);
+		}
+
+		.wp-block-heading {
+			margin-bottom: 0;
+			margin-top: 0;
+		}
+	}
+
+	.wporg-chapter-list__list {
+
+		@media (max-width: 767px) {
+			display: none;
+			margin-top: 0;
+			padding: 0 var(--wp--preset--spacing--20) 15px;
+		}
+	}
+
+	ul {
+		margin-top: 0;
+		margin-bottom: 0;
+		list-style-type: none;
+		padding-inline-start: 0;
+	}
+
+	li {
+		margin-block: calc(var(--wp--preset--spacing--20) / 4);
+		color: var(--wp--preset--color--charcoal-4);
+		padding-inline-start: var(--local--icon-size);
+		position: relative;
+
+		&::before {
+			content: "";
+			display: inline-block;
+			position: absolute;
+			inset-inline-start: 0;
+			width: var(--local--icon-size);
+			height: var(--local--icon-size);
+			/* stylelint-disable-next-line function-url-quotes */
+			mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4' fill='none'%3E%3Ccircle cx='2' cy='2' r='1.5' fill='%23656A71'/%3E%3C/svg%3E%0A");
+			mask-repeat: no-repeat;
+			mask-position: center;
+			background-color: var(--wp--preset--color--charcoal-4);
+		}
+	}
+
+	.children {
+
+		/* Shift the children to the left by half the icon size, allowing for the dot width of 4px. */
+		margin-inline-start: calc((var(--local--icon-size) - 4px) * -0.5);
+	}
+
+	a {
+		text-decoration: none;
+		color: inherit;
+	}
+
+	&.has-js-control {
+		.page_item_has_children {
+			padding-inline-start: 0;
+
+			&::before {
+				display: none;
+			}
+		}
+
+		.children {
+			display: none;
+			padding-inline-start: var(--local--icon-size);
+
+			&.is-open {
+				display: revert;
+			}
+		}
+	}
+
+	.wporg-chapter-list__button-group {
+		display: flex;
+		align-items: flex-start;
+	}
+
+	.wporg-chapter-list__toggle,
+	.wporg-chapter-list__button-group > button {
+		font-size: inherit;
+		background-color: transparent;
+		border: none;
+		padding: 0;
+		cursor: pointer;
+		height: var(--local--icon-size);
+
+		&::before {
+			content: "";
+			display: inline-block;
+			height: var(--local--icon-size);
+			width: var(--local--icon-size);
+			/* stylelint-disable-next-line function-url-quotes */
+			mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M15.9899 10.8888L12.0018 14.3071L8.01367 10.8888L8.98986 9.74988L12.0018 12.3315L15.0137 9.74988L15.9899 10.8888Z' fill='%231E1E1E'/%3E%3C/svg%3E%0A");
+			mask-repeat: no-repeat;
+			mask-position: center;
+			transform: rotate(-90deg);
+			background-color: var(--wp--preset--color--charcoal-4);
+		}
+
+		&[aria-expanded="true"]::before {
+			transform: revert;
+		}
+
+		&:focus-visible {
+			outline: 1px dashed var(--wp--preset--color--blueberry-1);
+		}
+	}
+
+	.wporg-chapter-list__toggle {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 100%;
+		height: 100%;
+		padding: 0 var(--wp--preset--spacing--20) 0 0;
+
+		@media (min-width: 768px) {
+			display: none;
+		}
+
+		&[aria-expanded="true"]::before {
+			background-color: var(--wp--preset--color--charcoal-1);
+		}
+	}
+
+	/* Descendent is `span` if there are children, or `a` if not. */
+	.current_page_item,
+	.current_page_item > span a,
+	.current_page_item > a {
+		color: var(--wp--preset--color--charcoal-1);
+	}
+
+	.current_page_item > span a,
+	.current_page_item > a {
+		font-weight: 700;
+	}
+
+	.current_page_item > span button::before {
+		background-color: var(--wp--preset--color--charcoal-1);
+	}
+}

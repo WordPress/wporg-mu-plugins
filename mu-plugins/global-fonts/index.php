@@ -7,7 +7,7 @@
 namespace WordPressdotorg\MU_Plugins\Global_Fonts;
 
 // Include helper functions that exist in global-scope.
-include __DIR__ . '/helper-functions.php';
+require __DIR__ . '/helper-functions.php';
 
 defined( 'WPINC' ) || die();
 
@@ -31,6 +31,26 @@ function get_font_stylesheet_url() {
 }
 
 /**
+ * Helper function to return valid subsets.
+ *
+ * Not all fonts have all subsets, but this list helps safelist the values.
+ */
+function get_valid_subsets() {
+	return array(
+		'arabic',
+		'arrows',
+		'cjk',
+		'cyrillic-ext',
+		'cyrillic',
+		'greek-ext',
+		'greek',
+		'latin-ext',
+		'latin',
+		'vietnamese',
+	);
+}
+
+/**
  * Filter the styles added by editor settings to inject the full URL to the font files.
  *
  * Once inlined in wp-admin, the relative URLs don't match the correct file paths.
@@ -47,8 +67,8 @@ function relative_to_absolute_urls( $editor_settings ) {
 			continue;
 		}
 		if ( str_contains( $style['css'], './Inter' ) || str_contains( $style['css'], './EB-Garamond' ) ) {
-			$url = plugins_url( '', __FILE__ );
-			$style['css'] = str_replace( 'url(./', "url($url/", $style['css'] );
+			$url                             = plugins_url( '', __FILE__ );
+			$style['css']                    = str_replace( 'url(./', "url($url/", $style['css'] );
 			$editor_settings['styles'][ $i ] = $style;
 		}
 	}
@@ -75,8 +95,29 @@ function preload_font( $fonts, $subsets ) {
 		return false;
 	}
 
-	$fonts = explode( ',', $fonts );
+	$fonts   = explode( ',', $fonts );
 	$subsets = explode( ',', $subsets );
+
+	$valid_subsets = get_valid_subsets();
+	$subsets       = array_intersect( $subsets, $valid_subsets );
+	if ( empty( $subsets ) ) {
+		// No valid subsets, don't preload anything.
+		return;
+	}
+
+	// something-ext is found, check that the corresponding base subset exists.
+	// The -ext subset only has the extra characters, so the base font still needs to be loaded.
+	if ( false !== strpos( implode( ', ', $subsets ), '-ext' ) ) {
+		if ( in_array( 'latin-ext', $subsets, true ) && ! in_array( 'latin', $subsets, true ) ) {
+			$subsets[] = 'latin';
+		}
+		if ( in_array( 'greek-ext', $subsets, true ) && ! in_array( 'greek', $subsets, true ) ) {
+			$subsets[] = 'greek';
+		}
+		if ( in_array( 'cyrillic-ext', $subsets, true ) && ! in_array( 'cyrillic', $subsets, true ) ) {
+			$subsets[] = 'cyrillic';
+		}
+	}
 
 	$preload = $style->extra['preload'] ?? [];
 
@@ -84,7 +125,7 @@ function preload_font( $fonts, $subsets ) {
 		$new_preload = [
 			$font => $subsets,
 		];
-		$preload = array_merge_recursive( $preload, $new_preload );
+		$preload     = array_merge_recursive( $preload, $new_preload );
 	}
 
 	wp_style_add_data( 'wporg-global-fonts', 'preload', $preload );
@@ -136,14 +177,6 @@ function maybe_preload_font( $preload ) {
 function get_font_url( $font, $subset ) {
 	$lower_font   = strtolower( trim( $font ) );
 	$lower_subset = strtolower( trim( $subset ) );
-
-	$valid_subsets = array( 'arrows', 'cyrillic-ext', 'cyrillic', 'greek-ext', 'greek', 'latin-ext', 'latin', 'vietnamese' );
-	if ( ! in_array( $lower_subset, $valid_subsets ) ) {
-		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			trigger_error( sprintf( 'Requested font subset %s does not exist.', esc_html( $lower_subset ) ), E_USER_WARNING );
-		}
-		return false;
-	}
 
 	switch ( $lower_font ) {
 		case 'newsreader':
@@ -214,13 +247,26 @@ function get_font_url( $font, $subset ) {
 			$font_folder    = 'IBMPlexSans/';
 			$font_file_name = 'IBMPlexSans-SemiBold-';
 			break;
+		case 'noto serif jp':
+			$font_folder    = 'NotoSerif/';
+			$font_file_name = 'NotoSerifJP-';
+			break;
+		case 'noto serif kr':
+			$font_folder    = 'NotoSerif/';
+			$font_file_name = 'NotoSerifKR-';
+			break;
+		case 'noto serif sc':
+			$font_folder    = 'NotoSerif/';
+			$font_file_name = 'NotoSerifSC-';
+			break;
+		case 'noto kufi':
+			$font_folder    = 'Noto/';
+			$font_file_name = 'NotoKufi-';
+			break;
 	}
 
 	$filepath = $font_folder . $font_file_name . $lower_subset . '.woff2';
 	if ( ! file_exists( __DIR__ . '/' . $filepath ) ) {
-		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			trigger_error( sprintf( 'Requested font file %s does not exist.', esc_html( $filepath ) ), E_USER_WARNING );
-		}
 		return false;
 	}
 

@@ -1,14 +1,13 @@
 <?php
-
-namespace WordPressdotorg\MU_Plugins;
-
-use WordPressdotorg\Autoload;
-
 /**
  * Load mu-plugins.
  *
  * `utilities/` aren't loaded automatically since they're not used globally.
  */
+
+namespace WordPressdotorg\MU_Plugins;
+
+use WordPressdotorg\Autoload;
 
 // Load and register the Autoloader.
 if ( ! class_exists( '\WordPressdotorg\Autoload\Autoloader', false ) ) {
@@ -27,6 +26,9 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 }
 
 require_once __DIR__ . '/helpers/helpers.php';
+require_once __DIR__ . '/blocks/chapter-list/index.php';
+require_once __DIR__ . '/blocks/copy-page/index.php';
+require_once __DIR__ . '/blocks/favorite-button/index.php';
 require_once __DIR__ . '/blocks/global-header-footer/blocks.php';
 require_once __DIR__ . '/blocks/google-map/index.php';
 require_once __DIR__ . '/blocks/handbook-meta-link/block.php';
@@ -35,12 +37,18 @@ require_once __DIR__ . '/blocks/language-suggest/language-suggest.php';
 require_once __DIR__ . '/blocks/local-navigation-bar/index.php';
 require_once __DIR__ . '/blocks/latest-news/latest-news.php';
 require_once __DIR__ . '/blocks/link-wrapper/index.php';
+require_once __DIR__ . '/blocks/modal/index.php';
 require_once __DIR__ . '/blocks/navigation/index.php';
 require_once __DIR__ . '/blocks/notice/index.php';
 require_once __DIR__ . '/blocks/query-filter/index.php';
+require_once __DIR__ . '/blocks/query-has-results/index.php';
 require_once __DIR__ . '/blocks/query-total/index.php';
+require_once __DIR__ . '/blocks/ratings-bars/index.php';
+require_once __DIR__ . '/blocks/ratings-stars/index.php';
 require_once __DIR__ . '/blocks/sidebar-container/index.php';
 require_once __DIR__ . '/blocks/screenshot-preview/block.php';
+require_once __DIR__ . '/blocks/screenshot-preview-block/block.php';
+require_once __DIR__ . '/blocks/search-results-context/index.php';
 require_once __DIR__ . '/blocks/site-breadcrumbs/index.php';
 require_once __DIR__ . '/blocks/table-of-contents/index.php';
 require_once __DIR__ . '/blocks/time/index.php';

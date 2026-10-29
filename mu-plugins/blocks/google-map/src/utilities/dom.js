@@ -9,7 +9,7 @@ import { createRoot, flushSync } from '@wordpress/element';
  * This is useful when you need to pass an element to the Maps API. The need for it might also be a smell that
  * we're not leveraging the Google Maps React library as much as we could, though.
  *
- * @param {JSX.Element} element
+ * @param {import('react').ReactElement} element
  *
  * @return {string} The HTML for the given element.
  */

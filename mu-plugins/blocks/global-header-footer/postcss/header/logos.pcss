@@ -26,19 +26,9 @@
 	& .wp-block-image > a {
 		display: inline-flex;
 		box-sizing: content-box;
-		height: 27px;
-		padding: 16px var(--wp--style--block-gap);
+		height: 30px;
+		padding: calc((var(--wp-global-header-height) - 30px) / 2) var(--wp--style--block-gap);
 		color: var(--wp-global-header--text-color);
-
-		@media (--tablet) {
-			padding-top: 31px;
-			padding-bottom: 32px;
-		}
-
-		@media (--short-screen) {
-			padding-bottom: 16px;
-			padding-top: 16px;
-		}
 
 		&:hover {
 			background-color: var(--wp-global-header--background-color--hover);
@@ -58,9 +48,11 @@
 	}
 
 	& .global-header__wporg-locale-title {
+
+		/* 1.35em = line height of element. */
+		padding-top: calc((var(--wp-global-header-height) - 1.35em) / 2);
+		padding-bottom: calc((var(--wp-global-header-height) - 1.35em) / 2);
 		padding-left: 0;
-		padding-bottom: 16px;
-		padding-top: 16px;
 		flex-basis: max-content;
 		flex-grow: 1;
 		flex-shrink: 1;
@@ -81,13 +73,6 @@
 			max-width: 15em;
 			flex-basis: min-content;
 			flex-shrink: 0;
-			padding-top: 31px;
-			padding-bottom: 32px;
-		}
-
-		@media (--short-screen) {
-			padding-bottom: 16px;
-			padding-top: 16px;
 		}
 
 		@media (--desktop-wide) {
@@ -96,10 +81,13 @@
 	}
 }
 
-/* When on the main (non-rosetta) sites, the logo should take over 100% space. */
-html[lang="en-US"] .wp-block-group.global-header .wp-block-image.global-header__wporg-logo-mark {
+/* When on the main (non-rosetta) sites, or the Learn site with any locale selected, the logo should take over 100% space. */
+html[lang="en-US"],
+.wp-child-theme-pubwporg-learn-2024 {
+	.wp-block-group.global-header .wp-block-image.global-header__wporg-logo-mark {
 
-	@media (--mobile-only) {
-		flex-basis: 100%;
+		@media (--mobile-only) {
+			flex-basis: 100%;
+		}
 	}
 }

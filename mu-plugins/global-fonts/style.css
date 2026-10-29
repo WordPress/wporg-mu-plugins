@@ -1,3 +1,7 @@
+@import "./NotoSerif/NotoSerifJP/style.css";
+@import "./NotoSerif/NotoSerifKR/style.css";
+@import "./NotoSerif/NotoSerifSC/style.css";
+
 /*--------------*
  *  Newsreader  *
  *--------------*/
@@ -879,7 +883,7 @@
 
 /* cyrillic-ext */
 @font-face {
-	font-family: IBM Plex Mono;
+	font-family: "IBM Plex Mono";
 	font-weight: 500;
 	font-style: normal;
 	font-display: swap;
@@ -889,7 +893,7 @@
 
 /* cyrillic */
 @font-face {
-	font-family: IBM Plex Mono;
+	font-family: "IBM Plex Mono";
 	font-weight: 500;
 	font-style: normal;
 	font-display: swap;
@@ -899,7 +903,7 @@
 
 /* greek-ext */
 @font-face {
-	font-family: IBM Plex Mono;
+	font-family: "IBM Plex Mono";
 	font-weight: 500;
 	font-style: normal;
 	font-display: swap;
@@ -909,7 +913,7 @@
 
 /* greek */
 @font-face {
-	font-family: IBM Plex Mono;
+	font-family: "IBM Plex Mono";
 	font-weight: 500;
 	font-style: normal;
 	font-display: swap;
@@ -919,7 +923,7 @@
 
 /* vietnamese */
 @font-face {
-	font-family: IBM Plex Mono;
+	font-family: "IBM Plex Mono";
 	font-weight: 500;
 	font-style: normal;
 	font-display: swap;
@@ -929,7 +933,7 @@
 
 /* latin-ext */
 @font-face {
-	font-family: IBM Plex Mono;
+	font-family: "IBM Plex Mono";
 	font-weight: 500;
 	font-style: normal;
 	font-display: swap;
@@ -939,7 +943,7 @@
 
 /* latin */
 @font-face {
-	font-family: IBM Plex Mono;
+	font-family: "IBM Plex Mono";
 	font-weight: 500;
 	font-style: normal;
 	font-display: swap;
@@ -949,7 +953,7 @@
 
 /* arrows */
 @font-face {
-	font-family: IBM Plex Mono;
+	font-family: "IBM Plex Mono";
 	font-weight: 500;
 	font-style: normal;
 	font-display: swap;
@@ -1232,4 +1236,17 @@
 	font-display: swap;
 	src: url(./IBMPlexSans/IBMPlexSans-SemiBold-arrows.woff2) format("woff2");
 	unicode-range: U+2190-2199;
+}
+
+/*------------------------------*
+ *  Noto Kufi Arabic            *
+ *------------------------------*/
+
+/* cjk */
+@font-face {
+	font-family: "Noto Kufi Arabic";
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+	src: url(./Noto/NotoKufi-arabic.woff2) format("woff2");
 }

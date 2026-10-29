@@ -1,0 +1,60 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wporg/modal",
+	"title": "Modal",
+	"icon": "location",
+	"category": "layout",
+	"description": "A modal dialog.",
+	"textdomain": "wporg",
+	"attributes": {
+		"backgroundColor": {
+			"type": "string",
+			"default": "white"
+		},
+		"customBackgroundColor": {
+			"type": "string"
+		},
+		"textColor": {
+			"type": "string",
+			"default": "charcoal-1"
+		},
+		"customTextColor": {
+			"type": "string"
+		},
+		"closeButtonColor": {
+			"type": "string",
+			"default": "charcoal-1"
+		},
+		"customCloseButtonColor": {
+			"type": "string"
+		},
+		"overlayColor": {
+			"type": "string"
+		},
+		"customOverlayColor": {
+			"type": "string",
+			"default": "#1e1e1ecc"
+		},
+		"href": {
+			"type": "string"
+		},
+		"label": {
+			"type": "string",
+			"default": "Open modal"
+		},
+		"buttonStyle": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"supports": {
+		"align": false,
+		"layout": false,
+		"interactivity": true
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"viewScriptModule": "file:./view.js",
+	"render": "file:../render.php"
+}

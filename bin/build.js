@@ -7,11 +7,12 @@ const chalk = require( 'chalk' );
 const fs = require( 'fs' ); // eslint-disable-line id-length
 const { sync: glob } = require( 'fast-glob' );
 const { hashElement } = require( 'folder-hash' );
+const os = require( 'os' ); // eslint-disable-line id-length
 const path = require( 'path' );
 const postcss = require( 'postcss' );
 const rtlcss = require( 'rtlcss' );
 const { sync: resolveBin } = require( 'resolve-bin' );
-const { sync: spawn } = require( 'cross-spawn' );
+const spawn = require( 'cross-spawn' );
 const postCssConfig = require( '../postcss.config.js' );
 
 /**
@@ -24,11 +25,15 @@ const postCssConfig = require( '../postcss.config.js' );
  * @param {string} inputDir
  * @param {string} outputDir
  */
-async function maybeBuildBlock( inputDir, outputDir ) {
+function maybeBuildBlock( inputDir, outputDir ) {
 	const project = path.basename( path.dirname( inputDir ) );
-	if ( fs.existsSync( inputDir ) ) {
-		// Run wp-scripts with a specific input and output directory.
-		const { status, output } = spawn(
+	if ( ! fs.existsSync( inputDir ) ) {
+		return Promise.resolve();
+	}
+
+	// Run wp-scripts with a specific input and output directory.
+	return new Promise( ( resolve ) => {
+		const child = spawn(
 			resolveBin( '@wordpress/scripts', { executable: 'wp-scripts' } ),
 			[
 				'build',
@@ -41,14 +46,23 @@ async function maybeBuildBlock( inputDir, outputDir ) {
 				stdio: 'pipe',
 			}
 		);
-		// Only output the webpack result if there was an issue.
-		if ( 0 !== status ) {
-			console.log( output.toString() );
-			console.log( chalk.red( `Error in block for ${ project }` ) );
-		} else {
-			console.log( chalk.green( `Block built for ${ project }` ) );
-		}
-	}
+
+		const output = [];
+		child.stdout.on( 'data', ( data ) => output.push( data ) );
+		child.stderr.on( 'data', ( data ) => output.push( data ) );
+
+		child.on( 'close', ( status ) => {
+			// Only output the webpack result if there was an issue.
+			if ( 0 !== status ) {
+				process.exitCode = 1;
+				console.log( Buffer.concat( output ).toString() );
+				console.log( chalk.red( `Error in block for ${ project }` ) );
+			} else {
+				console.log( chalk.green( `Block built for ${ project }` ) );
+			}
+			resolve();
+		} );
+	} );
 }
 
 /**
@@ -142,8 +156,10 @@ const projects = cliProjects.length
  * 1. If there is a `src` folder, run the JS build.
  * 2. If there is a `postcss` folder, run the CSS build.
  *      Will build any top-level Sass files (unless they start with `_`).
+ *
+ * @param {string} file
  */
-projects.forEach( async ( file ) => {
+async function buildProject( file ) {
 	const basePath = path.join( projectPath, file );
 
 	try {
@@ -158,5 +174,20 @@ projects.forEach( async ( file ) => {
 		await setBlockVersion( basePath );
 	} catch ( error ) {
 		console.log( chalk.red( `Error in ${ file }:` ), error.message );
+		process.exitCode = 1;
 	}
-} );
+}
+
+/*
+ * Build the projects in parallel, one webpack process per project, capped at
+ * the CPU count. The steps within a project remain sequential.
+ */
+const queue = [ ...projects ];
+const concurrency = Math.max( 1, Math.min( queue.length, os.availableParallelism() ) );
+Promise.all(
+	Array.from( { length: concurrency }, async () => {
+		while ( queue.length ) {
+			await buildProject( queue.shift() );
+		}
+	} )
+);

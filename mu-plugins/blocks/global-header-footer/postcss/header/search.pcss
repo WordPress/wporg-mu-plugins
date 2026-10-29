@@ -13,17 +13,8 @@
 
 	& .wp-block-navigation__responsive-container-open,
 	& .wp-block-navigation__responsive-container-close {
-
-		@media (--tablet) {
-			padding-top: 33px;
-			padding-bottom: 33px;
-		}
-
-		@media (--short-screen) {
-			padding-bottom: 20px;
-			padding-top: 16px;
-			background-position: center;
-		}
+		padding-top: calc((var(--wp-global-header-height) - 24px) / 2);
+		padding-bottom: calc((var(--wp-global-header-height) - 24px) / 2);
 
 		&:focus-visible {
 			outline: none;

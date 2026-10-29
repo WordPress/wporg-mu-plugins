@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Verifies that the WordPress test suite runs.
+ */
 class Test_Demo_Test extends WP_UnitTestCase {
 
 	/**

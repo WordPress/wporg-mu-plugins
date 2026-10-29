@@ -1,10 +1,13 @@
 <?php
-namespace WordPressdotorg\MU_Plugins\Encryption;
-use Exception;
 /**
  * Plugin Name: WordPress.org Encryption
  * Description: Encryption functions for use on WordPress.org.
  */
+
+namespace WordPressdotorg\MU_Plugins\Encryption;
+
+use Exception;
+
 require __DIR__ . '/exports.php';
 
 defined( 'WPINC' ) || die();
@@ -40,6 +43,7 @@ const NONCE_LENGTH = SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_NPUBBYTES;
  * @param string $context  Additional, authenticated data. This is used in the verification of the authentication tag appended to the ciphertext, but it is not encrypted or stored in the ciphertext.
  * @param string $key_name The name of the key to use for encryption. Optional.
  * @return string Encrypted value, exceptions thrown on error.
+ * @throws Exception If a nonce cannot be created, the context is empty, or the key is undefined.
  */
 function encrypt( $value, string $context, string $key_name = '' ) {
 	$nonce = random_bytes( NONCE_LENGTH );
@@ -51,7 +55,7 @@ function encrypt( $value, string $context, string $key_name = '' ) {
 		throw new Exception( '$context cannot be empty.' );
 	}
 
-	if ( $value instanceOf HiddenString ) {
+	if ( $value instanceof HiddenString ) {
 		$value = $value->getString();
 	}
 
@@ -70,8 +74,9 @@ function encrypt( $value, string $context, string $key_name = '' ) {
  * @param string $context  Additional, authenticated data. This is used in the verification of the authentication tag appended to the ciphertext, but it is not encrypted or stored in the ciphertext.
  * @param string $key_name The name of the key to use for decryption. Optional.
  * @return HiddenString Decrypted value.
+ * @throws Exception If the ciphertext is invalid or the key is undefined.
  */
-function decrypt( string $value, string $context, string $key_name = '' ) : HiddenString {
+function decrypt( string $value, string $context, string $key_name = '' ): HiddenString {
 	if ( ! is_encrypted( $value ) ) {
 		throw new Exception( 'Value is not encrypted.' );
 	}
@@ -106,7 +111,7 @@ function decrypt( string $value, string $context, string $key_name = '' ) : Hidd
  * @return bool True if the value is encrypted, false otherwise.
  */
 function is_encrypted( $value ) {
-	if ( $value instanceOf HiddenString ) {
+	if ( $value instanceof HiddenString ) {
 		$value = $value->getString();
 	}
 
@@ -128,6 +133,7 @@ function is_encrypted( $value ) {
  *
  * @param string $key_name The name of the key to use for decryption.
  * @return HiddenString The encryption key.
+ * @throws Exception If the requested key is undefined.
  */
 function get_encryption_key( string $key_name = '' ) {
 
@@ -141,6 +147,7 @@ function get_encryption_key( string $key_name = '' ) {
 	}
 
 	if ( ! isset( $keys[ $key_name ] ) ) {
+		// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Keep exception data raw; callers escape for their output context.
 		throw new Exception( sprintf( 'Encryption key "%s" not defined.', $key_name ) );
 	}
 

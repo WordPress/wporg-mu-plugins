@@ -83,7 +83,7 @@ export function combineDuplicateLocations( rawMarkers ) {
  */
 export function assignMarkerReferences( map, maps, infoWindow, wpEvents, rawIcon, blockStyle ) {
 	const icon = {
-		url: rawIcon.imagesDirUrl + `/map-marker-${ blockStyle }.svg`,
+		url: rawIcon.imagesDirUrl + `/map-marker-${ blockStyle }.svg?v=2`,
 		size: new maps.Size( rawIcon.markerHeight, rawIcon.markerWidth ),
 		anchor: new maps.Point( 34, rawIcon.markerWidth / 2 ),
 		scaledSize: new maps.Size( rawIcon.markerHeight / 2, rawIcon.markerWidth / 2 ),
@@ -138,17 +138,18 @@ function openInfoWindow( infoWindow, map, markerObject, rawMarker ) {
 /**
  * Cluster the markers into groups for improved performance and UX.
  *
- * @param {google.maps.Map}      map
- * @param {google.maps}          maps
- * @param {google.maps.Marker[]} markers
- * @param {Object}               rawIcon
- * @param {string}               blockStyle
+ * @param {google.maps.Map}        map
+ * @param {google.maps}            maps
+ * @param {google.maps.Marker[]}   markers
+ * @param {Object}                 rawIcon
+ * @param {string}                 blockStyle
+ * @param {google.maps.InfoWindow} infoWindow
  *
  * @return {MarkerClusterer} The clusterer object.
  */
-export function clusterMarkers( map, maps, markers, rawIcon, blockStyle ) {
+export function clusterMarkers( map, maps, markers, rawIcon, blockStyle, infoWindow ) {
 	const clusterIcon = {
-		url: rawIcon.imagesDirUrl + `/cluster-background-${ blockStyle }.svg`,
+		url: rawIcon.imagesDirUrl + `/cluster-background-${ blockStyle }.svg?v=2`,
 		size: new maps.Size( rawIcon.clusterHeight, rawIcon.clusterWidth ),
 		anchor: new maps.Point( rawIcon.clusterHeight, rawIcon.clusterWidth ),
 		scaledSize: new maps.Size( rawIcon.clusterHeight, rawIcon.clusterWidth ),
@@ -165,7 +166,15 @@ export function clusterMarkers( map, maps, markers, rawIcon, blockStyle ) {
 		},
 	};
 
-	return new MarkerClusterer( { map, markers, renderer } );
+	// Close any open info window before zooming into the cluster.
+	const onClusterClick = ( event, cluster, clusterMap ) => {
+		infoWindow.close();
+		if ( cluster.bounds ) {
+			clusterMap.fitBounds( cluster.bounds );
+		}
+	};
+
+	return new MarkerClusterer( { map, markers, renderer, onClusterClick } );
 }
 
 /**

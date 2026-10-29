@@ -1,5 +1,6 @@
 <?php
 namespace WordPressdotorg\MU_Plugins\Utilities;
+
 use Exception;
 
 /**
@@ -14,12 +15,36 @@ class Github_App_Authorization {
 	 *
 	 * @var int
 	 */
-	public $expiry = 600; // 10 minutes.
+	public $expiry = 600;
 
-	protected $app_id      = '';
-	protected $key         = '';
-	protected $user_agent  = '';
+	/**
+	 * GitHub application ID.
+	 *
+	 * @var int|string
+	 */
+	protected $app_id = '';
 
+	/**
+	 * Private key or the name of a constant containing it.
+	 *
+	 * @var string
+	 */
+	protected $key = '';
+
+	/**
+	 * User agent sent with API requests.
+	 *
+	 * @var string
+	 */
+	protected $user_agent = '';
+
+	/**
+	 * Initialize GitHub application credentials.
+	 *
+	 * @param int|string $app_id     GitHub application ID.
+	 * @param string     $key        Private key or constant containing it.
+	 * @param string     $user_agent Optional HTTP user agent.
+	 */
 	public function __construct( $app_id, $key, $user_agent = '' ) {
 		$this->app_id     = (int) $app_id;
 		$this->key        = $key;
@@ -36,7 +61,7 @@ class Github_App_Authorization {
 	 * @see wp_remote_get() for paramters.
 	 */
 	public function request( $url, $args = [] ) {
-		$args['headers'] ??= [];
+		$args['headers']                ??= [];
 		$args['headers']['Authorization'] = $this->get_authorization_header();
 
 		if ( ! str_starts_with( $url, 'https://' ) ) {
@@ -149,20 +174,22 @@ class Github_App_Authorization {
 
 		$key = defined( $this->key ) ? constant( $this->key ) : $this->key;
 		if ( ! str_contains( $key, 'BEGIN RSA PRIVATE KEY' ) ) {
-			$key = base64_decode( $key );
+			$key = base64_decode( $key ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode -- Decode the configured PEM key before signing the JWT.
 		}
 
 		try {
 			$jwt = new \Ahc\Jwt\JWT( openssl_pkey_get_private( $key ), 'RS256' );
-		} catch( Exception $e ) {
+		} catch ( Exception $e ) {
 			return false;
 		}
 
-		$token = $jwt->encode( array(
-			'iat' => time(),
-			'exp' => time() + $this->expiry,
-			'iss' => $this->app_id,
-		) );
+		$token = $jwt->encode(
+			array(
+				'iat' => time(),
+				'exp' => time() + $this->expiry,
+				'iss' => $this->app_id,
+			)
+		);
 
 		// Cache it for 1 minute less than the expiry.
 		set_site_transient( $transient_name, $token, $this->expiry - MINUTE_IN_SECONDS );

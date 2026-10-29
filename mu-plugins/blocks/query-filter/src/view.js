@@ -70,7 +70,9 @@ const { actions } = store( 'wporg/query-filter', {
 				}
 			}
 
-			clearButton.setAttribute( 'aria-disabled', count ? 'false' : 'true' );
+			if ( clearButton ) {
+				clearButton.setAttribute( 'aria-disabled', count ? 'false' : 'true' );
+			}
 		},
 
 		toggle: () => {
@@ -85,6 +87,11 @@ const { actions } = store( 'wporg/query-filter', {
 		},
 		handleKeydown: ( event ) => {
 			const context = getContext();
+			// Only handle key events if the dropdown is open.
+			if ( ! context.isOpen ) {
+				return;
+			}
+
 			// If Escape close the dropdown.
 			if ( event.key === 'Escape' ) {
 				actions.closeDropdown();

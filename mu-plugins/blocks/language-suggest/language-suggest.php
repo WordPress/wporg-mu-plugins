@@ -17,5 +17,74 @@ namespace WordPressdotorg\MU_Plugins\Language_Suggest;
  */
 function language_suggest_block_init() {
 	register_block_type( __DIR__ . '/build' );
+
+	register_block_style(
+		'wporg/language-suggest',
+		array(
+			'name'  => 'prominent',
+			'label' => _x( 'Prominent', 'block style name', 'wporg' ),
+		)
+	);
 }
 add_action( 'init', __NAMESPACE__ . '\language_suggest_block_init' );
+
+/**
+ * Returns the endpoint the front-end script should request.
+ *
+ * Sites with a context-aware suggestion API filter in their own URL. Anything
+ * that is not an HTTPS wordpress.org URL falls back to the network-wide default.
+ *
+ * @return string The endpoint URL.
+ */
+function get_endpoint() {
+	$default = 'https://wordpress.org/lang-guess/lang-guess-ajax.php';
+
+	/**
+	 * Filters the language suggestion endpoint for the current site.
+	 *
+	 * @param string $endpoint Endpoint URL. Must be an HTTPS wordpress.org URL.
+	 */
+	$endpoint = apply_filters( 'wporg_language_suggest_endpoint', $default );
+
+	if ( ! is_string( $endpoint ) ) {
+		return $default;
+	}
+
+	$parts = wp_parse_url( $endpoint );
+
+	// A backslash is a path separator to the browser, so it and PHP can disagree on the host.
+	if ( str_contains( $endpoint, '\\' ) ) {
+		return $default;
+	}
+
+	// Schemes and hosts are case-insensitive, so compare them in one case.
+	$scheme = strtolower( $parts['scheme'] ?? '' );
+	$host   = strtolower( $parts['host'] ?? '' );
+
+	if ( 'https' !== $scheme || ! $host ) {
+		return $default;
+	}
+
+	if ( 'wordpress.org' !== $host && ! str_ends_with( $host, '.wordpress.org' ) ) {
+		return $default;
+	}
+
+	return $endpoint;
+}
+
+/**
+ * Inject the locale data for use in viewScript.
+ */
+function add_locale_data() {
+	$data = array(
+		'locale'   => get_locale(),
+		'endpoint' => get_endpoint(),
+	);
+
+	wp_add_inline_script(
+		'wporg-language-suggest-view-script',
+		'var languageSuggestData = ' . wp_json_encode( $data ) . ';',
+		'before'
+	);
+}
+add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\add_locale_data' );

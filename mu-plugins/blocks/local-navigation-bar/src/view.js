@@ -42,17 +42,21 @@ function init() {
 		// CSS class to show the nav block with {"overlayMenu":"always"}
 		// added by `add_extra_navigation`.
 		const onResize = () => {
+			const navElement = container.querySelector( 'nav:not(.wporg-is-collapsed-nav)' );
+
 			// Bail early on small screens, the visible nav block is already mobile.
-			if ( window.innerWidth <= 600 ) {
-				container.classList.remove( 'wporg-show-collapsed-nav' );
+			if ( window.innerWidth < 600 ) {
+				container.classList.remove( 'wporg-hide-page-title', 'wporg-show-collapsed-nav' );
+				navElement.classList.add( 'wporg-is-mobile-nav' );
 				return;
 			}
+
+			navElement.classList.remove( 'wporg-is-mobile-nav' );
 
 			// Fetch the navWidth from a data value which is set on page load,
 			// so that the uncollapsed visible menu's width is used.
 			let navWidth = container.dataset.navWidth;
 			if ( ! navWidth ) {
-				const navElement = container.querySelector( 'nav:not(.wporg-is-collapsed-nav)' );
 				const navGap = parseInt( window.getComputedStyle( navElement ).gap, 10 ) || 20;
 				// Get the nav width based on items, so that it stays
 				// consistent even if the menu wraps to a new line.
@@ -68,6 +72,26 @@ function init() {
 				container.dataset.navWidth = Math.ceil( navWidth );
 			}
 
+			const titleElement = container.querySelector( '.wp-block-site-title, div.wp-block-group' );
+			if ( ! titleElement ) {
+				return;
+			}
+
+			// Get the initial full width, before any elements are hidden.
+			let fullTitleWidth = titleElement.dataset.fullWidth;
+			if ( ! fullTitleWidth ) {
+				// Like navWidth, get this by the individual items to get the
+				// non-wrapped width.
+				fullTitleWidth =
+					[ ...titleElement.children ].reduce(
+						( acc, current ) => ( acc += current.getBoundingClientRect().width ),
+						0
+					) +
+					10 * ( titleElement.children.length - 1 ); // 10px margin between items.
+
+				titleElement.dataset.fullWidth = Math.ceil( fullTitleWidth );
+			}
+
 			const {
 				paddingInlineStart = '0px',
 				paddingInlineEnd = '0px',
@@ -78,20 +102,29 @@ function init() {
 				window.innerWidth -
 				parseInt( paddingInlineStart, 10 ) -
 				parseInt( paddingInlineEnd, 10 ) -
-				parseInt( gap, 10 );
+				parseInt( gap, 10 ) -
+				20; // 20px right padding is added when the collapsed nav is hidden.
 
-			const titleElement = container.querySelector( '.wp-block-site-title, div.wp-block-group' );
-			if ( ! titleElement ) {
-				return;
+			// If the title area is not a group block, use the same width for
+			// short and full (as there is no page title to hide).
+			let soloTitleWidth = fullTitleWidth;
+			if ( titleElement.classList.contains( 'wp-block-group' ) ) {
+				soloTitleWidth = titleElement.children[ 0 ].getBoundingClientRect().width;
 			}
-			const { width: titleWidth } = titleElement.getBoundingClientRect();
 
-			const usedWidth = Math.ceil( titleWidth ) + Math.ceil( navWidth );
+			const usedFullWidth = Math.ceil( fullTitleWidth ) + Math.ceil( navWidth );
+			const usedShortWidth = Math.ceil( soloTitleWidth ) + Math.ceil( navWidth );
 
-			if ( usedWidth > availableWidth ) {
-				container.classList.add( 'wporg-show-collapsed-nav' );
-			} else {
+			if ( availableWidth > usedFullWidth ) {
+				// Screen is large enough for everything, show all.
+				container.classList.remove( 'wporg-show-collapsed-nav', 'wporg-hide-page-title' );
+			} else if ( availableWidth > usedShortWidth ) {
+				// Menu and title will collide, hide page title.
+				container.classList.add( 'wporg-hide-page-title' );
 				container.classList.remove( 'wporg-show-collapsed-nav' );
+			} else {
+				// Menu and title will collide even with only site title, use collapsed nav.
+				container.classList.add( 'wporg-hide-page-title', 'wporg-show-collapsed-nav' );
 			}
 		};
 

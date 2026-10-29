@@ -1,0 +1,26 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wporg/copy-page",
+	"version": "0.1.0",
+	"title": "Copy Page",
+	"category": "widgets",
+	"icon": "clipboard",
+	"description": "A button that copies the Markdown version of the current page to the clipboard, with a link to view it.",
+	"textdomain": "wporg",
+	"supports": {
+		"html": false,
+		"inserter": false,
+		"interactivity": true
+	},
+	"attributes": {
+		"hasViewLink": {
+			"type": "boolean",
+			"default": true
+		}
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style.css",
+	"viewScriptModule": "file:./view.js",
+	"render": "file:../render.php"
+}

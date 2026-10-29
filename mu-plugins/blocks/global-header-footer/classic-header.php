@@ -36,4 +36,5 @@ defined( 'WPINC' ) || die();
 	</head>
 
 	<body <?php body_class( 'is-classic-theme' ); ?>>
-		<?php wp_body_open();
+		<?php
+		wp_body_open();

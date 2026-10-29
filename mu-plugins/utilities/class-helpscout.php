@@ -15,12 +15,42 @@ class HelpScout {
 	 *
 	 * @var int
 	 */
-	public $timeout = 15;
+	public $timeout = 30;
 
-	public    $name           = '';
-	protected $app_id         = '';
-	protected $app_secret     = '';
+	/**
+	 * Name of the configured HelpScout application.
+	 *
+	 * @var string
+	 */
+	public $name = '';
+
+	/**
+	 * HelpScout application identifier.
+	 *
+	 * @var string|false
+	 */
+	protected $app_id = '';
+
+	/**
+	 * HelpScout application secret.
+	 *
+	 * @var string|false
+	 */
+	protected $app_secret = '';
+
+	/**
+	 * Webhook signing secret.
+	 *
+	 * @var string|false
+	 */
 	protected $webhook_secret = '';
+
+	/**
+	 * Most recent HTTP response, or false before the first request.
+	 *
+	 * @var array|\WP_Error|false
+	 */
+	public $last_api_request = false;
 
 	/**
 	 * Fetch an instance of the HelpScout API.
@@ -29,24 +59,30 @@ class HelpScout {
 		static $instances = [];
 
 		if ( ! $app_id && ! $secret && ! $webhook_secret ) {
-			$app_id = 'wordpress';
+			$app_id = 'wordpress'; // phpcs:ignore WordPress.WP.CapitalPDangit.MisspelledInText -- Application identifiers are case-sensitive.
 		}
 
-		return $instances[ $app_id ] ?? ( $instances[ $app_id ] = new self( $app_id, $secret, $webhook_secret ) );
+		if ( ! isset( $instances[ $app_id ] ) ) {
+			$instances[ $app_id ] = new self( $app_id, $secret, $webhook_secret );
+		}
+
+		return $instances[ $app_id ];
 	}
 
+	/**
+	 * Initialize HelpScout application credentials.
+	 *
+	 * @param string|false $app_id         Application identifier.
+	 * @param string|false $secret         Application secret.
+	 * @param string|false $webhook_secret Webhook signing secret.
+	 */
 	protected function __construct( $app_id, $secret = false, $webhook_secret = false ) {
 		$name = '';
-		if ( 'wordpress' === $app_id && defined( 'HELPSCOUT_APP_ID' ) ) {
-			$name           = 'wordpress';
+		if ( 'wordpress' === $app_id && defined( 'HELPSCOUT_APP_ID' ) ) { // phpcs:ignore WordPress.WP.CapitalPDangit.MisspelledInText -- Match the existing application identifier.
+			$name           = 'wordpress'; // phpcs:ignore WordPress.WP.CapitalPDangit.MisspelledInText -- Preserve the application's stored name.
 			$app_id         = HELPSCOUT_APP_ID;
 			$secret         = HELPSCOUT_APP_SECRET;
 			$webhook_secret = HELPSCOUT_WEBHOOK_SECRET_KEY;
-		} elseif ( 'foundation' === $app_id && defined( 'HELPSCOUT_FOUNDATION_APP_ID' ) ) {
-			$name           = 'foundation';
-			$app_id         = HELPSCOUT_FOUNDATION_APP_ID;
-			$secret         = HELPSCOUT_FOUNDATION_APP_SECRET;
-			$webhook_secret = HELPSCOUT_FOUNDATION_WEBHOOK_SECRET_KEY;
 		}
 
 		$this->name           = $name;
@@ -58,8 +94,8 @@ class HelpScout {
 	/**
 	 * Validate whether the webhook payload provided came from Helpscout.
 	 *
-	 * @param $data      string The raw JSON payload.
-	 * @param $signature string The signature provided by Helpscout.
+	 * @param string $data      The raw JSON payload.
+	 * @param string $signature The signature provided by Helpscout.
 	 * @return bool
 	 */
 	public function validate_webhook_signature( $data, $signature ) {
@@ -67,7 +103,7 @@ class HelpScout {
 			return false;
 		}
 
-		$calculated = base64_encode( hash_hmac( 'sha1', $data, $this->webhook_secret, true ) );
+		$calculated = base64_encode( hash_hmac( 'sha1', $data, $this->webhook_secret, true ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- HelpScout signatures use base64-encoded HMAC bytes.
 
 		return hash_equals( $signature, $calculated );
 	}
@@ -123,9 +159,7 @@ class HelpScout {
 		while ( ! empty( $api->_links->next->href ) ) {
 			$api = $this->get( $api->_links->next->href );
 
-			if ( is_array( $api->_embedded ) ) {
-				
-			} else {
+			if ( ! is_array( $api->_embedded ) ) {
 				foreach ( $api->_embedded as $field => $value ) {
 					$response->_embedded->$field = array_merge( $response->_embedded->$field, $value );
 				}
@@ -178,7 +212,7 @@ class HelpScout {
 			$body                    = wp_json_encode( $args );
 		}
 
-		$request = wp_remote_request(
+		$this->last_api_request = wp_remote_request(
 			$url,
 			array(
 				'method'  => $method,
@@ -188,7 +222,7 @@ class HelpScout {
 			)
 		);
 
-		return json_decode( wp_remote_retrieve_body( $request ) );
+		return json_decode( wp_remote_retrieve_body( $this->last_api_request ) );
 	}
 
 	/**
@@ -209,7 +243,7 @@ class HelpScout {
 					'grant_type'    => 'client_credentials',
 					'client_id'     => $this->app_id,
 					'client_secret' => $this->app_secret,
-				)
+				),
 			)
 		);
 
@@ -226,14 +260,12 @@ class HelpScout {
 		set_site_transient(
 			$cache_key,
 			[
-				'exp' => time() + $expiry,
-				'token' => $token
+				'exp'   => time() + $expiry,
+				'token' => $token,
 			],
 			$expiry
 		);
 
 		return 'BEARER ' . $token;
 	}
-
 }
-

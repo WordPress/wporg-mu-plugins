@@ -1,12 +1,9 @@
-/**
- * Fallback values for custom properties match CSS defaults.
- */
-const SPACE_TO_TOP = getCustomPropValue( '--wp--custom--wporg-sidebar-container--spacing--margin--top' ) || 80;
+/* global ResizeObserver */
 
 let containers;
-let mainEl;
+let main;
+let footer;
 let adminBarHeight;
-let globalNavHeight;
 const scrollHandlers = [];
 
 /**
@@ -45,19 +42,21 @@ function createScrollHandler( container ) {
 
 		const { scrollY, innerHeight: windowHeight } = window;
 		const scrollPosition = scrollY - adminBarHeight;
-		const localNavOffset = getCustomPropValue( '--local--nav--offset', container );
-		const paddingTop = getCustomPropValue( '--local--padding', container );
+		const localNavHeight = getCustomPropValue( '--local--nav--offset', container );
+		const mainTop = main.getBoundingClientRect().top;
 
-		// Toggle the fixed position based on whether the scrollPosition is greater than the
-		// initial gap from the top minus the padding applied when fixed.
-		const shouldFix =
-			scrollPosition > SPACE_TO_TOP + globalNavHeight + localNavOffset - adminBarHeight - paddingTop;
+		// Toggle the fixed position based on whether main has reached the local nav.
+		// This assumes that main and the sidebar are top aligned.
+		const shouldFix = mainTop <= localNavHeight + adminBarHeight;
 		container.classList.toggle( 'is-fixed-sidebar', shouldFix );
 
 		// If the sidebar is fixed and the footer is visible in the viewport, reduce the height to stop overlap.
-		const footerStart = mainEl.offsetTop + mainEl.offsetHeight;
-		if ( shouldFix && footerStart < scrollPosition + windowHeight ) {
-			container.style.setProperty( 'height', `${ footerStart - scrollPosition - container.offsetTop }px` );
+		const footerShowing = scrollPosition + windowHeight > footer.offsetTop;
+		if ( shouldFix && footerShowing ) {
+			container.style.setProperty(
+				'height',
+				`${ footer.offsetTop - scrollPosition - container.offsetTop }px`
+			);
 		} else {
 			container.style.removeProperty( 'height' );
 		}
@@ -74,12 +73,12 @@ function onResize() {
 		window.getComputedStyle( document.documentElement ).getPropertyValue( 'margin-top' ),
 		10
 	);
-	globalNavHeight = getCustomPropValue( '--wp-global-header-height' ) || 90;
 
 	containers.forEach( ( container ) => {
 		// Toggle the floating class based on the configured breakpoint.
 		const shouldFloat = window.matchMedia( `(min-width: ${ container.dataset.breakpoint })` ).matches;
 		container.classList.toggle( 'is-floating-sidebar', shouldFloat );
+
 		// Show the sidebar after layout, if it has been hidden to avoid FOUC.
 		if ( 'none' === window.getComputedStyle( container ).display ) {
 			container.style.setProperty( 'display', 'revert' );
@@ -89,15 +88,45 @@ function onResize() {
 	scrollHandlers.forEach( ( handler ) => handler() );
 }
 
+/**
+ * Initialize the sidebar container.
+ * Three elements are required: main, a sidebar container (or multiple), and a footer.
+ */
 function init() {
+	main = document.querySelector( 'main' );
 	containers = document.querySelectorAll( '.wp-block-wporg-sidebar-container' );
-	mainEl = document.getElementById( 'wp--skip-link--target' );
+	footer = document.querySelector( '.wporg-footer' );
 
-	if ( mainEl && containers.length ) {
+	if ( main && containers.length && footer ) {
 		containers.forEach( ( container ) => {
 			const scrollHandler = createScrollHandler( container );
 			scrollHandlers.push( scrollHandler );
 			window.addEventListener( 'scroll', scrollHandler );
+
+			// When the sidebar container adjacent to the main element (usually the chapter list)
+			// is taller than the main element, a glitch occurs when scrolling past the point where
+			// the sidebar becomes fixed, because the main element height depends on the sidebar container
+			// height. To avoid this, we observe the height of this container when it is floating and
+			// not fixed, and set the min-height of the main element to match the container height.
+			const isSibling = container.previousElementSibling === main || container.nextElementSibling === main;
+			if ( 'ResizeObserver' in window && isSibling ) {
+				const resizeObserver = new ResizeObserver( ( entries ) => {
+					for ( const entry of entries ) {
+						if (
+							container.classList.contains( 'is-floating-sidebar' ) &&
+							! container.classList.contains( 'is-fixed-sidebar' )
+						) {
+							const containerHeight = entry.contentRect.height;
+
+							if ( containerHeight ) {
+								main.style.setProperty( 'min-height', `${ containerHeight }px` );
+							}
+						}
+					}
+				} );
+
+				resizeObserver.observe( container );
+			}
 		} );
 	}
 

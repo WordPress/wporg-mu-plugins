@@ -1,3 +1,4 @@
+/* global MutationObserver */
 /**
  * File wporg-global-header-script.js.
  *
@@ -193,29 +194,16 @@
 			closeSearchButton.setAttribute( 'aria-label', labels.closeSearchLabel || 'Close Search' );
 		}
 
-		// Watch for the `has-modal-open` class to be removed, and remove the global class too.
-		// This works as a callback to be fired when the global header modals are closed, as
-		// they're attached when each modal opens.
-		const modalCloseObserver = new window.MutationObserver( ( mutationList, observer ) => {
-			for ( const mutation of mutationList ) {
-				const { attributeName, type, target } = mutation;
-				if ( type === 'attributes' && attributeName === 'class' ) {
-					if ( ! target.classList.contains( 'has-modal-open' ) ) {
-						target.classList.remove( 'has-global-modal-open' );
-					}
-				}
-			}
-			// Remove the observer to prevent recursion. This will be re-attached when the modal is opened.
-			observer.disconnect();
-		} );
-
-		const openButtons = document.querySelectorAll( '[data-micromodal-trigger]' );
+		const openButtons = document.querySelectorAll(
+			'.global-header__navigation [data-wp-on-async--click="actions.openMenuOnClick"],' +
+				'.global-header__search [data-wp-on-async--click="actions.openMenuOnClick"]'
+		);
 		openButtons.forEach( function ( button ) {
 			// When any open menu button is clicked, find any existing close buttons and click them.
 			button.addEventListener( 'click', function ( event ) {
-				const thisModal = event.target.getAttribute( 'data-micromodal-trigger' );
+				const thisModal = event.target.parentNode.querySelector( '[data-wp-class--has-modal-open]' ).id;
 				const closeButtons = Array.from(
-					document.querySelectorAll( 'button[data-micromodal-close]' )
+					document.querySelectorAll( '[data-wp-on-async--click="actions.closeMenuOnClick"]' )
 				).filter(
 					// Filter to find visible close buttons that are not for this modal.
 					( _button ) => _button.offsetWidth > 0 && null === _button.closest( `#${ thisModal }` )
@@ -223,15 +211,33 @@
 
 				closeButtons.forEach( ( _button ) => _button.click() );
 
-				// If this button opened the global search, add a class and trigger the close observer.
-				if (
-					button.parentNode.classList.contains( 'global-header__navigation' ) ||
-					button.parentNode.classList.contains( 'global-header__search' )
-				) {
-					document.documentElement.classList.add( 'has-global-modal-open' );
-					modalCloseObserver.observe( document.documentElement, { attributes: true } );
+				// Add a helper class when one of the global modals are open.
+				document.documentElement.classList.add( 'has-global-modal-open' );
+			} );
+		} );
+
+		// Watching for changes to the html element's class, which indicates open/close state of navigation.
+		const observer = new MutationObserver( ( mutations ) => {
+			mutations.forEach( ( mutation ) => {
+				const oldClass = mutation.oldValue || '';
+				const newClass = mutation.target.className || '';
+				if ( oldClass.includes( 'has-modal-open' ) && ! newClass.includes( 'has-modal-open' ) ) {
+					// Menu has closed, remove the helper class if it exists. If the previously
+					// open menu was not the global nav, there will be not effect here.
+					mutation.target.classList.remove( 'has-global-modal-open' );
+				} else if ( ! oldClass.includes( 'has-modal-open' ) && newClass.includes( 'has-modal-open' ) ) {
+					// Any nav menu has opened, scroll to the top of the page to show the
+					// entire menu (and prevent incorrect positioning).
+					window.scrollTo( { top: 0, behavior: 'instant' } );
 				}
 			} );
+		} );
+
+		// Observe the html element for changes only to the class attribute.
+		observer.observe( document.documentElement, {
+			attributes: true,
+			attributeFilter: [ 'class' ],
+			attributeOldValue: true,
 		} );
 	} );
 
