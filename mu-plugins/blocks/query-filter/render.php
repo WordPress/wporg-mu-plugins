@@ -109,6 +109,7 @@ if ( $selected_count && $has_multiple ) {
 		<form
 			action="<?php echo esc_attr( $settings['action'] ); ?>"
 			data-wp-on--change="actions.handleFormChange"
+			data-wp-on--submit="actions.handleFormSubmit"
 		>
 			<div class="wporg-query-filter__modal-header">
 				<h2><?php echo wp_kses_post( $settings['title'] ); ?></h2>
@@ -172,7 +173,7 @@ if ( $selected_count && $has_multiple ) {
 					type="submit"
 					class="wporg-query-filter__modal-action-submit"
 					data-label-with-count="<?php echo esc_attr( $label_count ); ?>"
-					data-label=<?php esc_attr_e( 'Apply', 'wporg' ); ?>
+					data-label="<?php esc_attr_e( 'Apply', 'wporg' ); ?>"
 					value="<?php echo esc_html( $apply_label ); ?>"
 				/>
 			</div> <!-- /.wporg-query-filter__modal-actions -->
