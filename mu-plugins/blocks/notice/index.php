@@ -6,6 +6,8 @@
 
 namespace WordPressdotorg\MU_Plugins\Notice;
 
+const CALLOUT_SHORTCODES = [ 'info', 'tip', 'alert', 'tutorial', 'warning' ];
+
 // Run after `WPorg_Handbook_Callout_Boxes` registers the shortcodes.
 add_action( 'init', __NAMESPACE__ . '\init', 11 );
 
@@ -21,7 +23,7 @@ add_filter( 'pre_render_block', __NAMESPACE__ . '\render_callout_block_as_notice
 function init() {
 	register_block_type( __DIR__ . '/build' );
 
-	foreach ( [ 'info', 'tip', 'alert', 'tutorial', 'warning' ] as $shortcode ) {
+	foreach ( CALLOUT_SHORTCODES as $shortcode ) {
 		remove_shortcode( $shortcode );
 		add_shortcode( $shortcode, __NAMESPACE__ . '\render_shortcode' );
 	}
@@ -44,6 +46,41 @@ function map_type( $type ) {
 
 	return $mapping[ $type ] ?: 'tip';
 }
+
+/**
+ * Highlights code in callout shortcodes before wpautop and wptexturize can alter it.
+ *
+ * SyntaxHighlighter parses its shortcodes at priority 7 but skips those nested in
+ * other shortcodes, which would leave code in callouts to the formatting filters.
+ *
+ * @param string $content Post content.
+ * @return string Post content with code in callouts highlighted.
+ */
+function highlight_code_in_callouts( $content ) {
+	$syntax_highlighter = $GLOBALS['SyntaxHighlighter'] ?? null;
+
+	if ( ! $syntax_highlighter instanceof \SyntaxHighlighter || ! str_contains( $content, '[/' ) ) {
+		return $content;
+	}
+
+	// Leave shortcodes in HTML tags alone, as do_shortcode() does.
+	$content = do_shortcodes_in_html_tags( $content, true, CALLOUT_SHORTCODES );
+	$content = preg_replace_callback(
+		'/' . get_shortcode_regex( CALLOUT_SHORTCODES ) . '/',
+		function ( $m ) use ( $syntax_highlighter ) {
+			// Skip escaped and self-closing shortcodes.
+			if ( '[' === $m[1] || '' === $m[5] ) {
+				return $m[0];
+			}
+
+			return "[{$m[2]}{$m[3]}]" . $syntax_highlighter->parse_shortcodes( $m[5] ) . "[/{$m[2]}]";
+		},
+		$content
+	);
+
+	return unescape_invalid_shortcodes( $content );
+}
+add_filter( 'the_content', __NAMESPACE__ . '\highlight_code_in_callouts', 6 );
 
 /**
  * Generates and processes block markup for a notice.
