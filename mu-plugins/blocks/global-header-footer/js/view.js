@@ -194,16 +194,19 @@
 			closeSearchButton.setAttribute( 'aria-label', labels.closeSearchLabel || 'Close Search' );
 		}
 
+		// Core's navigation block moved from `data-wp-on-async--click` to `data-wp-on--click`; match both.
+		const clickActionSelector = ( action ) =>
+			`:is([data-wp-on--click="actions.${ action }"], [data-wp-on-async--click="actions.${ action }"])`;
+
 		const openButtons = document.querySelectorAll(
-			'.global-header__navigation [data-wp-on-async--click="actions.openMenuOnClick"],' +
-				'.global-header__search [data-wp-on-async--click="actions.openMenuOnClick"]'
+			`:is(.global-header__navigation, .global-header__search) ${ clickActionSelector( 'openMenuOnClick' ) }`
 		);
 		openButtons.forEach( function ( button ) {
 			// When any open menu button is clicked, find any existing close buttons and click them.
 			button.addEventListener( 'click', function ( event ) {
 				const thisModal = event.target.parentNode.querySelector( '[data-wp-class--has-modal-open]' ).id;
 				const closeButtons = Array.from(
-					document.querySelectorAll( '[data-wp-on-async--click="actions.closeMenuOnClick"]' )
+					document.querySelectorAll( clickActionSelector( 'closeMenuOnClick' ) )
 				).filter(
 					// Filter to find visible close buttons that are not for this modal.
 					( _button ) => _button.offsetWidth > 0 && null === _button.closest( `#${ thisModal }` )
@@ -211,8 +214,11 @@
 
 				closeButtons.forEach( ( _button ) => _button.click() );
 
-				// Add a helper class when one of the global modals are open.
-				document.documentElement.classList.add( 'has-global-modal-open' );
+				/*
+				 * Closing the other modal removes core's root class even though this one is open. Restore it,
+				 * and add a helper class when one of the global modals is open.
+				 */
+				document.documentElement.classList.add( 'has-modal-open', 'has-global-modal-open' );
 			} );
 		} );
 
@@ -248,7 +254,7 @@
 		);
 		if ( ! mobileViewToggle || ! mobileViewToggle.offsetWidth ) {
 			const closeMenuButton = document.querySelector(
-				'.wp-block-navigation__responsive-container.is-menu-open button[data-micromodal-close]'
+				'.wp-block-navigation__responsive-container.is-menu-open button.wp-block-navigation__responsive-container-close'
 			);
 			if ( closeMenuButton ) {
 				closeMenuButton.click();
