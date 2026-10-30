@@ -6,7 +6,7 @@
 ## Full Site Editing themes
 
 1. See `../../../README.md` for installation prerequisites.
-1. `require_once .../global-header-footer/blocks.php` file. See `wporg-news-2021` as an example.
+1. `require_once .../global-header-footer/blocks.php` file. See `wporg-news-2021` as an example. The file also requires `mu-plugins/helpers/rosetta.php`, so vendor the `mu-plugins/helpers` directory alongside it when copying this block out of the repository.
 1. Add `<!-- wp:wporg/global-header /-->` to the theme's `block-templates/*.html` files.
 
 

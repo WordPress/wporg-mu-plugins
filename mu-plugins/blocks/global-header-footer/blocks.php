@@ -3,9 +3,12 @@
 namespace WordPressdotorg\MU_Plugins\Global_Header_Footer;
 
 use Rosetta_Sites, WP_Post, WP_REST_Server, WP_Theme_JSON_Resolver;
+use WordPressdotorg\MU_Plugins\Helpers;
 
 defined( 'WPINC' ) || die();
 
+// Themes can load this file directly, without `loader.php`.
+require_once dirname( __DIR__, 2 ) . '/helpers/rosetta.php';
 require_once __DIR__ . '/admin-bar.php';
 
 add_action( 'init', __NAMESPACE__ . '\register_block_types' );
@@ -384,9 +387,9 @@ function rest_render_planet_global_header() {
 function render_global_header() {
 	remove_inner_group_container();
 
-	if ( is_rosetta_site() ) {
+	if ( Helpers\is_rosetta_site() ) {
 		$menu_items   = get_rosetta_menu_items();
-		$locale_title = get_rosetta_name();
+		$locale_title = Helpers\get_rosetta_name();
 		$show_search  = false;
 	} else {
 		$menu_items   = get_global_menu_items();
@@ -478,14 +481,12 @@ function remove_head_alternate_links( $markup ) {
 /**
  * Determine if the current site is a Rosetta site (e.g., `es-mx.wordpress.org`).
  *
- * This returns `false` for `translate.wordpress.org`; it's part of the Rosetta network, but isn't a Rosetta site.
+ * @deprecated Use `WordPressdotorg\MU_Plugins\Helpers\is_rosetta_site()` from `mu-plugins/helpers/rosetta.php`.
  *
  * @return bool
  */
-function is_rosetta_site() {
-	global $rosetta;
-
-	return $rosetta instanceof Rosetta_Sites;
+function is_rosetta_site(): bool {
+	return Helpers\is_rosetta_site();
 }
 
 /**
@@ -661,13 +662,12 @@ function get_rosetta_menu_items(): array {
 /**
  * Fetch the Rosetta site name.
  *
+ * @deprecated Use `WordPressdotorg\MU_Plugins\Helpers\get_rosetta_name()` from `mu-plugins/helpers/rosetta.php`.
+ *
  * @return string
  */
 function get_rosetta_name(): string {
-	/** @var Rosetta_Sites $rosetta */
-	global $rosetta;
-
-	return get_blog_option( $rosetta->get_root_site_id(), 'blogname' );
+	return Helpers\get_rosetta_name();
 }
 
 /**
@@ -762,7 +762,7 @@ function get_home_url() {
 
 	$url = false;
 
-	if ( is_rosetta_site() ) {
+	if ( Helpers\is_rosetta_site() ) {
 		$root_site = $rosetta->get_root_site_id();
 		$url       = \get_home_url( $root_site, '/' );
 	}
@@ -788,7 +788,7 @@ function get_download_url() {
 
 	$url = false;
 
-	if ( is_rosetta_site() ) {
+	if ( Helpers\is_rosetta_site() ) {
 		$root_site = $rosetta->get_root_site_id();
 
 		switch_to_blog( $root_site );
@@ -877,8 +877,8 @@ function rest_render_global_footer() {
 function render_global_footer( $attributes ) {
 	remove_inner_group_container();
 
-	if ( is_rosetta_site() ) {
-		$locale_title = get_rosetta_name();
+	if ( Helpers\is_rosetta_site() ) {
+		$locale_title = Helpers\get_rosetta_name();
 	} else {
 		$locale_title = '';
 	}
@@ -1060,7 +1060,7 @@ function get_cip_text() {
 	$english    = 'Code is Poetry.';
 	$translated = __( 'Code is Poetry.', 'wporg' );
 
-	if ( $translated === $english && is_rosetta_site() ) {
+	if ( $translated === $english && Helpers\is_rosetta_site() ) {
 		$translated = __( 'Code is Poetry.', 'rosetta' ); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Reuse the existing Rosetta translation as a fallback.
 	}
 
