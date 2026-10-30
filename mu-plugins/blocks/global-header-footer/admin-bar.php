@@ -58,8 +58,8 @@ function filter_admin_bar_links( $wp_admin_bar ) {
 					$ab_item->meta['class'] = 'ab-sub-secondary';
 				}
 				$wp_admin_bar->add_node( $ab_item );
-			} elseif ( in_array( $ab_item->id, [ 'edit-profile', 'logout' ], true ) ) {
-				// Move "Edit Profile" and "Logout" to a new group at the end of the dropdown.
+			} elseif ( 'logout' === $ab_item->id ) {
+				// Move "Log Out" to a new group at the end of the dropdown.
 				$ab_item->parent = 'my-account-actions';
 				$wp_admin_bar->add_node( $ab_item );
 			} elseif ( in_array( $ab_item->id, [ 'edit', 'site-editor', 'customize' ], true ) || 'edit' === $ab_item->parent ) {
