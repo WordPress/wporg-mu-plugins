@@ -20,8 +20,7 @@ add_filter( 'render_block_data', __NAMESPACE__ . '\update_block_style_colors' );
 /**
  * Register block types
  *
- * These are intentionally missing arguments like `title`, `category`, `icon`, etc, because we don't want them
- * showing up in the Block Inserter, regardless of which theme is running.
+ * Their `block.json` files keep them out of the Block Inserter, regardless of which theme is running.
  */
 function register_block_types() {
 	register_block_type(
@@ -377,6 +376,27 @@ function rest_render_planet_global_header() {
 }
 
 /**
+ * Whether to wrap the blocks in the classic document markup of `classic-header.php` and `classic-footer.php`.
+ *
+ * Classic themes need it on the front end, and the REST API routes serve it to external consumers. Block themes
+ * preview the blocks in the Site Editor's iframe, which gets its styles from that document. Classic themes preview
+ * them in the block-based Widgets screen, outside an iframe, where the document's styles would break the editor.
+ *
+ * @see https://meta.trac.wordpress.org/ticket/6754
+ *
+ * @return bool
+ */
+function should_render_classic_document(): bool {
+	if ( wp_is_block_theme() ) {
+		return defined( 'REST_REQUEST' ) && REST_REQUEST;
+	}
+
+	$rest_route = $GLOBALS['wp']->query_vars['rest_route'] ?? '';
+
+	return ! str_starts_with( strtolower( $rest_route ), '/wp/v2/block-renderer/' );
+}
+
+/**
  * Render the global header in a block context.
  *
  * @return string Returns the block content.
@@ -436,7 +456,7 @@ function render_global_header() {
 	 * API requests also need `<head>` etc so they can get the styles.
 	 */
 	$head_markup = '';
-	if ( ! wp_is_block_theme() || $is_rest_request ) {
+	if ( should_render_classic_document() ) {
 		ob_start();
 		require_once __DIR__ . '/classic-header.php';
 		$head_markup = ob_get_clean();
@@ -891,11 +911,9 @@ function render_global_footer( $attributes ) {
 
 	restore_inner_group_container();
 
-	$is_rest_request = defined( 'REST_REQUEST' ) && REST_REQUEST;
-
 	// Render the classic markup second, so the `wp_footer()` call will execute callbacks that blocks added.
 	$footer_markup = '';
-	if ( ! wp_is_block_theme() || $is_rest_request ) {
+	if ( should_render_classic_document() ) {
 		ob_start();
 		require_once __DIR__ . '/classic-footer.php';
 		$footer_markup = ob_get_clean();
