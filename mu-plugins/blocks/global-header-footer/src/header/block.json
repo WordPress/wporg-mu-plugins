@@ -12,6 +12,7 @@
 			"text": true
 		},
 		"html": false,
+		"inserter": false,
 		"multiple": false,
 		"reusable": false,
 		"spacing": {
