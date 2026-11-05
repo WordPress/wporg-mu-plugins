@@ -13,6 +13,26 @@ const focusableSelectors = [
 	'[contenteditable]',
 	'[tabindex]:not([tabindex^="-"])',
 ];
+const editableInputSelectors = [
+	'input:not([type])',
+	'input[type="text"]',
+	'input[type="search"]',
+	'input[type="email"]',
+	'input[type="url"]',
+	'input[type="tel"]',
+	'input[type="password"]',
+	'input[type="number"]',
+	'input[type="date"]',
+	'input[type="month"]',
+	'input[type="week"]',
+	'input[type="time"]',
+	'input[type="datetime-local"]',
+].join( ', ' );
+
+const resetTypeahead = ( context ) => {
+	context.typeaheadBuffer = '';
+	context.typeaheadTimestamp = 0;
+};
 
 const { actions } = store( 'wporg/query-filter', {
 	actions: {
@@ -43,6 +63,7 @@ const { actions } = store( 'wporg/query-filter', {
 		closeDropdown: () => {
 			const context = getContext();
 			context.isOpen = false;
+			resetTypeahead( context );
 			context.form?.reset();
 
 			const count = context.form?.querySelectorAll( 'input:checked' ).length;
@@ -77,6 +98,7 @@ const { actions } = store( 'wporg/query-filter', {
 
 		toggle: () => {
 			const context = getContext();
+			resetTypeahead( context );
 			if ( context.isOpen ) {
 				actions.closeDropdown();
 			} else {
@@ -89,6 +111,7 @@ const { actions } = store( 'wporg/query-filter', {
 			const context = getContext();
 			// Only handle key events if the dropdown is open.
 			if ( ! context.isOpen ) {
+				resetTypeahead( context );
 				return;
 			}
 
@@ -110,6 +133,72 @@ const { actions } = store( 'wporg/query-filter', {
 					context.firstFocusableElement.focus();
 				}
 			}
+
+			// Let shortcuts, IME input, and editable form controls handle their own keys.
+			const target = event.target;
+			if (
+				event.altKey ||
+				event.ctrlKey ||
+				event.metaKey ||
+				event.isComposing ||
+				event.keyCode === 229 ||
+				target?.isContentEditable ||
+				target?.closest?.( 'textarea, select' ) ||
+				target?.matches?.( editableInputSelectors )
+			) {
+				resetTypeahead( context );
+				return;
+			}
+
+			// Printable characters move focus by label prefix. Repeated single letters
+			// cycle through matching options; different letters form a short prefix.
+			if ( [ ...event.key ].length !== 1 || /\s/u.test( event.key ) ) {
+				resetTypeahead( context );
+				return;
+			}
+
+			const options = [
+				...context.form.querySelectorAll( '.wporg-query-filter__option input:not(:disabled)' ),
+			];
+			if ( ! options.length ) {
+				resetTypeahead( context );
+				return;
+			}
+
+			const activeIndex = options.indexOf( context.form.ownerDocument.activeElement );
+			const character = event.key.toLowerCase();
+			const now = Date.now();
+			const previousBuffer = now - context.typeaheadTimestamp <= 500 ? context.typeaheadBuffer : '';
+			const isRepeatedCharacter = previousBuffer === character && previousBuffer.length === 1;
+			const findMatch = ( prefix, includeActive ) => {
+				const firstOffset = includeActive && activeIndex >= 0 ? 0 : 1;
+				for ( let offset = firstOffset; offset < firstOffset + options.length; offset++ ) {
+					const option = options[ ( activeIndex + offset + options.length ) % options.length ];
+					const label = option.labels?.[ 0 ]?.textContent.trim();
+					if ( label?.toLowerCase().startsWith( prefix ) ) {
+						return option;
+					}
+				}
+				return null;
+			};
+
+			let prefix = isRepeatedCharacter ? character : previousBuffer + character;
+			let match = findMatch( prefix, previousBuffer.length > 0 && ! isRepeatedCharacter );
+			if ( ! match && previousBuffer.length > 0 && ! isRepeatedCharacter ) {
+				// An unmatched extension starts a fresh search with the latest key.
+				prefix = character;
+				match = findMatch( prefix, false );
+			}
+
+			if ( ! match ) {
+				resetTypeahead( context );
+				return;
+			}
+
+			context.typeaheadBuffer = prefix;
+			context.typeaheadTimestamp = now;
+			event.preventDefault();
+			match.focus();
 		},
 		handleFormChange: () => {
 			const context = getContext();
