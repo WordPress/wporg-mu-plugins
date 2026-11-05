@@ -16,6 +16,7 @@ add_action( 'wp_head', __NAMESPACE__ . '\preload_google_fonts' );
 add_filter( 'style_loader_src', __NAMESPACE__ . '\update_google_fonts_url', 10, 2 );
 add_filter( 'render_block_core/search', __NAMESPACE__ . '\swap_header_search_action', 10, 2 );
 add_filter( 'render_block_data', __NAMESPACE__ . '\update_block_style_colors' );
+add_filter( 'document_title_separator', __NAMESPACE__ . '\document_title_separator' );
 
 /**
  * Register block types
@@ -1083,4 +1084,13 @@ function get_cip_text() {
 	}
 
 	return $translated;
+}
+
+/**
+ * Use a pipe as the document title separator, like the rest of WordPress.org.
+ *
+ * @return string
+ */
+function document_title_separator() {
+	return '|';
 }
