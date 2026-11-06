@@ -34,8 +34,9 @@ defined( 'WPINC' ) || die();
  * Conversations and threads are returned as the API sends them; conversations also get `url`, the link to the
  * conversation, and `tags`, its tag names.
  *
- * Agents are named by ID or email address. Messages, notes and changes are made as `AGENT_ID` unless `user` names
- * another agent. The client doesn't check who may act: callers check capabilities first.
+ * Agents are named by ID or email address. Messages, notes and changes are made as `AGENT_ID`, the only agent the
+ * API key may act as; `user` can name another only with a key that may act as others. The client doesn't check who
+ * may act: callers check capabilities first.
  *
  * A `freescout_no_response` error means FreeScout may have acted anyway, so don't simply send again.
  *

@@ -198,7 +198,7 @@ class Test_FreeScout extends WP_UnitTestCase {
 		$this->assertSame( array( 'tags' => array( 'trademark' ) ), $this->requests['PUT conversations/131241/tags'] );
 		$this->assertSame( 'https://freescout.wordpress.net/conversation/131241', $conversation['url'] );
 		$this->assertSame( array( 'trademark' ), $conversation['tags'] );
-		$this->assertArrayNotHasKey( 'GET users?email=agent%40example.org', $this->requests );
+		$this->assertEmpty( preg_grep( '/^GET users/', array_keys( $this->requests ) ) );
 	}
 
 	/**
