@@ -43,7 +43,7 @@ class Test_FreeScout extends WP_UnitTestCase {
 	protected array $requests = array();
 
 	/**
-	 * Answer FreeScout requests from `$responses`, as a logged-in agent.
+	 * Answer FreeScout requests from `$responses`.
 	 */
 	public function set_up(): void {
 		parent::set_up();
@@ -107,8 +107,6 @@ class Test_FreeScout extends WP_UnitTestCase {
 		);
 
 		add_filter( 'pre_http_request', array( $this, 'answer_request' ), 10, 3 );
-
-		wp_set_current_user( self::factory()->user->create( array( 'user_email' => 'agent@example.org' ) ) );
 	}
 
 	/**
@@ -157,11 +155,12 @@ class Test_FreeScout extends WP_UnitTestCase {
 	/**
 	 * Sends a trademark letter.
 	 *
+	 * @param array $args Optional. Arguments to add, like `user`.
 	 * @return array|WP_Error
 	 */
-	protected function send(): array|WP_Error {
+	protected function send( array $args = array() ): array|WP_Error {
 		return FreeScout::send(
-			array(
+			$args + array(
 				'mailbox' => 'trademarks',
 				'to'      => 'owner@example.org',
 				'subject' => 'Trademark Infringement Notification example.org',
@@ -173,10 +172,10 @@ class Test_FreeScout extends WP_UnitTestCase {
 	}
 
 	/**
-	 * The mailbox ID comes from its constant, the message goes out as the current user's agent, and the caller gets
-	 * a working link back.
+	 * The mailbox ID comes from its constant, the message goes out as the API key's agent, the only one FreeScout
+	 * lets the key act as, and the caller gets a working link back.
 	 */
-	public function test_send_from_the_mailbox_as_the_current_user(): void {
+	public function test_send_from_the_mailbox_as_the_api_keys_agent(): void {
 		$conversation = $this->send();
 
 		$this->assertSame(
@@ -189,7 +188,7 @@ class Test_FreeScout extends WP_UnitTestCase {
 					array(
 						'type' => 'message',
 						'text' => '<p>Hi there,</p>',
-						'user' => 33,
+						'user' => 81,
 						'cc'   => array( 'event@example.org' ),
 					),
 				),
@@ -199,6 +198,7 @@ class Test_FreeScout extends WP_UnitTestCase {
 		$this->assertSame( array( 'tags' => array( 'trademark' ) ), $this->requests['PUT conversations/131241/tags'] );
 		$this->assertSame( 'https://freescout.wordpress.net/conversation/131241', $conversation['url'] );
 		$this->assertSame( array( 'trademark' ), $conversation['tags'] );
+		$this->assertEmpty( preg_grep( '/^GET users/', array_keys( $this->requests ) ) );
 	}
 
 	/**
@@ -243,7 +243,7 @@ class Test_FreeScout extends WP_UnitTestCase {
 	public function test_send_refuses_an_agent_with_another_email(): void {
 		$this->responses['GET users?email=agent%40example.org'][1]['_embedded']['users'][0]['email'] = 'admin@example.org';
 
-		$conversation = $this->send();
+		$conversation = $this->send( array( 'user' => 'agent@example.org' ) );
 
 		$this->assertWPError( $conversation );
 		$this->assertArrayNotHasKey( 'POST conversations', $this->requests );
@@ -266,7 +266,7 @@ class Test_FreeScout extends WP_UnitTestCase {
 		$this->assertTrue( $result );
 		$this->assertSame(
 			array(
-				'byUser'   => 33,
+				'byUser'   => 81,
 				'status'   => 'closed',
 				'assignTo' => -1,
 			),
@@ -288,7 +288,7 @@ class Test_FreeScout extends WP_UnitTestCase {
 				array(
 					'type' => 'message',
 					'text' => '<p>Thanks!</p>',
-					'user' => 33,
+					'user' => 81,
 					'cc'   => array( 'committer@example.org', 'co-author@example.org' ),
 				),
 			),
@@ -298,7 +298,7 @@ class Test_FreeScout extends WP_UnitTestCase {
 				array(
 					'type' => 'note',
 					'text' => '<p>Thanks!</p>',
-					'user' => 33,
+					'user' => 81,
 					'cc'   => array( 'committer@example.org' ),
 				),
 			),
