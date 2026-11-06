@@ -34,16 +34,13 @@ defined( 'WPINC' ) || die();
  * Conversations and threads are returned as the API sends them; conversations also get `url`, the link to the
  * conversation, and `tags`, its tag names.
  *
- * Agents are named by ID or email address, and messages, notes and changes are made by the current user's agent,
- * which FreeScout links to their WordPress.org account. Pass `user` where that isn't an agent: in cron jobs, or when
- * a visitor's action sends the email, like a form submission. The client doesn't check who may act: callers check
- * capabilities first.
+ * Agents are named by ID or email address. Messages, notes and changes are made as `AGENT_ID` unless `user` names
+ * another agent. The client doesn't check who may act: callers check capabilities first.
  *
  * A `freescout_no_response` error means FreeScout may have acted anyway, so don't simply send again.
  *
  * Needs the `FREESCOUT_API_KEY` constant, and a `FREESCOUT_<MAILBOX>_MAILBOX_ID` constant for each mailbox named, like
- * `FREESCOUT_PLUGINS_MAILBOX_ID`. A personal API key, which can act only as its owner, also needs
- * `FREESCOUT_API_USER_ID`, the owner's agent ID: everything is then made as that agent unless `user` names another.
+ * `FREESCOUT_PLUGINS_MAILBOX_ID`.
  *
  * ⚠️ This class is used in multiple locations in the WordPress/WordCamp ecosystem. If you make changes to this
  * file, make sure they are tested everywhere.
@@ -57,6 +54,14 @@ final class FreeScout {
 	 * @var string
 	 */
 	const URL = 'https://freescout.wordpress.net';
+
+	/**
+	 * The agent everything is made as by default: wordpressdotorg, who owns the API key. FreeScout lets a personal
+	 * key act only as its owner.
+	 *
+	 * @var int
+	 */
+	const AGENT_ID = 81;
 
 	/**
 	 * How long agent IDs are cached, in seconds.
@@ -83,7 +88,7 @@ final class FreeScout {
 	 *     @type string[]     $tags      Optional. Tag names.
 	 *     @type string       $status    Optional. `active` (default), `pending` or `closed`.
 	 *     @type int|string   $assign_to Optional. The agent to assign it to.
-	 *     @type int|string   $user      Optional. The sending agent. Default: `FREESCOUT_API_USER_ID`, else the current user.
+	 *     @type int|string   $user      Optional. The sending agent. Default: `AGENT_ID`.
 	 * }
 	 * @return array|\WP_Error The conversation.
 	 */
@@ -180,7 +185,7 @@ final class FreeScout {
 	 *
 	 *     @type string[]   $cc     Addresses to copy.
 	 *     @type string     $status The conversation's status after the reply. Default: FreeScout's, `pending`.
-	 *     @type int|string $user   The sending agent. Default: `FREESCOUT_API_USER_ID`, else the current user.
+	 *     @type int|string $user   The sending agent. Default: `AGENT_ID`.
 	 * }
 	 * @return array|\WP_Error The new thread.
 	 */
@@ -197,7 +202,7 @@ final class FreeScout {
 	 *     Optional.
 	 *
 	 *     @type string     $status The conversation's status after the note.
-	 *     @type int|string $user   The agent writing it. Default: `FREESCOUT_API_USER_ID`, else the current user.
+	 *     @type int|string $user   The agent writing it. Default: `AGENT_ID`.
 	 * }
 	 * @return array|\WP_Error The new thread.
 	 */
@@ -218,7 +223,7 @@ final class FreeScout {
 	 *     @type string     $status    `active`, `pending`, `closed` or `spam`.
 	 *     @type int|string $assign_to The agent to assign it to, or `0` for nobody.
 	 *     @type string[]   $tags      Tag names to add.
-	 *     @type int|string $user      The agent making the change. Default: `FREESCOUT_API_USER_ID`, else the current user.
+	 *     @type int|string $user      The agent making the change. Default: `AGENT_ID`.
 	 * }
 	 * @return true|\WP_Error
 	 */
@@ -450,8 +455,7 @@ final class FreeScout {
 	/**
 	 * Gets an agent's ID.
 	 *
-	 * @param mixed $user The agent's ID or email address. Empty for the `FREESCOUT_API_USER_ID` agent, else the
-	 *                    current user's.
+	 * @param mixed $user The agent's ID or email address. Empty for `AGENT_ID`.
 	 * @return int|\WP_Error
 	 */
 	private static function get_user_id( mixed $user ): int|\WP_Error {
@@ -459,16 +463,12 @@ final class FreeScout {
 			return (int) $user;
 		}
 
-		if ( ! $user && defined( 'FREESCOUT_API_USER_ID' ) ) {
-			return (int) FREESCOUT_API_USER_ID;
-		}
-
 		if ( ! $user ) {
-			$user = wp_get_current_user()->user_email;
+			return self::AGENT_ID;
 		}
 
-		if ( ! is_string( $user ) || ! $user ) {
-			return new \WP_Error( 'freescout_invalid_argument', '`user` must be an agent ID or email address, or someone must be logged in.' );
+		if ( ! is_string( $user ) ) {
+			return new \WP_Error( 'freescout_invalid_argument', '`user` must be an agent ID or email address.' );
 		}
 
 		$cache_key = 'wporg_freescout_user_' . md5( strtolower( $user ) );
