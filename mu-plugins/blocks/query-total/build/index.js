@@ -1,0 +1,1 @@
+(()=>{"use strict";const e=window.wp.blocks,o=window.wp.blockEditor,t=JSON.parse('{"UU":"wporg/query-total"}'),i=window.ReactJSXRuntime;(0,e.registerBlockType)(t.UU,{edit:function(){return(0,i.jsx)("div",{...(0,o.useBlockProps)(),children:"10 items"})},save:()=>null})})();
