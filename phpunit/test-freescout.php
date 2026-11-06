@@ -202,6 +202,22 @@ class Test_FreeScout extends WP_UnitTestCase {
 	}
 
 	/**
+	 * With a personal API key, which FreeScout lets act only as its owner, the message goes out as that agent
+	 * whoever is logged in.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_send_as_the_api_keys_owner(): void {
+		define( 'FREESCOUT_API_USER_ID', 81 );
+
+		$this->send();
+
+		$this->assertSame( 81, $this->requests['POST conversations']['threads'][0]['user'] );
+		$this->assertArrayNotHasKey( 'GET users?email=agent%40example.org', $this->requests );
+	}
+
+	/**
 	 * A conversation that exists is returned even when tagging it fails, so the caller doesn't email the
 	 * recipient again.
 	 */

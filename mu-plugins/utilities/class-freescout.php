@@ -42,7 +42,8 @@ defined( 'WPINC' ) || die();
  * A `freescout_no_response` error means FreeScout may have acted anyway, so don't simply send again.
  *
  * Needs the `FREESCOUT_API_KEY` constant, and a `FREESCOUT_<MAILBOX>_MAILBOX_ID` constant for each mailbox named, like
- * `FREESCOUT_PLUGINS_MAILBOX_ID`.
+ * `FREESCOUT_PLUGINS_MAILBOX_ID`. A personal API key, which can act only as its owner, also needs
+ * `FREESCOUT_API_USER_ID`, the owner's agent ID: everything is then made as that agent unless `user` names another.
  *
  * ⚠️ This class is used in multiple locations in the WordPress/WordCamp ecosystem. If you make changes to this
  * file, make sure they are tested everywhere.
@@ -82,7 +83,7 @@ final class FreeScout {
 	 *     @type string[]     $tags      Optional. Tag names.
 	 *     @type string       $status    Optional. `active` (default), `pending` or `closed`.
 	 *     @type int|string   $assign_to Optional. The agent to assign it to.
-	 *     @type int|string   $user      Optional. The sending agent. Default: the current user.
+	 *     @type int|string   $user      Optional. The sending agent. Default: `FREESCOUT_API_USER_ID`, else the current user.
 	 * }
 	 * @return array|\WP_Error The conversation.
 	 */
@@ -179,7 +180,7 @@ final class FreeScout {
 	 *
 	 *     @type string[]   $cc     Addresses to copy.
 	 *     @type string     $status The conversation's status after the reply. Default: FreeScout's, `pending`.
-	 *     @type int|string $user   The sending agent. Default: the current user.
+	 *     @type int|string $user   The sending agent. Default: `FREESCOUT_API_USER_ID`, else the current user.
 	 * }
 	 * @return array|\WP_Error The new thread.
 	 */
@@ -196,7 +197,7 @@ final class FreeScout {
 	 *     Optional.
 	 *
 	 *     @type string     $status The conversation's status after the note.
-	 *     @type int|string $user   The agent writing it. Default: the current user.
+	 *     @type int|string $user   The agent writing it. Default: `FREESCOUT_API_USER_ID`, else the current user.
 	 * }
 	 * @return array|\WP_Error The new thread.
 	 */
@@ -217,7 +218,7 @@ final class FreeScout {
 	 *     @type string     $status    `active`, `pending`, `closed` or `spam`.
 	 *     @type int|string $assign_to The agent to assign it to, or `0` for nobody.
 	 *     @type string[]   $tags      Tag names to add.
-	 *     @type int|string $user      The agent making the change. Default: the current user.
+	 *     @type int|string $user      The agent making the change. Default: `FREESCOUT_API_USER_ID`, else the current user.
 	 * }
 	 * @return true|\WP_Error
 	 */
@@ -449,12 +450,17 @@ final class FreeScout {
 	/**
 	 * Gets an agent's ID.
 	 *
-	 * @param mixed $user The agent's ID or email address. Empty for the current user.
+	 * @param mixed $user The agent's ID or email address. Empty for the `FREESCOUT_API_USER_ID` agent, else the
+	 *                    current user's.
 	 * @return int|\WP_Error
 	 */
 	private static function get_user_id( mixed $user ): int|\WP_Error {
 		if ( is_numeric( $user ) ) {
 			return (int) $user;
+		}
+
+		if ( ! $user && defined( 'FREESCOUT_API_USER_ID' ) ) {
+			return (int) FREESCOUT_API_USER_ID;
 		}
 
 		if ( ! $user ) {
