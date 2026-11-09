@@ -1,6 +1,7 @@
 <?php
 
 use function WordPressdotorg\MU_Plugins\Global_Header_Footer\remove_head_alternate_links;
+use function WordPressdotorg\MU_Plugins\Global_Header_Footer\serve_rest_html;
 
 /**
  * Tests global header and footer feed-link filtering.
@@ -129,5 +130,15 @@ class Test_Global_Header_Footer extends WP_UnitTestCase {
 	public function test_no_link_tags() {
 		$input = '<div class="header">Hello</div>';
 		$this->assertSame( $input, remove_head_alternate_links( $input ) );
+	}
+
+	/**
+	 * Test that an `_envelope` response is left to the REST server instead of echoed.
+	 */
+	public function test_enveloped_response_is_not_served_as_html() {
+		$response = rest_get_server()->envelope_response( new WP_REST_Response( '<header>Global header</header>' ), false );
+
+		$this->expectOutputString( '' );
+		$this->assertFalse( serve_rest_html( false, $response ) );
 	}
 }
