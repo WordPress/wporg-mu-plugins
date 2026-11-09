@@ -16,7 +16,7 @@
 
 /**
  * CSS from original core Sass files.
- * See https://github.com/WordPress/wordpress-develop/blob/21ebdbcb745405de350f9dc570420b19c2b632d4/src/wp-admin/css/colors/_admin.scss#L379-L530.
+ * See https://github.com/WordPress/wordpress-develop/blob/c05f7a66b0b9f89b5b140dac234602dcf325a17d/src/wp-admin/css/colors/_admin.scss#L388-L556.
  */
 
 #wpadminbar .ab-item,
@@ -39,6 +39,12 @@
 #wpadminbar.nojs .ab-top-menu > li.menupop:hover > .ab-item,
 #wpadminbar .ab-top-menu > li.menupop.hover > .ab-item {
 	color: var(--wporg-admin-bar--link-color--active);
+}
+
+/* Painted on the list item, as the item's border-radius (for its focus outline) would round the background. */
+#wpadminbar:not(.mobile) .ab-top-menu > li:hover,
+#wpadminbar.nojs .ab-top-menu > li.menupop:hover,
+#wpadminbar .ab-top-menu > li.menupop.hover {
 	background: var(--wporg-admin-bar--background-color--hover);
 }
 
