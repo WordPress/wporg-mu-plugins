@@ -240,20 +240,7 @@ function rest_render_global_header() {
 	);
 
 	// Serve the request as HTML.
-	add_filter(
-		'rest_pre_serve_request',
-		function ( $served, $result ) {
-			header( 'Content-Type: text/html' );
-			header( 'X-Robots-Tag: noindex, follow' );
-
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Rendered block templates and wp_head/wp_footer output must retain their HTML and scripts.
-			echo $result->get_data();
-
-			return true;
-		},
-		10,
-		2
-	);
+	add_filter( 'rest_pre_serve_request', __NAMESPACE__ . '\serve_rest_html', 10, 2 );
 
 	// Filter out element-level styles (h1, etc) to prevent clashes in sites
 	// using this header.
@@ -271,6 +258,32 @@ function rest_render_global_header() {
 	);
 
 	return rewrite_assets_to_cdn( do_blocks( '<!-- wp:wporg/global-header /-->' ) );
+}
+
+/**
+ * Serve a header/footer REST response as HTML instead of JSON.
+ *
+ * Requests with `_envelope` are wrapped into an array before this filter runs, so those
+ * are left to the REST server, which returns the markup inside the JSON envelope.
+ *
+ * @param bool              $served Whether the request has already been served.
+ * @param \WP_REST_Response $result The response to serve.
+ * @return bool
+ */
+function serve_rest_html( $served, $result ) {
+	$markup = $result->get_data();
+
+	if ( ! is_string( $markup ) ) {
+		return $served;
+	}
+
+	header( 'Content-Type: text/html' );
+	header( 'X-Robots-Tag: noindex, follow' );
+
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Rendered block templates and wp_head/wp_footer output must retain their HTML and scripts.
+	echo $markup;
+
+	return true;
 }
 
 /**
@@ -865,21 +878,8 @@ function rest_render_global_footer() {
 	 */
 	do_blocks( '<!-- wp:wporg/global-header /-->' );
 
-	// Serve the request as HTML
-	add_filter(
-		'rest_pre_serve_request',
-		function ( $served, $result ) {
-			header( 'Content-Type: text/html' );
-			header( 'X-Robots-Tag: noindex, follow' );
-
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Rendered block templates and wp_head/wp_footer output must retain their HTML and scripts.
-			echo $result->get_data();
-
-			return true;
-		},
-		10,
-		2
-	);
+	// Serve the request as HTML.
+	add_filter( 'rest_pre_serve_request', __NAMESPACE__ . '\serve_rest_html', 10, 2 );
 
 	$markup = do_blocks( '<!-- wp:wporg/global-footer /-->' );
 	$markup = rewrite_assets_to_cdn( $markup );
