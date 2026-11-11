@@ -201,6 +201,10 @@ function get_font_url( $font, $subset ) {
 			$font_folder    = 'Inter/';
 			$font_file_name = 'Inter-';
 			break;
+		case 'inter italic':
+			$font_folder    = 'Inter/';
+			$font_file_name = 'Inter-Italic-';
+			break;
 		case 'eb garamond':
 			$font_folder    = 'EB-Garamond/';
 			$font_file_name = 'EBGaramond-';
