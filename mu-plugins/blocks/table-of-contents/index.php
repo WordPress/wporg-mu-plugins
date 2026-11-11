@@ -68,26 +68,33 @@ function render( $attributes, $content, $block ) {
 
 	$content .= '<ul class="wporg-table-of-contents__list">';
 
-	$last_item = false;
+	// Heading level of each open list item, by depth, so out-of-order headings can't close the root list.
+	$open_levels = array();
 
 	foreach ( $items as $item ) {
 		if ( $item['level'] > 3 ) {
 			continue;
 		}
 
-		if ( $last_item ) {
-			if ( $last_item < $item['level'] ) {
-				$content .= "\n<ul>\n";
-			} elseif ( $last_item > $item['level'] ) {
-				$content .= "\n</ul></li>\n";
-			} else {
-				$content .= "</li>\n";
+		if ( $open_levels && $item['level'] > end( $open_levels ) ) {
+			$content .= "\n<ul>\n";
+		} elseif ( $open_levels ) {
+			$content .= "</li>\n";
+			array_pop( $open_levels );
+
+			while ( $open_levels && $item['level'] <= end( $open_levels ) ) {
+				$content .= "</ul></li>\n";
+				array_pop( $open_levels );
 			}
 		}
 
-		$last_item = $item['level'];
+		$open_levels[] = $item['level'];
 
 		$content .= '<li><a href="#' . esc_attr( $item['id'] ) . '">' . wp_strip_all_tags( $item['title'] ) . '</a>';
+	}
+
+	if ( $open_levels ) {
+		$content .= '</li>' . str_repeat( "</ul></li>\n", count( $open_levels ) - 1 );
 	}
 
 	$content .= "</ul>\n";
