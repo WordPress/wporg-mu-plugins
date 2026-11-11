@@ -149,11 +149,21 @@ function update_google_fonts_url( $src, $handle ) {
 }
 
 /**
- * Add preconnect resource hints for the Google Fonts API.
+ * Add preconnect resource hints for the Google Fonts API, on pages that load a Google Fonts stylesheet.
  */
 function preload_google_fonts() {
-	echo '<link rel="preconnect" href="https://fonts.googleapis.com">';
-	echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> ';
+	$styles = wp_styles();
+
+	// Head styles are already printed here, `wp_print_styles` runs at priority 8.
+	foreach ( $styles->done as $handle ) {
+		$src = $styles->registered[ $handle ]->src ?? '';
+
+		if ( is_string( $src ) && str_contains( $src, 'fonts.googleapis.com' ) ) {
+			echo '<link rel="preconnect" href="https://fonts.googleapis.com">';
+			echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> ';
+			return;
+		}
+	}
 }
 
 /**
