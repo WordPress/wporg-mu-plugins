@@ -14,27 +14,7 @@ use WildWolf\WordPress\TwoFactorWebAuthn\WebAuthn_Credential_Store;
  */
 class Connector_Two_Factor extends Connector {
 	/**
-	 * Connector slug
-	 *
-	 * @var string
-	 */
-	public $name = 'two-factor';
-
-	/**
-	 * Actions registered for this connector
-	 *
-	 * @var array
-	 */
-	public $actions = array(
-		// Triggers "callback_{name}" funcs.
-		'update_user_meta', // Before user meta changes
-		'updated_user_meta', // After user meta changes
-
-		'two_factor_user_authenticated', // Authenticatd via 2FA
-		'wp_login_failed', // Failed login
-	);
-
-	/**
+	 * Actions that need to be run early.
 	 * Actions that need to be run early.
 	 *
 	 * @var array
@@ -58,6 +38,24 @@ class Connector_Two_Factor extends Connector {
 	 * @var array
 	 */
 	public $user_meta = array();
+
+	/**
+	 * Sets the connector slug and the actions it registers.
+	 *
+	 * Stream declares these properties, typed from 4.5.0 onwards, and PHP requires a redeclaration
+	 * to match the parent's type exactly. Assigning them here works with either version.
+	 */
+	public function __construct() {
+		$this->name    = 'two-factor';
+		$this->actions = array(
+			// Triggers "callback_{name}" funcs.
+			'update_user_meta', // Before user meta changes
+			'updated_user_meta', // After user meta changes
+
+			'two_factor_user_authenticated', // Authenticatd via 2FA
+			'wp_login_failed', // Failed login
+		);
+	}
 
 	/**
 	 * Check if plugin dependencies are satisfied and add an admin notice if not
