@@ -40,10 +40,14 @@ function render( $attributes, $content, $block ) {
 		return '';
 	}
 
-	// The global post carries the previewed content, which get_post() would reload from the cache.
+	// Core swaps preview content into the global post only (see _set_preview()).
 	$post = get_post();
 	if ( ! $post || (int) $block->context['postId'] !== $post->ID ) {
 		$post = get_post( $block->context['postId'] );
+	}
+
+	if ( ! $post ) {
+		return '';
 	}
 
 	$post_content = apply_filters( 'wporg_table_of_contents_post_content', get_the_content( null, false, $post ) );
