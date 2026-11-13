@@ -15,10 +15,52 @@ add_filter( 'wp_preload_resources', __NAMESPACE__ . '\maybe_preload_font' );
 
 /**
  * Register stylesheet with font-family declarations.
+ *
+ * The Noto Serif CJK stylesheets are only a dependency for the locale that uses them.
  */
 function register_style() {
+	foreach ( get_locale_stylesheets() as $stylesheet ) {
+		wp_register_style(
+			$stylesheet['handle'],
+			plugins_url( $stylesheet['path'], __FILE__ ),
+			array(),
+			filemtime( __DIR__ . '/' . $stylesheet['path'] )
+		);
+	}
+
+	$stylesheet   = get_locale_stylesheets()[ get_locale() ] ?? false;
+	$dependencies = $stylesheet ? array( $stylesheet['handle'] ) : array();
+
 	$version = filemtime( __DIR__ . '/style.css' );
-	wp_register_style( 'wporg-global-fonts', get_font_stylesheet_url(), array(), $version );
+	wp_register_style( 'wporg-global-fonts', get_font_stylesheet_url(), $dependencies, $version );
+}
+
+/**
+ * Get the font stylesheets that only specific locales load, keyed by locale.
+ *
+ * These CJK fonts are split into many files by unicode range, so each
+ * stylesheet is around 35KB gzipped, too large to load on every page.
+ *
+ * @return array[] {
+ *     @type string $handle The stylesheet handle.
+ *     @type string $path   The stylesheet path, relative to this directory.
+ * }
+ */
+function get_locale_stylesheets() {
+	return array(
+		'ja'    => array(
+			'handle' => 'wporg-global-fonts-noto-serif-jp',
+			'path'   => 'NotoSerif/NotoSerifJP/style.css',
+		),
+		'ko_KR' => array(
+			'handle' => 'wporg-global-fonts-noto-serif-kr',
+			'path'   => 'NotoSerif/NotoSerifKR/style.css',
+		),
+		'zh_CN' => array(
+			'handle' => 'wporg-global-fonts-noto-serif-sc',
+			'path'   => 'NotoSerif/NotoSerifSC/style.css',
+		),
+	);
 }
 
 /**
@@ -53,6 +95,9 @@ function get_valid_subsets() {
  *
  * Once inlined in wp-admin, the relative URLs don't match the correct file paths.
  *
+ * It also imports the stylesheets `wporg-global-fonts` depends on (the locale's
+ * Noto Serif stylesheet) by absolute URL, so the editor loads what the front end does.
+ *
  * @param array $editor_settings Default editor settings.
  */
 function relative_to_absolute_urls( $editor_settings ) {
@@ -60,13 +105,24 @@ function relative_to_absolute_urls( $editor_settings ) {
 		return $editor_settings;
 	}
 
+	$imports = '';
+	$fonts   = wp_styles()->query( 'wporg-global-fonts' );
+	foreach ( $fonts ? $fonts->deps : array() as $handle ) {
+		$dependency = wp_styles()->query( $handle );
+		if ( $dependency ) {
+			$imports .= sprintf( "@import url(\"%s\");\n", esc_url_raw( add_query_arg( 'ver', $dependency->ver, $dependency->src ) ) );
+		}
+	}
+
 	foreach ( $editor_settings['styles'] as $i => $style ) {
 		if ( ! isset( $style['css'] ) ) {
 			continue;
 		}
 		if ( str_contains( $style['css'], './Inter' ) || str_contains( $style['css'], './EB-Garamond' ) ) {
-			$url                             = plugins_url( '', __FILE__ );
-			$style['css']                    = str_replace( 'url(./', "url($url/", $style['css'] );
+			$url = plugins_url( '', __FILE__ );
+			// `@import` must come before any other rule.
+			$style['css']                    = $imports . str_replace( 'url(./', "url($url/", $style['css'] );
+			$imports                         = ''; // Only import them once.
 			$editor_settings['styles'][ $i ] = $style;
 		}
 	}
