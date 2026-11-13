@@ -40,7 +40,12 @@ function render( $attributes, $content, $block ) {
 		return '';
 	}
 
-	$post         = get_post( $block->context['postId'] );
+	// The global post carries the previewed content, which get_post() would reload from the cache.
+	$post = get_post();
+	if ( ! $post || (int) $block->context['postId'] !== $post->ID ) {
+		$post = get_post( $block->context['postId'] );
+	}
+
 	$post_content = apply_filters( 'wporg_table_of_contents_post_content', get_the_content( null, false, $post ) );
 	$items        = get_headings( $post_content );
 	if ( ! $items ) {
