@@ -69,4 +69,30 @@ class Test_Table_Of_Contents extends WP_UnitTestCase {
 			),
 		);
 	}
+
+	/**
+	 * A post preview lists the autosaved headings, which core sets on the global post only.
+	 */
+	public function test_lists_headings_from_previewed_content(): void {
+		$post_id = self::factory()->post->create( array( 'post_content' => '<h2>Saved one</h2><h2>Saved two</h2>' ) );
+
+		_wp_put_post_revision(
+			array_merge(
+				get_post( $post_id, ARRAY_A ),
+				array( 'post_content' => '<h2>Draft one</h2><h2>Draft two</h2>' )
+			),
+			true
+		);
+
+		// What core's `the_preview` filter does to the main query's post.
+		$GLOBALS['post'] = _set_preview( get_post( $post_id ) ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+
+		$block = new WP_Block( array( 'blockName' => 'wporg/table-of-contents' ), array( 'postId' => $post_id ) );
+		preg_match( '#<ul class="wporg-table-of-contents__list">.*</ul>#s', $block->render(), $matches );
+
+		$this->assertSame(
+			'<ul class="wporg-table-of-contents__list"><li><a href="#draft-one">Draft one</a></li><li><a href="#draft-two">Draft two</a></li></ul>',
+			preg_replace( '/>\s+</', '><', $matches[0] ?? '' )
+		);
+	}
 }
