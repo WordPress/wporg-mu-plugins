@@ -77,13 +77,14 @@ function render_block( $attributes, $content, $block ) {
 	foreach ( $breadcrumbs as $i => $crumb ) {
 		// We can assume that the item without a URL is the current page.
 		if ( ! $crumb['url'] ) {
-			$content .= sprintf( '<span class="is-current-page">%s</span>', esc_html( $crumb['title'] ) );
+			$content .= sprintf( '<span role="listitem" class="is-current-page" aria-current="page">%s</span>', esc_html( $crumb['title'] ) );
 		} else {
-			$content .= sprintf( '<span><a href="%s">%s</a></span>', esc_url( $crumb['url'] ), esc_html( $crumb['title'] ) );
+			$content .= sprintf( '<span role="listitem"><a href="%s">%s</a></span>', esc_url( $crumb['url'] ), esc_html( $crumb['title'] ) );
 		}
 	}
 
-	$content = '<div class="wporg-site-breadcrumbs__wrapper">' . $content . '</div>';
+	// List roles let screen readers step through the crumbs one at a time, without changing the markup themes style.
+	$content = '<div class="wporg-site-breadcrumbs__wrapper" role="list">' . $content . '</div>';
 
 	$wrapper_attributes = get_block_wrapper_attributes();
 	return sprintf(

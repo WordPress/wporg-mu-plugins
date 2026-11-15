@@ -8,6 +8,8 @@
 	}
 
 	& .wporg-site-breadcrumbs__wrapper {
+		display: flex;
+		align-items: baseline;
 		overflow-x: auto;
 		text-overflow: clip;
 		white-space: nowrap;
@@ -15,7 +17,7 @@
 		/* Add extra space so the page title can be fully visible when scrolled. */
 		&::after {
 			content: "";
-			display: inline-block;
+			flex-shrink: 0;
 			width: 60px;
 		}
 	}
@@ -29,8 +31,10 @@
 		}
 	}
 
+	/* Block-level items, so screen readers like NVDA read each crumb on its own. */
 	& span {
-		display: inline-block;
+		display: block;
+		flex-shrink: 0;
 
 		&:not(:last-child) {
 
@@ -39,6 +43,7 @@
 
 			&::after {
 				content: "/";
+				content: "/" / ""; /* Hide the separator from screen readers where supported. */
 				display: inline-block;
 				font-weight: 400;
 				margin: 0 var(--wp--preset--spacing--10);
