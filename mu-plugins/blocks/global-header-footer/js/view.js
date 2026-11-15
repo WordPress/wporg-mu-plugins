@@ -71,6 +71,12 @@
 			let totalWidth = dotMenuWidth;
 			this.resetMenu();
 
+			// If every item fits without the … menu item, there's nothing to hide.
+			const itemsWidth = this.itemsWidths.reduce( ( sum, width ) => sum + width, 0 );
+			if ( itemsWidth < this.wrapper.offsetWidth ) {
+				return;
+			}
+
 			for ( let i = 0, len = this.itemsWidths.length; i < len; i++ ) {
 				totalWidth += this.itemsWidths[ i ];
 				// If this is the last item, we don't need to account for the … menu item.
