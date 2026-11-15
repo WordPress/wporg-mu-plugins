@@ -77,7 +77,8 @@
 				if ( i === len - 1 ) {
 					totalWidth -= dotMenuWidth;
 				}
-				if ( totalWidth >= this.wrapper.offsetWidth ) {
+				// Once one item overflows, every later item does too, so the menu keeps its order.
+				if ( this.hasHiddenItems || totalWidth >= this.wrapper.offsetWidth ) {
 					this.listItems[ i ].classList.add( 'global-header__overflow-item' );
 					if ( ! this.hasHiddenItems ) {
 						this.hasHiddenItems = true;
