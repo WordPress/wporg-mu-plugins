@@ -52,7 +52,8 @@
 	/* Mobile - `li` containing `a` */
 	& .wp-block-navigation__container .wp-block-navigation-item.global-header__mobile-get-wordpress {
 		margin-top: calc(var(--wp--style--block-gap) / 2);
-		margin-left: calc(var(--wp--style--block-gap) / 2);
+		margin-left: calc(var(--wp--style--block-gap) * 0.75);
+		width: auto; /* Not full width, or the margin pushes it past the menu edge. */
 
 		& a {
 			padding: 10px 19px;
