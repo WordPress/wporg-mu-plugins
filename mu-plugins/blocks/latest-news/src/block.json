@@ -19,6 +19,13 @@
 			"type": "integer",
 			"default": 3
 		},
+		"postTypes": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"default": [ "post" ]
+		},
 		"showCategories": {
 			"type": "boolean",
 			"default": false

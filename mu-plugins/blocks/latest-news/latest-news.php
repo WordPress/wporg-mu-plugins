@@ -26,10 +26,17 @@ function should_switch_to_blog() {
  */
 function render_block( $attributes ) {
 	$defaults      = array(
-		'perPage' => 3,
+		'perPage'   => 3,
+		'postTypes' => array( 'post' ),
 	);
 	$attributes    = wp_parse_args( $attributes, $defaults );
 	$blog_switched = false;
+
+	// Post types can be registered only on the switched-to site, so they are not checked against this one.
+	$post_types = array_values( array_filter( array_map( 'sanitize_key', (array) $attributes['postTypes'] ) ) );
+	if ( ! $post_types ) {
+		$post_types = array( 'post' );
+	}
 
 	$blog_id = isset( $attributes['blogId'] ) ? (int) $attributes['blogId'] : 0;
 
@@ -50,11 +57,15 @@ function render_block( $attributes ) {
 	// finally guarantees restore; an unrestored switch leaks into the rest of the page's queries and capability checks.
 	try {
 		$cache_key = 'wporg-latest-news-' . $attributes['perPage'];
-		$posts     = get_transient( $cache_key );
+		if ( array( 'post' ) !== $post_types ) {
+			$cache_key .= '-' . implode( '-', $post_types );
+		}
+		$posts = get_transient( $cache_key );
 		if ( ! $posts ) {
 			$posts = wp_get_recent_posts(
 				array(
 					'numberposts' => $attributes['perPage'],
+					'post_type'   => $post_types,
 					'post_status' => 'publish',
 				)
 			);
