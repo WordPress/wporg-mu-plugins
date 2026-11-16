@@ -31,9 +31,9 @@
 		}
 	}
 
-	/* Block-level items, so screen readers like NVDA read each crumb on its own. */
+	/* Inside the flex wrapper these are block-level items, so screen readers like NVDA read each crumb on its own. */
 	& span {
-		display: block;
+		display: inline-block;
 		flex-shrink: 0;
 
 		&:not(:last-child) {
