@@ -85,6 +85,24 @@ class Test_Latest_News extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Post types other than the allowed public ones are never listed.
+	 */
+	public function test_ignores_disallowed_post_types(): void {
+		self::factory()->post->create( array( 'post_title' => 'A blog post' ) );
+		self::factory()->post->create(
+			array(
+				'post_title' => 'A synced pattern',
+				'post_type'  => 'wp_block',
+			)
+		);
+
+		$output = $this->render( array( 'postTypes' => array( 'post', 'wp_block' ) ) );
+
+		$this->assertStringContainsString( 'A blog post', $output );
+		$this->assertStringNotContainsString( 'A synced pattern', $output );
+	}
+
+	/**
 	 * A post type not registered in this request, as on another site, links by ID.
 	 */
 	public function test_links_unregistered_post_types_by_id(): void {

@@ -32,8 +32,8 @@ function render_block( $attributes ) {
 	$attributes    = wp_parse_args( $attributes, $defaults );
 	$blog_switched = false;
 
-	// Post types can be registered only on the switched-to site, so they are not checked against this one.
-	$post_types = array_values( array_filter( array_map( 'sanitize_key', (array) $attributes['postTypes'] ) ) );
+	// The switched-to site's types aren't registered here to check viewability, so only known public types are allowed.
+	$post_types = array_values( array_intersect( array_map( 'sanitize_key', (array) $attributes['postTypes'] ), array( 'post', 'podcast' ) ) );
 	if ( ! $post_types ) {
 		$post_types = array( 'post' );
 	}
