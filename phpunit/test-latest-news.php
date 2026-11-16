@@ -83,4 +83,21 @@ class Test_Latest_News extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'A blog post', $output );
 		$this->assertStringContainsString( 'A podcast episode', $output );
 	}
+
+	/**
+	 * A post type not registered in this request, as on another site, links by ID.
+	 */
+	public function test_links_unregistered_post_types_by_id(): void {
+		$post_id = self::factory()->post->create(
+			array(
+				'post_title' => 'A podcast episode',
+				'post_type'  => 'podcast',
+			)
+		);
+		unregister_post_type( 'podcast' );
+
+		$output = $this->render( array( 'postTypes' => array( 'podcast' ) ) );
+
+		$this->assertStringContainsString( 'href="' . esc_url( home_url( '?p=' . $post_id ) ) . '"', $output );
+	}
 }

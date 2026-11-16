@@ -90,9 +90,12 @@ function render_block( $attributes ) {
 		$list_items = '';
 
 		foreach ( $posts as $post ) {
+			// A type registered only on the switched-to site would get the post permastruct, so let that site redirect by ID.
+			$permalink = post_type_exists( $post['post_type'] ) ? get_permalink( $post['ID'] ) : home_url( '?p=' . $post['ID'] );
+
 			$title_element = sprintf(
 				'<a href="%1$s">%2$s</a>',
-				esc_url( get_permalink( $post['ID'] ) ),
+				esc_url( $permalink ),
 				esc_html( $post['post_title'] )
 			);
 
