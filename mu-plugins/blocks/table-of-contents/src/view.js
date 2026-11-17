@@ -8,8 +8,7 @@
 function initCurrentSection( container ) {
 	const sections = Array.from( container.querySelectorAll( '.wporg-table-of-contents__list a[href^="#"]' ) )
 		.map( ( link ) => {
-			const id = decodeURIComponent( link.getAttribute( 'href' ).slice( 1 ) );
-			const heading = document.getElementById( id );
+			const heading = document.getElementById( link.getAttribute( 'href' ).slice( 1 ) );
 			return { link, heading };
 		} )
 		.filter( ( { heading } ) => !! heading );
@@ -28,7 +27,12 @@ function initCurrentSection( container ) {
 		let nextLink = null;
 
 		sections.forEach( ( { link, heading } ) => {
-			if ( heading.getBoundingClientRect().top <= threshold ) {
+			// Skip headings that aren't rendered (e.g. in a closed details block). Closed details hide
+			// content with content-visibility where supported, which getClientRects() doesn't detect.
+			const isVisible = heading.checkVisibility
+				? heading.checkVisibility()
+				: heading.getClientRects().length;
+			if ( isVisible && heading.getBoundingClientRect().top <= threshold ) {
 				nextLink = link;
 			}
 		} );
