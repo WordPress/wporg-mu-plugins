@@ -49,6 +49,43 @@ export function getSafeHref( url ) {
 	}
 }
 
+const regionNames = {};
+
+/**
+ * Get the names of a country, so searching for "Australia" matches events stored with the code `AU`.
+ *
+ * @param {string} code ISO 3166-1 alpha-2 country code.
+ *
+ * @return {string} The country name in the page language and in English, or the code if neither is available.
+ */
+export function getCountryNames( code ) {
+	if ( ! code || 'string' !== typeof code || ! window.Intl?.DisplayNames ) {
+		return code;
+	}
+
+	const names = new Set();
+	const locales = [ document.documentElement.lang, 'en' ].filter( Boolean );
+
+	locales.forEach( ( locale ) => {
+		try {
+			if ( ! regionNames[ locale ] ) {
+				regionNames[ locale ] = new Intl.DisplayNames( [ locale ], { type: 'region' } );
+			}
+
+			const name = regionNames[ locale ].of( code.toUpperCase() );
+
+			// Unknown codes come back unchanged.
+			if ( name && name !== code.toUpperCase() ) {
+				names.add( name );
+			}
+		} catch {
+			// Invalid locale or code, keep the names found so far.
+		}
+	} );
+
+	return names.size ? Array.from( names ).join( ' ' ) : code;
+}
+
 /**
  * Filter the list of markers based on a user's search query.
  *
@@ -64,7 +101,9 @@ export function filterMarkers( unfilteredMarkers, query, searchFields ) {
 	}
 
 	unfilteredMarkers.forEach( ( marker ) => {
-		let haystack = searchFields.map( ( field ) => marker[ field ] ).join( ' ' );
+		let haystack = searchFields
+			.map( ( field ) => ( 'country' === field ? getCountryNames( marker[ field ] ) : marker[ field ] ) )
+			.join( ' ' );
 
 		// Sometimes `&nbsp;` is used as a hack to prevent typographic runts. If we don't replace that then a
 		// `query` of `los angeles` wouldn't match `los&nbsp;angeles`.
