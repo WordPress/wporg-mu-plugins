@@ -20,15 +20,23 @@ function initCurrentSection( container ) {
 	let currentLink = null;
 	let ticking = false;
 
+	/**
+	 * Move `aria-current` to the link for the last visible heading past the threshold.
+	 */
 	function update() {
 		ticking = false;
 
-		const threshold = window.innerHeight / 3;
+		// Short final sections can't scroll up to the threshold, so at the bottom the last one wins.
+		const isAtBottom =
+			window.scrollY > 0 && window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 1;
+		const threshold = isAtBottom ? Infinity : window.innerHeight / 3;
 		let nextLink = null;
 
 		sections.forEach( ( { link, heading } ) => {
-			// Skip headings that aren't rendered (e.g. in a closed details block). Closed details hide
-			// content with content-visibility where supported, which getClientRects() doesn't detect.
+			/*
+			 * Skip headings that aren't rendered (e.g. in a closed details block). Closed details hide
+			 * content with content-visibility where supported, which getClientRects() doesn't detect.
+			 */
 			const isVisible = heading.checkVisibility
 				? heading.checkVisibility()
 				: heading.getClientRects().length;
@@ -50,6 +58,9 @@ function initCurrentSection( container ) {
 		currentLink = nextLink;
 	}
 
+	/**
+	 * Schedule one update per animation frame.
+	 */
 	function onScroll() {
 		if ( ! ticking ) {
 			ticking = true;
