@@ -23,6 +23,12 @@ wp_register_style(
 );
 ```
 
+### Noto Serif JP, KR, and SC
+
+These stylesheets are large, so they aren't part of `style.css`. `wporg-global-fonts` depends on the matching handle only for its locale: `wporg-global-fonts-noto-serif-jp` (`ja`), `-kr` (`ko_KR`) and `-sc` (`zh_CN`). To use one elsewhere, enqueue its handle directly.
+
+### Preloading
+
 If you wish to have one (or more) font subsets preloaded automatically, you can call the global function `global_fonts_preload()`.
 
 For example, to preload `Inter Latin`:
