@@ -104,9 +104,12 @@ function ScreenShotImg( { alt = '', queryString, src, isReady = false } ) {
 		}
 	};
 
+	// Wait until the card is in view, so off-screen previews don't use up their attempts.
 	useEffect( () => {
-		( async () => await fetchImage() )();
-	}, [] );
+		if ( isReady ) {
+			( async () => await fetchImage() )();
+		}
+	}, [ isReady ] );
 
 	/**
 	 * The Snapshot service will redirect when its generating an image.
