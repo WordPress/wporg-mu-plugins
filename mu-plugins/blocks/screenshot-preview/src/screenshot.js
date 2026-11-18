@@ -88,15 +88,15 @@ function ScreenShotImg( { alt = '', queryString, src, isReady = false } ) {
 		try {
 			const res = await fetch( fullUrl );
 
-			if ( res.redirected ) {
-				setShouldRetry( true );
-			} else if ( res.status === 200 && ! res.redirected ) {
+			if ( res.status === 200 && ! res.redirected ) {
 				await convertResponseToBase64( res );
 
 				setHasLoaded( true );
 				setShouldRetry( false );
 			} else {
-				setAttempts( attempts + 1 );
+				// mShots redirects while it generates the image; count each try so we eventually give up.
+				setAttempts( ( count ) => count + 1 );
+				setShouldRetry( true );
 			}
 		} catch {
 			setHasError( true );
@@ -116,8 +116,24 @@ function ScreenShotImg( { alt = '', queryString, src, isReady = false } ) {
 		async () => {
 			await fetchImage();
 		},
-		shouldRetry ? RETRY_DELAY : null
+		shouldRetry && ! hasAborted ? RETRY_DELAY : null
 	);
+
+	/**
+	 * Start over after a failure, for example when mShots took too long.
+	 *
+	 * @param {Event} event
+	 */
+	const handleRetry = ( event ) => {
+		// The preview sits inside the card's link, so don't follow it.
+		event.preventDefault();
+		event.stopPropagation();
+
+		setAttempts( 0 );
+		setHasError( false );
+		setShouldRetry( false );
+		fetchImage();
+	};
 
 	if ( ! isReady ) {
 		return null;
@@ -128,7 +144,14 @@ function ScreenShotImg( { alt = '', queryString, src, isReady = false } ) {
 	}
 
 	if ( hasError || hasAborted ) {
-		return <div className="wporg-screenshot wporg-screenshot__has-error">{ __( 'error', 'wporg' ) }</div>;
+		return (
+			<div className="wporg-screenshot wporg-screenshot__has-error">
+				<p>{ __( 'The preview could not be loaded.', 'wporg' ) }</p>
+				<button type="button" className="wporg-screenshot__retry" onClick={ handleRetry }>
+					{ __( 'Try again', 'wporg' ) }
+				</button>
+			</div>
+		);
 	}
 
 	return <img src={ base64Img } alt={ alt } />;
