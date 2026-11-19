@@ -252,7 +252,7 @@ function get_all_upcoming_events( array $facets = array() ): array {
 
 	$query = "
 		SELECT
-			id, `type`, title, url, meetup, location, latitude, longitude, date_utc,
+			id, `type`, title, url, meetup, location, country, latitude, longitude, date_utc,
 			date_utc_offset AS tz_offset
 			{$description_field}
 		FROM `wporg_events`
@@ -364,7 +364,7 @@ function get_all_past_events( int $page, array $facets = array() ): array {
 	// wporg_events.status doesn't have a separate value for "completed", it's just scheduled events that have
 	// a date in the past.
 	$query = "SELECT
-			id, `type`, title, url, meetup, location, latitude, longitude, date_utc,
+			id, `type`, title, url, meetup, location, country, latitude, longitude, date_utc,
 			date_utc_offset AS tz_offset
 			{$description_field}
 		FROM `wporg_events`
@@ -424,7 +424,7 @@ function get_events_between_dates( int $start_timestamp, int $end_timestamp ): a
 	$query = $wpdb->prepare(
 		'
 		SELECT
-			id, `type`, source_id, title, url, description, meetup, location, latitude, longitude, date_utc,
+			id, `type`, source_id, title, url, description, meetup, location, country, latitude, longitude, date_utc,
 			date_utc_offset AS tz_offset
 		FROM `wporg_events`
 		WHERE

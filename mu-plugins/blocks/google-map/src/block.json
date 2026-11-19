@@ -54,7 +54,7 @@
 		},
 		"searchFields": {
 			"type": "array",
-			"default": [ "title", "location", "meetup" ]
+			"default": [ "title", "location", "meetup", "country" ]
 		}
 	},
 	"supports": {
