@@ -137,9 +137,13 @@ class Users_Controller extends \WP_REST_Users_Controller {
 	/**
 	 * Get the user, if the slug is valid.
 	 *
-	 * @param string $slug Supplied slug.
+	 * The slug is normally a string from the route, but a query string such as `?slug[]=x` takes
+	 * precedence over it. Schema validation rejects that request, yet core's `rest_send_allow_header()`
+	 * still calls the permission callback with the raw value, so anything but a string is refused here.
 	 *
-	 * @return \WP_User|\WP_Error True if slug is valid, WP_Error otherwise.
+	 * @param mixed $slug Supplied slug.
+	 *
+	 * @return \WP_User|\WP_Error User object if slug is valid, WP_Error otherwise.
 	 */
 	protected function get_user_by_slug( $slug ) {
 		$error = new \WP_Error(
@@ -148,7 +152,7 @@ class Users_Controller extends \WP_REST_Users_Controller {
 			array( 'status' => 404 )
 		);
 
-		if ( mb_strlen( $slug ) > 50 || ! sanitize_title( $slug ) ) {
+		if ( ! is_string( $slug ) || mb_strlen( $slug ) > 50 || ! sanitize_title( $slug ) ) {
 			return $error;
 		}
 
