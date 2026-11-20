@@ -18,14 +18,15 @@ function initCurrentSection( container ) {
 	}
 
 	let currentLink = null;
+	let pinnedLink = null;
 	let ticking = false;
 
 	/**
-	 * Move `aria-current` to the link for the last visible heading past the threshold.
+	 * Find the link for the last visible heading past the threshold.
+	 *
+	 * @return {HTMLElement|null} The link for the section in view.
 	 */
-	function update() {
-		ticking = false;
-
+	function findCurrentLink() {
 		// Short final sections can't scroll up to the threshold, so at the bottom the last one wins.
 		const isAtBottom =
 			window.scrollY > 0 && window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 1;
@@ -44,6 +45,17 @@ function initCurrentSection( container ) {
 				nextLink = link;
 			}
 		} );
+
+		return nextLink;
+	}
+
+	/**
+	 * Move `aria-current` to the pinned link, or else to the link for the section in view.
+	 */
+	function update() {
+		ticking = false;
+
+		const nextLink = pinnedLink || findCurrentLink();
 
 		if ( nextLink === currentLink ) {
 			return;
@@ -67,6 +79,31 @@ function initCurrentSection( container ) {
 			window.requestAnimationFrame( update );
 		}
 	}
+
+	/*
+	 * A jump to a short section can leave the next heading past the threshold too, so keep the
+	 * section the reader asked for current until they scroll on their own.
+	 */
+	sections.forEach( ( { link } ) => {
+		link.addEventListener( 'click', () => {
+			pinnedLink = link;
+			update();
+		} );
+	} );
+	[ 'wheel', 'touchmove', 'keydown', 'mousedown' ].forEach( ( type ) => {
+		window.addEventListener(
+			type,
+			() => {
+				pinnedLink = null;
+			},
+			{ passive: true }
+		);
+	} );
+
+	const hashSection = sections.find(
+		( { link } ) => window.location.hash && link.hash === window.location.hash
+	);
+	pinnedLink = hashSection ? hashSection.link : null;
 
 	window.addEventListener( 'scroll', onScroll, { passive: true } );
 	window.addEventListener( 'resize', onScroll );
