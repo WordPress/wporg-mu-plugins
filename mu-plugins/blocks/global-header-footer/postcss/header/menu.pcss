@@ -108,8 +108,12 @@
 
 			&.current-menu-item:not(.global-header__get-wordpress) {
 
+				/* On the link, not the `li`, so hover backgrounds and open submenus don't hide or stretch it. Focus keeps its ring. */
 				@media (--mobile-only) {
-					box-shadow: inset 1.5px 0 0 0 var(--wp-global-header--link-color--active);
+					& > a:not(:focus-visible),
+					& > button:not(:focus-visible) {
+						box-shadow: inset 1.5px 0 0 0 var(--wp-global-header--link-color--active);
+					}
 				}
 
 				@media (--tablet) {
