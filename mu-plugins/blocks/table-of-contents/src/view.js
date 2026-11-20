@@ -100,9 +100,19 @@ function initCurrentSection( container ) {
 		);
 	} );
 
-	const hashSection = sections.find(
-		( { link } ) => window.location.hash && link.hash === window.location.hash
-	);
+	// Back/Forward moves the page without any of the inputs above.
+	window.addEventListener( 'hashchange', () => {
+		if ( pinnedLink && pinnedLink.hash !== window.location.hash ) {
+			pinnedLink = null;
+			onScroll();
+		}
+	} );
+
+	// Reloads and history visits restore the reader's scroll position instead of jumping to the hash.
+	const [ navigation ] = window.performance.getEntriesByType( 'navigation' );
+	const hashSection =
+		( ! navigation || 'navigate' === navigation.type ) &&
+		sections.find( ( { link } ) => window.location.hash && link.hash === window.location.hash );
 	pinnedLink = hashSection ? hashSection.link : null;
 
 	window.addEventListener( 'scroll', onScroll, { passive: true } );
