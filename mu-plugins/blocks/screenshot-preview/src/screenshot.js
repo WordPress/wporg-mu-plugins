@@ -3,7 +3,7 @@
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { useEffect, useRef, useState } from '@wordpress/element';
+import { useCallback, useEffect, useRef, useState } from '@wordpress/element';
 
 /**
  * Module constants
@@ -74,7 +74,7 @@ function ScreenShotImg( { alt = '', queryString, src, isReady = false } ) {
 	 *
 	 * @param {string} res
 	 */
-	const convertResponseToBase64 = async ( res ) => {
+	const convertResponseToBase64 = useCallback( async ( res ) => {
 		const blob = await res.blob();
 
 		const reader = new FileReader();
@@ -82,9 +82,12 @@ function ScreenShotImg( { alt = '', queryString, src, isReady = false } ) {
 			setBase64Img( event.target.result );
 		};
 		reader.readAsDataURL( blob );
-	};
+	}, [] );
 
-	const fetchImage = async () => {
+	/**
+	 * Request the screenshot, and schedule another try while mShots is still generating it.
+	 */
+	const fetchImage = useCallback( async () => {
 		try {
 			const res = await fetch( fullUrl );
 
@@ -102,14 +105,14 @@ function ScreenShotImg( { alt = '', queryString, src, isReady = false } ) {
 			setHasError( true );
 			setShouldRetry( false );
 		}
-	};
+	}, [ fullUrl, convertResponseToBase64 ] );
 
 	// Wait until the card is in view, so off-screen previews don't use up their attempts.
 	useEffect( () => {
 		if ( isReady ) {
 			( async () => await fetchImage() )();
 		}
-	}, [ isReady ] );
+	}, [ isReady, fetchImage ] );
 
 	/**
 	 * The Snapshot service will redirect when its generating an image.
