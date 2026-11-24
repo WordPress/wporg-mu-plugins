@@ -171,17 +171,29 @@
 			this.populateExtendedSubmenu();
 		}
 
-		window.addEventListener(
-			'resize',
-			function () {
-				this.resetMenu();
-				if ( ! this.isResponsive() ) {
-					this.getItemWidths();
-					this.hideExtraItems();
-					this.populateExtendedSubmenu();
+		const refreshMenu = function () {
+			this.resetMenu();
+			if ( ! this.isResponsive() ) {
+				this.getItemWidths();
+				this.hideExtraItems();
+				this.populateExtendedSubmenu();
+			}
+		}.bind( this );
+
+		window.addEventListener( 'resize', refreshMenu );
+
+		// Text-only zoom resizes text without a window resize; this button scales with text and never overflows.
+		const getWordPress = document.querySelector( '.global-header__desktop-get-wordpress' );
+		if ( 'ResizeObserver' in window && getWordPress ) {
+			let observedWidth = getWordPress.offsetWidth;
+			new window.ResizeObserver( () => {
+				const width = getWordPress.offsetWidth;
+				if ( width !== observedWidth ) {
+					observedWidth = width;
+					refreshMenu();
 				}
-			}.bind( this )
-		);
+			} ).observe( getWordPress );
+		}
 	};
 
 	window.addEventListener( 'load', function () {
