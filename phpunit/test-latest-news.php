@@ -118,4 +118,69 @@ class Test_Latest_News extends WP_UnitTestCase {
 
 		$this->assertStringContainsString( 'href="' . esc_url( home_url( '?p=' . $post_id ) ) . '"', $output );
 	}
+
+	/**
+	 * The taxonomy and termSlug attributes list only posts with that term.
+	 */
+	public function test_filters_by_term(): void {
+		self::factory()->post->create(
+			array(
+				'post_title' => 'A dev note',
+				'tags_input' => array( 'dev-notes' ),
+			)
+		);
+		self::factory()->post->create( array( 'post_title' => 'An announcement' ) );
+
+		// Render the default first, so a shared cache would leak into the second render.
+		$this->render( array() );
+		$output = $this->render(
+			array(
+				'taxonomy' => 'post_tag',
+				'termSlug' => 'dev-notes',
+			)
+		);
+
+		$this->assertStringContainsString( 'A dev note', $output );
+		$this->assertStringNotContainsString( 'An announcement', $output );
+	}
+
+	/**
+	 * A category slug filters by category.
+	 */
+	public function test_filters_by_category(): void {
+		$category_id = self::factory()->category->create( array( 'slug' => 'releases' ) );
+		self::factory()->post->create(
+			array(
+				'post_title'    => 'A release post',
+				'post_category' => array( $category_id ),
+			)
+		);
+		self::factory()->post->create( array( 'post_title' => 'An announcement' ) );
+
+		$output = $this->render(
+			array(
+				'taxonomy' => 'category',
+				'termSlug' => 'releases',
+			)
+		);
+
+		$this->assertStringContainsString( 'A release post', $output );
+		$this->assertStringNotContainsString( 'An announcement', $output );
+	}
+
+	/**
+	 * Taxonomies other than categories and tags are ignored.
+	 */
+	public function test_ignores_disallowed_taxonomies(): void {
+		self::factory()->post->create( array( 'post_title' => 'A blog post' ) );
+
+		$output = $this->render(
+			array(
+				'taxonomy' => 'post_format',
+				'termSlug' => 'post-format-aside',
+			)
+		);
+
+		$this->assertStringContainsString( 'A blog post', $output );
+	}
 }

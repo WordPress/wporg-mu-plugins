@@ -28,6 +28,8 @@ function render_block( $attributes ) {
 	$defaults      = array(
 		'perPage'   => 3,
 		'postTypes' => array( 'post' ),
+		'taxonomy'  => '',
+		'termSlug'  => '',
 	);
 	$attributes    = wp_parse_args( $attributes, $defaults );
 	$blog_switched = false;
@@ -37,6 +39,9 @@ function render_block( $attributes ) {
 	if ( ! $post_types ) {
 		$post_types = array( 'post' );
 	}
+
+	$taxonomy  = in_array( $attributes['taxonomy'], array( 'category', 'post_tag' ), true ) ? $attributes['taxonomy'] : '';
+	$term_slug = $taxonomy ? sanitize_title( $attributes['termSlug'] ) : '';
 
 	$blog_id = isset( $attributes['blogId'] ) ? (int) $attributes['blogId'] : 0;
 
@@ -60,15 +65,26 @@ function render_block( $attributes ) {
 		if ( array( 'post' ) !== $post_types ) {
 			$cache_key .= '-' . implode( '-', $post_types );
 		}
+		if ( $term_slug ) {
+			$cache_key .= '-' . md5( $taxonomy . ':' . $term_slug );
+		}
 		$posts = get_transient( $cache_key );
 		if ( ! $posts ) {
-			$posts = wp_get_recent_posts(
-				array(
-					'numberposts' => $attributes['perPage'],
-					'post_type'   => $post_types,
-					'post_status' => 'publish',
-				)
+			$query_args = array(
+				'numberposts' => $attributes['perPage'],
+				'post_type'   => $post_types,
+				'post_status' => 'publish',
 			);
+			if ( $term_slug ) {
+				$query_args['tax_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+					array(
+						'taxonomy' => $taxonomy,
+						'field'    => 'slug',
+						'terms'    => $term_slug,
+					),
+				);
+			}
+			$posts = wp_get_recent_posts( $query_args );
 
 			if ( empty( $posts ) ) {
 				return __( 'No posts found.', 'wporg' );

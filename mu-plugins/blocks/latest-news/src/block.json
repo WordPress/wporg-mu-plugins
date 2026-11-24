@@ -26,6 +26,15 @@
 			},
 			"default": [ "post" ]
 		},
+		"taxonomy": {
+			"type": "string",
+			"enum": [ "", "category", "post_tag" ],
+			"default": ""
+		},
+		"termSlug": {
+			"type": "string",
+			"default": ""
+		},
 		"showCategories": {
 			"type": "boolean",
 			"default": false

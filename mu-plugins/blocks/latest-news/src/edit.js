@@ -7,6 +7,8 @@ import {
 	CheckboxControl,
 	__experimentalNumberControl as NumberControl, // eslint-disable-line @wordpress/no-unsafe-wp-apis
 	PanelBody,
+	SelectControl,
+	TextControl,
 } from '@wordpress/components';
 import ServerSideRender from '@wordpress/server-side-render';
 
@@ -21,10 +23,12 @@ import ServerSideRender from '@wordpress/server-side-render';
  * @return {Element} Element to render.
  */
 export default function Edit( { attributes, setAttributes, name } ) {
-	const { blogId, perPage, showCategories } = attributes;
+	const { blogId, perPage, showCategories, taxonomy, termSlug } = attributes;
 
 	const onPerPageChange = ( value ) => setAttributes( { perPage: value * 1 } );
 	const onBlogIdChange = ( value ) => setAttributes( { blogId: Number( value ) } );
+	const onTaxonomyChange = ( value ) => setAttributes( { taxonomy: value } );
+	const onTermSlugChange = ( value ) => setAttributes( { termSlug: value } );
 	const onShowCategoriesChange = ( value ) => setAttributes( { showCategories: value } );
 
 	return (
@@ -45,6 +49,24 @@ export default function Edit( { attributes, setAttributes, name } ) {
 						onChange={ onPerPageChange }
 						value={ perPage }
 					/>
+					<SelectControl
+						label={ __( 'Filter by', 'wporg' ) }
+						value={ taxonomy }
+						options={ [
+							{ label: __( 'None', 'wporg' ), value: '' },
+							{ label: __( 'Category', 'wporg' ), value: 'category' },
+							{ label: __( 'Tag', 'wporg' ), value: 'post_tag' },
+						] }
+						onChange={ onTaxonomyChange }
+					/>
+					{ taxonomy && (
+						<TextControl
+							label={ __( 'Term slug', 'wporg' ) }
+							value={ termSlug }
+							onChange={ onTermSlugChange }
+							help={ __( 'For example, dev-notes.', 'wporg' ) }
+						/>
+					) }
 					<CheckboxControl
 						label={ __( 'Show Categories', 'wporg' ) }
 						onChange={ onShowCategoriesChange }
