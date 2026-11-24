@@ -171,17 +171,28 @@
 			this.populateExtendedSubmenu();
 		}
 
-		window.addEventListener(
-			'resize',
-			function () {
-				this.resetMenu();
-				if ( ! this.isResponsive() ) {
-					this.getItemWidths();
-					this.hideExtraItems();
-					this.populateExtendedSubmenu();
+		const refreshMenu = function () {
+			this.resetMenu();
+			if ( ! this.isResponsive() ) {
+				this.getItemWidths();
+				this.hideExtraItems();
+				this.populateExtendedSubmenu();
+			}
+		}.bind( this );
+
+		window.addEventListener( 'resize', refreshMenu );
+
+		// Text-only zoom changes item widths without a window resize, so watch the first item too.
+		if ( 'ResizeObserver' in window && this.listItems.length ) {
+			let observedWidth = this.listItems[ 0 ].offsetWidth;
+			new window.ResizeObserver( () => {
+				const width = this.listItems[ 0 ].offsetWidth;
+				if ( width !== observedWidth ) {
+					observedWidth = width;
+					refreshMenu();
 				}
-			}.bind( this )
-		);
+			} ).observe( this.listItems[ 0 ] );
+		}
 	};
 
 	window.addEventListener( 'load', function () {
