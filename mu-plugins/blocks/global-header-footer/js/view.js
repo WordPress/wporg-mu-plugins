@@ -182,16 +182,17 @@
 
 		window.addEventListener( 'resize', refreshMenu );
 
-		// Text-only zoom changes item widths without a window resize, so watch the first item too.
-		if ( 'ResizeObserver' in window && this.listItems.length ) {
-			let observedWidth = this.listItems[ 0 ].offsetWidth;
+		// Text-only zoom resizes text without a window resize; this button scales with text and never overflows.
+		const getWordPress = document.querySelector( '.global-header__desktop-get-wordpress' );
+		if ( 'ResizeObserver' in window && getWordPress ) {
+			let observedWidth = getWordPress.offsetWidth;
 			new window.ResizeObserver( () => {
-				const width = this.listItems[ 0 ].offsetWidth;
+				const width = getWordPress.offsetWidth;
 				if ( width !== observedWidth ) {
 					observedWidth = width;
 					refreshMenu();
 				}
-			} ).observe( this.listItems[ 0 ] );
+			} ).observe( getWordPress );
 		}
 	};
 
