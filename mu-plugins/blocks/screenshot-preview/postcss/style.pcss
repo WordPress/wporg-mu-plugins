@@ -37,9 +37,34 @@
 
 .wporg-screenshot__has-error,
 .wporg-screenshot__has-error:hover {
-	font-size: 10px;
-	color: #aaa;
+	flex-direction: column;
+	gap: 8px;
+	padding: 16px;
+	box-sizing: border-box;
+	font-size: 14px;
+	color: #50575e;
+	text-align: center;
 	text-decoration: none;
+}
+
+.wporg-screenshot__has-error p {
+	margin: 0;
+}
+
+.wporg-screenshot__retry {
+	padding: 4px 12px;
+	border: 1px solid var(--wp-screenshot-theme-color);
+	border-radius: 2px;
+	background: #fff;
+	color: var(--wp-screenshot-theme-color);
+	font-size: 13px;
+	cursor: pointer;
+}
+
+.wporg-screenshot__retry:hover,
+.wporg-screenshot__retry:focus {
+	background: var(--wp-screenshot-theme-color);
+	color: #fff;
 }
 
 .wporg-screenshot-loader {

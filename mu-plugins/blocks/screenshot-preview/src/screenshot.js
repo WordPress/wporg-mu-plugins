@@ -3,7 +3,7 @@
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { useEffect, useRef, useState } from '@wordpress/element';
+import { useCallback, useEffect, useRef, useState } from '@wordpress/element';
 
 /**
  * Module constants
@@ -74,7 +74,7 @@ function ScreenShotImg( { alt = '', queryString, src, isReady = false } ) {
 	 *
 	 * @param {string} res
 	 */
-	const convertResponseToBase64 = async ( res ) => {
+	const convertResponseToBase64 = useCallback( async ( res ) => {
 		const blob = await res.blob();
 
 		const reader = new FileReader();
@@ -82,31 +82,37 @@ function ScreenShotImg( { alt = '', queryString, src, isReady = false } ) {
 			setBase64Img( event.target.result );
 		};
 		reader.readAsDataURL( blob );
-	};
+	}, [] );
 
-	const fetchImage = async () => {
+	/**
+	 * Request the screenshot, and schedule another try while mShots is still generating it.
+	 */
+	const fetchImage = useCallback( async () => {
 		try {
 			const res = await fetch( fullUrl );
 
-			if ( res.redirected ) {
-				setShouldRetry( true );
-			} else if ( res.status === 200 && ! res.redirected ) {
+			if ( res.status === 200 && ! res.redirected ) {
 				await convertResponseToBase64( res );
 
 				setHasLoaded( true );
 				setShouldRetry( false );
 			} else {
-				setAttempts( attempts + 1 );
+				// mShots redirects while it generates the image; count each try so we eventually give up.
+				setAttempts( ( count ) => count + 1 );
+				setShouldRetry( true );
 			}
 		} catch {
 			setHasError( true );
 			setShouldRetry( false );
 		}
-	};
+	}, [ fullUrl, convertResponseToBase64 ] );
 
+	// Wait until the card is in view, so off-screen previews don't use up their attempts.
 	useEffect( () => {
-		( async () => await fetchImage() )();
-	}, [] );
+		if ( isReady ) {
+			( async () => await fetchImage() )();
+		}
+	}, [ isReady, fetchImage ] );
 
 	/**
 	 * The Snapshot service will redirect when its generating an image.
@@ -116,8 +122,24 @@ function ScreenShotImg( { alt = '', queryString, src, isReady = false } ) {
 		async () => {
 			await fetchImage();
 		},
-		shouldRetry ? RETRY_DELAY : null
+		shouldRetry && ! hasAborted ? RETRY_DELAY : null
 	);
+
+	/**
+	 * Start over after a failure, for example when mShots took too long.
+	 *
+	 * @param {Event} event
+	 */
+	const handleRetry = ( event ) => {
+		// The preview sits inside the card's link, so don't follow it.
+		event.preventDefault();
+		event.stopPropagation();
+
+		setAttempts( 0 );
+		setHasError( false );
+		setShouldRetry( false );
+		fetchImage();
+	};
 
 	if ( ! isReady ) {
 		return null;
@@ -128,7 +150,14 @@ function ScreenShotImg( { alt = '', queryString, src, isReady = false } ) {
 	}
 
 	if ( hasError || hasAborted ) {
-		return <div className="wporg-screenshot wporg-screenshot__has-error">{ __( 'error', 'wporg' ) }</div>;
+		return (
+			<div className="wporg-screenshot wporg-screenshot__has-error">
+				<p>{ __( 'The preview could not be loaded.', 'wporg' ) }</p>
+				<button type="button" className="wporg-screenshot__retry" onClick={ handleRetry }>
+					{ __( 'Try again', 'wporg' ) }
+				</button>
+			</div>
+		);
 	}
 
 	return <img src={ base64Img } alt={ alt } />;
